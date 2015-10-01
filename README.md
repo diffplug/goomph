@@ -8,7 +8,8 @@ output = [
 	link(shield('License Apache', 'license', 'Apache', 'blue'), 'https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)'),
 	'',
 	link(shield('Changelog', 'changelog', '{{version}}', 'brightgreen'), 'CHANGES.md'),
-	link(image('Travis CI', 'https://travis-ci.org/{{org}}/{{name}}.svg?branch=master'), 'https://travis-ci.org/{{org}}/{{name}}')
+	link(image('Travis CI', 'https://travis-ci.org/{{org}}/{{name}}.svg?branch=master'), 'https://travis-ci.org/{{org}}/{{name}}'),
+	link(shield('Live chat', 'gitter', 'live chat', 'brightgreen'), 'https://gitter.im/{{org}}/{{name}}')
 	].join('\n');
 -->
 [![Maven artifact](https://img.shields.io/badge/mavenCentral-com.diffplug.gradle%3Agoomph-blue.svg)](https://bintray.com/diffplug/opensource/goomph/view)
@@ -18,6 +19,7 @@ output = [
 
 [![Changelog](https://img.shields.io/badge/changelog-1.0.0--SNAPSHOT-brightgreen.svg)](CHANGES.md)
 [![Travis CI](https://travis-ci.org/diffplug/goomph.svg?branch=master)](https://travis-ci.org/diffplug/goomph)
+[![Live chat](https://img.shields.io/badge/gitter-live_chat-brightgreen.svg)](https://gitter.im/diffplug/goomph)
 <!---freshmark /shields -->
 
 <!---freshmark javadoc
@@ -76,7 +78,7 @@ task diffplugP2(type: PdeProductBuildTask) {
 	addBuildProperty('resolution.devMode',		'true')
 	// configure some P2 pieces
 	addBuildProperty('p2.build.repo',	'file:' + project.file(P2_REPO_DIR).absolutePath)
-	addBuildProperty('p2.gathering',	'true')	
+	addBuildProperty('p2.gathering',	'true')
 	addBuildProperty('skipDirector',	'true')
 
 	// configure gradle's staleness detector
