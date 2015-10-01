@@ -1,0 +1,243 @@
+plugins {
+	// code formatting
+	id "com.diffplug.gradle.spotless" version "1.3.1"
+	// bintray uploading
+	id "com.jfrog.bintray" version "1.3.1"
+}
+
+repositories {
+	mavenCentral()
+	// SNAPSHOT versions are free to rely on other SNAPSHOT libraries
+	if (project.version.endsWith('-SNAPSHOT')) {
+		maven {
+			url 'https://oss.sonatype.org/content/repositories/snapshots/'
+		}
+		configurations.all {
+			resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+		}
+	}
+	ivy {
+		// Here's a hack for downloading stuff from the oomph p2 repository
+		url "http://download.eclipse.org/oomph/drops/release/1.2.1/"
+		layout "pattern", {
+			artifact "plugins/[artifact]_[revision].[ext]"
+		}
+
+		// There isn't a reliable way to get eclipse artifacts except through p2 repositories,
+		// which gradle does not yet support.  For now we're forcing it with ivy.
+		// https://discuss.gradle.org/t/is-it-possible-to-configure-a-p2-repository/6812/6
+	}
+}
+
+apply plugin: 'java'
+sourceCompatibility = VER_JAVA
+targetCompatibility = VER_JAVA
+
+// None of these eclipse jars are in the public repositories.  This means
+// that when someone downloads this plugin, unless they add the weird
+// ivy depenency, they won't be able to resolve the eclipse jars.
+//
+// To fix this, we embed the content of these eclispe jars into ourselves, as a "fat jar".
+configurations {
+	embeddedJars
+}
+
+dependencies {
+	compile gradleApi()
+	compile "com.diffplug.durian:durian:${VER_DURIAN}"
+	compile "com.diffplug.durian:durian-swt:${VER_DURIAN_SWT}"
+	compile "org.osgi:org.osgi.core:6.0.0"
+
+	// p2 dependencies
+	//embeddedJars 'p2:org.eclipse.jdt.core:3.11.0.v20150602-1242'
+	//embeddedJars 'p2:org.eclipse.text:3.5.400.v20150505-1044'
+	configurations.compile.extendsFrom(configurations.embeddedJars)
+}
+
+jar {
+	// this embeds the eclipse jars into our "fat jar"
+	from {
+		configurations.embeddedJars.collect{ it.isDirectory() ? it : zipTree(it) }
+	}
+	// the eclipse jars are signed, and our fat jar breaks the signatures
+	// so we've gotta be sure to filter out the signatures
+	exclude 'META-INF/*.RSA'
+	exclude 'META-INF/*.SF'
+}
+
+apply plugin: 'eclipse'
+eclipse {
+	classpath {
+		downloadSources true
+		downloadJavadoc true
+	}
+}
+// always create fresh projects
+tasks.eclipse.dependsOn(cleanEclipse)
+
+////////////
+// FORMAT //
+////////////
+apply plugin: 'com.diffplug.gradle.spotless'
+spotless {
+	java {
+		licenseHeaderFile	'spotless.license.java'			// License header file
+		importOrderFile		'spotless.importorder'			// An import ordering file, exported from Eclipse
+		eclipseFormatFile	'spotless.eclipseformat.xml'	// XML file dumped out by the Eclipse formatter
+		// Eclipse formatter puts excess whitespace after lambda blocks
+		//    funcThatTakesLambdas(x -> {} , y -> {} )	// what Eclipse does
+		//    funcThatTakesLambdas(x -> {}, y -> {})	// what I wish Eclipse did
+		custom 'Lambda fix', { it.replace('} )', '})').replace('} ,', '},') }
+	}
+	format 'misc', {
+		target '**/.gitignore', '**/*.gradle', '**/*.md', '**/*.sh'
+		indentWithTabs()
+		trimTrailingWhitespace()
+		endWithNewline()
+	}
+	freshmark {}
+}
+
+//////////////
+// FINDBUGS //
+//////////////
+apply plugin: 'findbugs'
+findbugs {
+	toolVersion = VER_FINDBUGS
+	sourceSets = [sourceSets.main]	// don't check the test code
+	ignoreFailures = false 	// bug free or it doesn't ship!
+	reportsDir = file('build/findbugs')
+	effort = 'max'			// min|default|max
+	reportLevel = 'low'		// low|medium|high (low = sensitive to even minor mistakes)
+	omitVisitors = []		// bugs that we want to ignore
+}
+// HTML instead of XML
+tasks.withType(FindBugs) {
+	reports {
+		xml.enabled = false
+		html.enabled = true
+	}
+}
+// we'll want the findbugs annotations (they don't have a 3.0.1 version)
+dependencies {
+	compile 'com.google.code.findbugs:annotations:3.0.0'
+	compile 'com.google.code.findbugs:jsr305:3.0.0'
+}
+
+///////////
+// MAVEN //
+///////////
+apply plugin: 'maven-publish'
+
+task sourcesJar(type: Jar) {
+	classifier = 'sources'
+	from sourceSets.main.allJava
+}
+
+// Where it's possible to name parameters and methods clearly enough
+// that javadoc is not necessary, why make the code bigger?
+//
+// Thus, no javadoc warnings.
+javadoc {
+	options.addStringOption('Xdoclint:none', '-quiet')
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	classifier = 'javadoc'
+	from javadoc.destinationDir
+}
+
+////////////////
+// PUBLISHING //
+////////////////
+def isSnapshot = project.version.endsWith('-SNAPSHOT')
+// pulls the credentials from either the environment variable or gradle.properties
+def cred = {
+	if (System.env[it] != null) {
+		return System.env[it]
+	} else if (project.hasProperty(it)) {
+		return project[it]
+	} else {
+		return 'unknown_' + it
+	}
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+			artifact sourcesJar
+			artifact javadocJar
+			pom.withXml {
+				// remove the p2 dependencies because they are embedded
+				// also remove 'com.diffplug' dependencies so that we can use spotless on its dependencies
+				asNode().dependencies.'*'.each() {
+					if (it.groupId.text() == 'p2' || it.groupId.text().startsWith('com.diffplug.')) {
+						it.parent().remove(it)
+					}
+				}
+				// add MavenCentral requirements to the POM
+				asNode().children().last() + {
+					resolveStrategy = Closure.DELEGATE_FIRST
+					name project.name
+					description project.description
+					url "https://github.com/${project.org}/${project.name}"
+					scm {
+						url "https://github.com/${project.org}/${project.name}"
+						connection "scm:git:git://github.com/${project.org}/${project.name}"
+						developerConnection "scm:git:ssh:git@github.com/${project.org}/${project.name}"
+					}
+					licenses {
+						license {
+							name 'The Apache Software License, Version 2.0'
+							url 'http://www.apache.org/license/LICENSE-2.0.txt'
+							distribution 'repo'
+						}
+					}
+					developers {
+						developer {
+							id 'nedtwigg'
+							name 'Ned Twigg'
+							email 'ned.twigg@diffplug.com'
+						}
+					}
+				}
+			}
+		}
+	}
+	if (isSnapshot) {
+		// upload snapshots to oss.sonatype.org
+		repositories { maven {
+			url = 'https://oss.sonatype.org/content/repositories/snapshots'
+			credentials {
+				username = cred('nexus_user')
+				password = cred('nexus_pass')
+			}
+		} }
+	}
+}
+
+if (!isSnapshot) {
+	// upload releases to bintray and then mavenCentral
+	bintray {
+		user = cred('bintray_user')
+		key = cred('bintray_pass')
+		publications = ['mavenJava']
+		publish = true
+		pkg {
+			repo = 'opensource'
+			name = project.name
+			userOrg = project.org
+			version {
+				name = project.version
+				mavenCentralSync {
+					user = cred('nexus_user')
+					password = cred('nexus_pass')
+				}
+			}
+		}
+	}
+
+	publish.dependsOn(bintrayUpload)
+	bintrayUpload.dependsOn(['generatePomFileForMavenJavaPublication', jar, sourcesJar, javadocJar])
+}
