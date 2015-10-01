@@ -38,7 +38,7 @@ public class BuildProperties {
 	/** Returns the content of template.build.properties as a String. */
 	public static String rawFile() {
 		try {
-			URL url = Resources.getResource(BuildProperties.class, "template.build.properties");
+			URL url = BuildProperties.class.getResource("/template.build.properties");
 			return Resources.toString(url, StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
