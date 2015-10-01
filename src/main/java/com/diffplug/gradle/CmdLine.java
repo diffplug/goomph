@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 
@@ -146,46 +147,46 @@ public class CmdLine {
 		Process process = builder.start();
 
 		// wrap the process' input and output
-		BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
-		BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+		try (
+				BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream(), Charset.defaultCharset()));
+				BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream(), Charset.defaultCharset()));) {
 
-		if (echoCmd) {
-			System.out.println("cmd>" + cmd);
-		}
-
-		// dump the output
-		ImmutableList.Builder<String> output = ImmutableList.builder();
-		ImmutableList.Builder<String> error = ImmutableList.builder();
-
-		String line = null;
-		while ((line = stdInput.readLine()) != null) {
-			output.add(line);
-			if (echoOutput) {
-				System.out.println(line);
+			if (echoCmd) {
+				System.out.println("cmd>" + cmd);
 			}
-		}
 
-		// dump the input
-		while ((line = stdError.readLine()) != null) {
-			error.add(line);
-			if (echoOutput) {
-				System.err.println(line);
+			// dump the output
+			ImmutableList.Builder<String> output = ImmutableList.builder();
+			ImmutableList.Builder<String> error = ImmutableList.builder();
+
+			String line = null;
+			while ((line = stdInput.readLine()) != null) {
+				output.add(line);
+				if (echoOutput) {
+					System.out.println(line);
+				}
 			}
-		}
 
-		// check that the process exited correctly
-		try {
+			// dump the input
+			while ((line = stdError.readLine()) != null) {
+				error.add(line);
+				if (echoOutput) {
+					System.err.println(line);
+				}
+			}
+
+			// check that the process exited correctly
 			int exitValue = process.waitFor();
 			if (exitValue != EXIT_VALUE_SUCCESS) {
 				throw new RuntimeException("'" + cmd + "' exited with " + exitValue);
 			}
+
+			// returns the result of this successful execution
+			return new Result(directory, cmd, output.build(), error.build());
 		} catch (InterruptedException e) {
-			// this isn't expected, but whatevs
+			// this isn't expected, but it's possible
 			throw new RuntimeException(e);
 		}
-
-		// returns the result of this successful execution
-		return new Result(directory, cmd, output.build(), error.build());
 	}
 
 	/** The integer value which marks that a process exited successfully. */
