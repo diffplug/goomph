@@ -2,6 +2,12 @@ language: java
 jdk:
 - oraclejdk8
 script: "./.ci/ci.sh"
+before_cache:
+- rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+cache:
+  directories:
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
 env:
   global:
   - secure: LSJ2yJUp8QuX7VRnapO3Ym6kfYxVhbFG1U2baWxPd0ncYBBleGEQt875kHiMgrFsrWRG1VNCphplae45MZ8ufLiKha9tN2vusdnYxEaYuj10OxA2ko0m3H4/HhQ2A53+fcAAWfOY6t6ngiP4jzOt0jPZHaLvvyiYOppHd8Fi5ek=

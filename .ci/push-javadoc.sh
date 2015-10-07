@@ -17,6 +17,7 @@ git clone --quiet --branch=gh-pages https://${gh_token}@github.com/diffplug/goom
 
 # copy the javadoc into the build
 cd gh-pages
+mkdir -p javadoc
 if [[ "$VERSION" != *SNAPSHOT* ]]; then
 	git rm -rf javadoc/${VERSION}
 	cp -Rf $HOME/javadoc-temp/ ./javadoc/${VERSION}/
