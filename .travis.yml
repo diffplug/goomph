@@ -8,12 +8,3 @@ cache:
   directories:
   - "$HOME/.gradle/caches/"
   - "$HOME/.gradle/wrapper/"
-env:
-  global:
-  - secure: MCxhaU2RenLku4IsiWlWAI4mhyuTOTmr5lY/PSwLhlTDwHXlbnqtnIj0yc/tL6iSmoZGNgzK9HNx+/mT3P6fMpnArMznYL6mBGEctJkpk7oxa5MQQC+0Ei+mLuNhjAVXJc/yKxhuh1Pw8d9Gqfujs+266WkhCmw87y+a1rP+620=
-  - secure: Q7Xgy9cBsch6FBmAr/dnjDNwk3RWvO+UTETs+wdSaeJe2J9HF6D2w46OjtYuE8udU0nOO41OOPJrx6JA46rwT+ytf0Nk5AfQ1u+S12tr4tqKCjUqOK7hcg4YDe3ePAW8Sds7c9RcQJAiIrzqAoCAkv4D44NFhXJEGWgZq+EOwss=
-  - secure: YSzdyrKbJaCE5sguwcQ+pPAhFDDXc72AAK8UmWJW5LlvjdP7KAbtEPlrRV5BIZ0VYkvmlR7nQX3WFxC65oStYHVQUi76po4fXzAvmLNVyE2rlj6HLaxFJM2Yz73hz0fo+9Jhxw1gDSxhIPP5F3YbCslwYJan3YHcpxCx/Lk8Iao=
-  - secure: X/zhXKylyO1sz+snD/JCx+wrLtb71xx1EJKbzk2Wqoo486QOyN25ShbNQ2DHjNX5Y+kncZDhue/yTeRMt8PX5U1q2IsQrMoaaPxE4zoWf5TKEltyPIJW2Hau/Di6+CSE9IK1JIve61wR20jcJffXpDvfKn4q6eXamo8Nx6uC+KM=
-  - secure: A12XKdJq2jHRZQb4Gg49e4hn6AWzh27VdQPVPn2uZgOKt49KYgplXGSMsyQDrIIhVZovG6uXjoAI1TmXVYjaYcVwcS5/kOKGZ4PkHMtEjIvj/7z5f9DC+W4TSNpDnN3YKRoW+79rS9XGTpvRhqEs6FWgBlNtq8cVBG7PpBR4sBM=
-  - secure: C7K4vcG62raOzaW5loh7WM3RvXeUiD3qFoqnocJTDGQqPeB/FdXtpcaNkc5j28PiO1c5QYpsZIulmYZ/DhAsnisnw4uYtg+hZRF6AN3C2NQSdLFhmKQukWOLqE6El2t/lemUXytHj7qQ+sOMLgecuPGwTXpILAqfVkVXpQgIVWw=
-  - secure: r7aB7bekN9NN+YKbrPPoJnkWgCV1BHk5edJTBMTl2djpJn89WTa5haHTgfrCaCVyZ4hHO24l8rXe4g/5j8u3v+ryRuxitwfHRDZpWpYqLNdghakjlH+sTtz9GAFoyTq7BNPv+WIMWs06UAyaBihwDDPFrpU9XOjnV554d3TNIok=
