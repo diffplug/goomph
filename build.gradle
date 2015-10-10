@@ -241,3 +241,8 @@ if (!isSnapshot) {
 	publish.dependsOn(bintrayUpload)
 	bintrayUpload.dependsOn(['generatePomFileForMavenJavaPublication', jar, sourcesJar, javadocJar])
 }
+
+// helps external scripts detect version
+task printVersion << {
+	println version
+}
