@@ -43,6 +43,7 @@ import com.google.common.io.Files;
 
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.CmdLine;
+import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.ZipUtil;
 
 public class PdeProductBuildTask extends DefaultTask {
@@ -107,11 +108,7 @@ public class PdeProductBuildTask extends DefaultTask {
 
 		// delete the buildDir and make a fresh directory
 		File buildDir = getBuildDir();
-		if (buildDir.exists()) {
-			FileUtils.deleteDirectory(buildDir);
-		}
-		buildDir.mkdirs();
-		Preconditions.checkArgument(buildDir.isDirectory());
+		FileMisc.cleanDir(buildDir);
 
 		// setup build.properties
 		BuildProperties properties = new BuildProperties(getProject());
@@ -126,8 +123,8 @@ public class PdeProductBuildTask extends DefaultTask {
 		for (Map.Entry<String, String> entry : buildProperties.entrySet()) {
 			properties.setProp(entry.getKey(), entry.getValue());
 		}
-		File buildDirProperties = buildDir.toPath().resolve("build.properties").toFile();
 		// write build.properties to the appropriate directory
+		File buildDirProperties = new File(buildDir, "build.properties");
 		Files.write(properties.getContent(), buildDirProperties, StandardCharsets.UTF_8);
 
 		// copy any other files the user might like us to copy
@@ -142,7 +139,7 @@ public class PdeProductBuildTask extends DefaultTask {
 			});
 
 			// get DiffPlug's version 
-			String dpVersion = (String) getProject().getProperties().get("VER_DIFFPLUG");
+			String dpVersion = "1.6.3.RC1";
 
 			// set all the version tags in the product file
 			File productInput = new File(srcDir, PRODUCT_FILE);
