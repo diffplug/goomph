@@ -16,6 +16,7 @@
 package com.diffplug.gradle.eclipse;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
@@ -41,7 +42,6 @@ import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.ZipUtil;
 
 /** Catalogs all of the plugins and their versions in the given paths. */
-
 public class PluginCatalog {
 	/** A map from plugin name to a set of available versions. */
 	private SetMultimap<String, Version> map = HashMultimap.create();
@@ -70,46 +70,50 @@ public class PluginCatalog {
 
 			List<File> files = Arrays.asList(pluginRoot.listFiles());
 			Preconditions.checkArgument(files.size() > 0, "No plugins found in " + root);
-			files.stream()
-					.filter(File::isFile)
-					.filter(file -> file.getName().endsWith(".jar"))
-					.filter(file -> !file.getName().endsWith("_SNAPSHOT.jar"))
-					.forEach(file -> {
-						try {
-							ZipUtil.read(file, MANIFEST_PATH, input -> {
-								Manifest parsed = new Manifest(input);
-
-								// parse out the name (looking out for the ";singleton=true" names
-								String name = parsed.getMainAttributes().getValue(BUNDLE_NAME);
-								int splitIdx = name.indexOf(';');
-								if (splitIdx > 0) {
-									name = name.substring(0, splitIdx);
-								}
-
-								// parse out the platform filter (if any)
-								// if it doesn't match an OS that we support, throw it out
-								String platformFilter = parsed.getMainAttributes().getValue(ECLIPSE_PLATFORM_FILTER);
-								if (platformFilter != null) {
-									Filter filter = new Filter(platformFilter.replace(" ", ""));
-									boolean isSupportedOS = Arrays.asList(OS.values()).stream()
-											.map(SwtPlatform::fromOS)
-											.anyMatch(platform -> filter.match(new Hashtable<>(platform.platformProperties())));
-									if (!isSupportedOS) {
-										unsupportedPlatform.add(name);
-										return;
-									}
-								}
-
-								// parse out the version
-								String versionRaw = parsed.getMainAttributes().getValue(BUNDLE_VERSION);
-								Version version = Version.parseVersion(versionRaw);
-								map.put(name, version);
-							});
-						} catch (Exception e) {
-							throw Errors.asRuntime(e);
-						}
-					});
+			// look for plugin.jar
+			files.stream().filter(file -> file.isFile() && file.getName().endsWith(".jar") && !file.getName().endsWith("_SNAPSHOT.jar"))
+					.forEach(Errors.rethrow().wrap(file -> {
+						ZipUtil.read(file, MANIFEST_PATH, input -> addManifest(new Manifest(input)));
+					}));
+			// look for folder-style plugins (especially org.eclipse.core.runtime.compatibility.registry)
+			files.stream().filter(file -> file.isDirectory()).forEach(Errors.rethrow().wrap(file -> {
+				File manifestFile = new File(file, MANIFEST_PATH);
+				if (manifestFile.exists()) {
+					try (FileInputStream input = new FileInputStream(new File(file, MANIFEST_PATH))) {
+						addManifest(new Manifest(input));
+					}
+				}
+			}));
 		}
+	}
+
+	/** Adds a manifest to the catalog. */
+	private void addManifest(Manifest parsed) {
+		// parse out the name (looking out for the ";singleton=true" names
+		String name = parsed.getMainAttributes().getValue(BUNDLE_NAME);
+		int splitIdx = name.indexOf(';');
+		if (splitIdx > 0) {
+			name = name.substring(0, splitIdx);
+		}
+
+		// parse out the platform filter (if any)
+		// if it doesn't match an OS that we support, throw it out
+		String platformFilter = parsed.getMainAttributes().getValue(ECLIPSE_PLATFORM_FILTER);
+		if (platformFilter != null) {
+			Filter filter = new Filter(platformFilter.replace(" ", ""));
+			boolean isSupportedOS = Arrays.asList(OS.values()).stream()
+					.map(SwtPlatform::fromOS)
+					.anyMatch(platform -> filter.match(new Hashtable<>(platform.platformProperties())));
+			if (!isSupportedOS) {
+				unsupportedPlatform.add(name);
+				return;
+			}
+		}
+
+		// parse out the version
+		String versionRaw = parsed.getMainAttributes().getValue(BUNDLE_VERSION);
+		Version version = Version.parseVersion(versionRaw);
+		map.put(name, version);
 	}
 
 	/** If the given plugin has multiple versions, and those versions match the versions passed in, it will resolve them with the first version in this list. */
