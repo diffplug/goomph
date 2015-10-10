@@ -144,7 +144,7 @@ public class PluginCatalog {
 				if (Sets.newHashSet(resolveWith).equals(versions)) {
 					return resolveWith.get(0);
 				} else {
-					throw new IllegalArgumentException("Conflicts don't match!  Suggested resolution was " + resolveWith + ", but available was " + versions);
+					throw new IllegalArgumentException("Conflicts don't match for '" + plugin + "'!  Suggested resolution was " + resolveWith + ", but available was " + versions);
 				}
 			}
 		}
