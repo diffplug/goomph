@@ -101,11 +101,12 @@ task diffplugP2(type: PdeProductBuildTask) {
 ```
 
 ### run P2 director (assemble an RCP application from a P2 repository)
+
+```groovy
 import com.diffplug.gradle.*
 import com.diffplug.gradle.eclipse.*
 import com.diffplug.common.swt.os.*
 
-```groovy
 // list of OS values for which we want to create an installer
 def INSTALLERS = OS.values()
 def VER_JRE = '1.8.0.40'
