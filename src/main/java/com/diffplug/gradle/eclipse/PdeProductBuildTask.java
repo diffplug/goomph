@@ -138,8 +138,8 @@ public class PdeProductBuildTask extends DefaultTask {
 				catalog.resolveWithFirst(entry.getKey(), entry.getValue());
 			});
 
-			// get DiffPlug's version 
-			String dpVersion = "1.6.3.RC1";
+			// get DiffPlug's version
+			String dpVersion = (String) getProject().getProperties().get("VER_DIFFPLUG");
 
 			// set all the version tags in the product file
 			File productInput = new File(srcDir, PRODUCT_FILE);
