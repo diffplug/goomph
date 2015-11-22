@@ -19,6 +19,30 @@ It's a bog-standard gradle build.
 
 If you're getting style warnings, `gradlew spotlessApply` will apply anything necessary to fix formatting. For more info on the formatter, check out [spotless](https://github.com/diffplug/spotless).
 
+## Test locally
+
+To make changes to Goomph and test those changes on a local project, add the following to the top of your local project's `build.gradle` (the project you want to use Goomph on, not Goomph itself):
+
+```groovy
+buildscript {
+	repositories {
+		mavenLocal()
+		jcenter()
+		configurations.all {
+			resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+		}
+	}
+
+	dependencies {
+		classpath 'com.diffplug.gradle:goomph:+'
+		classpath 'com.diffplug.durian:durian-swt:+'
+	}
+}
+
+```
+
+To test your changes, run `gradlew publishToMavenLocal` on your Goomph project.  Now you can make changes and test them on your project.
+
 ## License
 
 By contributing your code, you agree to license your contribution under the terms of the APLv2: https://github.com/diffplug/durian/blob/master/LICENSE
