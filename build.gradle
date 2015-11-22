@@ -30,6 +30,7 @@ repositories {
 }
 
 apply plugin: 'java'
+apply plugin: 'groovy'
 sourceCompatibility = VER_JAVA
 targetCompatibility = VER_JAVA
 
@@ -88,6 +89,13 @@ spotless {
 		//    funcThatTakesLambdas(x -> {} , y -> {} )	// what Eclipse does
 		//    funcThatTakesLambdas(x -> {}, y -> {})	// what I wish Eclipse did
 		custom 'Lambda fix', { it.replace('} )', '})').replace('} ,', '},') }
+	}
+	format 'groovy', {
+		target '**/*.groovy'
+		licenseHeaderFile('spotless.license.java', 'package ')
+		indentWithTabs()
+		trimTrailingWhitespace()
+		endWithNewline()
 	}
 	format 'misc', {
 		target '**/.gitignore', '**/*.gradle', '**/*.md', '**/*.sh'
