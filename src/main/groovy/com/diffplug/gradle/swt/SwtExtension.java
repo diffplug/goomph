@@ -26,6 +26,7 @@ public class SwtExtension {
 	static final String NAME = "goomphSwt";
 
 	public static final String LUNA_SR2 = "4.4.2";
+	public static final String MARS_SR2 = "4.5.2";
 
 	public static final String SWT = "org.eclipse.swt";
 	public static final String SWT_PLATFORM = "org.eclipse.swt.${platform}";
@@ -38,11 +39,12 @@ public class SwtExtension {
 
 	public String version = LUNA_SR2;
 
+	// @formatter:off
 	String updateSite() {
 		String UPDATE_ROOT = "http://download.eclipse.org/eclipse/updates/";
 		switch (version) {
-		case LUNA_SR2:
-			return UPDATE_ROOT + "4.4/R-4.4.2-201502041700/";
+		case LUNA_SR2:		return UPDATE_ROOT + "4.4/R-4.4.2-201502041700/";
+		case MARS_SR2:		return UPDATE_ROOT + "4.5/R-4.5.2-201602121500/";
 		default:
 			throw Unhandled.stringException(version);
 		}
@@ -52,23 +54,27 @@ public class SwtExtension {
 		switch (version) {
 		case LUNA_SR2:
 			switch (type) {
-			case JFACE:
-				return "3.10.2.v20141021-1035";
-			case SWT:
-				return "3.103.2.v20150203-1313";
-			case SWT_PLATFORM:
-				return "3.103.2.v20150203-1351";
-			case CORE_COMMANDS:
-				return "3.6.100.v20140528-1422";
-			case EQUINOX_COMMON:
-				return "3.6.200.v20130402-1505";
-			default:
-				throw Unhandled.stringException(version);
+			case JFACE:			return "3.10.2.v20141021-1035";
+			case SWT:			return "3.103.2.v20150203-1313";
+			case SWT_PLATFORM:	return "3.103.2.v20150203-1351";
+			case CORE_COMMANDS:	return "3.6.100.v20140528-1422";
+			case EQUINOX_COMMON:return "3.6.200.v20130402-1505";
+			default:	throw Unhandled.stringException(version);
+			}
+		case MARS_SR2:
+			switch (type) {
+			case JFACE:			return "3.11.1.v20160128-1644";
+			case SWT:			return "3.104.2.v20160212-1350";
+			case SWT_PLATFORM:	return "3.104.2.v20160212-1350";
+			case CORE_COMMANDS:	return "3.7.0.v20150422-0725";
+			case EQUINOX_COMMON:return "3.7.0.v20150402-1709";
+			default:	throw Unhandled.stringException(version);
 			}
 		default:
 			throw Unhandled.stringException(version);
 		}
 	}
+	// @formatter:on
 
 	String fullDep(String dep) {
 		if (dep.equals(SWT_PLATFORM)) {
