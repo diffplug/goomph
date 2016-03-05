@@ -59,6 +59,13 @@ public class PdeProductBuildTask extends DefaultTask {
 		return getProject().file(buildDir);
 	}
 
+	/** The name of the product file. */
+	public void productFilename(String productFile) {
+		this.productFilename = productFile;
+	}
+
+	private String productFilename;
+
 	private Object pluginPath;
 
 	/** The directory from which plugins will be pulled, besides the delta pack. */
@@ -100,8 +107,6 @@ public class PdeProductBuildTask extends DefaultTask {
 		this.dstRelPath = dstRelPath;
 	}
 
-	private static final String PRODUCT_FILE = "com.diffplug.core.product";
-
 	@TaskAction
 	public void build() throws Exception {
 		Preconditions.checkNotNull(buildDir, "buildDir must not be null!");
@@ -142,8 +147,8 @@ public class PdeProductBuildTask extends DefaultTask {
 			String dpVersion = (String) getProject().getProperties().get("VER_DIFFPLUG");
 
 			// set all the version tags in the product file
-			File productInput = new File(srcDir, PRODUCT_FILE);
-			File productOutput = new File(dstDir, PRODUCT_FILE);
+			File productInput = new File(srcDir, productFilename);
+			File productOutput = new File(dstDir, productFilename);
 
 			// read the lines of the file, and set the exact versions
 			List<String> lines = Files.readLines(productInput, StandardCharsets.UTF_8);
@@ -156,7 +161,7 @@ public class PdeProductBuildTask extends DefaultTask {
 			File corePlugin = new File(getPluginPath(), "com.diffplug.core_" + dpVersion + ".jar");
 			File temp = File.createTempFile("tempPlugin", ".jar");
 			ZipUtil.modify(new FileInputStream(corePlugin), new FileOutputStream(temp),
-					ImmutableMap.of(PRODUCT_FILE, new FileInputStream(productOutput)),
+					ImmutableMap.of(productFilename, new FileInputStream(productOutput)),
 					Collections.emptySet());
 			Files.copy(temp, corePlugin);
 			temp.delete();
