@@ -52,7 +52,7 @@ public class EclipseTask extends DefaultTask {
 	}
 
 	/** Returns the absolute path quoted. */
-	private String quote(File file) {
+	private static String quote(File file) {
 		return "\"" + file.getAbsolutePath() + "\"";
 	}
 }

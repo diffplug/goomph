@@ -75,7 +75,7 @@ public class BuildProperties {
 	}
 
 	/** Returns the system path separator. */
-	private String getSep() {
+	private static String getSep() {
 		return System.getProperty("path.separator");
 	}
 
