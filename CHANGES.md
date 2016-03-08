@@ -1,7 +1,11 @@
 # Goomph releases
 
-### Version 1.2.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/))
+### Version 1.3.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/))
 
+### Version 1.2.0 - March 8th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/1.2.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/1.2.0/view))
+
+* Fixed a DiffPlug-specific constant in PdeProductBuildTask
+* Added support for Mars SR2
 
 ### Version 1.1.0 - November 12th 2015 ([javadoc](http://diffplug.github.io/goomph/javadoc/1.1.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/1.1.0/view))
 
