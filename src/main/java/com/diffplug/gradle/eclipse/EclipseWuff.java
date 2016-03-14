@@ -16,6 +16,7 @@
 package com.diffplug.gradle.eclipse;
 
 import java.io.File;
+import java.nio.file.Path;
 
 import org.gradle.api.Project;
 import org.osgi.framework.Version;
@@ -42,6 +43,13 @@ public class EclipseWuff {
 		Preconditions.checkNotNull(version);
 	}
 
+	private static final Version MARS = Version.parseVersion("4.5.0");
+
+	/** Returns true iff this Eclipse is Mars or later. */
+	private boolean isMarsOrLater() {
+		return Comparison.compare(versionOsgi, MARS).lesserEqualGreater(false, true, true);
+	}
+
 	/** Returns the version for this Eclipse instance. */
 	public String getVersion() {
 		return version;
@@ -54,7 +62,14 @@ public class EclipseWuff {
 
 	/** Returns the SDK directory for this version for this OS. */
 	public File getSdkDir() {
-		return getWuffDir().toPath().resolve("unpacked/eclipse-SDK-" + version + "-" + getSuffixForThisOS()).toFile();
+		Path unzippedDir = getWuffDir().toPath().resolve("unpacked/eclipse-SDK-" + version + "-" + getSuffixForThisOS());
+		String relativePath;
+		if (OS.getNative().isMac() && isMarsOrLater()) {
+			relativePath = "Contents/Eclipse";
+		} else {
+			relativePath = "";
+		}
+		return unzippedDir.resolve(relativePath).toFile();
 	}
 
 	/** Returns the given path within the SDK. */
@@ -73,17 +88,13 @@ public class EclipseWuff {
 		return getWuffDir().toPath().resolve("unpacked/eclipse-" + version + "-delta-pack").toFile();
 	}
 
-	private static final Version MARS = Version.parseVersion("4.5.0");
-
 	/** Returns the eclipse GUI executable. */
 	public File getEclipseExecutable() {
 		OS os = OS.getNative();
 		if (os.isWindows()) {
 			return getSdkFile("eclipse.exe");
 		} else if (os.isMac()) {
-			String pre45 = "eclipse.app";
-			String after45 = "Contents/MacOS/eclipse";
-			String path = Comparison.compare(versionOsgi, MARS).lesserEqualGreater(pre45, after45, after45);
+			String path = isMarsOrLater() ? "../MacOS/eclipse" : "eclipse.app";
 			return getSdkFile(path);
 		} else {
 			return getSdkFile("eclipse");
@@ -96,9 +107,7 @@ public class EclipseWuff {
 		if (os.isWindows()) {
 			return getSdkFile("eclipsec.exe");
 		} else if (os.isMac()) {
-			String pre45 = "eclipse.app/Contents/MacOS/eclipse";
-			String after45 = "Contents/MacOS/eclipse";
-			String path = Comparison.compare(versionOsgi, MARS).lesserEqualGreater(pre45, after45, after45);
+			String path = isMarsOrLater() ? "../MacOS/eclipse" : "eclipse.app/Contents/MacOS/eclipse";
 			return getSdkFile(path);
 		} else {
 			return getSdkFile("eclipse");
