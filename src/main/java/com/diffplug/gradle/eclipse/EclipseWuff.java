@@ -18,9 +18,11 @@ package com.diffplug.gradle.eclipse;
 import java.io.File;
 
 import org.gradle.api.Project;
+import org.osgi.framework.Version;
 
 import com.google.common.base.Preconditions;
 
+import com.diffplug.common.base.Comparison;
 import com.diffplug.common.swt.os.OS;
 
 /** Represents an Eclipse which was downloaded by WUFF.  Assumes that the VER_ECLIPSE property is set. */
@@ -31,16 +33,23 @@ public class EclipseWuff {
 	}
 
 	private final String version;
+	private final Version versionOsgi;
 
 	/** Wraps up the Wuff-downloaded eclipses. */
 	public EclipseWuff(Project project) {
 		version = (String) project.getProperties().get("VER_ECLIPSE");
+		versionOsgi = Version.parseVersion(version);
 		Preconditions.checkNotNull(version);
 	}
 
 	/** Returns the version for this Eclipse instance. */
 	public String getVersion() {
 		return version;
+	}
+
+	/** Returns the version for this Eclipse instance. */
+	public Version getVersionOsgi() {
+		return versionOsgi;
 	}
 
 	/** Returns the SDK directory for this version for this OS. */
@@ -64,13 +73,18 @@ public class EclipseWuff {
 		return getWuffDir().toPath().resolve("unpacked/eclipse-" + version + "-delta-pack").toFile();
 	}
 
+	private static final Version MARS = Version.parseVersion("4.5.0");
+
 	/** Returns the eclipse GUI executable. */
 	public File getEclipseExecutable() {
 		OS os = OS.getNative();
 		if (os.isWindows()) {
 			return getSdkFile("eclipse.exe");
 		} else if (os.isMac()) {
-			return getSdkFile("eclipse.app");
+			String pre45 = "eclipse.app";
+			String after45 = "Contents/MacOS/eclipse";
+			String path = Comparison.compare(versionOsgi, MARS).lesserEqualGreater(pre45, after45, after45);
+			return getSdkFile(path);
 		} else {
 			return getSdkFile("eclipse");
 		}
@@ -82,7 +96,10 @@ public class EclipseWuff {
 		if (os.isWindows()) {
 			return getSdkFile("eclipsec.exe");
 		} else if (os.isMac()) {
-			return getSdkFile("eclipse.app/Contents/MacOS/eclipse");
+			String pre45 = "eclipse.app/Contents/MacOS/eclipse";
+			String after45 = "Contents/MacOS/eclipse";
+			String path = Comparison.compare(versionOsgi, MARS).lesserEqualGreater(pre45, after45, after45);
+			return getSdkFile(path);
 		} else {
 			return getSdkFile("eclipse");
 		}
