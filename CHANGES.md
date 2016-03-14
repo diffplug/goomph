@@ -1,6 +1,11 @@
 # Goomph releases
 
-### Version 1.3.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/))
+### Version 1.4.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/))
+
+### Version 1.3.0 - March 14th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/1.3.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/1.3.0/view))
+
+* Fixed location of OS X eclipse binaries for Eclipse Mars and later.
+	+ Required adding a `getVersionOsgi()` method to EclipseWuff.
 
 ### Version 1.2.0 - March 8th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/1.2.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/1.2.0/view))
 
