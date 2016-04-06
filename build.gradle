@@ -1,6 +1,6 @@
 plugins {
 	// code formatting
-	id "com.diffplug.gradle.spotless" version "1.3.1"
+	id "com.diffplug.gradle.spotless" version "1.3.3"
 	// bintray uploading
 	id "com.jfrog.bintray" version "1.3.1"
 }
@@ -85,10 +85,6 @@ spotless {
 		licenseHeaderFile	'spotless.license.java'			// License header file
 		importOrderFile		'spotless.importorder'			// An import ordering file, exported from Eclipse
 		eclipseFormatFile	'spotless.eclipseformat.xml'	// XML file dumped out by the Eclipse formatter
-		// Eclipse formatter puts excess whitespace after lambda blocks
-		//    funcThatTakesLambdas(x -> {} , y -> {} )	// what Eclipse does
-		//    funcThatTakesLambdas(x -> {}, y -> {})	// what I wish Eclipse did
-		custom 'Lambda fix', { it.replace('} )', '})').replace('} ,', '},') }
 	}
 	format 'groovy', {
 		target '**/*.groovy'
