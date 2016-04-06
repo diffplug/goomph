@@ -2,6 +2,10 @@
 
 ### Version 1.4.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/))
 
+### Version 1.3.1 - April 6th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/1.3.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/1.3.1/view))
+
+* Fixed EclipseWuff on OS X for the rest (not just binaries).
+
 ### Version 1.3.0 - March 14th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/1.3.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/1.3.0/view))
 
 * Fixed location of OS X eclipse binaries for Eclipse Mars and later.
