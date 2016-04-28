@@ -30,7 +30,6 @@ repositories {
 }
 
 apply plugin: 'java'
-apply plugin: 'groovy'
 sourceCompatibility = VER_JAVA
 targetCompatibility = VER_JAVA
 
