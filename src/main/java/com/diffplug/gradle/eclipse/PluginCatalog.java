@@ -27,14 +27,14 @@ import java.util.stream.Collectors;
 
 import org.osgi.framework.Version;
 
-import aQute.lib.filter.Filter;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
+
+import aQute.lib.filter.Filter;
 
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.swt.os.OS;
