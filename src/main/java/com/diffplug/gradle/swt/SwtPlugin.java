@@ -35,16 +35,16 @@ public class SwtPlugin implements Plugin<Project> {
 
 		// create the SwtExtension
 		SwtExtension swtExtension = project.getExtensions().create(SwtExtension.NAME, SwtExtension.class);
-		project.afterEvaluate(proj -> {
+		project.beforeEvaluate(proj -> {
 			// add the update site as an ivy artifact
 			IvyArtifactRepository repo = proj.getExtensions().getByType(IvyArtifactRepository.class);
 			repo.artifactPattern("plugins/[artifact]_[revision].[ext]");
 			repo.setUrl(swtExtension.updateSite());
-			project.getRepositories().add(repo);
+			proj.getRepositories().add(repo);
 
 			// add all of SWT's dependencies 
 			for (String dep : SwtExtension.DEPS) {
-				project.getDependencies().add("compile", swtExtension.fullDep(dep));
+				proj.getDependencies().add("compile", swtExtension.fullDep(dep));
 			}
 		});
 	}
