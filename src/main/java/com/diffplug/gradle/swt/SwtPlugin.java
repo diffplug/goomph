@@ -15,23 +15,16 @@
  */
 package com.diffplug.gradle.swt;
 
-import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.repositories.IvyArtifactRepository;
 import org.gradle.api.plugins.JavaPlugin;
 
-public class SwtPlugin implements Plugin<Project> {
-	@Override
-	public void apply(Project project) {
-		// ensure we don't double-apply the plugin
-		if (project.getPlugins().hasPlugin(SwtPlugin.class)) {
-			return;
-		}
+import com.diffplug.gradle.ProjectPlugin;
 
-		// make sure the java plugin has been applied
-		if (!project.getPlugins().hasPlugin(JavaPlugin.class)) {
-			project.getPlugins().apply(JavaPlugin.class);
-		}
+public class SwtPlugin extends ProjectPlugin {
+	@Override
+	public void applyOnce(Project project) {
+		ProjectPlugin.getPlugin(project, JavaPlugin.class);
 
 		// create the SwtExtension
 		SwtExtension swtExtension = project.getExtensions().create(SwtExtension.NAME, SwtExtension.class);
