@@ -18,6 +18,10 @@ package com.diffplug.gradle;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 
+import com.google.common.collect.ImmutableList;
+
+import com.diffplug.common.base.TreeDef;
+
 /** Base implementation of Plugin which prevents double-application. */
 public abstract class ProjectPlugin implements Plugin<Project> {
 	@Override
@@ -42,5 +46,10 @@ public abstract class ProjectPlugin implements Plugin<Project> {
 		} else {
 			return project.getPlugins().apply(pluginClazz);
 		}
+	}
+
+	/** A TreeDef for projects. */
+	public static TreeDef.Parented<Project> treeDef() {
+		return TreeDef.Parented.of(p -> ImmutableList.copyOf(p.getChildProjects().values()), Project::getParent);
 	}
 }
