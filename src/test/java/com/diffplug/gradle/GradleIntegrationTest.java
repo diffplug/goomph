@@ -19,26 +19,61 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.gradle.testkit.runner.GradleRunner;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 
+import com.diffplug.common.base.Errors;
+import com.diffplug.common.base.TreeDef;
+import com.diffplug.common.base.TreeStream;
+
 public class GradleIntegrationTest {
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
 
-	protected void write(String path, String content) throws IOException {
-		File file = new File(folder.getRoot(), path);
-		Files.write(file.toPath(), content.getBytes(StandardCharsets.UTF_8));
+	protected void write(String path, String... lines) throws IOException {
+		String content = Arrays.asList(lines).stream().collect(Collectors.joining("\n"));
+		Path target = folder.getRoot().toPath().resolve(path);
+		Files.createDirectories(target.getParent());
+		Files.write(target, content.getBytes(StandardCharsets.UTF_8));
 	}
 
 	protected String read(String path) throws IOException {
-		File file = new File(folder.getRoot(), path);
-		return new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+		Path target = folder.getRoot().toPath().resolve(path);
+		return new String(Files.readAllBytes(target), StandardCharsets.UTF_8);
 	}
 
 	protected GradleRunner gradleRunner() {
 		return GradleRunner.create().withProjectDir(folder.getRoot()).withPluginClasspath();
+	}
+
+	/** Dumps the complete file contents of the folder to the console. */
+	protected void dumpContentsToConsole() throws IOException {
+		dumpContentsToConsole(subPath -> !subPath.startsWith("."));
+	}
+
+	protected void dumpContentsToConsole(Predicate<String> subpathsToInclude) throws IOException {
+		TreeDef<File> treeDef = TreeDef.forFile(Errors.rethrow());
+		List<File> files = TreeStream.depthFirst(treeDef, folder.getRoot())
+				.filter(file -> file.isFile())
+				.collect(Collectors.toList());
+
+		ListIterator<File> iterator = files.listIterator(files.size());
+		int rootLength = folder.getRoot().getAbsolutePath().length() + 1;
+		while (iterator.hasPrevious()) {
+			File file = iterator.previous();
+			String subPath = file.getAbsolutePath().substring(rootLength);
+			if (subpathsToInclude.test(subPath)) {
+				System.out.println("### " + subPath + " ###");
+				System.out.println(read(subPath));
+			}
+		}
 	}
 }

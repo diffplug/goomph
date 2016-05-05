@@ -28,9 +28,9 @@ public class ExcludeBuildFolderPluginTest extends GradleIntegrationTest {
 	@Test
 	public void examineXmlChange() throws IOException {
 		// write the normal eclipse file
-		String plainEclipse = testCase("plugins { id 'eclipse' }");
+		String plainEclipse = testCase("eclipse");
 		// write the excluded build folder file
-		String underTestEclipse = testCase("plugins { id 'com.diffplug.gradle.eclipse.excludebuildfolder' }");
+		String underTestEclipse = testCase("com.diffplug.gradle.eclipse.excludebuildfolder");
 		// assert the expected thing was added to the .project file
 		Assert.assertEquals(StringPrinter.buildStringFromLines(
 				"INSERT",
@@ -48,8 +48,8 @@ public class ExcludeBuildFolderPluginTest extends GradleIntegrationTest {
 				""), Diff.computeDiff(plainEclipse, underTestEclipse));
 	}
 
-	private String testCase(String buildContents) throws IOException {
-		write("build.gradle", buildContents);
+	private String testCase(String pluginId) throws IOException {
+		write("build.gradle", "plugins { id '" + pluginId + "' }");
 		gradleRunner().withArguments("eclipse").build();
 		return read(".project").replaceAll("<id>([0-9|-]+)</id>", "<id>somenumber</id>");
 	}

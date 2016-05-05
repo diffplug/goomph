@@ -23,7 +23,10 @@ import com.diffplug.common.base.Unhandled;
 /** Creates diffs which are easy to assert against. */
 public class Diff {
 	public static String computeDiff(String before, String after) {
-		LinkedList<diff_match_patch.Diff> diffs = new diff_match_patch().diff_main(before, after);
+		diff_match_patch differ = new diff_match_patch();
+		LinkedList<diff_match_patch.Diff> diffs = differ.diff_main(before, after);
+		differ.diff_cleanupEfficiency(diffs);
+		differ.diff_cleanupSemantic(diffs);
 		return StringPrinter.buildString(printer -> {
 			for (diff_match_patch.Diff diff : diffs) {
 				switch (diff.operation) {
