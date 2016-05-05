@@ -2,10 +2,11 @@
 
 ### Version 1.4.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/)) ([snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
+* Added plugin `com.diffplug.gradle.eclipse.bndmanifest` which uses bnd to generate `MANIFEST.MF` and the entire jar, while respecting the result of gradle's resources directory.
 * Added plugin `com.diffplug.gradle.eclipse.buildproperties` which uses the Eclipse PDE build.properties file as the single source of truth for controlling binary assets.
 * Added plugin `com.diffplug.gradle.eclipse.projectdeps` which fixes some bugs with interproject dependencies.
 * Added plugin `com.diffplug.gradle.eclipse.excludebuildfolder` which excludes the build folder from the eclipse project resources.
-* Minor fix to SwtPlugin (now applied via `beforeEvaluate` rather than `afterEvaluate`, as appropriate for a plugin which changes dependencies)
+* Minor fix to SwtPlugin (now applied via `beforeEvaluate` rather than `afterEvaluate`, which is better for a plugin which changes dependencies).
 
 ### Version 1.3.1 - April 6th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/1.3.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/1.3.1/view))
 

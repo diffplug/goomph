@@ -48,7 +48,7 @@ public class GradleIntegrationTest {
 
 	protected String read(String path) throws IOException {
 		Path target = folder.getRoot().toPath().resolve(path);
-		return new String(Files.readAllBytes(target), StandardCharsets.UTF_8);
+		return new String(Files.readAllBytes(target), StandardCharsets.UTF_8).replace("\r\n", "\n");
 	}
 
 	protected GradleRunner gradleRunner() {

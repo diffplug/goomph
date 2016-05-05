@@ -53,36 +53,57 @@ Here are the things it can do as of now:
 ### Remove the `build` folder from the Eclipse resource finder
 If you hit `Ctrl + R` in eclipse, you'll get a fuzzy search for resources in your workspace.  This will include class files and other artifacts in the Gradle build folder, which is usually not desirable.  To fix:
 
-```
+```groovy
 apply plugin: 'com.diffplug.gradle.eclipse.excludebuildfolder'
 ```
 
 ### Fix interproject dependencies
 Fixes a problem where dependencies on other projects within the workspace aren't always resolved correctly within Eclipse.
 
-```
+```groovy
 apply plugin: 'com.diffplug.gradle.eclipse.projectdeps'
 ```
 
 ### Use eclipse's `build.properties` as the single source of truth for binary assets
 Eclipse PDE uses a [`build.properties`](http://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Fguide%2Ftools%2Feditors%2Fmanifest_editor%2Fbuild.htm) file to control the build process.  Even if you aren't using PDE to do your build, the IDE will throw warnings if you don't keep the build.properties up to date.
 
-This plugin reads the `build.properties` file, and uses that to properly setup the Gradle `processResources` task.  It also ensures that these resources are available on the IDE's classpath.  This way your `build.properties` can be the single source of truth for all the binary assets inside your plugin.
+This plugin reads the `build.properties` file, and uses that to setup the Gradle `processResources` task.  It also ensures that these resources are available on the IDE's classpath.  This way your `build.properties` can be the single source of truth for all the binary assets inside your plugin.
 
-```
+```groovy
 apply plugin: 'com.diffplug.gradle.eclipse.buildproperties'
 ```
+
+### Use bnd to generate the MANIFEST.MF
+Generating manifests by hand is a recipe for mistakes.  [Bnd](https://github.com/bndtools/bnd) does a fantastic job generating all this stuff for you, but there's a lot of wiring required to tie it into both Eclipse PDE and Gradle.  Which is what Goomph is for!
+
+```groovy
+apply plugin: 'com.diffplug.gradle.eclipse.bndmanifest'
+// pass headers and bnd directives: http://www.aqute.biz/Bnd/Format
+jar.manifest.attributes(
+	'-exportcontents': 'com.diffplug.*',
+	'-removeheaders': 'Bnd-LastModified,Bundle-Name,Created-By,Tool,Private-Package',
+	'Import-Package': '!javax.annotation.*,*',
+	'Bundle-SymbolicName': "${project.name};singleton:=true",
+)
+```
+
+Besides passing raw headers and bnd directives, this plugin takes the following actions:
+- Passes the project version to bnd.
+- Passes the `runtime` coonfiguration's classpath to bnd for manifest calculation.
+- Instructs bnd to respect the result of the `processResources` task.
+- Writes out the resultant manifest to `META-INF/MANIFEST.MF`, so that your IDE stays up-to-date.
 
 ## Build Eclipse applications
 
 ### SWT dependencies
 To add the platform-specific SWT jars as `compile` dependencies, add this to your buildscript:
 
-```
+```groovy
 apply plugin: `com.diffplug.gradle.swt`
 goomphSwt {
 	// the eclipse version to use
 	//    currently supported: 4.4.2, 4.5.2
+	//    defaults to the latest available
 	version = '4.5.2'
 }
 ```
@@ -207,7 +228,9 @@ INSTALLERS.each() { os ->
 ## Acknowledgements
 
 * Andrey Hihlovskiy's excellent [Wuff](https://github.com/akhikhl/wuff) and [Unpuzzle](https://github.com/akhikhl/unpuzzle) libraries have been a huge boon to everyone trying to get Gradle and Eclipse to collaborate.
-* Thanks to Neil Fraser of Google for [diff-match-patch](https://code.google.com/p/google-diff-match-patch/).
+* Thanks to Peter Kriens for the excellent [bnd](https://github.com/bndtools/bnd).
+* Thanks to JRuyi and Agemo Cui for [osgibnd-gradle-plugin](https://github.com/jruyi/osgibnd-gradle-plugin), which inspired `BndManifestPlugin`.
+* Thanks to Neil Fraser of Google for [diff-match-patch](https://code.google.com/p/google-diff-match-patch/) which is very helpful for testing.
 * Formatted by [spotless](https://github.com/diffplug/spotless), [as such](https://github.com/diffplug/durian/blob/v2.0/build.gradle?ts=4#L70-L90).
 * Bugs found by [findbugs](http://findbugs.sourceforge.net/), [as such](https://github.com/diffplug/durian/blob/v2.0/build.gradle?ts=4#L92-L116).
 * Scripts in the `.ci` folder are inspired by [Ben Limmer's work](http://benlimmer.com/2013/12/26/automatically-publish-javadoc-to-gh-pages-with-travis-ci/).
