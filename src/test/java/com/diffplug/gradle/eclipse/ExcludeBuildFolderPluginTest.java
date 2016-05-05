@@ -15,36 +15,23 @@
  */
 package com.diffplug.gradle.eclipse;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.Arrays;
 
-import org.gradle.testkit.runner.GradleRunner;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 
 import com.diffplug.common.base.StringPrinter;
+import com.diffplug.gradle.Diff;
+import com.diffplug.gradle.GradleIntegrationTest;
 
-public class ExcludeBuildFolderPluginTest {
-	@Rule
-	public TemporaryFolder testProjectDir = new TemporaryFolder();
-
+public class ExcludeBuildFolderPluginTest extends GradleIntegrationTest {
 	@Test
 	public void examineXmlChange() throws IOException {
-		File buildFile = testProjectDir.newFile("build.gradle");
 		// write the normal eclipse file
-		Files.write(buildFile.toPath(), Arrays.asList("apply plugin: 'eclipse'"));
-		GradleRunner.create().withProjectDir(testProjectDir.getRoot()).withArguments("eclipse").withPluginClasspath().build();
-		String plainEclipse = getEclipse();
+		String plainEclipse = testCase("plugins { id 'eclipse' }");
 		// write the excluded build folder file
-		Files.write(buildFile.toPath(), Arrays.asList("plugins { id 'com.diffplug.gradle.eclipse.excludebuildfolder' }"));
-		GradleRunner.create().withProjectDir(testProjectDir.getRoot()).withArguments("eclipse", "--stacktrace").withPluginClasspath().build();
-		String underTestEclipse = getEclipse();
-		// assert the expected thing was added
+		String underTestEclipse = testCase("plugins { id 'com.diffplug.gradle.eclipse.excludebuildfolder' }");
+		// assert the expected thing was added to the .project file
 		Assert.assertEquals(StringPrinter.buildStringFromLines(
 				"INSERT",
 				"	<filteredResources>",
@@ -61,9 +48,9 @@ public class ExcludeBuildFolderPluginTest {
 				""), Diff.computeDiff(plainEclipse, underTestEclipse));
 	}
 
-	private String getEclipse() throws IOException {
-		File eclipseFile = new File(testProjectDir.getRoot(), ".project");
-		return new String(Files.readAllBytes(eclipseFile.toPath()), StandardCharsets.UTF_8)
-				.replaceAll("<id>([0-9|-]+)</id>", "<id>somenumber</id>");
+	private String testCase(String buildContents) throws IOException {
+		write("build.gradle", buildContents);
+		gradleRunner().withArguments("eclipse").build();
+		return read(".project").replaceAll("<id>([0-9|-]+)</id>", "<id>somenumber</id>");
 	}
 }
