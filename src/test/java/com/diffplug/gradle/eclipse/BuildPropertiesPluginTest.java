@@ -26,7 +26,7 @@ import com.diffplug.gradle.GradleIntegrationTest;
 
 public class BuildPropertiesPluginTest extends GradleIntegrationTest {
 	@Test
-	public void examineXmlChange() throws IOException {
+	public void assertClasspathChanged() throws IOException {
 		// write the normal eclipse file
 		String plainEclipse = testCase("eclipse");
 		// write the excluded build folder file
