@@ -57,7 +57,19 @@ public class FileMisc {
 		if (dirToRemove.isFile()) {
 			dirToRemove.delete();
 		} else if (dirToRemove.isDirectory()) {
-			FileUtils.deleteDirectory(dirToRemove);
+			try {
+				FileUtils.deleteDirectory(dirToRemove);
+			} catch (IOException e) {
+				// we couldn't delete the directory,
+				// but deleting everything inside is just as good
+				for (File file : dirToRemove.listFiles()) {
+					if (file.isFile()) {
+						file.delete();
+					} else {
+						FileUtils.deleteDirectory(file);
+					}
+				}
+			}
 		}
 		dirToRemove.mkdirs();
 	}
