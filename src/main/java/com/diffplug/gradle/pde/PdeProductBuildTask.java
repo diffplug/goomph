@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.diffplug.gradle.eclipse;
+package com.diffplug.gradle.pde;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -45,6 +45,7 @@ import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.CmdLine;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.ZipUtil;
+import com.diffplug.gradle.eclipse.BuildProperties;
 
 public class PdeProductBuildTask extends DefaultTask {
 	private Object buildDir;

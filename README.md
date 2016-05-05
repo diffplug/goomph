@@ -17,7 +17,7 @@ output = [
 [![Javadoc](https://img.shields.io/badge/javadoc-OK-blue.svg)](https://diffplug.github.io/goomph/javadoc/1.3.1/)
 [![License Apache](https://img.shields.io/badge/license-Apache-blue.svg)](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))
 
-[![Changelog](https://img.shields.io/badge/changelog-1.4.0--SNAPSHOT-brightgreen.svg)](CHANGES.md)
+[![Changelog](https://img.shields.io/badge/changelog-2.0.0--SNAPSHOT-brightgreen.svg)](CHANGES.md)
 [![Travis CI](https://travis-ci.org/diffplug/goomph.svg?branch=master)](https://travis-ci.org/diffplug/goomph)
 [![Live chat](https://img.shields.io/badge/gitter-live_chat-brightgreen.svg)](https://gitter.im/diffplug/goomph)
 <!---freshmark /shields -->
@@ -112,7 +112,7 @@ goomphSwt {
 
 ```groovy
 import com.diffplug.gradle.*
-import com.diffplug.gradle.eclipse.*
+import com.diffplug.gradle.pde.*
 import com.diffplug.common.swt.os.*
 
 task diffplugP2(type: PdeProductBuildTask) {
@@ -164,7 +164,7 @@ task diffplugP2(type: PdeProductBuildTask) {
 
 ```groovy
 import com.diffplug.gradle.*
-import com.diffplug.gradle.eclipse.*
+import com.diffplug.gradle.pde.*
 import com.diffplug.common.swt.os.*
 
 // list of OS values for which we want to create an installer

@@ -33,6 +33,7 @@ import com.google.common.io.Resources;
 
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.JDK;
+import com.diffplug.gradle.pde.EclipseWuff;
 
 public class BuildProperties {
 	/** Returns the content of template.build.properties as a String. */
