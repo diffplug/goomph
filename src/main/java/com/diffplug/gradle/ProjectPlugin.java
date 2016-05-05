@@ -40,9 +40,8 @@ public abstract class ProjectPlugin implements Plugin<Project> {
 	/** Returns the instance of the given plugin, by returning the existing or applying brand new, as appropriate. */
 	public static <T extends Plugin<?>> T getPlugin(Project project, Class<T> pluginClazz) {
 		// make sure the eclipse plugin has been applied
-		T plugin = project.getPlugins().getPlugin(pluginClazz);
-		if (plugin != null) {
-			return plugin;
+		if (project.getPlugins().hasPlugin(pluginClazz)) {
+			return project.getPlugins().getPlugin(pluginClazz);
 		} else {
 			return project.getPlugins().apply(pluginClazz);
 		}
