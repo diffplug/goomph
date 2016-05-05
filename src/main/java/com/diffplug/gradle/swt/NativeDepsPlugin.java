@@ -16,28 +16,32 @@
 package com.diffplug.gradle.swt;
 
 import org.gradle.api.Project;
-import org.gradle.api.artifacts.repositories.IvyArtifactRepository;
 import org.gradle.api.plugins.JavaPlugin;
 
 import com.diffplug.gradle.ProjectPlugin;
 
-public class SwtPlugin extends ProjectPlugin {
+/**
+ * Adds the platform-specific SWT jars which are appropriate for the
+ * native system to the compile classpath.
+ * <p>
+ * Currently supports only 4.4.2 and 4.5.2.
+ */
+public class NativeDepsPlugin extends ProjectPlugin {
 	@Override
 	public void applyOnce(Project project) {
 		ProjectPlugin.getPlugin(project, JavaPlugin.class);
 
-		// create the SwtExtension
-		SwtExtension swtExtension = project.getExtensions().create(SwtExtension.NAME, SwtExtension.class);
-		project.beforeEvaluate(proj -> {
-			// add the update site as an ivy artifact
-			IvyArtifactRepository repo = proj.getExtensions().getByType(IvyArtifactRepository.class);
-			repo.artifactPattern("plugins/[artifact]_[revision].[ext]");
-			repo.setUrl(swtExtension.updateSite());
-			proj.getRepositories().add(repo);
+		// create the NativeDepsExtension
+		NativeDepsExtension extension = project.getExtensions().create(NativeDepsExtension.NAME, NativeDepsExtension.class);
+		project.afterEvaluate(proj -> {
+			// add the update site as an ivy repository
+			proj.getRepositories().ivy(ivyConfig -> {
+				ivyConfig.artifactPattern(extension.updateSite() + "plugins/[artifact]_[revision].[ext]");
+			});
 
 			// add all of SWT's dependencies 
-			for (String dep : SwtExtension.DEPS) {
-				proj.getDependencies().add("compile", swtExtension.fullDep(dep));
+			for (String dep : NativeDepsExtension.DEPS) {
+				proj.getDependencies().add("compile", extension.fullDep(dep));
 			}
 		});
 	}

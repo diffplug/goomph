@@ -22,8 +22,10 @@ import java.util.List;
 import com.diffplug.common.base.Unhandled;
 import com.diffplug.common.swt.os.SwtPlatform;
 
-public class SwtExtension {
-	static final String NAME = "goomphSwt";
+public class NativeDepsExtension {
+	public String version = LUNA_SR2;
+
+	static final String NAME = "goomphSwtNativeDeps";
 
 	public static final String LUNA_SR2 = "4.4.2";
 	public static final String MARS_SR2 = "4.5.2";
@@ -36,8 +38,6 @@ public class SwtExtension {
 
 	static final List<String> DEPS = Collections.unmodifiableList(Arrays.asList(
 			SWT, SWT_PLATFORM, JFACE, CORE_COMMANDS, EQUINOX_COMMON));
-
-	public String version = LUNA_SR2;
 
 	// @formatter:off
 	String updateSite() {
