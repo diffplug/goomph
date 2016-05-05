@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.diffplug.gradle.eclipse;
+package com.diffplug.gradle.osgi;
 
 import java.io.IOException;
 
@@ -29,7 +29,7 @@ public class BndManifestPluginTest extends GradleIntegrationTest {
 		write("build.gradle",
 				"plugins {",
 				"    id 'java'",
-				"    id 'com.diffplug.gradle.eclipse.bndmanifest'",
+				"    id 'com.diffplug.gradle.osgi.bndmanifest'",
 				"}",
 				"repositories { mavenCentral() }",
 				"dependencies { compile 'com.diffplug.durian:durian:3.4.0' }",
