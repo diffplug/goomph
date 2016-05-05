@@ -64,6 +64,15 @@ Fixes a problem where dependencies on other projects within the workspace aren't
 apply plugin: 'com.diffplug.gradle.eclipse.projectdeps'
 ```
 
+### Use eclipse's `build.properties` as the single source of truth for binary assets
+Eclipse PDE uses a [`build.properties`](http://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Fguide%2Ftools%2Feditors%2Fmanifest_editor%2Fbuild.htm) file to control the build process.  Even if you aren't using PDE to do your build, the IDE will throw warnings if you don't keep the build.properties up to date.
+
+This plugin reads the `build.properties` file, and uses that to properly setup the Gradle `processResources` task.  It also ensures that these resources are available on the IDE's classpath.  This way your `build.properties` can be the single source of truth for all the binary assets inside your plugin.
+
+```
+apply plugin: 'com.diffplug.gradle.eclipse.buildproperties'
+```
+
 ## Build Eclipse applications
 
 ### SWT dependencies

@@ -31,6 +31,7 @@ import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 
 import com.diffplug.common.base.Errors;
+import com.diffplug.common.base.StringPrinter;
 import com.diffplug.common.base.TreeDef;
 import com.diffplug.common.base.TreeStream;
 
@@ -55,11 +56,11 @@ public class GradleIntegrationTest {
 	}
 
 	/** Dumps the complete file contents of the folder to the console. */
-	protected void dumpContentsToConsole() throws IOException {
-		dumpContentsToConsole(subPath -> !subPath.startsWith("."));
+	protected String getContents() throws IOException {
+		return getContents(subPath -> !subPath.startsWith(".gradle"));
 	}
 
-	protected void dumpContentsToConsole(Predicate<String> subpathsToInclude) throws IOException {
+	protected String getContents(Predicate<String> subpathsToInclude) throws IOException {
 		TreeDef<File> treeDef = TreeDef.forFile(Errors.rethrow());
 		List<File> files = TreeStream.depthFirst(treeDef, folder.getRoot())
 				.filter(file -> file.isFile())
@@ -67,13 +68,17 @@ public class GradleIntegrationTest {
 
 		ListIterator<File> iterator = files.listIterator(files.size());
 		int rootLength = folder.getRoot().getAbsolutePath().length() + 1;
-		while (iterator.hasPrevious()) {
-			File file = iterator.previous();
-			String subPath = file.getAbsolutePath().substring(rootLength);
-			if (subpathsToInclude.test(subPath)) {
-				System.out.println("### " + subPath + " ###");
-				System.out.println(read(subPath));
-			}
-		}
+		return StringPrinter.buildString(printer -> {
+			Errors.rethrow().run(() -> {
+				while (iterator.hasPrevious()) {
+					File file = iterator.previous();
+					String subPath = file.getAbsolutePath().substring(rootLength);
+					if (subpathsToInclude.test(subPath)) {
+						printer.println("### " + subPath + " ###");
+						printer.println(read(subPath));
+					}
+				}
+			});
+		});
 	}
 }
