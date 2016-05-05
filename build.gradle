@@ -177,7 +177,7 @@ publishing {
 				// remove the p2 dependencies because they are embedded
 				// also remove 'com.diffplug' dependencies so that we can use spotless on its dependencies
 				asNode().dependencies.'*'.each() {
-					if (it.groupId.text() == 'p2' || it.groupId.text().startsWith('com.diffplug.')) {
+					if (it.groupId.text() == 'p2') {
 						it.parent().remove(it)
 					}
 				}
