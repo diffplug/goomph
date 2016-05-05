@@ -57,6 +57,13 @@ If you hit `Ctrl + R` in eclipse, you'll get a fuzzy search for resources in you
 apply plugin: 'com.diffplug.gradle.eclipse.excludebuildfolder'
 ```
 
+### Fix interproject dependencies
+Fixes a problem where dependencies on other projects within the workspace aren't always resolved correctly within Eclipse.
+
+```
+apply plugin: 'com.diffplug.gradle.eclipse.projectdeps'
+```
+
 ## Build Eclipse applications
 
 ### SWT dependencies
