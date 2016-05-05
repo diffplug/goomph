@@ -26,6 +26,7 @@ import java.util.ListIterator;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FileUtils;
 import org.gradle.testkit.runner.GradleRunner;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
@@ -80,5 +81,11 @@ public class GradleIntegrationTest {
 				}
 			});
 		});
+	}
+
+	/** Copies the test to some directory for external debugging. */
+	protected void copyTo(String path) throws IOException {
+		File destination = new File(path);
+		FileUtils.copyDirectory(folder.getRoot(), destination);
 	}
 }
