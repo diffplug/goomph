@@ -48,6 +48,29 @@ Contributions are welcome, see [the contributing guide](CONTRIBUTING.md) for dev
 
 Here are the things it can do as of now:
 
+## Work with Eclipse as an IDE
+
+### Remove the `build` folder from the Eclipse resource finder
+If you hit `Ctrl + R` in eclipse, you'll get a fuzzy search for resources in your workspace.  This will include class files and other artifacts in the Gradle build folder, which is usually not desirable.  To fix:
+
+```
+apply plugin: 'com.diffplug.gradle.eclipse.excludebuildfolder'
+```
+
+## Build Eclipse applications
+
+### SWT dependencies
+To add the platform-specific SWT jars as `compile` dependencies, add this to your buildscript:
+
+```
+apply plugin: `com.diffplug.gradle.swt`
+goomphSwt {
+	// the eclipse version to use
+	//    currently supported: 4.4.2, 4.5.2
+	version = '4.5.2'
+}
+```
+
 ### run PDE build (makes an RCP application or a P2 repository)
 
 ```groovy
@@ -168,6 +191,7 @@ INSTALLERS.each() { os ->
 ## Acknowledgements
 
 * Andrey Hihlovskiy's excellent [Wuff](https://github.com/akhikhl/wuff) and [Unpuzzle](https://github.com/akhikhl/unpuzzle) libraries have been a huge boon to everyone trying to get Gradle and Eclipse to collaborate.
+* Thanks to Neil Fraser of Google for [diff-match-patch](https://code.google.com/p/google-diff-match-patch/).
 * Formatted by [spotless](https://github.com/diffplug/spotless), [as such](https://github.com/diffplug/durian/blob/v2.0/build.gradle?ts=4#L70-L90).
 * Bugs found by [findbugs](http://findbugs.sourceforge.net/), [as such](https://github.com/diffplug/durian/blob/v2.0/build.gradle?ts=4#L92-L116).
 * Scripts in the `.ci` folder are inspired by [Ben Limmer's work](http://benlimmer.com/2013/12/26/automatically-publish-javadoc-to-gh-pages-with-travis-ci/).
