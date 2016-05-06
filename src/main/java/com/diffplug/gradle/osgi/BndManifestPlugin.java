@@ -138,9 +138,11 @@ public class BndManifestPlugin extends ProjectPlugin {
 				// set the version
 				if (builder.getBundleVersion() == null) {
 					try {
-						builder.setBundleVersion(project.getVersion().toString());
+						String version = project.getVersion().toString()
+								.replace("-SNAPSHOT", ".SNAPSHOT");
+						builder.setBundleVersion(version);
 					} catch (Exception e) {
-						project.getLogger().warn(e.getMessage());
+						project.getLogger().warn(e.getMessage() + "  Must be 'major.minor.micro.qualifier'");
 						builder.setBundleVersion("0.0.0.ERRORSETVERSION");
 					}
 				}
