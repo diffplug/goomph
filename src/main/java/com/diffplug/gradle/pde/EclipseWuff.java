@@ -27,7 +27,7 @@ import com.diffplug.common.base.Comparison;
 import com.diffplug.common.swt.os.OS;
 
 /** Represents an Eclipse which was downloaded by WUFF.  Assumes that the VER_ECLIPSE property is set. */
-public class EclipseWuff {
+class EclipseWuff {
 	/** Returns the directory in which wuff caches its things. */
 	private static File getWuffDir() {
 		return new File(System.getProperty("user.home") + "/.wuff");

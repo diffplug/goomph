@@ -34,7 +34,17 @@ import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 
 public class FileMisc {
-	/** Copies from src to dst, while replacing them. */
+	/**
+	 * Copies from src to dst and performs a simple
+	 * copy-replace templating operation along the way.
+	 * 
+	 * ```java
+	 * copyFile(src, dst,
+	 *     "%username%", "lskywalker"
+	 *     "%firstname%", "Luke",
+	 *     "%lastname%", "Skywalker");
+	 * ```
+	 */
 	public static void copyFile(File srcFile, File dstFile, String... toReplace) throws IOException {
 		// make a map of the keys that we're replacing
 		Preconditions.checkArgument(toReplace.length % 2 == 0);
@@ -52,7 +62,7 @@ public class FileMisc {
 		Files.write(content.getBytes(StandardCharsets.UTF_8), dstFile);
 	}
 
-	/** Deletes the given file if it exists, and then creates a fresh directory in its place. */
+	/** Deletes the given file or directory if it exists, then creates a fresh directory in its place. */
 	public static void cleanDir(File dirToRemove) throws IOException {
 		if (dirToRemove.isFile()) {
 			dirToRemove.delete();
@@ -74,7 +84,24 @@ public class FileMisc {
 		dirToRemove.mkdirs();
 	}
 
-	/** Flattens a single directory (moves its children to be its peers, then deletes the given directory. */
+	/**
+	 * Flattens a single directory (moves its children to be its peers, then deletes the given directory.
+	 * 
+	 * ```
+	 * before:
+	 *     root/
+	 *        toFlatten/
+	 *           child1
+	 *           child2
+	 * 
+	 * flatten("root/toFlatten")
+	 * 
+	 * after:
+	 *     root/
+	 *        child1
+	 *        child2
+	 * ```
+	 */
 	public static void flatten(File dirToRemove) throws IOException {
 		final File parent = dirToRemove.getParentFile();
 		// move each child directory to the parent

@@ -46,6 +46,63 @@ import com.diffplug.gradle.CmdLine;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.ZipUtil;
 
+/**
+ * Runs PDE build to make an RCP application or a P2 repository.
+ * 
+ * WARNING: This part of Goomph currently has the following precondition:
+ * your project must have the property VER_ECLIPSE=4.5.2 (or some other version),
+ * and you must have installed that Eclipse using Wuff. We will remove this
+ * restriction in the future.
+ * 
+ * ```groovy
+ * import com.diffplug.gradle.*
+ * import com.diffplug.gradle.pde.*
+ * import com.diffplug.common.swt.os.*
+
+ * task diffplugP2(type: PdeProductBuildTask) {
+ *     // the directory which will contain the results of the build
+ *     buildDir(P2_BUILD_DIR)
+ *     // copy the product file and its referenced images
+ *     copyProductAndImgs('../com.diffplug.core', 'plugins/com.diffplug.core')
+ *     // set the plugins to be the delta pack (implicit)
+ *     // and the combined targetplatform / obfuscation result
+ *     setPluginPath(PDE_PREP_DIR)
+ *     // if multiple versions of a plugin are detected between the pluginPath / targetplatform,
+ *     // you must list the plugin name, and all versions which are available.  only the first
+ *     // plugin will be included in the final product build
+ *     resolveWithFirst('org.apache.commons.codec', '1.9.0', '1.6.0.v201305230611')
+ *     resolveWithFirst('org.apache.commons.logging', '1.2.0', '1.1.1.v201101211721')
+ *     // set the build properties to be as shown
+ *     addBuildProperty('topLevelElementType', 'product')
+ *     addBuildProperty('topLevelElementId',   APP_ID)
+ *     addBuildProperty('product', '/com.diffplug.core/' + APP_ID)
+ *     addBuildProperty('runPackager', 'false')
+ *     addBuildProperty('groupConfigurations',     'true')
+ *     addBuildProperty('filteredDependencyCheck', 'true')
+ *     addBuildProperty('resolution.devMode',      'true')
+ *     // configure some P2 pieces
+ *     addBuildProperty('p2.build.repo',   'file:' + project.file(P2_REPO_DIR).absolutePath)
+ *     addBuildProperty('p2.gathering',    'true')
+ *     addBuildProperty('skipDirector',    'true')
+
+ *     // configure gradle's staleness detector
+ *     inputs.dir(PDE_PREP_DIR)
+ *     outputs.dir(P2_REPO_DIR)
+
+ *     doLast {
+ *         // artifact compression reduces content.xml from ~1MB to ~100kB
+ *         def compressXml = { name ->
+ *             def xml = project.file(P2_REPO_DIR + "/${name}.xml")
+ *             def jar = project.file(P2_REPO_DIR + "/${name}.jar")
+ *             ZipUtil.zip(xml, "${name}.xml", jar)
+ *             xml.delete()
+ *         }
+ *         compressXml('artifacts')
+ *         compressXml('content')
+ *     }
+ * }
+ * ```
+ */
 public class PdeProductBuildTask extends DefaultTask {
 	private Object buildDir;
 

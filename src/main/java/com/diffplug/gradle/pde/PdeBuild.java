@@ -24,7 +24,7 @@ import org.gradle.api.Project;
 import com.diffplug.common.base.MoreCollectors;
 
 /** Generates a command line which will execute PDE build. */
-public class PdeBuild {
+class PdeBuild {
 	private EclipseWuff eclipse;
 
 	public PdeBuild(Project project) {

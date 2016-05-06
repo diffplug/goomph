@@ -22,19 +22,20 @@ import java.util.List;
 import com.diffplug.common.base.Unhandled;
 import com.diffplug.common.swt.os.SwtPlatform;
 
+/** Determines the version used by {@link NativeDepsPlugin}. */
 public class NativeDepsExtension {
 	public String version = LUNA_SR2;
 
 	static final String NAME = "goomphSwtNativeDeps";
 
-	public static final String LUNA_SR2 = "4.4.2";
-	public static final String MARS_SR2 = "4.5.2";
+	static final String LUNA_SR2 = "4.4.2";
+	static final String MARS_SR2 = "4.5.2";
 
-	public static final String SWT = "org.eclipse.swt";
-	public static final String SWT_PLATFORM = "org.eclipse.swt.${platform}";
-	public static final String JFACE = "org.eclipse.jface";
-	public static final String CORE_COMMANDS = "org.eclipse.core.commands";
-	public static final String EQUINOX_COMMON = "org.eclipse.equinox.common";
+	static final String SWT = "org.eclipse.swt";
+	static final String SWT_PLATFORM = "org.eclipse.swt.${platform}";
+	static final String JFACE = "org.eclipse.jface";
+	static final String CORE_COMMANDS = "org.eclipse.core.commands";
+	static final String EQUINOX_COMMON = "org.eclipse.equinox.common";
 
 	static final List<String> DEPS = Collections.unmodifiableList(Arrays.asList(
 			SWT, SWT_PLATFORM, JFACE, CORE_COMMANDS, EQUINOX_COMMON));
@@ -45,8 +46,7 @@ public class NativeDepsExtension {
 		switch (version) {
 		case LUNA_SR2:		return UPDATE_ROOT + "4.4/R-4.4.2-201502041700/";
 		case MARS_SR2:		return UPDATE_ROOT + "4.5/R-4.5.2-201602121500/";
-		default:
-			throw Unhandled.stringException(version);
+		default:	throw Unhandled.stringException(version);
 		}
 	}
 

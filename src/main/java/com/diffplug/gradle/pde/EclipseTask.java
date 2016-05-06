@@ -27,7 +27,7 @@ import com.google.common.collect.ListMultimap;
 import com.diffplug.gradle.CmdLine;
 
 /** A Gradle task which runs an Eclipsec command at the console. */
-public class EclipseTask extends DefaultTask {
+class EclipseTask extends DefaultTask {
 	private ListMultimap<String, String> args = ArrayListMultimap.create();
 
 	/** Adds a console argument. */

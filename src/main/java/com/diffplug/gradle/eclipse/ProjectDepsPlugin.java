@@ -29,15 +29,19 @@ import groovy.util.Node;
 import com.diffplug.gradle.ProjectPlugin;
 
 /**
- * Fixes a problem where dependencies on other
- * projects within the workspace weren't always
- * resolved correctly within Eclipse.
+ * Fixes an intermittent problem when generating eclipse
+ * project files where dependencies on other projects within
+ * the workspace aren't always resolved correctly within Eclipse.
+ * 
+ * ```groovy
+ * apply plugin: 'com.diffplug.gradle.eclipse.projectdeps'
+ * ```
  */
 public class ProjectDepsPlugin extends ProjectPlugin {
 	@SuppressWarnings("unchecked")
 	@Override
-	public void applyOnce(Project project) {
-		EclipsePluginUtil.modifyEclipseProject(project, eclipseModel -> {
+	protected void applyOnce(Project project) {
+		EclipseProjectPlugin.modifyEclipseProject(project, eclipseModel -> {
 			// find the project's referenced projects and reference them explicitly in the eclipse model
 			Task prepareEclipse = project.task("prepareEclipse");
 			prepareEclipse.doLast(task -> {

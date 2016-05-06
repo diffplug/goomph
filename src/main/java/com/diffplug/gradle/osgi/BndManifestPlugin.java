@@ -37,13 +37,34 @@ import com.diffplug.common.base.Throwing;
 import com.diffplug.gradle.ProjectPlugin;
 
 /**
- * Uses Bnd to create a manifest.  jar.manifest.attributes is passed
- * to bnd directly as properties.  All classes and resources
- * will be included in the final jar.
- * <p>
+ * Generates a manifest using purely bnd, and outputs it for IDE consumption.
+ * 
+ * Generating manifests by hand is a recipe for mistakes. Bnd does a fantastic
+ * job generating all this stuff for you, but there's a lot of wiring required
+ * to tie bnd into both Eclipse PDE and Gradle. Which is what Goomph is for!
+ * 
+ * ```groovy
+ * apply plugin: 'com.diffplug.gradle.eclipse.bndmanifest'
+ * // pass headers and bnd directives: http://www.aqute.biz/Bnd/Format
+ * jar.manifest.attributes(
+ *     '-exportcontents': 'com.diffplug.*',
+ *     '-removeheaders': 'Bnd-LastModified,Bundle-Name,Created-By,Tool,Private-Package',
+ *     'Import-Package': '!javax.annotation.*,*',
+ *     'Bundle-SymbolicName': "${project.name};singleton:=true",
+ * )
+ * ```
+ * 
+ * Besides passing raw headers and bnd directives, this plugin also takes the following actions:
+ * 
+ * * Passes the project version to bnd if {@code Bundle-Version} isn't set.
+ * * Passes the {@code runtime} configuration's classpath to bnd for manifest calculation.
+ * * Instructs bnd to respect the result of the {@code processResources} task.
+ * * Writes out the resultant manifest to {@code META-INF/MANIFEST.MF}, so that your IDE stays up-to-date.
+ * 
  * Many thanks to JRuyi and Agemo Cui for their excellent
- * <a href="https://github.com/jruyi/osgibnd-gradle-plugin">osgibnd-gradle-plugin</a>.
- * This plugin follows the template set by their plugin quite deliberately.
+ * [osgibnd-gradle-plugin](https://github.com/jruyi/osgibnd-gradle-plugin).
+ * This plugin follows the template set by their plugin, but with fewer automagic
+ * features and tighter integrations with IDEs and gradle's resources pipeline.
  */
 public class BndManifestPlugin extends ProjectPlugin {
 	private static final String PATH_MANIFEST = "META-INF/MANIFEST.MF";

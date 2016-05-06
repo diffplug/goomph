@@ -23,6 +23,10 @@ import java.util.stream.Collectors;
 
 import org.gradle.api.Project;
 
+/**
+ * Detects the JDK folder from the gradle project,
+ * and wraps it in an API.
+ */
 public class JDK {
 	private final File rootFile;
 	private final Path rootPath;

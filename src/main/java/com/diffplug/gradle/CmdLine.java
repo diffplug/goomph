@@ -31,6 +31,9 @@ import com.google.common.collect.Lists;
 import com.diffplug.common.base.Throwing;
 import com.diffplug.common.swt.os.OS;
 
+/**
+ * Implementation of {@link CmdLineTask}, but helpful for implementing other things as well.
+ */
 public class CmdLine {
 	private List<Throwing.Runnable> actions = Lists.newArrayList();
 

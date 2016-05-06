@@ -42,7 +42,7 @@ import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.ZipUtil;
 
 /** Catalogs all of the plugins and their versions in the given paths. */
-public class PluginCatalog {
+class PluginCatalog {
 	/** A map from plugin name to a set of available versions. */
 	private SetMultimap<String, Version> map = HashMultimap.create();
 	/** A set containing plugins which are specific to platforms which we don't support. */

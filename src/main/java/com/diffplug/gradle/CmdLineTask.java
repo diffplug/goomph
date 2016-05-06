@@ -20,7 +20,23 @@ import org.gradle.api.tasks.TaskAction;
 
 import com.diffplug.common.base.Throwing;
 
-/** A task for running command line actions which may have multiple lines. */
+/**
+ * A task for running a series of actions, including
+ * shell commands.
+ * 
+ * ```groovy
+ * task mirrorRepo(type: com.diffplug.gradle.CmdLineTask) {
+ *     // initialize the repository
+ *     cmd("svnadmin create ${name}")
+ *     // setup its script
+ *     copy(SCRIPT, "${name}/hooks/${SCRIPT}")
+ *     // initialize the sync
+ *     cmd("svnsync initialize file:///${project.file(name).absolutePath} ${url}")
+ *     // follow throw on the sync
+ *     cmd("svnsync synchronize file:///${project.file(name).absolutePath} ${url}")
+ * }
+ * ```
+ **/
 public class CmdLineTask extends DefaultTask {
 	private CmdLine cmdLine = new CmdLine();
 

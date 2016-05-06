@@ -23,12 +23,18 @@ import com.diffplug.gradle.ProjectPlugin;
 /**
  * Adds the platform-specific SWT jars which are appropriate for the
  * native system to the compile classpath.
- * <p>
- * Currently supports only 4.4.2 and 4.5.2.
+ * 
+ * ```groovy
+ * apply plugin: 'com.diffplug.gradle.swt'
+ * // (configuration block below is optional)
+ * goomphSwtNativeDeps {
+ *     version = '4.5.2' // currently supported: 4.4.2, 4.5.2, defaults to the latest available
+ * }
+ * ```
  */
 public class NativeDepsPlugin extends ProjectPlugin {
 	@Override
-	public void applyOnce(Project project) {
+	protected void applyOnce(Project project) {
 		ProjectPlugin.getPlugin(project, JavaPlugin.class);
 
 		// create the NativeDepsExtension

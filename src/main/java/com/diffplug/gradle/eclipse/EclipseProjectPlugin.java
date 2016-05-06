@@ -23,7 +23,8 @@ import org.gradle.plugins.ide.eclipse.model.EclipseModel;
 
 import com.diffplug.gradle.ProjectPlugin;
 
-public class EclipsePluginUtil {
+/** Utility for gradle plugins which modify the eclipse model. */
+class EclipseProjectPlugin {
 	/** Applies the EclipsePlugin and provides the eclipse model for modification. */
 	public static void modifyEclipseProject(Project project, Consumer<EclipseModel> modifier) {
 		// make sure the eclipse plugin has been applied

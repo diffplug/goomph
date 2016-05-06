@@ -25,6 +25,24 @@ import com.google.common.collect.Maps;
 
 import com.diffplug.gradle.CmdLine;
 
+/**
+ * Runs PDE build on an ant file.
+ * 
+ * WARNING: This part of Goomph currently has the following precondition:
+ * your project must have the property VER_ECLIPSE=4.5.2 (or some other version),
+ * and you must have installed that Eclipse using Wuff. We will remove this
+ * restriction in the future.
+ * 
+ * ```groovy
+ * task featureBuild(type: PdeAntBuildTask) {
+ *     antFile(FEATURE + '.xml')
+ *     addFileProperty('featuredir', FEATURE)
+ *     inputs.dir(FEATURE)
+ *     addFileProperty('repodir', buildDir)
+ *     outputs.dir(buildDir)
+ * }
+ * ```
+ */
 public class PdeAntBuildTask extends DefaultTask {
 	private Object antFile;
 

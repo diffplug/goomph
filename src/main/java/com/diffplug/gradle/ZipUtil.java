@@ -32,8 +32,15 @@ import java.util.zip.ZipOutputStream;
 
 import com.diffplug.common.base.Throwing;
 
+/** Utilities for mucking with zip files. */
 public class ZipUtil {
-	/** Reads the given entry from the zip. */
+	/**
+	 * Reads the given entry from the zip.
+	 * 
+	 * @param input		a zip file
+	 * @param toRead	a path within that zip file
+	 * @param reader	will be called with an InputStream containing the contents of that entry in the zip file
+	 */
 	public static void read(File input, String toRead, Throwing.Specific.Consumer<InputStream, IOException> reader) throws IOException {
 		try (
 				ZipFile file = new ZipFile(input);
@@ -42,7 +49,15 @@ public class ZipUtil {
 		}
 	}
 
-	/** Modifies the given entries in the zip. */
+	/**
+	 * Modifies only the specified entries in a zip file. 
+	 *
+	 * @param input 		an input stream from a zip file
+	 * @param output		an output stream to a zip file
+	 * @param toModify		a map from path to an input stream for the entries you'd like to change
+	 * @param toOmit		a set of entries you'd like to leave out of the zip
+	 * @throws IOException
+	 */
 	public static void modify(InputStream input, OutputStream output, Map<String, InputStream> toModify, Set<String> toOmit) throws IOException {
 		ZipInputStream zipInput = new ZipInputStream(input);
 		ZipOutputStream zipOutput = new ZipOutputStream(output);
@@ -84,7 +99,13 @@ public class ZipUtil {
 		zipOutput.close();
 	}
 
-	/** Zips input into output, with the given name within the archive. */
+	/**
+	 * Creates a single-entry zip file.
+	 * 
+	 * @param input					an uncompressed file
+	 * @param pathWithinArchive		the path within the archive
+	 * @param output				the new zip file it will be compressed into
+	 */
 	public static void zip(File input, String pathWithinArchive, File output) throws IOException {
 		try (ZipOutputStream zipStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(output)))) {
 			zipStream.setMethod(ZipOutputStream.DEFLATED);

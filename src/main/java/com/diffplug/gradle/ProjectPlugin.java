@@ -22,7 +22,7 @@ import com.google.common.collect.ImmutableList;
 
 import com.diffplug.common.base.TreeDef;
 
-/** Base implementation of Plugin which prevents double-application. */
+/** Base implementation of a Plugin which prevents double-application. */
 public abstract class ProjectPlugin implements Plugin<Project> {
 	@Override
 	public final void apply(Project project) {

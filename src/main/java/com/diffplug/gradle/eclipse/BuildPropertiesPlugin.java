@@ -40,20 +40,29 @@ import com.diffplug.common.base.Suppliers;
 import com.diffplug.gradle.ProjectPlugin;
 
 /**
- * Reads the build.properties file, sets the eclipse project
- * includes so that all of build.properties gets included in
- * the IDE, and also configures the project's resources to
- * include these as resources.
+ * Uses [`build.properties`](http://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Fguide%2Ftools%2Feditors%2Fmanifest_editor%2Fbuild.htm)
+ * to control a gradle build, and fixes the eclipse project classpath to include binary assets specified in `build.properties`.
+ * 
+ * Eclipse PDE uses a `build.properties` file to control the build process.  Even if you aren't using PDE for
+ * your build, the IDE will throw warnings if you don't keep the `build.properties` up to date.
+ * 
+ * This plugin reads the `build.properties` file, and uses that to setup the Gradle `processResources` task.
+ * It also ensures that these resources are available on the IDE's classpath.  This way your `build.properties`
+ * can be the single source of truth for all the binary assets inside your plugin.
+ * 
+ * ```groovy
+ * apply plugin: 'com.diffplug.gradle.eclipse.buildproperties'
+ * ```
  */
 public class BuildPropertiesPlugin extends ProjectPlugin {
 	private Project project;
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void applyOnce(Project project) {
+	protected void applyOnce(Project project) {
 		this.project = project;
 
-		EclipsePluginUtil.modifyEclipseProject(project, eclipseModel -> {
+		EclipseProjectPlugin.modifyEclipseProject(project, eclipseModel -> {
 			// add <classpathentry including="META-INF/|OSGI-INF/" kind="src" path=""/>
 			eclipseModel.getClasspath().getFile().getXmlTransformer().addAction(xmlProvider -> {
 				Node entry = xmlProvider.asNode().appendNode("classpathentry");

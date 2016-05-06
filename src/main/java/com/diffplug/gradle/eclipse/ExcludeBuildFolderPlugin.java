@@ -22,18 +22,22 @@ import groovy.util.Node;
 import com.diffplug.gradle.ProjectPlugin;
 
 /**
- * This plugin excludes the gradle build folder from Eclipse
- * projects.
- * <p>
- * If you hit {@code Ctrl + R} in eclipse, you'll get a fuzzy
+ * Creates eclipse project files which excludes the gradle build
+ * folder from Eclipse's resource indexing.
+ * 
+ * If you hit `Ctrl + R` in eclipse, you'll get a fuzzy
  * search for resources in your workspace.  This will include
- * artifacts in the Gradle build folders, which is usually
- * not desirable.    
+ * class files and other artifacts in the gradle build folder,
+ * which is usually not desirable.  To fix:
+ * 
+ * ```groovy
+ * apply plugin: 'com.diffplug.gradle.eclipse.excludebuildfolder'
+ * ```
  */
 public class ExcludeBuildFolderPlugin extends ProjectPlugin {
 	@Override
-	public void applyOnce(Project project) {
-		EclipsePluginUtil.modifyEclipseProject(project, eclipseModel -> {
+	protected void applyOnce(Project project) {
+		EclipseProjectPlugin.modifyEclipseProject(project, eclipseModel -> {
 			// create a filterResources node
 			eclipseModel.getProject().getFile().getXmlTransformer().addAction(xmlProvider -> {
 				Node filterNode = xmlProvider.asNode().appendNode("filteredResources").appendNode("filter");
