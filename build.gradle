@@ -272,51 +272,55 @@ if (!isSnapshot) {
 	}
 	publish.dependsOn(bintrayUpload)
 	bintrayUpload.dependsOn(['generatePomFileForMavenJavaPublication', jar, sourcesJar, javadocJar])
+}
 
-	//////////////////////////
-	// GRADLE PLUGIN PORTAL //
-	//////////////////////////
-	apply plugin: "com.gradle.plugin-publish"
-	pluginBundle {
-		// These settings are set for the whole plugin bundle
-		website = "https://github.com/${project.org}/${project.name}"
-		vcsUrl = "https://github.com/${project.org}/${project.name}"
-		displayName = project.description
+//////////////////////////
+// GRADLE PLUGIN PORTAL //
+//////////////////////////
+apply plugin: "com.gradle.plugin-publish"
+pluginBundle {
+	// These settings are set for the whole plugin bundle
+	website = "https://github.com/${project.org}/${project.name}"
+	vcsUrl = "https://github.com/${project.org}/${project.name}"
 
-		plugins {
-			eclipseBuildPropertiesPlugin {
-				id = 'com.diffplug.gradle.eclipse.buildproperties'
-				description = "Uses Eclipse's build.properties to control a gradle build, and fixes the eclipse project classpath to include binary assets specified in build.properties."
-				tags = ['eclipse']
-			}
-			eclipseExcludeBuildFolderPlugin {
-				id = 'com.diffplug.gradle.eclipse.excludebuildfolder'
-				description = "Excludes the gradle build folder from Eclipse's resource indexing."
-				tags = ['eclipse']
-			}
-			eclipseProjectDepsPlugin {
-				id = 'com.diffplug.gradle.eclipse.projectdeps'
-				description = "Fixes an intermittent problem where dependencies on other projects within the workspace aren't always resolved correctly within Eclipse."
-				tags = ['eclipse']
-			}
-			osgiBndManifestPlugin {
-				id = 'com.diffplug.gradle.osgi.bndmanifest'
-				description = "Generates a manifest using purely bnd, and outputs it for IDE consumption."
-				tags = ['osgi', 'bnd', 'eclipse']
-			}
-			swtNativeDepsPlugin {
-				id = 'com.diffplug.gradle.swt.nativedeps'
-				description = "Adds the platform-specific SWT jars to the runtime classpath so that SWT code can run."
-				tags = ['eclipse', 'swt']
-			}
+	plugins {
+		eclipseBuildPropertiesPlugin {
+			id = 'com.diffplug.gradle.eclipse.buildproperties'
+			description = "Uses Eclipse's build.properties to control a gradle build, and fixes the eclipse project classpath to include binary assets specified in build.properties."
+			tags = ['eclipse']
 		}
-
-		mavenCoordinates {
-			groupId = project.group
-			artifactId = project.name
-			version = project.version
+		eclipseExcludeBuildFolderPlugin {
+			id = 'com.diffplug.gradle.eclipse.excludebuildfolder'
+			description = "Excludes the gradle build folder from Eclipse's resource indexing."
+			tags = ['eclipse']
+		}
+		eclipseProjectDepsPlugin {
+			id = 'com.diffplug.gradle.eclipse.projectdeps'
+			description = "Fixes an intermittent problem where dependencies on other projects within the workspace aren't always resolved correctly within Eclipse."
+			tags = ['eclipse']
+		}
+		osgiBndManifestPlugin {
+			id = 'com.diffplug.gradle.osgi.bndmanifest'
+			description = "Generates a manifest using purely bnd, and outputs it for IDE consumption."
+			tags = ['osgi', 'bnd', 'eclipse']
+		}
+		swtNativeDepsPlugin {
+			id = 'com.diffplug.gradle.swt.nativedeps'
+			description = "Adds the platform-specific SWT jars to the runtime classpath so that SWT code can run."
+			tags = ['eclipse', 'swt']
 		}
 	}
+
+	mavenCoordinates {
+		groupId = project.group
+		artifactId = project.name
+		version = project.version
+	}
+}
+// the gradle plugin portal isn't really compatible with SNAPSHOT versions
+// https://discuss.gradle.org/t/uploading-snapshot-versions-to-the-plugin-portal/11347
+if (isSnapshot) {
+	publishPlugins.enabled = false
 }
 
 // helps external scripts detect version
