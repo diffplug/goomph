@@ -33,7 +33,7 @@ public class NativeDepsExtension {
 	////////////////////
 	// IMPLEMENTATION //
 	////////////////////
-	static final String NAME = "goomphSwtNativeDeps";
+	static final String NAME = "swtNativeDeps";
 
 	static final String LUNA_SR2 = "4.4.2";
 	static final String MARS_SR2 = "4.5.2";

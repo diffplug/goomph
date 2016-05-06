@@ -33,7 +33,7 @@ public class BndManifestPluginTest extends GradleIntegrationTest {
 
 	@Test
 	public void assertManifestCustomLocation() throws IOException {
-		testCase("goomphBndManifest { copyTo 'customlocation' }");
+		testCase("osgiBndManifest { copyTo 'customlocation' }");
 		assertManifestContent(read("customlocation"));
 	}
 

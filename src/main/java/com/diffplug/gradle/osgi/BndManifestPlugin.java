@@ -57,7 +57,7 @@ import com.diffplug.gradle.ProjectPlugin;
  * // at the proper 'META-INF/MANIFEST.MF' location.  But if you'd like to easily
  * // see the manifest for debugging or to help an IDE, you can ask gradle to copy the
  * // the manifest into your source tree.
- * bndManifest {
+ * osgiBndManifest {
  *     copyTo 'src/main/resources/META-INF/MANIFEST.MF'
  * }
  * ```

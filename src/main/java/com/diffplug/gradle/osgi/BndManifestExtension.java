@@ -23,5 +23,5 @@ public class BndManifestExtension {
 		this.copyTo = copyTo;
 	}
 
-	static final String NAME = "goomphBndManifest";
+	static final String NAME = "osgiBndManifest";
 }

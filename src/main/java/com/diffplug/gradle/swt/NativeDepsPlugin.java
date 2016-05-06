@@ -27,7 +27,7 @@ import com.diffplug.gradle.ProjectPlugin;
  * ```groovy
  * apply plugin: 'com.diffplug.gradle.swt'
  * // (configuration block below is optional)
- * goomphSwtNativeDeps {
+ * swtNativeDeps {
  *     version = '4.5.2' // currently supported: 4.4.2, 4.5.2, defaults to the latest available
  * }
  * ```
