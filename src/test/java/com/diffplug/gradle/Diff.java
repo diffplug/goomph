@@ -36,7 +36,7 @@ public class Diff {
 				case DELETE:
 				case INSERT:
 					printer.println(diff.operation.name());
-					printer.println(diff.text.replace("\r\n", "\n"));
+					printer.println(FileMisc.toUnixNewline(diff.text));
 					break;
 				default:
 					throw Unhandled.enumException(diff.operation);

@@ -33,7 +33,13 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 
+/** Miscellaneous utilties for copying files around. */
 public class FileMisc {
+	/** Enforces unix newlines on the given string. */
+	public static String toUnixNewline(String input) {
+		return input.replace("\r\n", "\n");
+	}
+
 	/**
 	 * Copies from src to dst and performs a simple
 	 * copy-replace templating operation along the way.
