@@ -29,7 +29,7 @@ public class NativeDepsPluginTest extends GradleIntegrationTest {
 
 	@Test
 	public void assertExtensionWorks() throws IOException {
-		testCase("goomphSwtNativeDeps { version = '4.4.2' }");
+		testCase("goomphSwtNativeDeps { version '4.4.2' }");
 	}
 
 	private void testCase(String buildscriptAppend) throws IOException {

@@ -26,6 +26,13 @@ import com.diffplug.common.swt.os.SwtPlatform;
 public class NativeDepsExtension {
 	public String version = LUNA_SR2;
 
+	public void version(String version) {
+		this.version = version;
+	}
+
+	////////////////////
+	// IMPLEMENTATION //
+	////////////////////
 	static final String NAME = "goomphSwtNativeDeps";
 
 	static final String LUNA_SR2 = "4.4.2";
@@ -50,7 +57,7 @@ public class NativeDepsExtension {
 		}
 	}
 
-	String version(String type) {
+	String versionForType(String type) {
 		switch (version) {
 		case LUNA_SR2:
 			switch (type) {
@@ -78,9 +85,9 @@ public class NativeDepsExtension {
 
 	String fullDep(String dep) {
 		if (dep.equals(SWT_PLATFORM)) {
-			return "p2:org.eclipse.swt." + SwtPlatform.getRunning() + ":" + version(dep);
+			return "p2:org.eclipse.swt." + SwtPlatform.getRunning() + ":" + versionForType(dep);
 		} else {
-			return "p2:" + dep + ":" + version(dep);
+			return "p2:" + dep + ":" + versionForType(dep);
 		}
 	}
 }
