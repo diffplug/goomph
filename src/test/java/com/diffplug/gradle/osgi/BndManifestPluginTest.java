@@ -15,6 +15,7 @@
  */
 package com.diffplug.gradle.osgi;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.junit.Assert;
@@ -22,10 +23,21 @@ import org.junit.Test;
 
 import com.diffplug.common.base.StringPrinter;
 import com.diffplug.gradle.GradleIntegrationTest;
+import com.diffplug.gradle.ZipUtil;
 
 public class BndManifestPluginTest extends GradleIntegrationTest {
 	@Test
-	public void assertManifestMF() throws IOException {
+	public void assertManifestContentDefaultLocation() throws IOException {
+		testCase("");
+	}
+
+	@Test
+	public void assertManifestCustomLocation() throws IOException {
+		testCase("goomphBndManifest { copyTo 'customlocation' }");
+		assertManifestContent(read("customlocation"));
+	}
+
+	private void testCase(String buildscriptAddendum) throws IOException {
 		write("build.gradle",
 				"plugins {",
 				"    id 'java'",
@@ -37,7 +49,8 @@ public class BndManifestPluginTest extends GradleIntegrationTest {
 				"  '-exportcontents': 'test.*',",
 				"  '-removeheaders': 'Bnd-LastModified,Bundle-Name,Created-By,Tool,Private-Package',",
 				"  'Bundle-SymbolicName': 'test'",
-				")");
+				")",
+				buildscriptAddendum);
 		write("src/main/java/test/Api.java",
 				"package test;",
 				"",
@@ -49,7 +62,15 @@ public class BndManifestPluginTest extends GradleIntegrationTest {
 				"	}",
 				"}");
 		gradleRunner().withArguments("jar", "--stacktrace").build();
-		String manifest = read("META-INF/MANIFEST.MF");
+
+		// make sure the jar contains the proper manifest
+		File libsDir = file("build/libs");
+		File jar = libsDir.listFiles()[0];
+		String manifestContent = ZipUtil.read(jar, "META-INF/MANIFEST.MF");
+		assertManifestContent(manifestContent);
+	}
+
+	private void assertManifestContent(String manifestContent) {
 		Assert.assertEquals(StringPrinter.buildStringFromLines(
 				"Manifest-Version: 1.0",
 				"Bundle-ManifestVersion: 2",
@@ -57,6 +78,6 @@ public class BndManifestPluginTest extends GradleIntegrationTest {
 				"Bundle-Version: 0.0.0.ERRORSETVERSION",
 				"Export-Package: test;uses:=\"com.diffplug.common.base\";version=\"0.0.0\"",
 				"Import-Package: com.diffplug.common.base;version=\"[3.4,4)\"",
-				"Require-Capability: osgi.ee;filter:=\"(&(osgi.ee=JavaSE)(version=1.8))\""), manifest);
+				"Require-Capability: osgi.ee;filter:=\"(&(osgi.ee=JavaSE)(version=1.8))\""), manifestContent);
 	}
 }

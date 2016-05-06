@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.gradle.api.Project;
@@ -45,21 +46,27 @@ import com.diffplug.gradle.ProjectPlugin;
  * 
  * ```groovy
  * apply plugin: 'com.diffplug.gradle.eclipse.bndmanifest'
- * // pass headers and bnd directives: http://www.aqute.biz/Bnd/Format
+ * // Pass headers and bnd directives: http://www.aqute.biz/Bnd/Format
  * jar.manifest.attributes(
  *     '-exportcontents': 'com.diffplug.*',
  *     '-removeheaders': 'Bnd-LastModified,Bundle-Name,Created-By,Tool,Private-Package',
  *     'Import-Package': '!javax.annotation.*,*',
  *     'Bundle-SymbolicName': "${project.name};singleton:=true",
  * )
+ * // The block below is optional.  The manifest will always be included in the built jar
+ * // at the proper 'META-INF/MANIFEST.MF' location.  But if you'd like to easily
+ * // see the manifest for debugging or to help an IDE, you can ask gradle to copy the
+ * // the manifest into your source tree.
+ * bndManifest {
+ *     copyTo 'src/main/resources/META-INF/MANIFEST.MF'
+ * }
  * ```
  * 
  * Besides passing raw headers and bnd directives, this plugin also takes the following actions:
  * 
- * * Passes the project version to bnd if {@code Bundle-Version} isn't set.
+ * * Passes the project version to bnd if {@code Bundle-Version} hasn't been set explicitly.
  * * Passes the {@code runtime} configuration's classpath to bnd for manifest calculation.
  * * Instructs bnd to respect the result of the {@code processResources} task.
- * * Writes out the resultant manifest to {@code META-INF/MANIFEST.MF}, so that your IDE stays up-to-date.
  * 
  * Many thanks to JRuyi and Agemo Cui for their excellent
  * [osgibnd-gradle-plugin](https://github.com/jruyi/osgibnd-gradle-plugin).
@@ -67,25 +74,42 @@ import com.diffplug.gradle.ProjectPlugin;
  * features and tighter integrations with IDEs and gradle's resources pipeline.
  */
 public class BndManifestPlugin extends ProjectPlugin {
-	private static final String PATH_MANIFEST = "META-INF/MANIFEST.MF";
-
 	@Override
 	protected void applyOnce(Project proj) {
-		File manifestFile = proj.file(PATH_MANIFEST);
+		BndManifestExtension extension = proj.getExtensions().create(BndManifestExtension.NAME, BndManifestExtension.class);
 		proj.afterEvaluate(project -> {
+			// find the file that the user would like us to copy to (if any)
+			Optional<File> copyTo = Optional.ofNullable(extension.copyTo).map(proj::file);
+
 			ProjectPlugin.getPlugin(project, JavaPlugin.class);
 			Jar jarTask = (Jar) project.getTasks().getByName(JavaPlugin.JAR_TASK_NAME);
 			jarTask.deleteAllActions();
 			jarTask.getInputs().properties(jarTask.getManifest().getEffectiveManifest().getAttributes());
 			jarTask.getOutputs().file(jarTask.getArchivePath());
+			copyTo.ifPresent(jarTask.getOutputs()::file);
 			jarTask.doLast(unused -> {
 				takeBndAction(project, jar -> {
 					createParents(jarTask.getArchivePath());
 					jar.write(jarTask.getArchivePath());
-					writeFile(manifestFile, jar::writeManifest);
+					if (copyTo.isPresent()) {
+						writeFile(copyTo.get(), jar::writeManifest);
+					}
 				});
 			});
 		});
+	}
+
+	/** Writes to the given file. */
+	private static void writeFile(File file, Throwing.Consumer<OutputStream> writer) throws Throwable {
+		createParents(file);
+		try (OutputStream output = new BufferedOutputStream(new FileOutputStream(file))) {
+			writer.accept(output);
+		}
+	}
+
+	/** Creates all parent files for the given file. */
+	private static void createParents(File file) {
+		file.getParentFile().mkdirs();
 	}
 
 	/** Takes an action on a Bnd jar. */
@@ -125,18 +149,5 @@ public class BndManifestPlugin extends ProjectPlugin {
 				onBuilder.accept(builder.build());
 			}
 		});
-	}
-
-	/** Writes to the given file. */
-	private static void writeFile(File file, Throwing.Consumer<OutputStream> writer) throws Throwable {
-		createParents(file);
-		try (OutputStream output = new BufferedOutputStream(new FileOutputStream(file))) {
-			writer.accept(output);
-		}
-	}
-
-	/** Creates all parent files for the given file. */
-	private static void createParents(File file) {
-		file.getParentFile().mkdirs();
 	}
 }
