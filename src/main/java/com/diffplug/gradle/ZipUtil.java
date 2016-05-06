@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipEntry;
@@ -30,6 +31,8 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import com.diffplug.common.base.Errors;
+import com.diffplug.common.base.StringPrinter;
 import com.diffplug.common.base.Throwing;
 
 /** Utilities for mucking with zip files. */
@@ -47,6 +50,22 @@ public class ZipUtil {
 				InputStream stream = file.getInputStream(file.getEntry(toRead));) {
 			reader.accept(stream);
 		}
+	}
+
+	/**
+	 * Reads the given entry from the zip.
+	 * 
+	 * @param input		a zip file
+	 * @param toRead	a path within that zip file
+	 * @return the given path within the zip file decoded as a UTF8 string, with only unix newlines.
+	 */
+	public static String read(File input, String toRead) throws IOException {
+		String raw = StringPrinter.buildString(Errors.rethrow().wrap(printer -> {
+			read(input, toRead, inputStream -> {
+				copy(inputStream, printer.toOutputStream(StandardCharsets.UTF_8));
+			});
+		}));
+		return FileMisc.toUnixNewline(raw);
 	}
 
 	/**
