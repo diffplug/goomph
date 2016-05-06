@@ -1,4 +1,4 @@
-# <img align="left" src="images/goomph_logo.png"> Goomph: Automate Eclipse from Gradle
+# <img align="left" src="images/goomph_logo.png"> Goomph: OSGi, Eclipse, and SWT for Gradle
 
 <!---freshmark shields
 output = [
