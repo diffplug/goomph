@@ -26,8 +26,28 @@ import com.google.common.collect.ListMultimap;
 
 import com.diffplug.gradle.CmdLine;
 
-/** A Gradle task which runs an Eclipsec command at the console. */
-class EclipseTask extends DefaultTask {
+/**
+ * A Gradle task which runs an `eclipsec` command at the console.
+ * 
+ * Probably not very useful in isolation, but it is used by
+ * {@link P2DirectorModel} to run P2 tasks, so we'll keep it around.
+ * 
+ * WARNING: This part of Goomph currently has the following precondition:
+ * your project must have the property VER_ECLIPSE=4.5.2 (or some other version),
+ * and you must have installed that Eclipse using Wuff. We will remove this
+ * restriction in the future.
+ * 
+ * ```groovy
+ * task runP2director(type: EclipseTask) {
+ *     addArg('nosplash', '')
+ *     addArg('application', '')
+ *     addArg('application', 'org.eclipse.equinox.p2.director')
+ * }
+ * ```
+ * 
+ * will run `eclipsec -nosplash -application org.eclipse.equinox.p2.director`.
+ */
+public class EclipsecTask extends DefaultTask {
 	private ListMultimap<String, String> args = ArrayListMultimap.create();
 
 	/** Adds a console argument. */

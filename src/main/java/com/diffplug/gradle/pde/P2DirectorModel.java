@@ -130,7 +130,7 @@ public class P2DirectorModel {
 	/** Creates a task which run P2 Director on the given model. */
 	public Task taskFor(Project project, String taskName, OS os, Object dstDir) throws Exception {
 		// create an EclipseTask
-		EclipseTask task = project.getTasks().create(taskName, EclipseTask.class);
+		EclipsecTask task = project.getTasks().create(taskName, EclipsecTask.class);
 		// set it up to build
 		task.addArg("nosplash", "");
 		task.addArg("application", "org.eclipse.equinox.p2.director");

@@ -48,6 +48,7 @@ Below is an index of Goomph's capabilities, followed by more-detailed sections w
 	+ [`PdeProductBuildTask`](https://diffplug.github.io/goomph/javadoc/1.3.1/com/diffplug/gradle/pde/PdeProductBuildTask.html) runs PDE build to build an RCP product.
 	+ [`PdeAntBuildTask`](https://diffplug.github.io/goomph/javadoc/1.3.1/com/diffplug/gradle/pde/PdeAntBuildTask.html) runs PDE on an ant file
 	+ [`P2DirectorModel`](https://diffplug.github.io/goomph/javadoc/1.3.1/com/diffplug/gradle/pde/P2DirectorModel.html) runs P2 director to execute P2 actions.
+	+ [`EclipsecTask`](https://diffplug.github.io/goomph/javadoc/1.3.1/com/diffplug/gradle/pde/EclipsecTask.html) runs a console command using `eclipsec`.
 * `com.diffplug.gradle` (miscellaneous infrastructure)
 	+ [`CmdLineTask`](https://diffplug.github.io/goomph/javadoc/1.3.1/com/diffplug/gradle/CmdLineTask.html) runs a series of shell commands, possibly copying or moving files in the meantime
 
