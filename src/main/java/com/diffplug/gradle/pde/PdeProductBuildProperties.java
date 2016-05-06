@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.diffplug.gradle.eclipse;
+package com.diffplug.gradle.pde;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,13 +33,15 @@ import com.google.common.io.Resources;
 
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.JDK;
-import com.diffplug.gradle.pde.EclipseWuff;
 
-public class BuildProperties {
+/**
+ * Takes the template.build.properties and provides an API for setting
+ * pieces of it. */
+class PdeProductBuildProperties {
 	/** Returns the content of template.build.properties as a String. */
-	public static String rawFile() {
+	static String rawFile() {
 		try {
-			URL url = BuildProperties.class.getResource("/template.build.properties");
+			URL url = PdeProductBuildProperties.class.getResource("/template.build.properties");
 			return Resources.toString(url, StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -49,7 +51,7 @@ public class BuildProperties {
 	private String content;
 	private final EclipseWuff eclipse;
 
-	public BuildProperties(Project project) {
+	public PdeProductBuildProperties(Project project) {
 		content = rawFile();
 		eclipse = new EclipseWuff(project);
 

@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.diffplug.gradle.eclipse;
+package com.diffplug.gradle.pde;
 
 import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-public class BuildPropertiesTest {
+import com.diffplug.gradle.pde.PdeProductBuildProperties;
+
+public class PdeProductBuildPropertiesTest {
 	/** Tests that we can read the raw template file. */
 	@Test
-	public void testRawFile() throws IOException {
-		Assert.assertEquals(BuildProperties.rawFile(), BuildProperties.rawFile());
+	public void testWeCanRead() throws IOException {
+		Assert.assertEquals(PdeProductBuildProperties.rawFile(), PdeProductBuildProperties.rawFile());
 	}
 }

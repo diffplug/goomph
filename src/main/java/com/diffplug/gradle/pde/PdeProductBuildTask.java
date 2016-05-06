@@ -45,7 +45,6 @@ import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.CmdLine;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.ZipUtil;
-import com.diffplug.gradle.eclipse.BuildProperties;
 
 public class PdeProductBuildTask extends DefaultTask {
 	private Object buildDir;
@@ -117,7 +116,7 @@ public class PdeProductBuildTask extends DefaultTask {
 		FileMisc.cleanDir(buildDir);
 
 		// setup build.properties
-		BuildProperties properties = new BuildProperties(getProject());
+		PdeProductBuildProperties properties = new PdeProductBuildProperties(getProject());
 		properties.setConfigs(SwtPlatform.getAll()); // for all configs
 		properties.setBuildDirectory(getBuildDir()); // tied to the appropriate build directory
 		if (pluginPath != null) {
