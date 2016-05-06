@@ -1,8 +1,15 @@
-plugins {
-	// code formatting
-	id "com.diffplug.gradle.spotless" version "1.3.3"
-	// bintray uploading
-	id "com.jfrog.bintray" version "1.3.1"
+buildscript {
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		// markdown javadoc
+		classpath "ch.raffael.pegdown-doclet:pegdown-doclet:${VER_PEGDOWN_DOCLET}"
+		// code formatting
+		classpath "com.diffplug.gradle.spotless:spotless:${VER_SPOTLESS}"
+		// bintray uploading
+		classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:${VER_BINTRAY}"
+	}
 }
 
 repositories {
@@ -139,12 +146,27 @@ task sourcesJar(type: Jar) {
 	from sourceSets.main.allJava
 }
 
-// Where it's possible to name parameters and methods clearly enough
-// that javadoc is not necessary, why make the code bigger?
-//
-// Thus, no javadoc warnings.
+// use markdown in javadoc
+def makeLink = { url, text -> "<a href=\"${url}\" style=\"text-transform: none;\">${text}</a>" }
+def javadocInfo = '<h2>' + makeLink("https://github.com/${org}/${name}", "${group}:${name}:${version}") +
+' by ' + makeLink('http://www.diffplug.com', 'DiffPlug') + '</h2>'
+
+apply plugin: 'ch.raffael.pegdown-doclet'
 javadoc {
-	options.addStringOption('Xdoclint:none', '-quiet')
+	// Where it's possible to name parameters and methods clearly enough
+	// that javadoc is not necessary, why make the code bigger?
+	//
+	// Thus, no javadoc warnings.
+	options.addStringOption('Xdoclint:none')
+	// setup the header
+	options.header javadocInfo
+	options.footer javadocInfo
+	// setup links
+	options.linksOffline('https://docs.oracle.com/javase/8/docs/api/', 'gradle/javadoc/java8')
+	options.linksOffline("https://docs.gradle.org/${VER_GRADLE}/javadoc/", 'gradle/javadoc/gradle')
+	options.linksOffline("https://diffplug.github.io/durian/javadoc/${VER_DURIAN}/", 'gradle/javadoc/durian')
+	options.linksOffline("https://diffplug.github.io/durian-swt/javadoc/${VER_DURIAN_SWT}/", 'gradle/javadoc/durian-swt')
+	options.linksOffline("http://www.javadoc.io/doc/biz.aQute.bnd/biz.aQute.bndlib/${VER_BNDLIB}/", 'gradle/javadoc/bndlib')
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -223,6 +245,7 @@ publishing {
 }
 
 if (!isSnapshot) {
+	apply plugin: 'com.jfrog.bintray'
 	// upload releases to bintray and then mavenCentral
 	bintray {
 		user = cred('bintray_user')
