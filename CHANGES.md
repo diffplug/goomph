@@ -1,6 +1,10 @@
 # Goomph releases
 
-### Version 2.0.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/)) ([snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
+### Version 2.1.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/)) ([snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
+
+* Hopefully some p2 stuff...
+
+### Version 2.0.0 - May 7th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/2.0.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/2.0.0/view))
 
 * BREAKING CHANGE: Moved former contents of `com.diffplug.gradle.eclipse` into `com.diffplug.gradle.pde`.
 * BREAKING CHANGE: Renamed plugin  `com.diffplug.gradle.swt` to `com.diffplug.gradle.swt.nativedeps`.
@@ -8,7 +12,7 @@
 * Added plugin `com.diffplug.gradle.eclipse.buildproperties` which uses the Eclipse PDE build.properties file as the single source of truth for controlling binary assets.
 * Added plugin `com.diffplug.gradle.eclipse.projectdeps` which fixes some bugs with interproject dependencies.
 * Added plugin `com.diffplug.gradle.eclipse.excludebuildfolder` which excludes the build folder from the eclipse project resources.
-* Minor fix to SwtPlugin (now applied via `beforeEvaluate` rather than `afterEvaluate`, which is better for a plugin which changes dependencies).
+* All plugins are now tested by Gradle's testkit.  Some of the custom tasks in the `pde` package still need better coverage.
 
 ### Version 1.3.1 - April 6th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/1.3.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/1.3.1/view))
 
