@@ -286,26 +286,31 @@ pluginBundle {
 	plugins {
 		eclipseBuildPropertiesPlugin {
 			id = 'com.diffplug.gradle.eclipse.buildproperties'
+			displayName = 'Goomph eclipse.buildproperties'
 			description = "Uses Eclipse's build.properties to control a gradle build, and fixes the eclipse project classpath to include binary assets specified in build.properties."
 			tags = ['eclipse']
 		}
 		eclipseExcludeBuildFolderPlugin {
 			id = 'com.diffplug.gradle.eclipse.excludebuildfolder'
+			displayName = 'Goomph eclipse.excludebuildfolder'
 			description = "Excludes the gradle build folder from Eclipse's resource indexing."
 			tags = ['eclipse']
 		}
 		eclipseProjectDepsPlugin {
 			id = 'com.diffplug.gradle.eclipse.projectdeps'
+			displayName = 'Goomph eclipse.projectdeps'
 			description = "Fixes an intermittent problem where dependencies on other projects within the workspace aren't always resolved correctly within Eclipse."
 			tags = ['eclipse']
 		}
 		osgiBndManifestPlugin {
 			id = 'com.diffplug.gradle.osgi.bndmanifest'
+			displayName = 'Goomph osgi.bndmanifest'
 			description = "Generates a manifest using purely bnd, and outputs it for IDE consumption."
 			tags = ['osgi', 'bnd', 'eclipse']
 		}
 		swtNativeDepsPlugin {
 			id = 'com.diffplug.gradle.swt.nativedeps'
+			displayName = 'Goomph swt.nativedeps'
 			description = "Adds the platform-specific SWT jars to the runtime classpath so that SWT code can run."
 			tags = ['eclipse', 'swt']
 		}
