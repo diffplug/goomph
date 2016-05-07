@@ -13,11 +13,11 @@ output = [
 	].join('\n');
 -->
 [![Maven artifact](https://img.shields.io/badge/mavenCentral-com.diffplug.gradle%3Agoomph-blue.svg)](https://bintray.com/diffplug/opensource/goomph/view)
-[![Latest version](https://img.shields.io/badge/latest-1.3.1-blue.svg)](https://github.com/diffplug/goomph/releases/latest)
-[![Javadoc](https://img.shields.io/badge/javadoc-OK-blue.svg)](https://diffplug.github.io/goomph/javadoc/1.3.1/)
+[![Latest version](https://img.shields.io/badge/latest-2.0.0-blue.svg)](https://github.com/diffplug/goomph/releases/latest)
+[![Javadoc](https://img.shields.io/badge/javadoc-OK-blue.svg)](https://diffplug.github.io/goomph/javadoc/2.0.0/)
 [![License Apache](https://img.shields.io/badge/license-Apache-blue.svg)](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))
 
-[![Changelog](https://img.shields.io/badge/changelog-2.0.0--SNAPSHOT-brightgreen.svg)](CHANGES.md)
+[![Changelog](https://img.shields.io/badge/changelog-2.0.0-brightgreen.svg)](CHANGES.md)
 [![Travis CI](https://travis-ci.org/diffplug/goomph.svg?branch=master)](https://travis-ci.org/diffplug/goomph)
 [![Live chat](https://img.shields.io/badge/gitter-live_chat-brightgreen.svg)](https://gitter.im/diffplug/goomph)
 <!---freshmark /shields -->
@@ -37,20 +37,20 @@ Notable products using Goomph:
 Below is an index of Goomph's capabilities, followed by more-detailed sections which describe their usage.  Of course, you can always consult the javadoc as described above.
 
 * `com.diffplug.gradle.osgi`
-	+ [`bndmanifest`](https://diffplug.github.io/goomph/javadoc/1.3.1/com/diffplug/gradle/osgi/BndManifestPlugin.html) generates a manifest using purely bnd, and outputs it for IDE consumption.
+	+ [`bndmanifest`](https://diffplug.github.io/goomph/javadoc/2.0.0/com/diffplug/gradle/osgi/BndManifestPlugin.html) generates a manifest using purely bnd, and outputs it for IDE consumption.
 * `com.diffplug.gradle.eclipse`
-	+ [`buildproperties`](https://diffplug.github.io/goomph/javadoc/1.3.1/com/diffplug/gradle/eclipse/BuildPropertiesPlugin.html) uses [`build.properties`](http://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Fguide%2Ftools%2Feditors%2Fmanifest_editor%2Fbuild.htm) to control a gradle build, and fixes eclipse project classpath to include binary assets specified in `build.properties`.
-	+ [`excludebuildfolder`](https://diffplug.github.io/goomph/javadoc/1.3.1/com/diffplug/gradle/eclipse/ExcludeBuildFolderPlugin.html) excludes the gradle `build` folder from Eclipse's resource indexing.
-	+ [`projectdeps`](https://diffplug.github.io/goomph/javadoc/1.3.1/com/diffplug/gradle/eclipse/ProjectDepsPlugin.html) fixes an intermittent problem where dependencies on other projects within the workspace aren't always resolved correctly within Eclipse.
+	+ [`buildproperties`](https://diffplug.github.io/goomph/javadoc/2.0.0/com/diffplug/gradle/eclipse/BuildPropertiesPlugin.html) uses [`build.properties`](http://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Fguide%2Ftools%2Feditors%2Fmanifest_editor%2Fbuild.htm) to control a gradle build, and fixes eclipse project classpath to include binary assets specified in `build.properties`.
+	+ [`excludebuildfolder`](https://diffplug.github.io/goomph/javadoc/2.0.0/com/diffplug/gradle/eclipse/ExcludeBuildFolderPlugin.html) excludes the gradle `build` folder from Eclipse's resource indexing.
+	+ [`projectdeps`](https://diffplug.github.io/goomph/javadoc/2.0.0/com/diffplug/gradle/eclipse/ProjectDepsPlugin.html) fixes an intermittent problem where dependencies on other projects within the workspace aren't always resolved correctly within Eclipse.
 * `com.diffplug.gradle.swt`
-	+ [`nativedeps`](https://diffplug.github.io/goomph/javadoc/1.3.1/com/diffplug/gradle/swt/NativeDepsPlugin.html) adds the platform-specific SWT jars to the runtime classpath so that SWT code can run.
+	+ [`nativedeps`](https://diffplug.github.io/goomph/javadoc/2.0.0/com/diffplug/gradle/swt/NativeDepsPlugin.html) adds the platform-specific SWT jars to the runtime classpath so that SWT code can run.
 * `com.diffplug.gradle.pde`
-	+ [`PdeProductBuildTask`](https://diffplug.github.io/goomph/javadoc/1.3.1/com/diffplug/gradle/pde/PdeProductBuildTask.html) runs PDE build to build an RCP product.
-	+ [`PdeAntBuildTask`](https://diffplug.github.io/goomph/javadoc/1.3.1/com/diffplug/gradle/pde/PdeAntBuildTask.html) runs PDE on an ant file
-	+ [`P2DirectorModel`](https://diffplug.github.io/goomph/javadoc/1.3.1/com/diffplug/gradle/pde/P2DirectorModel.html) runs P2 director to execute P2 actions.
-	+ [`EclipsecTask`](https://diffplug.github.io/goomph/javadoc/1.3.1/com/diffplug/gradle/pde/EclipsecTask.html) runs a console command using `eclipsec`.
+	+ [`PdeProductBuildTask`](https://diffplug.github.io/goomph/javadoc/2.0.0/com/diffplug/gradle/pde/PdeProductBuildTask.html) runs PDE build to build an RCP product.
+	+ [`PdeAntBuildTask`](https://diffplug.github.io/goomph/javadoc/2.0.0/com/diffplug/gradle/pde/PdeAntBuildTask.html) runs PDE on an ant file
+	+ [`P2DirectorModel`](https://diffplug.github.io/goomph/javadoc/2.0.0/com/diffplug/gradle/pde/P2DirectorModel.html) runs P2 director to execute P2 actions.
+	+ [`EclipsecTask`](https://diffplug.github.io/goomph/javadoc/2.0.0/com/diffplug/gradle/pde/EclipsecTask.html) runs a console command using `eclipsec`.
 * `com.diffplug.gradle` (miscellaneous infrastructure)
-	+ [`CmdLineTask`](https://diffplug.github.io/goomph/javadoc/1.3.1/com/diffplug/gradle/CmdLineTask.html) runs a series of shell commands, possibly copying or moving files in the meantime
+	+ [`CmdLineTask`](https://diffplug.github.io/goomph/javadoc/2.0.0/com/diffplug/gradle/CmdLineTask.html) runs a series of shell commands, possibly copying or moving files in the meantime
 
 <!---freshmark /javadoc -->
 
