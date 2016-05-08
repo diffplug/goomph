@@ -19,6 +19,8 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -134,6 +136,10 @@ public class BndManifestPlugin extends ProjectPlugin {
 				JavaPluginConvention javaConvention = project.getConvention().getPlugin(JavaPluginConvention.class);
 				SourceSet main = javaConvention.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME);
 				builder.set(Constants.INCLUDERESOURCE, main.getOutput().getClassesDir() + "," + main.getOutput().getResourcesDir());
+
+				// make sure that the existing MANIFEST.MF can't sneak in and get merged with the one we're generating
+				Path currentManifest = main.getOutput().getResourcesDir().toPath().resolve("META-INF/MANIFEST.MF");
+				Files.deleteIfExists(currentManifest);
 
 				// set the version
 				if (builder.getBundleVersion() == null) {
