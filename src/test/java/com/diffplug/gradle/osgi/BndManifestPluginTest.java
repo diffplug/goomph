@@ -37,6 +37,19 @@ public class BndManifestPluginTest extends GradleIntegrationTest {
 		assertManifestContent(read("customlocation"));
 	}
 
+	@Test
+	public void assertNoMerging() throws IOException {
+		write("src/main/resources/META-INF/MANIFEST.MF",
+				"Manifest-Version: 1.0",
+				"Bundle-ManifestVersion: 2",
+				"Bundle-Name: Mock",
+				"Bundle-SymbolicName: org.eclipse.e4.demo.e4photo.flickr.mock; singleton:=true",
+				"Bundle-Version: 1.0.0.qualifier",
+				"Require-Bundle: org.eclipse.core.runtime",
+				"Bundle-ActivationPolicy: lazy");
+		testCase("");
+	}
+
 	private void testCase(String buildscriptAddendum) throws IOException {
 		write("build.gradle",
 				"plugins {",
