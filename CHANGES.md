@@ -4,7 +4,12 @@
 
 * Hopefully some p2 stuff...
 
-### Version 2.1.0 - May 7th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/2.1.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/2.1.0/view))
+### Version 2.1.1 - May 9th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/2.1.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/2.1.1/view))
+
+* `com.diffplug.gradle.osgi.bndmanifest` now always writes out the calculated manifest to the output resources directory.  This way, if a task such as `test` relies on having a valid manifest, it will be there.
+* Note that if your tests rely on having an accurate META-INF/MANIFEST.MF, you should add `test.dependsOn(jar)` to your buildscript.
+
+### Version 2.1.0 - May 9th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/2.1.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/2.1.0/view))
 
 * `com.diffplug.gradle.osgi.bndmanifest` now has the ability to specify whether or not to merge the calculated manifest with the existing manifest.  Default behavior is don't merge.
 

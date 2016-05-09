@@ -104,6 +104,10 @@ public class BndManifestPluginTest extends GradleIntegrationTest {
 		File jar = libsDir.listFiles()[0];
 		String manifestContent = ZipUtil.read(jar, "META-INF/MANIFEST.MF");
 		Assert.assertEquals(expectedManifest, manifestContent);
+
+		// make sure the output resources dir contains the proper manifest
+		String resourcedManifestContent = read("build/resources/main/META-INF/MANIFEST.MF");
+		Assert.assertEquals(expectedManifest, resourcedManifestContent);
 	}
 
 	private String generatedManifest() {

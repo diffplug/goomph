@@ -96,23 +96,28 @@ public class BndManifestPlugin extends ProjectPlugin {
 			jarTask.getInputs().properties(jarTask.getManifest().getEffectiveManifest().getAttributes());
 			jarTask.getOutputs().file(jarTask.getArchivePath());
 			copyTo.ifPresent(jarTask.getOutputs()::file);
-			jarTask.doLast(unused -> {
-				// if we don't want to merge, then delete the existing manifest to ensure that we don't
+			jarTask.doLast(Errors.rethrow().wrap(unused -> {
+				// find the location of the manifest in the output resources directory
+				JavaPluginConvention javaConvention = project.getConvention().getPlugin(JavaPluginConvention.class);
+				SourceSet main = javaConvention.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME);
+				Path outputManifest = main.getOutput().getResourcesDir().toPath().resolve("META-INF/MANIFEST.MF");
+				// if we don't want to merge, then delete the existing manifest so that bnd doesn't merge with it
 				if (!extension.mergeWithExisting) {
-					JavaPluginConvention javaConvention = project.getConvention().getPlugin(JavaPluginConvention.class);
-					SourceSet main = javaConvention.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME);
-					Path currentManifest = main.getOutput().getResourcesDir().toPath().resolve("META-INF/MANIFEST.MF");
-					Errors.rethrow().run(() -> Files.deleteIfExists(currentManifest));
+					Files.deleteIfExists(outputManifest);
 				}
 				// take the bnd action 
 				takeBndAction(project, jar -> {
+					// write out the jar file
 					createParents(jarTask.getArchivePath());
 					jar.write(jarTask.getArchivePath());
+					// write out the manifest to the resources output directory for the test task (and others)
+					writeFile(outputManifest.toFile(), jar::writeManifest);
+					// write the manifest to copyTo, if we're supposed to
 					if (copyTo.isPresent()) {
 						writeFile(copyTo.get(), jar::writeManifest);
 					}
 				});
-			});
+			})::accept);
 		});
 	}
 
