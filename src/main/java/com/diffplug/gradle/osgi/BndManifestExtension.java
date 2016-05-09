@@ -23,5 +23,11 @@ public class BndManifestExtension {
 		this.copyTo = copyTo;
 	}
 
+	public boolean mergeWithExisting = false;
+
+	public void mergeWithExisting(boolean mergeWithExisting) {
+		this.mergeWithExisting = mergeWithExisting;
+	}
+
 	static final String NAME = "osgiBndManifest";
 }

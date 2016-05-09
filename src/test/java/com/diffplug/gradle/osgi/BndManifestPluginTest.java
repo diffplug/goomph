@@ -28,13 +28,13 @@ import com.diffplug.gradle.ZipUtil;
 public class BndManifestPluginTest extends GradleIntegrationTest {
 	@Test
 	public void assertManifestContentDefaultLocation() throws IOException {
-		testCase("");
+		testCase("", generatedManifest());
 	}
 
 	@Test
 	public void assertManifestCustomLocation() throws IOException {
-		testCase("osgiBndManifest { copyTo 'customlocation' }");
-		assertManifestContent(read("customlocation"));
+		testCase("osgiBndManifest { copyTo 'customlocation' }", generatedManifest());
+		Assert.assertEquals(generatedManifest(), read("customlocation"));
 	}
 
 	@Test
@@ -45,12 +45,35 @@ public class BndManifestPluginTest extends GradleIntegrationTest {
 				"Bundle-Name: Mock",
 				"Bundle-SymbolicName: org.eclipse.e4.demo.e4photo.flickr.mock; singleton:=true",
 				"Bundle-Version: 1.0.0.qualifier",
-				"Require-Bundle: org.eclipse.core.runtime",
-				"Bundle-ActivationPolicy: lazy");
-		testCase("");
+				"Bundle-ActivationPolicy: lazy",
+				"Require-Bundle: org.eclipse.core.runtime");
+		testCase("", generatedManifest());
 	}
 
-	private void testCase(String buildscriptAddendum) throws IOException {
+	@Test
+	public void assertMerging() throws IOException {
+		write("src/main/resources/META-INF/MANIFEST.MF",
+				"Manifest-Version: 1.0",
+				"Bundle-ManifestVersion: 2",
+				"Bundle-Name: Mock",
+				"Bundle-SymbolicName: org.eclipse.e4.demo.e4photo.flickr.mock; singleton:=true",
+				"Bundle-Version: 1.0.0.qualifier",
+				"Bundle-ActivationPolicy: lazy",
+				"Require-Bundle: org.eclipse.core.runtime");
+		String expectedMerge = StringPrinter.buildStringFromLines(
+				"Manifest-Version: 1.0",
+				"Bundle-ActivationPolicy: lazy",
+				"Bundle-ManifestVersion: 2",
+				"Bundle-SymbolicName: test",
+				"Bundle-Version: 0.0.0.ERRORSETVERSION",
+				"Export-Package: test;uses:=\"com.diffplug.common.base\";version=\"0.0.0\"",
+				"Import-Package: com.diffplug.common.base;version=\"[3.4,4)\"",
+				"Require-Bundle: org.eclipse.core.runtime",
+				"Require-Capability: osgi.ee;filter:=\"(&(osgi.ee=JavaSE)(version=1.8))\"");
+		testCase("osgiBndManifest { mergeWithExisting true }", expectedMerge);
+	}
+
+	private void testCase(String buildscriptAddendum, String expectedManifest) throws IOException {
 		write("build.gradle",
 				"plugins {",
 				"    id 'java'",
@@ -80,17 +103,17 @@ public class BndManifestPluginTest extends GradleIntegrationTest {
 		File libsDir = file("build/libs");
 		File jar = libsDir.listFiles()[0];
 		String manifestContent = ZipUtil.read(jar, "META-INF/MANIFEST.MF");
-		assertManifestContent(manifestContent);
+		Assert.assertEquals(expectedManifest, manifestContent);
 	}
 
-	private void assertManifestContent(String manifestContent) {
-		Assert.assertEquals(StringPrinter.buildStringFromLines(
+	private String generatedManifest() {
+		return StringPrinter.buildStringFromLines(
 				"Manifest-Version: 1.0",
 				"Bundle-ManifestVersion: 2",
 				"Bundle-SymbolicName: test",
 				"Bundle-Version: 0.0.0.ERRORSETVERSION",
 				"Export-Package: test;uses:=\"com.diffplug.common.base\";version=\"0.0.0\"",
 				"Import-Package: com.diffplug.common.base;version=\"[3.4,4)\"",
-				"Require-Capability: osgi.ee;filter:=\"(&(osgi.ee=JavaSE)(version=1.8))\""), manifestContent);
+				"Require-Capability: osgi.ee;filter:=\"(&(osgi.ee=JavaSE)(version=1.8))\"");
 	}
 }

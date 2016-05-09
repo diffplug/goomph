@@ -41,7 +41,7 @@ public class GradleIntegrationTest {
 	public TemporaryFolder folder = new TemporaryFolder();
 
 	protected void write(String path, String... lines) throws IOException {
-		String content = Arrays.asList(lines).stream().collect(Collectors.joining("\n"));
+		String content = Arrays.asList(lines).stream().collect(Collectors.joining("\n")) + "\n";
 		Path target = folder.getRoot().toPath().resolve(path);
 		Files.createDirectories(target.getParent());
 		Files.write(target, content.getBytes(StandardCharsets.UTF_8));

@@ -55,12 +55,19 @@ import com.diffplug.gradle.ProjectPlugin;
  *     'Import-Package': '!javax.annotation.*,*',
  *     'Bundle-SymbolicName': "${project.name};singleton:=true",
  * )
- * // The block below is optional.  The manifest will always be included in the built jar
- * // at the proper 'META-INF/MANIFEST.MF' location.  But if you'd like to easily
- * // see the manifest for debugging or to help an IDE, you can ask gradle to copy the
- * // the manifest into your source tree.
+ * // The block below is optional.
  * osgiBndManifest {
+ *     // The manifest will always be included in the built jar
+ *     // at the proper 'META-INF/MANIFEST.MF' location.  But if
+ *     // you'd like to easily see the manifest for debugging or
+ *     // to help an IDE, you can ask gradle to copy the manifest
+ *     // into your source tree.
  *     copyTo 'src/main/resources/META-INF/MANIFEST.MF'
+
+ *     // By default, the existing manifest is completely ignored.
+ *     // The line below will cause the existing manifest's fields
+ *     // to be merged with the fields set by bnd.
+ *     mergeWithExisting true  
  * }
  * ```
  * 
@@ -90,6 +97,14 @@ public class BndManifestPlugin extends ProjectPlugin {
 			jarTask.getOutputs().file(jarTask.getArchivePath());
 			copyTo.ifPresent(jarTask.getOutputs()::file);
 			jarTask.doLast(unused -> {
+				// if we don't want to merge, then delete the existing manifest to ensure that we don't
+				if (!extension.mergeWithExisting) {
+					JavaPluginConvention javaConvention = project.getConvention().getPlugin(JavaPluginConvention.class);
+					SourceSet main = javaConvention.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME);
+					Path currentManifest = main.getOutput().getResourcesDir().toPath().resolve("META-INF/MANIFEST.MF");
+					Errors.rethrow().run(() -> Files.deleteIfExists(currentManifest));
+				}
+				// take the bnd action 
 				takeBndAction(project, jar -> {
 					createParents(jarTask.getArchivePath());
 					jar.write(jarTask.getArchivePath());
@@ -136,10 +151,6 @@ public class BndManifestPlugin extends ProjectPlugin {
 				JavaPluginConvention javaConvention = project.getConvention().getPlugin(JavaPluginConvention.class);
 				SourceSet main = javaConvention.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME);
 				builder.set(Constants.INCLUDERESOURCE, main.getOutput().getClassesDir() + "," + main.getOutput().getResourcesDir());
-
-				// make sure that the existing MANIFEST.MF can't sneak in and get merged with the one we're generating
-				Path currentManifest = main.getOutput().getResourcesDir().toPath().resolve("META-INF/MANIFEST.MF");
-				Files.deleteIfExists(currentManifest);
 
 				// set the version
 				if (builder.getBundleVersion() == null) {
