@@ -15,6 +15,8 @@
  */
 package com.diffplug.gradle.pde;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.util.Set;
 
 import org.gradle.api.Project;
@@ -22,8 +24,10 @@ import org.gradle.api.Task;
 
 import com.google.common.collect.Sets;
 
+import com.diffplug.common.base.Errors;
 import com.diffplug.common.swt.os.OS;
 import com.diffplug.common.swt.os.SwtPlatform;
+import com.diffplug.gradle.FileMisc;
 
 /**
  * Runs P2 director to install artifacts from P2 repositories.
@@ -148,7 +152,16 @@ public class P2DirectorModel {
 
 		task.addArg("roaming", "");
 
-		task.addArg("destination", "file:" + project.file(dstDir).getAbsolutePath());
+		File dstFile = project.file(dstDir);
+		task.addArg("destination", "file:" + dstFile.getAbsolutePath());
+
+		// delete the cached repositories, since they leak paths on the build server
+		task.doLast(unused -> {
+			Errors.rethrow().run(() -> {
+				Path path = dstFile.toPath().resolve("p2/org.eclipse.equinox.p2.engine/.settings");
+				FileMisc.cleanDir(path.toFile());
+			});
+		});
 
 		return task;
 	}
