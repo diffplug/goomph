@@ -18,9 +18,8 @@ package com.diffplug.gradle;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 
-import com.google.common.collect.ImmutableList;
-
-import com.diffplug.common.base.TreeDef;
+import com.diffplug.common.collect.ImmutableList;
+import com.diffplug.common.tree.TreeDef;
 
 /** Base implementation of a Plugin which prevents double-application. */
 public abstract class ProjectPlugin implements Plugin<Project> {

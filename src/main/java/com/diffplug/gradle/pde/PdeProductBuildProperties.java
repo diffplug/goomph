@@ -26,11 +26,10 @@ import java.util.stream.Collectors;
 
 import org.gradle.api.Project;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-import com.google.common.io.Resources;
-
+import com.diffplug.common.base.Joiner;
+import com.diffplug.common.base.Preconditions;
+import com.diffplug.common.collect.Lists;
+import com.diffplug.common.io.Resources;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.JDK;
 

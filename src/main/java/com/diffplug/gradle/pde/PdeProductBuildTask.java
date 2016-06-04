@@ -34,13 +34,12 @@ import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-import com.google.common.io.Files;
-
+import com.diffplug.common.base.Joiner;
+import com.diffplug.common.base.Preconditions;
+import com.diffplug.common.collect.ImmutableList;
+import com.diffplug.common.collect.ImmutableMap;
+import com.diffplug.common.collect.Maps;
+import com.diffplug.common.io.Files;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.CmdLine;
 import com.diffplug.gradle.FileMisc;

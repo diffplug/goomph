@@ -28,10 +28,10 @@ import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Maps;
-import com.google.common.io.Files;
+import com.diffplug.common.base.Joiner;
+import com.diffplug.common.base.Preconditions;
+import com.diffplug.common.collect.Maps;
+import com.diffplug.common.io.Files;
 
 /** Miscellaneous utilties for copying files around. */
 public class FileMisc {

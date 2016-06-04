@@ -27,16 +27,15 @@ import java.util.stream.Collectors;
 
 import org.osgi.framework.Version;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
-import com.google.common.collect.SetMultimap;
-import com.google.common.collect.Sets;
-
 import aQute.lib.filter.Filter;
 
 import com.diffplug.common.base.Errors;
+import com.diffplug.common.base.Preconditions;
+import com.diffplug.common.collect.HashMultimap;
+import com.diffplug.common.collect.Iterables;
+import com.diffplug.common.collect.Maps;
+import com.diffplug.common.collect.SetMultimap;
+import com.diffplug.common.collect.Sets;
 import com.diffplug.common.swt.os.OS;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.ZipUtil;

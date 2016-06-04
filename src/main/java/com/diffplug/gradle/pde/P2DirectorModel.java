@@ -22,9 +22,8 @@ import java.util.Set;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 
-import com.google.common.collect.Sets;
-
 import com.diffplug.common.base.Errors;
+import com.diffplug.common.collect.Sets;
 import com.diffplug.common.swt.os.OS;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.FileMisc;

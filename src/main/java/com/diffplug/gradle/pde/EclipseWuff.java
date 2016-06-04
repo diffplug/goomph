@@ -21,9 +21,8 @@ import java.nio.file.Path;
 import org.gradle.api.Project;
 import org.osgi.framework.Version;
 
-import com.google.common.base.Preconditions;
-
 import com.diffplug.common.base.Comparison;
+import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.swt.os.OS;
 
 /** Represents an Eclipse which was downloaded by WUFF.  Assumes that the VER_ECLIPSE property is set. */

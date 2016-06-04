@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.gradle.api.Project;
 
-import com.diffplug.common.base.MoreCollectors;
+import com.diffplug.common.collect.MoreCollectors;
 
 /** Generates a command line which will execute PDE build. */
 class PdeBuild {

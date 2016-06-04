@@ -33,8 +33,8 @@ import org.junit.rules.TemporaryFolder;
 
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.StringPrinter;
-import com.diffplug.common.base.TreeDef;
-import com.diffplug.common.base.TreeStream;
+import com.diffplug.common.tree.TreeDef;
+import com.diffplug.common.tree.TreeStream;
 
 public class GradleIntegrationTest {
 	@Rule

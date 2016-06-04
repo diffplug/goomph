@@ -25,10 +25,9 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-
 import com.diffplug.common.base.Throwing;
+import com.diffplug.common.collect.ImmutableList;
+import com.diffplug.common.collect.Lists;
 import com.diffplug.common.swt.os.OS;
 
 /**

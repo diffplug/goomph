@@ -22,10 +22,9 @@ import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.artifacts.ProjectDependency;
 
-import com.google.common.collect.Iterables;
-
 import groovy.util.Node;
 
+import com.diffplug.common.collect.Iterables;
 import com.diffplug.gradle.ProjectPlugin;
 
 /**

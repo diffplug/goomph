@@ -20,9 +20,8 @@ import java.util.Map;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Maps;
-
+import com.diffplug.common.base.Preconditions;
+import com.diffplug.common.collect.Maps;
 import com.diffplug.gradle.CmdLine;
 
 /**

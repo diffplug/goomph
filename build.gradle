@@ -53,10 +53,13 @@ configurations {
 }
 
 dependencies {
-	compile "com.diffplug.durian:durian:${VER_DURIAN}"
+	compile "com.diffplug.durian:durian-core:${VER_DURIAN}"
+	compile "com.diffplug.durian:durian-collect:${VER_DURIAN}"
+	compile "com.diffplug.durian:durian-io:${VER_DURIAN}"
 	compile "com.diffplug.durian:durian-swt:${VER_DURIAN_SWT}"
 	compile "org.osgi:org.osgi.core:6.0.0"
 	compile "biz.aQute.bnd:biz.aQute.bndlib:${VER_BNDLIB}"
+	compile "commons-io:commons-io:${VER_COMMONS_IO}"
 
 	// p2 dependencies
 	//embeddedJars 'p2:org.eclipse.jdt.core:3.11.0.v20150602-1242'

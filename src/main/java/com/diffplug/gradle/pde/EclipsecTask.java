@@ -20,10 +20,9 @@ import java.io.File;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
-
+import com.diffplug.common.base.Joiner;
+import com.diffplug.common.collect.ArrayListMultimap;
+import com.diffplug.common.collect.ListMultimap;
 import com.diffplug.gradle.CmdLine;
 
 /**
