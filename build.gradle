@@ -96,9 +96,9 @@ tasks.eclipse.dependsOn(cleanEclipse)
 apply plugin: 'com.diffplug.gradle.spotless'
 spotless {
 	java {
-		licenseHeaderFile	'spotless.license.java'			// License header file
-		importOrderFile		'spotless.importorder'			// An import ordering file, exported from Eclipse
-		eclipseFormatFile	'spotless.eclipseformat.xml'	// XML file dumped out by the Eclipse formatter
+		licenseHeaderFile	'gradle/spotless.license.java'		// License header file
+		importOrderFile		'gradle/spotless.importorder'		// An import ordering file, exported from Eclipse
+		eclipseFormatFile	'gradle/spotless.eclipseformat.xml'	// XML file dumped out by the Eclipse formatter
 	}
 	format 'groovy', {
 		target '**/*.groovy'
