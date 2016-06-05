@@ -26,11 +26,11 @@ import com.diffplug.gradle.GradleIntegrationTest;
 
 public class ProjectDepsPluginTest extends GradleIntegrationTest {
 	@Test
-	public void assertClasspathChanged() throws IOException {
+	public void assertClasspathChangedPre2_14() throws IOException {
 		// write the normal eclipse file
-		String plainEclipse = testCase("eclipse");
+		String plainEclipse = testCase("eclipse", "2.13");
 		// write the excluded build folder file
-		String underTestEclipse = testCase("com.diffplug.gradle.eclipse.projectdeps");
+		String underTestEclipse = testCase("com.diffplug.gradle.eclipse.projectdeps", "2.13");
 		// assert the expected thing was added to the .project file
 		Assert.assertEquals(StringPrinter.buildStringFromLines(
 				"DELETE",
@@ -39,7 +39,21 @@ public class ProjectDepsPluginTest extends GradleIntegrationTest {
 				"exported=\"true\" path=\"/a\" kind=\"src\" combineaccessrules=\"true"), Diff.computeDiff(plainEclipse, underTestEclipse));
 	}
 
-	private String testCase(String pluginId) throws IOException {
+	@Test
+	public void assertClasspathChangedPost2_14() throws IOException {
+		// write the normal eclipse file
+		String plainEclipse = testCase("eclipse", "2.14-rc-4");
+		// write the excluded build folder file
+		String underTestEclipse = testCase("com.diffplug.gradle.eclipse.projectdeps", "2.14-rc-4");
+		// assert the expected thing was added to the .project file
+		Assert.assertEquals(StringPrinter.buildStringFromLines(
+				"INSERT",
+				" exported=\"true\"",
+				"INSERT",
+				" combineaccessrules=\"true\""), Diff.computeDiff(plainEclipse, underTestEclipse));
+	}
+
+	private String testCase(String pluginId, String version) throws IOException {
 		write("settings.gradle",
 				"include 'a'",
 				"include 'b'");
@@ -55,7 +69,7 @@ public class ProjectDepsPluginTest extends GradleIntegrationTest {
 				"	}",
 				"}");
 		write("b/build.gradle", "plugins { id '" + pluginId + "' }");
-		gradleRunner().withArguments("eclipse").build();
+		gradleRunner().withGradleVersion(version).withArguments("eclipse").build();
 		return read("b/.classpath");
 	}
 }
