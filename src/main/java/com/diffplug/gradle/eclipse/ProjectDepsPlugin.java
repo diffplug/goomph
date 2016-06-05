@@ -96,7 +96,7 @@ public class ProjectDepsPlugin extends ProjectPlugin {
 				while (classpathEntries.hasNext()) {
 					Node entry = classpathEntries.next();
 					String path = (String) entry.attributes().get("path");
-					if (path != null) {
+					if (path != null && !path.isEmpty()) {
 						if (path.endsWith(".jar")) {
 							// keep track of binary jars
 							jarDeps.add(parseLibraryName(path));
