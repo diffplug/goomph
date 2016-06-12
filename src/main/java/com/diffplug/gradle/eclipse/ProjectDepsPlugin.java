@@ -15,15 +15,20 @@
  */
 package com.diffplug.gradle.eclipse;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.artifacts.ProjectDependency;
+import org.gradle.plugins.ide.eclipse.model.EclipseModel;
 
 import groovy.util.Node;
 
+import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.collect.Iterables;
 import com.diffplug.gradle.ProjectPlugin;
 
@@ -31,15 +36,25 @@ import com.diffplug.gradle.ProjectPlugin;
  * Fixes an intermittent problem when generating eclipse
  * project files where dependencies on other projects within
  * the workspace aren't always resolved correctly within Eclipse.
- * 
+ *
  * ```groovy
  * apply plugin: 'com.diffplug.gradle.eclipse.projectdeps'
  * ```
+ *
+ * Can also be configured to replace binary dependencies with
+ * eclipse project dependencies:
+ *
+ * ```groovy
+ * eclipseProjectDeps {
+ *     replaceWithProject('some-external-lib')
+ *     replaceWithProject(['libA', 'libB', 'libC'])
+ * }
+ * ```
  */
 public class ProjectDepsPlugin extends ProjectPlugin {
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void applyOnce(Project project) {
+		ProjectDepsExtension extension = project.getExtensions().create(ProjectDepsExtension.NAME, ProjectDepsExtension.class);
 		EclipseProjectPlugin.modifyEclipseProject(project, eclipseModel -> {
 			// find the project's referenced projects and reference them explicitly in the eclipse model
 			Task prepareEclipse = project.task("prepareEclipse");
@@ -58,27 +73,74 @@ public class ProjectDepsPlugin extends ProjectPlugin {
 
 			// create robust classpath entries for all referenced projects
 			eclipseModel.getClasspath().getFile().getXmlTransformer().addAction(xmlProvider -> {
-				Node classpathNode = xmlProvider.asNode();
-				// remove any existing referenced projects
-				Iterator<Node> classpathEntries = classpathNode.children().iterator();
+				modifyClasspath(xmlProvider.asNode(), eclipseModel, extension);
+			});
+		});
+	}
+
+	@SuppressWarnings("unchecked")
+	private void modifyClasspath(Node classpathNode, EclipseModel eclipseModel, ProjectDepsExtension extension) {
+		// the name (minus ".jar") of any jars on the classpath
+		List<String> jarDeps = new ArrayList<>();
+
+		// find the jars, and remove all existing referenced projects
+		Iterator<Node> classpathEntries = classpathNode.children().iterator();
+		while (classpathEntries.hasNext()) {
+			Node entry = classpathEntries.next();
+			String path = (String) entry.attributes().get("path");
+			if (path != null && !path.isEmpty()) {
+				if (path.endsWith(".jar")) {
+					// keep track of binary jars
+					jarDeps.add(parseLibraryName(path));
+				} else if (eclipseModel.getProject().getReferencedProjects().contains(path.substring(1))) {
+					// remove all existing referenced projects
+					classpathEntries.remove();
+				}
+			}
+		}
+
+		// define a function which adds a project properly
+		Consumer<String> addProject = projectDep -> {
+			Node entry = classpathNode.appendNode("classpathentry");
+			entry.attributes().put("combineaccessrules", "true");
+			entry.attributes().put("exported", "true");
+			entry.attributes().put("kind", "src");
+			entry.attributes().put("path", "/" + projectDep);
+		};
+
+		// add all explicitly referenced projects
+		eclipseModel.getProject().getReferencedProjects().forEach(addProject);
+
+		// map from referenced project to jar filename (for those which have been mapped)
+		for (String jarToReplace : extension.jarsToReplace) {
+			// find the longest jar which matches the project
+			String matching = "";
+			for (String jarDep : jarDeps) {
+				if (jarDep.length() > matching.length() && jarDep.startsWith(jarToReplace)) {
+					matching = jarDep;
+				}
+			}
+			// if we found one
+			if (!matching.isEmpty()) {
+				// remove the jar from the classpath
+				String jar = "/" + matching + ".jar";
+				classpathEntries = classpathNode.children().iterator();
 				while (classpathEntries.hasNext()) {
 					Node entry = classpathEntries.next();
 					String path = (String) entry.attributes().get("path");
-					if (path != null) {
-						if (eclipseModel.getProject().getReferencedProjects().contains(path.substring(1))) {
-							classpathEntries.remove();
-						}
+					if (path != null && path.endsWith(jar)) {
+						classpathEntries.remove();
 					}
 				}
-				// add the new referenced projects with all of the required attributes
-				for (String projectDep : eclipseModel.getProject().getReferencedProjects()) {
-					Node entry = classpathNode.appendNode("classpathentry");
-					entry.attributes().put("combineaccessrules", "true");
-					entry.attributes().put("exported", "true");
-					entry.attributes().put("kind", "src");
-					entry.attributes().put("path", "/" + projectDep);
-				}
-			});
-		});
+				// and add a project
+				addProject.accept(jarToReplace);
+			}
+		}
+	}
+
+	static String parseLibraryName(String input) {
+		Preconditions.checkArgument(input.endsWith(".jar"));
+		int lastIdx = input.lastIndexOf('/');
+		return input.substring(lastIdx + 1, input.length() - 4);
 	}
 }

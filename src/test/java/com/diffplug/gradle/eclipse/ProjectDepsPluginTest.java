@@ -72,4 +72,39 @@ public class ProjectDepsPluginTest extends GradleIntegrationTest {
 		gradleRunner().withGradleVersion(version).withArguments("eclipse").build();
 		return read("b/.classpath");
 	}
+
+	@Test
+	public void testReplaceWithProject() throws IOException {
+		write("build.gradle",
+				"plugins { id 'com.diffplug.gradle.eclipse.projectdeps' }",
+				"apply plugin: 'java'",
+				"repositories { mavenCentral() }",
+				"dependencies {",
+				"    compile 'com.diffplug.durian:durian-core:1.0.0'",
+				"    compile 'com.diffplug.durian:durian-collect:1.0.0'",
+				"}",
+				"",
+				"eclipseProjectDeps {",
+				"    replaceWithProject('durian-core')",
+				"}");
+		gradleRunner().withArguments("eclipse").build();
+		String result = read(".classpath")
+				// replace the system-specific paths
+				.replaceAll("\"(?:.*)/(.*?)\"", "$1");
+		Assert.assertEquals(StringPrinter.buildStringFromLines(
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+				"<classpath>",
+				"\t<classpathentry path=\"bin\" kind=\"output\"/>",
+				"\t<classpathentry path= kind=\"con\"/>",
+				"\t<classpathentry path=durian-collect-1.0.0-sources.jar/>",
+				"\t<classpathentry path=animal-sniffer-annotations-1.14-sources.jar/>",
+				"\t<classpathentry path=j2objc-annotations-0.1-sources.jar/>",
+				"\t<classpathentry exported=durian-core kind=\"src\" combineaccessrules=\"true\"/>",
+				"</classpath>"), result);
+	}
+
+	@Test
+	public void testParseLibraryName() {
+		Assert.assertEquals("durian-core-1.0.0", ProjectDepsPlugin.parseLibraryName("C:/Users/ntwigg/AppData/Local/Temp/.gradle-test-kit-ntwigg/caches/modules-2/files-2.1/com.diffplug.durian/durian-core/1.0.0/b4462fca6c0f4ec9e3c38d78c4e57f8575fa1920/durian-core-1.0.0.jar"));
+	}
 }
