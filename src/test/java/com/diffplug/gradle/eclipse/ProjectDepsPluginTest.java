@@ -16,8 +16,6 @@
 package com.diffplug.gradle.eclipse;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -76,50 +74,33 @@ public class ProjectDepsPluginTest extends GradleIntegrationTest {
 	}
 
 	@Test
-	public void assertClasspathBinaryArtifact() throws IOException {
-		String baseline = testCaseExistingJars(false, false);
-		String replaceJar = testCaseExistingJars(true, false);
-		String onlyIfHasJar = testCaseExistingJars(false, true);
-		String both = testCaseExistingJars(true, true);
-		{ // replaceJar should have removed the jar
-			List<String> diff = Arrays.asList(Diff.computeDiff(baseline, replaceJar).split("\n"));
-			Assert.assertEquals("DELETE", diff.get(0));
-			Assert.assertTrue(diff.get(1).startsWith("<classpathentry path="));
-			Assert.assertTrue(diff.get(1).endsWith("/durian-core-1.0.0-sources.jar\"/>"));
-		}
-		{ // onlyIfHasJar should not add 'other-project'
-			Assert.assertEquals(StringPrinter.buildStringFromLines(
-					"DELETE",
-					"\t<classpathentry exported=\"true\" path=\"/other-project\" kind=\"src\" combineaccessrules=\"true\"/>",
-					""), Diff.computeDiff(baseline, onlyIfHasJar));
-		}
-		{ // both should do both
-			List<String> diff = Arrays.asList(Diff.computeDiff(baseline, both).split("\n"));
-			Assert.assertEquals("DELETE", diff.get(0));
-			Assert.assertTrue(diff.get(1).startsWith("<classpathentry path="));
-			Assert.assertTrue(diff.get(1).endsWith("/durian-core-1.0.0-sources.jar\"/>"));
-			Assert.assertEquals("DELETE", diff.get(3));
-			Assert.assertEquals("\t<classpathentry exported=\"true\" path=\"/other-project\" kind=\"src\" combineaccessrules=\"true\"/>", diff.get(4));
-		}
-	}
-
-	private String testCaseExistingJars(boolean replaceJar, boolean onlyIfHasJar) throws IOException {
+	public void testReplaceWithProject() throws IOException {
 		write("build.gradle",
 				"plugins { id 'com.diffplug.gradle.eclipse.projectdeps' }",
 				"apply plugin: 'java'",
 				"repositories { mavenCentral() }",
-				"dependencies { compile 'com.diffplug.durian:durian-core:1.0.0' }",
-				"",
-				"apply plugin: 'eclipse'",
-				"eclipse.project.referencedProjects.add('durian-core')",
-				"eclipse.project.referencedProjects.add('other-project')",
+				"dependencies {",
+				"    compile 'com.diffplug.durian:durian-core:1.0.0'",
+				"    compile 'com.diffplug.durian:durian-collect:1.0.0'",
+				"}",
 				"",
 				"eclipseProjectDeps {",
-				"    replaceJar = " + replaceJar,
-				"    onlyIfHasJar = " + onlyIfHasJar,
+				"    replaceWithProject('durian-core')",
 				"}");
-		gradleRunner().withArguments("jar", "eclipse").forwardOutput().build();
-		return read(".classpath");
+		gradleRunner().withArguments("eclipse").build();
+		String result = read(".classpath")
+				// replace the system-specific paths
+				.replaceAll("\"(?:.*)/(.*?)\"", "$1");
+		Assert.assertEquals(StringPrinter.buildStringFromLines(
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+				"<classpath>",
+				"\t<classpathentry path=\"bin\" kind=\"output\"/>",
+				"\t<classpathentry path= kind=\"con\"/>",
+				"\t<classpathentry path=durian-collect-1.0.0-sources.jar/>",
+				"\t<classpathentry path=animal-sniffer-annotations-1.14-sources.jar/>",
+				"\t<classpathentry path=j2objc-annotations-0.1-sources.jar/>",
+				"\t<classpathentry exported=durian-core kind=\"src\" combineaccessrules=\"true\"/>",
+				"</classpath>"), result);
 	}
 
 	@Test

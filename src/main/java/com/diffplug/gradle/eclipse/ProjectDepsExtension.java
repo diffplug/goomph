@@ -15,12 +15,24 @@
  */
 package com.diffplug.gradle.eclipse;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import com.diffplug.gradle.osgi.BndManifestPlugin;
+
 /** Determines where the manifest is written out by {@link BndManifestPlugin}. */
 public class ProjectDepsExtension {
 	static final String NAME = "eclipseProjectDeps";
 
-	/** If a project dependency has been added and there is a binary artifact with the same name, remove it. */
-	public boolean replaceJar = false;
 	/** Only adds a project dependency if the project also depends on a binary artifact with the same name. */
-	public boolean onlyIfHasJar = false;
+	final Set<String> jarsToReplace = new HashSet<>();
+
+	public void replaceWithProject(String jar) {
+		jarsToReplace.add(jar);
+	}
+
+	public void replaceWithProject(Collection<String> jar) {
+		jarsToReplace.addAll(jar);
+	}
 }
