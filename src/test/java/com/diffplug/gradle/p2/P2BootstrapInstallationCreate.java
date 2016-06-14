@@ -1,0 +1,39 @@
+/*
+ * Copyright 2016 DiffPlug
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.diffplug.gradle.p2;
+
+import java.io.File;
+
+import org.gradle.internal.impldep.com.google.common.base.StandardSystemProperty;
+
+import com.diffplug.gradle.eclipse.EclipseRelease;
+
+/** Creates a new folder for uploading to [goomph-p2-bootstrap](https://bintray.com/diffplug/opensource/goomph-p2-bootstrap). */
+public class P2BootstrapInstallationCreate {
+	/** The release to install. */
+	static final EclipseRelease RELEASE = EclipseRelease.R_4_5_2;
+	/** The place to install the release to. */
+	static final File INSTALL_TO = new File(StandardSystemProperty.USER_HOME.value() + "/Desktop/bootstrap");
+
+	public static void main(String[] args) throws Exception {
+		P2BootstrapInstallation installation = new P2BootstrapInstallation(RELEASE);
+		P2DirectorModel model = installation.p2model();
+		model.install(INSTALL_TO, "goomph-p2-bootstrap-" + RELEASE.version(), config -> {
+			config.roaming();
+		});
+		P2DirectorModel.cleanCachedRepositories(INSTALL_TO);
+	}
+}

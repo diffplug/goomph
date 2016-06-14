@@ -34,24 +34,31 @@ class P2BootstrapInstallation {
 
 	final EclipseRelease release;
 
-	public P2BootstrapInstallation(EclipseRelease release) {
+	P2BootstrapInstallation(EclipseRelease release) {
 		this.release = Objects.requireNonNull(release);
 	}
 
 	/** The root of this installation. */
-	public File getRootFolder() {
+	File getRootFolder() {
 		return new File(GoomphCacheLocations.p2bootstrap(), release.version().toString());
+	}
+
+	/** Makes sure that the installation is prepared. */
+	public void ensureInstalled() throws IOException {
+		if (!isInstalled()) {
+			install();
+		}
 	}
 
 	static final String TOKEN = "installed";
 
 	/** Returns true iff it is installed. */
-	public boolean ready() throws IOException {
+	private boolean isInstalled() throws IOException {
 		return FileMisc.hasToken(getRootFolder(), TOKEN);
 	}
 
 	/** Installs the bootstrap installation. */
-	public void install() throws IOException {
+	private void install() throws IOException {
 		// clean the install folder
 		FileMisc.cleanDir(getRootFolder());
 		// download the URL
@@ -65,19 +72,12 @@ class P2BootstrapInstallation {
 		FileMisc.writeToken(getRootFolder(), TOKEN);
 	}
 
-	/** Makes sure that the installation is prepared. */
-	public void ensureInstalled() throws IOException {
-		if (!ready()) {
-			install();
-		}
-	}
-
 	/**
 	 * Creates a model containing p2-director for the given {@link EclipseRelease}.
 	 *
 	 * Useful for updating [bintray](https://bintray.com/diffplug/opensource/goomph-p2-bootstrap/view).
 	 */
-	P2DirectorModel createNew() {
+	P2DirectorModel p2model() {
 		P2DirectorModel model = new P2DirectorModel();
 		// the update site for the release we're downloading artifacts for
 		model.addRepo(release.updateSite());
