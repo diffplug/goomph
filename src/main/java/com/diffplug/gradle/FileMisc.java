@@ -24,6 +24,7 @@ import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -196,5 +197,32 @@ public class FileMisc {
 		return permissions.contains(PosixFilePermission.OWNER_EXECUTE) &&
 				permissions.contains(PosixFilePermission.GROUP_EXECUTE) &&
 				permissions.contains(PosixFilePermission.OTHERS_EXECUTE);
+	}
+
+	/** Writes a file with the given name, to the given directory, containing the given value. */
+	public static void writeToken(File dir, String name, String value) throws IOException {
+		Preconditions.checkArgument(dir.isDirectory());
+		File token = new File(dir, name);
+		FileUtils.write(token, value, StandardCharsets.UTF_8);
+	}
+
+	/** Returns the contents of a file with the given name, if it exists. */
+	public static Optional<String> readToken(File dir, String name) throws IOException {
+		File token = new File(dir, name);
+		if (!token.isFile()) {
+			return Optional.empty();
+		} else {
+			return Optional.of(FileUtils.readFileToString(token, StandardCharsets.UTF_8));
+		}
+	}
+
+	/** Writes an empty file with the given name in the given directory. */
+	public static void writeToken(File dir, String name) throws IOException {
+		writeToken(dir, name, "");
+	}
+
+	/** Returns true iff the given directory has a file with the given name. */
+	public static boolean hasToken(File dir, String name) throws IOException {
+		return readToken(dir, name).isPresent();
 	}
 }

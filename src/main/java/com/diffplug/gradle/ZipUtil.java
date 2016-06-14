@@ -31,6 +31,8 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.io.IOUtils;
+
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.StringPrinter;
 import com.diffplug.common.base.Throwing;
@@ -138,12 +140,30 @@ public class ZipUtil {
 
 	/** Copies one stream into the other. */
 	private static void copy(InputStream input, OutputStream output) throws IOException {
-		byte[] buf = new byte[1024];
+		IOUtils.copy(input, output);
+	}
 
-		int numRead = input.read(buf);
-		while (numRead > 0) {
-			output.write(buf, 0, numRead);
-			numRead = input.read(buf);
+	/**
+	 * Reads the given entry from the zip.
+	 * 
+	 * @param input		a zip file
+	 * @param toRead	a path within that zip file
+	 * @param reader	will be called with an InputStream containing the contents of that entry in the zip file
+	 */
+	public static void unzip(File input, File destinationDir) throws IOException {
+		try (ZipInputStream zipInput = new ZipInputStream(new BufferedInputStream(new FileInputStream(input)))) {
+			ZipEntry entry;
+			while ((entry = zipInput.getNextEntry()) != null) {
+				File dest = new File(destinationDir, entry.getName());
+				if (entry.isDirectory()) {
+					dest.mkdirs();
+				} else {
+					dest.getParentFile().mkdirs();
+					try (OutputStream output = new BufferedOutputStream(new FileOutputStream(dest))) {
+						copy(zipInput, output);
+					}
+				}
+			}
 		}
 	}
 }
