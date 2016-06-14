@@ -21,10 +21,13 @@ import java.nio.file.Path;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import groovy.lang.Closure;
+
 import com.diffplug.common.collect.Sets;
 import com.diffplug.common.swt.os.OS;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.FileMisc;
+import com.diffplug.gradle.GroovyCompat;
 import com.diffplug.gradle.eclipse.EclipseArgsBuilder;
 import com.diffplug.gradle.eclipse.EclipseRelease;
 import com.diffplug.gradle.eclipse.EquinoxLauncher;
@@ -188,6 +191,11 @@ public class P2DirectorModel {
 		EquinoxLauncher launcher = new EquinoxLauncher(installation.getRootFolder());
 		launcher.setArgs(args.toArgList());
 		launcher.run();
+	}
+
+	/** Groovy-friendly version of {@link P2DirectorModel#install(File, String, Consumer)}. */
+	public void install(File dstFolder, String profile, Closure<EclipseArgsBuilder> configModify) throws Exception {
+		install(dstFolder, profile, GroovyCompat.consumerFrom(configModify));
 	}
 
 	/** Adds `p2.os`, `p2.ws`, and `p2.arch` arguments. */
