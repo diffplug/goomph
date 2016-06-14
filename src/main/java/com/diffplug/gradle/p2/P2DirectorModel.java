@@ -18,6 +18,8 @@ package com.diffplug.gradle.p2;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -115,6 +117,25 @@ public class P2DirectorModel {
 	private Set<String> repos = Sets.newLinkedHashSet();
 	private Set<String> metadataRepo = Sets.newLinkedHashSet();
 	private Set<String> artifactRepo = Sets.newLinkedHashSet();
+
+	/** Combines all fields for easy implementation of equals and hashCode. */
+	private final List<Object> content = Arrays.asList(ius, repos, metadataRepo, artifactRepo);
+
+	/** Hash of the models current content. */
+	@Override
+	public int hashCode() {
+		return content.hashCode();
+	}
+
+	/** Two models are equal if all their fields are equal. */
+	@Override
+	public boolean equals(Object otherObj) {
+		if (otherObj instanceof P2DirectorModel) {
+			return content.equals(((P2DirectorModel) otherObj).content);
+		} else {
+			return false;
+		}
+	}
 
 	public void addIU(String iu) {
 		ius.add(iu);
