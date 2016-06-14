@@ -15,6 +15,8 @@
  */
 package com.diffplug.gradle.eclipse;
 
+import org.osgi.framework.Version;
+
 import com.diffplug.common.base.Unhandled;
 
 /**
@@ -28,6 +30,12 @@ import com.diffplug.common.base.Unhandled;
 public enum EclipseRelease {
 	R_4_5_2;
 
+	/** Returns the latest released version of eclipse which is supported by Goomph. */
+	public static EclipseRelease latest() {
+		return R_4_5_2;
+	}
+
+	/** Returns the eclipse update site for this release. */
 	public String updateSite() {
 		String root = "http://download.eclipse.org/eclipse/updates/";
 		// @formatter:off
@@ -38,12 +46,13 @@ public enum EclipseRelease {
 		// @formatter:on
 	}
 
-	public String version() {
-		return name().substring(2).replace('_', '.');
+	/** Returns the OSGi version for this release. */
+	public Version version() {
+		return Version.valueOf(toString());
 	}
 
-	/** Returns the latest released version of eclipse which is supported by Goomph. */
-	public static EclipseRelease latest() {
-		return R_4_5_2;
+	@Override
+	public String toString() {
+		return name().substring(2).replace('_', '.');
 	}
 }

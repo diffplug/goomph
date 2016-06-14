@@ -40,7 +40,7 @@ class P2BootstrapInstallation {
 
 	/** The root of this installation. */
 	public File getRootFolder() {
-		return new File(GoomphCacheLocations.p2bootstrap(), release.version());
+		return new File(GoomphCacheLocations.p2bootstrap(), release.version().toString());
 	}
 
 	static final String TOKEN = "installed";
@@ -77,15 +77,17 @@ class P2BootstrapInstallation {
 	 *
 	 * Useful for updating [bintray](https://bintray.com/diffplug/opensource/goomph-p2-bootstrap/view).
 	 */
-	static P2DirectorModel createNew(EclipseRelease release) {
+	P2DirectorModel createNew() {
 		P2DirectorModel model = new P2DirectorModel();
 		// the update site for the release we're downloading artifacts for
 		model.addRepo(release.updateSite());
 		// the p2 director application and its dependencies
 		model.addIU("org.eclipse.equinox.p2.director.app");
 		model.addFeature("org.eclipse.equinox.p2.core.feature");
-		// failed transitive from p2
+		// failed transitive required for basic p2 operations
 		model.addIU("org.eclipse.core.net");
+		// failed transitive required for shared installations touchpoints
+		model.addIU("org.eclipse.osgi.compatibility.state");
 		// eclipse infrastructure to make "eclipsec -application org.eclipse.equinox.p2.director" work
 		model.addIU("org.eclipse.core.runtime");
 		model.addIU("org.eclipse.update.configurator");

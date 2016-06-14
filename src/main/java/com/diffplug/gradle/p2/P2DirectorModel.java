@@ -25,6 +25,7 @@ import java.util.function.Consumer;
 
 import groovy.lang.Closure;
 
+import com.diffplug.common.base.Consumers;
 import com.diffplug.common.collect.Sets;
 import com.diffplug.common.swt.os.OS;
 import com.diffplug.common.swt.os.SwtPlatform;
@@ -166,26 +167,74 @@ public class P2DirectorModel {
 	}
 
 	/**
-	 * Creates an EclipseArgsBuilder populated with the arguments
-	 * necessary to call "eclipsec" and run the p2 director application
-	 * to install the artifacts from the repos in this model into the
-	 *
-	 * @param dstFolder
-	 * @param profile
-	 * @return
+	 * Returns the arguments required to call "eclipsec" and run the p2 director application
+	 * to install the artifacts from the repos in this model into the given directory and profile.
 	 */
-	EclipseArgsBuilder argsFor(File dstFolder, String profile) {
-		// create args for this destination
-		EclipseArgsBuilder task = new EclipseArgsBuilder();
-		// set 
-		task.addArg("application", "org.eclipse.equinox.p2.director");
-		repos.forEach(repo -> task.addArg("repository", repo));
-		metadataRepo.forEach(repo -> task.addArg("metadataRepository", repo));
-		artifactRepo.forEach(repo -> task.addArg("artifactRepository", repo));
-		ius.forEach(iu -> task.addArg("installIU", iu));
-		task.addArg("profile", profile);
-		task.addArg("destination", "file:" + dstFolder.getAbsolutePath());
-		return task;
+	public ArgsBuilder argsForInstall(File dstFolder, String profile) {
+		ArgsBuilder builder = new ArgsBuilder();
+		builder.clean();
+		builder.consolelog();
+		builder.application("org.eclipse.equinox.p2.director");
+		repos.forEach(repo -> builder.addArg("repository", repo));
+		metadataRepo.forEach(repo -> builder.addArg("metadataRepository", repo));
+		artifactRepo.forEach(repo -> builder.addArg("artifactRepository", repo));
+		ius.forEach(iu -> builder.addArg("installIU", iu));
+		builder.addArg("profile", profile);
+		builder.addArg("destination", "file:" + dstFolder.getAbsolutePath());
+		return builder;
+	}
+
+	/**
+	 * An extension of EclipseArgsBuilder with typed methods appropriate for p2 director.
+	 *
+	 * Created using {@link P2DirectorModel#argsForInstall(File, String)}.
+	 */
+	public static class ArgsBuilder extends EclipseArgsBuilder {
+		/**
+		 * Adds a `bundlepool` argument.
+		 *
+		 * The location of where the plug-ins and features will be stored. This value
+		 * is only taken into account when a new profile is created. For an application
+		 * where all the bundles are located into the plugins/ folder of the destination,
+		 * set it to `<destination>`.
+		 */
+		public void bundlepool(File bundlePool) {
+			addArg("bundlepool", bundlePool.getAbsolutePath());
+		}
+
+		/** Adds `p2.os`, `p2.ws`, and `p2.arch` arguments. */
+		public void os(OS os) {
+			SwtPlatform platform = SwtPlatform.fromOS(os);
+			addArg("p2.os", platform.getOs());
+			addArg("p2.ws", platform.getWs());
+			addArg("p2.arch", platform.getArch());
+		}
+
+		/**
+		 * Adds the `roaming` argument.
+		 *
+		 * Indicates that the product resulting from the installation can be moved.
+		 * This property only makes sense when the destination and bundle pool are
+		 * in the same location. This value is only taken into account when the
+		 * profile is created.
+		 */
+		public void roaming() {
+			addArg("roaming");
+		}
+
+		/**
+		 * Adds the `shared` argument.
+		 *
+		 * use a shared location for the install. The path defaults to ${user.home}/.p2.
+		 */
+		public void shared() {
+			addArg("shared");
+		}
+
+		/** @see #shared() */
+		public void shared(File shared) {
+			addArg("shared", shared.getAbsolutePath());
+		}
 	}
 
 	/**
@@ -201,9 +250,9 @@ public class P2DirectorModel {
 	 * @param profile the name of the profile, doesn't really matter what it is.
 	 * @return args which you can pass to the eclipse command line
 	 */
-	public void install(File dstFolder, String profile, Consumer<EclipseArgsBuilder> configModify) throws Exception {
+	public void install(File dstFolder, String profile, Consumer<ArgsBuilder> configModify) throws Exception {
 		// setup the args
-		EclipseArgsBuilder args = argsFor(dstFolder, profile);
+		ArgsBuilder args = argsForInstall(dstFolder, profile);
 		configModify.accept(args);
 		// ensure the bootstrap installation is installed
 		P2BootstrapInstallation installation = new P2BootstrapInstallation(EclipseRelease.latest());
@@ -215,16 +264,13 @@ public class P2DirectorModel {
 	}
 
 	/** Groovy-friendly version of {@link P2DirectorModel#install(File, String, Consumer)}. */
-	public void install(File dstFolder, String profile, Closure<EclipseArgsBuilder> configModify) throws Exception {
+	public void install(File dstFolder, String profile, Closure<ArgsBuilder> configModify) throws Exception {
 		install(dstFolder, profile, GroovyCompat.consumerFrom(configModify));
 	}
 
-	/** Adds `p2.os`, `p2.ws`, and `p2.arch` arguments. */
-	public static void addArgsFor(EclipseArgsBuilder args, OS os) {
-		SwtPlatform platform = SwtPlatform.fromOS(os);
-		args.addArg("p2.os", platform.getOs());
-		args.addArg("p2.ws", platform.getWs());
-		args.addArg("p2.arch", platform.getArch());
+	/** See {@link #install(File, String, Consumer)}. */
+	public void install(File dstFolder, String profile) throws Exception {
+		install(dstFolder, profile, Consumers.doNothing());
 	}
 
 	/** Deletes the cached repository info (which may include references to local paths). */
