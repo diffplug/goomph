@@ -113,7 +113,6 @@ public class EquinoxLauncher {
 	 * map.put("osgi.noShutdown", "false");
 	 * // enable 
 	 * map.put("equinox.use.ds", "true");
-	 * map.put("eclipse.consoleLog", "true");
 	 * map.put("osgi.bundles", Joiner.on(", ").join(
 	 *     // automatic bundle discovery and installation
 	 *     "org.eclipse.equinox.common@2:start",
@@ -183,7 +182,6 @@ public class EquinoxLauncher {
 		map.put(EclipseStarter.PROP_NOSHUTDOWN, "false");
 		// enable 
 		map.put("equinox.use.ds", "true");
-		map.put(EclipseStarter.PROP_CONSOLE_LOG, "true");
 		map.put(EclipseStarter.PROP_BUNDLES, Joiner.on(", ").join(
 				// automatic bundle discovery and installation
 				"org.eclipse.equinox.common@2:start",
