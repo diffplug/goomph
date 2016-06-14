@@ -53,19 +53,18 @@ configurations {
 }
 
 dependencies {
+	// Compile misc
 	compile "com.diffplug.durian:durian-core:${VER_DURIAN}"
 	compile "com.diffplug.durian:durian-collect:${VER_DURIAN}"
 	compile "com.diffplug.durian:durian-io:${VER_DURIAN}"
 	compile "com.diffplug.durian:durian-swt:${VER_DURIAN_SWT}"
-	compile "org.osgi:org.osgi.core:6.0.0"
-	compile "biz.aQute.bnd:biz.aQute.bndlib:${VER_BNDLIB}"
 	compile "commons-io:commons-io:${VER_COMMONS_IO}"
+	// OSGi
+	compile "biz.aQute.bnd:biz.aQute.bndlib:${VER_BNDLIB}"
+	// p2
+	compile "org.eclipse.tycho:org.eclipse.osgi:${VER_ECLIPSE_OSGI}"
 
-	// p2 dependencies
-	//embeddedJars 'p2:org.eclipse.jdt.core:3.11.0.v20150602-1242'
-	//embeddedJars 'p2:org.eclipse.text:3.5.400.v20150505-1044'
-	configurations.compile.extendsFrom(configurations.embeddedJars)
-
+	// testing
 	testCompile "junit:junit:${VER_JUNIT}"
 }
 

@@ -13,20 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.diffplug.gradle.pde;
+package com.diffplug.gradle.p2;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
-import org.gradle.api.Project;
-import org.gradle.api.Task;
+import groovy.lang.Closure;
 
-import com.diffplug.common.base.Errors;
 import com.diffplug.common.collect.Sets;
 import com.diffplug.common.swt.os.OS;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.FileMisc;
+import com.diffplug.gradle.GroovyCompat;
+import com.diffplug.gradle.eclipse.EclipseArgsBuilder;
+import com.diffplug.gradle.eclipse.EclipseRelease;
+import com.diffplug.gradle.eclipse.EquinoxLauncher;
 
 /**
  * Runs P2 director to install artifacts from P2 repositories.
@@ -40,17 +46,17 @@ import com.diffplug.gradle.FileMisc;
  * import com.diffplug.gradle.*
  * import com.diffplug.gradle.pde.*
  * import com.diffplug.common.swt.os.*
-
+ *
  * // list of OS values for which we want to create an installer
  * def INSTALLERS = OS.values()
  * def VER_JRE = '1.8.0.40'
-
+ *
  * // add each of the core IUs
  * def coreModel = new P2DirectorModel()
  * coreModel.addIU(APP_ID)
  * coreModel.addIU('com.diffplug.jre.feature.group')
  * coreModel.addIU('com.diffplug.native.feature.group')
-
+ *
  * // add each of the local repositories
  * def repoRoot = 'file:' + projectDir + '/'   // reads repos from this machine
  * //def repoRoot = 'http://192.168.1.77/'     // reads repos from another machine running hostFiles()
@@ -59,7 +65,7 @@ import com.diffplug.gradle.FileMisc;
  * ROOT_FEATURES.forEach() { feature ->
  *     assembleModel.addRepo('file:' + project.file(ROOT_FEATURE_DIR + feature))
  * }
-
+ *
  * // assemble DiffPlug for each os
  * task assembleAll
  * def ASSEMBLE_TASK = 'assemble'
@@ -69,7 +75,7 @@ import com.diffplug.gradle.FileMisc;
  *     assembleOneTask.dependsOn(diffplugP2)
  *     assembleOneTask.dependsOn(checkRootFeatures)
  *     assembleAll.dependsOn(assembleOneTask)
-
+ *
  *     // make the JRE executable if we can
  *     if (os.isMacOrLinux() && NATIVE_OS.isMacOrLinux()) {
  *         EclipsePlatform platform = EclipsePlatform.fromOS(os)
@@ -79,7 +85,7 @@ import com.diffplug.gradle.FileMisc;
  *         }
  *     }
  * }
-
+ *
  * // test case which creates a DiffPlug from an existing DiffPlug
  * task reassembleAll
  * def REASSEMBLE_TASK = 'reassemble'
@@ -112,8 +118,39 @@ public class P2DirectorModel {
 	private Set<String> metadataRepo = Sets.newLinkedHashSet();
 	private Set<String> artifactRepo = Sets.newLinkedHashSet();
 
+	/** Combines all fields for easy implementation of equals and hashCode. */
+	private final List<Object> content = Arrays.asList(ius, repos, metadataRepo, artifactRepo);
+
+	/** Hash of the models current content. */
+	@Override
+	public int hashCode() {
+		return content.hashCode();
+	}
+
+	/** Two models are equal if all their fields are equal. */
+	@Override
+	public boolean equals(Object otherObj) {
+		if (otherObj instanceof P2DirectorModel) {
+			return content.equals(((P2DirectorModel) otherObj).content);
+		} else {
+			return false;
+		}
+	}
+
 	public void addIU(String iu) {
 		ius.add(iu);
+	}
+
+	public void addIU(String iu, String version) {
+		ius.add(iu + "/" + version);
+	}
+
+	public void addFeature(String feature) {
+		addIU(feature + ".feature.group");
+	}
+
+	public void addFeature(String feature, String version) {
+		addIU(feature + ".feature.group", version);
 	}
 
 	public void addRepo(String repo) {
@@ -128,40 +165,71 @@ public class P2DirectorModel {
 		artifactRepo.add(repo);
 	}
 
-	private static final String PROFILE = "ProfileDiffPlugP2";
-
-	/** Creates a task which run P2 Director on the given model. */
-	public Task taskFor(Project project, String taskName, OS os, Object dstDir) throws Exception {
-		// create an EclipseTask
-		EclipsecTask task = project.getTasks().create(taskName, EclipsecTask.class);
-		// set it up to build
-		task.addArg("nosplash", "");
+	/**
+	 * Creates an EclipseArgsBuilder populated with the arguments
+	 * necessary to call "eclipsec" and run the p2 director application
+	 * to install the artifacts from the repos in this model into the
+	 *
+	 * @param dstFolder
+	 * @param profile
+	 * @return
+	 */
+	EclipseArgsBuilder argsFor(File dstFolder, String profile) {
+		// create args for this destination
+		EclipseArgsBuilder task = new EclipseArgsBuilder();
+		// set 
 		task.addArg("application", "org.eclipse.equinox.p2.director");
 		repos.forEach(repo -> task.addArg("repository", repo));
 		metadataRepo.forEach(repo -> task.addArg("metadataRepository", repo));
 		artifactRepo.forEach(repo -> task.addArg("artifactRepository", repo));
 		ius.forEach(iu -> task.addArg("installIU", iu));
-		task.addArg("profile", PROFILE);
-		task.addArg("profileProperties", "org.eclipse.update.install.features=true");
-
-		SwtPlatform platform = SwtPlatform.fromOS(os);
-		task.addArg("p2.os", platform.getOs());
-		task.addArg("p2.ws", platform.getWs());
-		task.addArg("p2.arch", platform.getArch());
-
-		task.addArg("roaming", "");
-
-		File dstFile = project.file(dstDir);
-		task.addArg("destination", "file:" + dstFile.getAbsolutePath());
-
-		// delete the cached repositories, since they leak paths on the build server
-		task.doLast(unused -> {
-			Errors.rethrow().run(() -> {
-				Path path = dstFile.toPath().resolve("p2/org.eclipse.equinox.p2.engine/.settings");
-				FileMisc.cleanDir(path.toFile());
-			});
-		});
-
+		task.addArg("profile", profile);
+		task.addArg("destination", "file:" + dstFolder.getAbsolutePath());
 		return task;
+	}
+
+	/**
+	 * Installs the IUs from the repos specified in this object into the given folder.
+	 *
+	 * This uses the P2 director application from the latest available 
+	 *
+	 * For more args, see [the p2 director docs](http://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Fguide%2Fp2_director.html&cp=2_0_20_2).
+	 *
+	 * In particular, you might want to add "roaming", if you'd like to copy-paste an installation around.
+	 *
+	 * @param dstFolder the folder into which the installation will take place.
+	 * @param profile the name of the profile, doesn't really matter what it is.
+	 * @return args which you can pass to the eclipse command line
+	 */
+	public void install(File dstFolder, String profile, Consumer<EclipseArgsBuilder> configModify) throws Exception {
+		// setup the args
+		EclipseArgsBuilder args = argsFor(dstFolder, profile);
+		configModify.accept(args);
+		// ensure the bootstrap installation is installed
+		P2BootstrapInstallation installation = new P2BootstrapInstallation(EclipseRelease.latest());
+		installation.ensureInstalled();
+		// launch the equinox application with these arguments
+		EquinoxLauncher launcher = new EquinoxLauncher(installation.getRootFolder());
+		launcher.setArgs(args.toArgList());
+		launcher.run();
+	}
+
+	/** Groovy-friendly version of {@link P2DirectorModel#install(File, String, Consumer)}. */
+	public void install(File dstFolder, String profile, Closure<EclipseArgsBuilder> configModify) throws Exception {
+		install(dstFolder, profile, GroovyCompat.consumerFrom(configModify));
+	}
+
+	/** Adds `p2.os`, `p2.ws`, and `p2.arch` arguments. */
+	public static void addArgsFor(EclipseArgsBuilder args, OS os) {
+		SwtPlatform platform = SwtPlatform.fromOS(os);
+		args.addArg("p2.os", platform.getOs());
+		args.addArg("p2.ws", platform.getWs());
+		args.addArg("p2.arch", platform.getArch());
+	}
+
+	/** Deletes the cached repository info (which may include references to local paths). */
+	public static void cleanCachedRepositories(File dstFile) throws IOException {
+		Path path = dstFile.toPath().resolve("p2/org.eclipse.equinox.p2.engine/.settings");
+		FileMisc.cleanDir(path.toFile());
 	}
 }
