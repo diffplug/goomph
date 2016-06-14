@@ -24,6 +24,7 @@ import com.diffplug.common.base.Joiner;
 import com.diffplug.common.collect.ArrayListMultimap;
 import com.diffplug.common.collect.ListMultimap;
 import com.diffplug.gradle.CmdLine;
+import com.diffplug.gradle.p2.P2DirectorModel;
 
 /**
  * A Gradle task which runs an `eclipsec` command at the console.
