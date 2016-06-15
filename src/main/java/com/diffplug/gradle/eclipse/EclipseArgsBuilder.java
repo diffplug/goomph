@@ -16,6 +16,7 @@
 package com.diffplug.gradle.eclipse;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -63,7 +64,10 @@ public class EclipseArgsBuilder {
 	}
 
 	public void addArg(String key) {
-		args.put(key, "");
+		// no reason to set a flag twice
+		if (!args.get(key).equals(Collections.singletonList(""))) {
+			args.put(key, "");
+		}
 	}
 
 	public void addArg(String key, String value) {

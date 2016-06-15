@@ -19,7 +19,7 @@ import org.gradle.internal.impldep.com.google.common.base.Joiner;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class EclipseArgBuilderTest {
+public class EclipseArgsBuilderTest {
 	@Test
 	public void test() {
 		EclipseArgsBuilder builder = new EclipseArgsBuilder();
@@ -28,5 +28,14 @@ public class EclipseArgBuilderTest {
 		builder.addArg("flag");
 		Assert.assertEquals("-prop a,b -flag", Joiner.on(" ").join(builder.toArgList()));
 		Assert.assertEquals("-prop a,b\n-flag\n", builder.toString());
+	}
+
+	@Test
+	public void testDoubleAdd() {
+		EclipseArgsBuilder args = new EclipseArgsBuilder();
+		args.addArg("flag");
+		args.addArg("flag");
+		args.addArg("flag");
+		Assert.assertEquals("-flag", Joiner.on(" ").join(args.toArgList()));
 	}
 }
