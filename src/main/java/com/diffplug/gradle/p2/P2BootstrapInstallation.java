@@ -22,6 +22,7 @@ import java.util.Objects;
 
 import org.apache.commons.io.FileUtils;
 
+import com.diffplug.common.base.Preconditions;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
 import com.diffplug.gradle.ZipUtil;
@@ -36,11 +37,13 @@ class P2BootstrapInstallation {
 
 	P2BootstrapInstallation(EclipseRelease release) {
 		this.release = Objects.requireNonNull(release);
+		// install() will only work for officially supported versions
+		Preconditions.checkArgument(EclipseRelease.OFFICIAL.contains(release));
 	}
 
 	/** The root of this installation. */
 	File getRootFolder() {
-		return new File(GoomphCacheLocations.p2bootstrap(), release.version().toString());
+		return new File(GoomphCacheLocations.p2bootstrap(), release.toString());
 	}
 
 	/** Makes sure that the installation is prepared. */
