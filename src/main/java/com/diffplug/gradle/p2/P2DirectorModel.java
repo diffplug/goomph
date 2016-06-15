@@ -27,7 +27,6 @@ import groovy.lang.Closure;
 
 import com.diffplug.common.base.Consumers;
 import com.diffplug.common.collect.Sets;
-import com.diffplug.common.swt.os.OS;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GroovyCompat;
@@ -202,8 +201,7 @@ public class P2DirectorModel {
 		}
 
 		/** Adds `p2.os`, `p2.ws`, and `p2.arch` arguments. */
-		public void os(OS os) {
-			SwtPlatform platform = SwtPlatform.fromOS(os);
+		public void oswsarch(SwtPlatform platform) {
 			addArg("p2.os", platform.getOs());
 			addArg("p2.ws", platform.getWs());
 			addArg("p2.arch", platform.getArch());
@@ -247,7 +245,6 @@ public class P2DirectorModel {
 	 *
 	 * @param dstFolder the folder into which the installation will take place.
 	 * @param profile the name of the profile, doesn't really matter what it is.
-	 * @return args which you can pass to the eclipse command line
 	 */
 	public void install(File dstFolder, String profile, Consumer<ArgsBuilder> configModify) throws Exception {
 		// setup the args
