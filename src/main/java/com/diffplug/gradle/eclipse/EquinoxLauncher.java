@@ -41,6 +41,9 @@ import com.diffplug.common.collect.TreeMultimap;
  * provides an API for running an eclipse instance and working
  * with its {@link BundleContext}.
  *
+ * Doesn't work with a shared install - requires a standard "plugins"
+ * folder full of jars.
+ *
  * See {@link #setProps(Map)} for precise details on the
  * default framework properties.
  */
@@ -65,9 +68,20 @@ public class EquinoxLauncher {
 					int verSplit = fileName.lastIndexOf('_');
 
 					// the name and version of the plugin
-					String name = fileName.substring(0, verSplit);
-					String version = fileName.substring(verSplit + 1, fileName.length() - ".jar".length());
-					plugins.put(name, Version.valueOf(version));
+					// General scheme is name_version.jar
+					// But sometimes name can have underscore: org.eclipse.swt.win32.win32.x86_64_3.104.2.v20160212-1350.jar
+					// And sometimes version can hava underscore: org.w3c.dom.events_3.0.0.draft20060413_v201105210656.jar
+					// Probably right thing is regex for _#.#.#, but easy thing is this iterative nonsense
+					while (verSplit != -1) {
+						try {
+							String name = fileName.substring(0, verSplit);
+							String version = fileName.substring(verSplit + 1, fileName.length() - ".jar".length());
+							plugins.put(name, Version.valueOf(version));
+							break;
+						} catch (IllegalArgumentException e) {
+							verSplit = fileName.lastIndexOf('_', verSplit - 1);
+						}
+					}
 				}
 			}
 		}
