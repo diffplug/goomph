@@ -20,9 +20,8 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.gradle.internal.impldep.com.google.common.collect.Iterables;
-
 import com.diffplug.common.base.Joiner;
+import com.diffplug.common.collect.Iterables;
 import com.diffplug.common.collect.ListMultimap;
 import com.diffplug.common.collect.Multimaps;
 

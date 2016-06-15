@@ -21,9 +21,9 @@ import java.net.URL;
 import java.util.Objects;
 
 import org.apache.commons.io.FileUtils;
-import org.gradle.internal.impldep.com.google.common.collect.ImmutableSet;
 
 import com.diffplug.common.base.Preconditions;
+import com.diffplug.common.collect.ImmutableSet;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
 import com.diffplug.gradle.ZipUtil;
@@ -36,7 +36,7 @@ class P2BootstrapInstallation {
 
 	/** List of versions for which we have deployed a bootstrap to bintray. */
 	static final ImmutableSet<EclipseRelease> SUPPORTED = ImmutableSet.of(
-			EclipseRelease.officialRelease("4.5.2"));
+			EclipseRelease.official("4.5.2"));
 
 	final EclipseRelease release;
 

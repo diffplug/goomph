@@ -54,7 +54,7 @@ public final class EclipseRelease {
 	}
 
 	/** Returns the given officially released version which is supported by Goomph. */
-	public static EclipseRelease officialRelease(String version) {
+	public static EclipseRelease official(String version) {
 		EclipseRelease release = officialReleaseMaybe(version);
 		if (release == null) {
 			throw new IllegalArgumentException(version + " is not supported.  We only support " + supportedRange());

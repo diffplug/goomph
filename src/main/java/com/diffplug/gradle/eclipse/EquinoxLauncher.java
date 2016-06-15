@@ -24,14 +24,14 @@ import java.util.SortedSet;
 import java.util.function.BiConsumer;
 
 import org.eclipse.core.runtime.adaptor.EclipseStarter;
-import org.gradle.internal.impldep.com.google.common.collect.ImmutableList;
-import org.gradle.internal.impldep.com.google.common.collect.ImmutableMap;
-import org.gradle.internal.impldep.com.google.common.collect.Iterables;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Version;
 
 import com.diffplug.common.base.Joiner;
 import com.diffplug.common.base.Preconditions;
+import com.diffplug.common.collect.ImmutableList;
+import com.diffplug.common.collect.ImmutableMap;
+import com.diffplug.common.collect.Iterables;
 import com.diffplug.common.collect.SortedSetMultimap;
 import com.diffplug.common.collect.TreeMultimap;
 
