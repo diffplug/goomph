@@ -144,11 +144,10 @@ public class ZipUtil {
 	}
 
 	/**
-	 * Reads the given entry from the zip.
-	 * 
-	 * @param input		a zip file
-	 * @param toRead	a path within that zip file
-	 * @param reader	will be called with an InputStream containing the contents of that entry in the zip file
+	 * Unzips a directory to a folder.
+	 *
+	 * @param input				a zip file
+	 * @param destinationDir	where the zip will be extracted to
 	 */
 	public static void unzip(File input, File destinationDir) throws IOException {
 		try (ZipInputStream zipInput = new ZipInputStream(new BufferedInputStream(new FileInputStream(input)))) {
