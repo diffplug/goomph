@@ -32,7 +32,6 @@ import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GroovyCompat;
 import com.diffplug.gradle.eclipse.EclipseArgsBuilder;
-import com.diffplug.gradle.eclipse.EclipseRelease;
 import com.diffplug.gradle.eclipse.EquinoxLauncher;
 
 /**
@@ -255,7 +254,7 @@ public class P2DirectorModel {
 		ArgsBuilder args = argsForInstall(dstFolder, profile);
 		configModify.accept(args);
 		// ensure the bootstrap installation is installed
-		P2BootstrapInstallation installation = new P2BootstrapInstallation(EclipseRelease.latest());
+		P2BootstrapInstallation installation = P2BootstrapInstallation.latest();
 		installation.ensureInstalled();
 		// launch the equinox application with these arguments
 		EquinoxLauncher launcher = new EquinoxLauncher(installation.getRootFolder());

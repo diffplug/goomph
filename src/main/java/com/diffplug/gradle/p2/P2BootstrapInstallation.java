@@ -21,6 +21,7 @@ import java.net.URL;
 import java.util.Objects;
 
 import org.apache.commons.io.FileUtils;
+import org.gradle.internal.impldep.com.google.common.collect.ImmutableSet;
 
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.gradle.FileMisc;
@@ -33,12 +34,21 @@ class P2BootstrapInstallation {
 	static final String DOWNLOAD_ROOT = "https://dl.bintray.com/diffplug/opensource/com/diffplug/gradle/goomph-p2-bootstrap/";
 	static final String DOWNLOAD_FILE = "/goomph-p2-bootstrap.zip";
 
+	/** List of versions for which we have deployed a bootstrap to bintray. */
+	static final ImmutableSet<EclipseRelease> SUPPORTED = ImmutableSet.of(
+			EclipseRelease.officialRelease("4.5.2"));
+
 	final EclipseRelease release;
+
+	static P2BootstrapInstallation latest() {
+		EclipseRelease latest = SUPPORTED.asList().listIterator(SUPPORTED.size()).previous();
+		return new P2BootstrapInstallation(latest);
+	}
 
 	P2BootstrapInstallation(EclipseRelease release) {
 		this.release = Objects.requireNonNull(release);
 		// install() will only work for officially supported versions
-		Preconditions.checkArgument(EclipseRelease.OFFICIAL.contains(release));
+		Preconditions.checkArgument(SUPPORTED.contains(release), "We only have bootstrap for ", SUPPORTED);
 	}
 
 	/** The root of this installation. */

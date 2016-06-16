@@ -16,14 +16,11 @@
 package com.diffplug.gradle.eclipse;
 
 import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 
-import org.gradle.internal.impldep.com.google.common.collect.ImmutableSet;
-import org.osgi.framework.Version;
+import javax.annotation.Nullable;
 
-import com.diffplug.common.base.Unhandled;
+import org.osgi.framework.Version;
 
 /**
  * Enum representing all the released versions of eclipse from 4.5.2 onwards.
@@ -46,9 +43,9 @@ public final class EclipseRelease {
 
 	/** Creates a custom eclipse release (use an official release, e.g. `EclipseRelease.R_4_5_2` whenever possible). */
 	public static EclipseRelease createWithIdVersionUpdatesite(String id, String version, String updateSite) {
-		Optional<EclipseRelease> officialConflict = OFFICIAL.stream().filter(release -> release.id.equals(id)).findFirst();
-		if (officialConflict.isPresent()) {
-			throw new IllegalArgumentException("User-generated version cannot conflict with built-in " + officialConflict.get() + ", use EclipseRelease.R_" + id.replace(".", "_"));
+		EclipseRelease official = officialReleaseMaybe(id);
+		if (official != null) {
+			throw new IllegalArgumentException("User-generated version cannot conflict with built-in " + id + ", change the ID or use EclipseRelease.forVersion(" + id + ")");
 		}
 		return new EclipseRelease(
 				Objects.requireNonNull(id),
@@ -56,27 +53,60 @@ public final class EclipseRelease {
 				Objects.requireNonNull(updateSite));
 	}
 
-	/** Mars.2 */
-	public static final EclipseRelease R_4_5_2 = officialRelease("4.5.2");
-
-	/** The officially released versions which are supported by goomph. */
-	public static final Set<EclipseRelease> OFFICIAL = ImmutableSet.of(R_4_5_2);
-
-	/** Returns the latest officially released version which is supported by Goomph. */
-	public static EclipseRelease latestOfficial() {
-		return R_4_5_2;
+	/** Returns the given officially released version which is supported by Goomph. */
+	public static EclipseRelease officialRelease(String version) {
+		EclipseRelease release = officialReleaseMaybe(version);
+		if (release == null) {
+			throw new IllegalArgumentException(version + " is not supported.  We only support " + supportedRange());
+		} else {
+			return release;
+		}
 	}
 
-	private static EclipseRelease officialRelease(String version) {
-		Function<String, String> updateSite = v -> {
-			String root = "http://download.eclipse.org/eclipse/updates/";
+	public static String supportedRange() {
+		return "3.5.0 through 4.5.2";
+	}
+
+	@Nullable
+	private static EclipseRelease officialReleaseMaybe(String version) {
+		Function<String, String> updateSiteFunc = v -> {
 			// @formatter:off
+			String root = "http://download.eclipse.org/eclipse/updates/";
 			switch (v) {
+			case "3.5.0": return root + "3.5/R-3.5-200906111540/";
+			case "3.5.1": return root + "3.5/R-3.5.1-200909170800/";
+			case "3.5.2": return root + "3.5/R-3.5.2-201002111343/";
+			case "3.6.0": return root + "3.6/R-3.6-201006080911/";
+			case "3.6.1": return root + "3.6/R-3.6.1-201009090800/";
+			case "3.6.2": return root + "3.6/R-3.6.2-201102101200/";
+			case "3.7.0": return root + "3.7/R-3.7-201106131736/";
+			case "3.7.1": return root + "3.7/R-3.7.1-201109091335/";
+			case "3.7.2": return root + "3.7/R-3.7.2-201202080800/";
+			case "3.8.0": return root + "3.8/R-3.8-201206081200/";
+			case "3.8.1": return root + "3.8/R-3.8.1-201209141540/";
+			case "3.8.2": return root + "3.8/R-3.8.2-201301310800/";
+			case "4.2.0": return root + "4.2/R-4.2-201206081400/";
+			case "4.2.1": return root + "4.2/R-4.2.1-201209141800/";
+			case "4.2.2": return root + "4.2/R-4.2.2-201302041200/";
+			case "4.3.0": return root + "4.3/R-4.3-201306052000/";
+			case "4.3.1": return root + "4.3/R-4.3.1-201309111000/";
+			case "4.3.2": return root + "4.3/R-4.3.2-201402211700/";
+			case "4.4.0": return root + "4.4/R-4.4-201406061215/";
+			case "4.4.1": return root + "4.4/R-4.4.1-201409250400/";
+			case "4.4.2": return root + "4.4/R-4.4.2-201502041700/";
+			case "4.5.0": return root + "4.5/R-4.5-201506032000/";
+			case "4.5.1": return root + "4.5/R-4.5.1-201509040015/";
 			case "4.5.2": return root + "4.5/R-4.5.2-201602121500/";
-			default: throw Unhandled.stringException(v);
+			default: return null;
 			}
+			// @formatter:on
 		};
-		return new EclipseRelease(version, Version.valueOf(version), updateSite.apply(version));
+		String updateSite = updateSiteFunc.apply(version);
+		if (updateSite == null) {
+			return null;
+		} else {
+			return new EclipseRelease(version, Version.valueOf(version), updateSite);
+		}
 	}
 
 	/** Returns the OSGi version for this release. */
@@ -93,5 +123,23 @@ public final class EclipseRelease {
 	@Override
 	public String toString() {
 		return id;
+	}
+
+	/** Returns the hashCode for this release. */
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, version, updateSite);
+	}
+
+	@Override
+	public boolean equals(Object otherObj) {
+		if (otherObj instanceof EclipseRelease) {
+			EclipseRelease other = (EclipseRelease) otherObj;
+			return id.equals(other.id)
+					&& version.equals(other.version)
+					&& updateSite.equals(other.updateSite);
+		} else {
+			return false;
+		}
 	}
 }
