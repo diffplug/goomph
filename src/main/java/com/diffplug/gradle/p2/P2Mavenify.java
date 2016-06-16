@@ -29,12 +29,13 @@ import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
 import com.diffplug.gradle.GroovyCompat;
 
+/** */
 public class P2Mavenify {
 	public static void init(Project project, Closure<P2Mavenify> configure) {
 		init(project, GroovyCompat.consumerFrom(configure));
 	}
 
-	private static void init(Project project, Consumer<P2Mavenify> configure) {
+	public static void init(Project project, Consumer<P2Mavenify> configure) {
 		project.afterEvaluate(p -> {
 			P2Mavenify mavenify = new P2Mavenify(project);
 			configure.accept(mavenify);
@@ -44,11 +45,15 @@ public class P2Mavenify {
 
 	final Project project;
 
-	private P2Mavenify(Project project) {
+	public P2Mavenify(Project project) {
 		this.project = project;
 	}
 
-	private void run() throws Exception {
+	public File getDestination() {
+		return project.file(destination);
+	}
+
+	public void run() throws Exception {
 		Objects.requireNonNull(mavenGroup, "Must set mavengroup");
 		// record the user's inputs
 		String state = state();
@@ -81,7 +86,7 @@ public class P2Mavenify {
 			project.getLogger().debug("P2Mavenify " + mavenGroup + " installing from p2");
 			p2model.install(dir, mavenGroup);
 		}
-		project.getLogger().debug("P2Mavenify " + mavenGroup + " completed successfully");
+		project.getLogger().debug("P2Mavenify " + mavenGroup + " creating maven repo");
 
 		// write out the staleness token to indicate that everything is good
 		FileMisc.writeToken(dir, STALE_TOKEN, state);
@@ -97,16 +102,20 @@ public class P2Mavenify {
 		this.mavenGroup = mavenGroup;
 	}
 
-	public void destination(String mavenGroup) {
-		this.mavenGroup = mavenGroup;
+	public void destination(Object destination) {
+		this.destination = destination;
 	}
 
-	public void useBundlePool(String mavenGroup) {
-		this.mavenGroup = mavenGroup;
+	public void useBundlePool(boolean useBundlePool) {
+		this.useBundlePool = useBundlePool;
 	}
 
 	public void p2(Closure<P2DirectorModel> modelConfig) {
 		GroovyCompat.consumerFrom(modelConfig).accept(p2model);
+	}
+
+	public P2DirectorModel p2() {
+		return p2model;
 	}
 
 	/** The group which will be used in the maven-ization. */
