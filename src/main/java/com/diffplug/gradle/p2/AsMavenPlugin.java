@@ -20,6 +20,65 @@ import org.gradle.api.Project;
 import com.diffplug.common.base.Errors;
 import com.diffplug.gradle.ProjectPlugin;
 
+/**
+ * Downloads a set of artifacts from a p2 repository
+ * and stuffs them into a local maven repository in the
+ * `build/goomph-asmaven` folder, then adds this repository
+ * to the project.
+ *
+ * ```groovy
+ * apply plugin: 'com.diffplug.gradle.p2.asmaven'
+ * p2AsMaven {
+ *     mavenGroup 'p2asmaven'
+ *     p2.addRepo(ECLIPSE_UPDATE_SITE)
+ *     p2.addIU('org.eclipse.jdt.core')
+ * }
+ *
+ * dependencies {
+ *     compile 'eclipse:org.eclipse.jdt.core:+'
+ *     compile 'eclipse:org.eclipse.text:+'
+ * }
+ * ```
+ *
+ * The `p2` property inside `p2AsMaven` is a {@link P2DirectorModel}.
+ *
+ * The maven repository does not contain any dependency information,
+ * just the raw jars.  In the example above, when p2 downloads
+ * `org.eclipse.jdt.core`, it also downloads all of its dependencies.
+ * But none of these dependencies are added automatically - you have to
+ * add them yourself.
+ *
+ * See [spotless](https://github.com/diffplug/spotless) for a production
+ * example.
+ *
+ * ## Acknowledgements and comparisons to other options
+ *
+ * Inspired by Andrey Hihlovskiy's [unpuzzle](https://github.com/akhikhl/unpuzzle).
+ * Unpuzzle downloads a zipped-up copy of the eclipse IDE and stuffs its jars into a
+ * maven repository.  Additionally, it parses out the `Require-Bundle` directives to
+ * put partial dependency information in the maven metadata.
+ *
+ * Simon Templer has a [fork](https://github.com/stempler/unpuzzle) which supports parsing
+ * the `Import-Package` and `Export-Package` directive to build even more detailed
+ * dependency information.
+ *
+ * A third option is Dr. David Akehurst's [p2 dependency resolver](https://github.com/dhakehurst/net.akehurst.build.gradle),
+ * which is a partial re-implementation of P2, and uses internal gradle APIs to hook into
+ * Gradle's dependency resolution.  It's very impressive, but it has a few limitations:
+ *
+ * - It does not support composite repositories
+ * - It does not work on Gradle > 2.8
+ *
+ * All of the above are great work, and served as useful examples.  The central
+ * problem which is the cause of so many not-quite-satisfying implementations is this:
+ *
+ * - Using the real p2 is cumbersome, but possible.
+ * - Re-implementing the first 70% of p2 is easy, but the last 30% is hard and moving (they're still adding features).
+ * - Gradle doesn't yet have an extensible API for repositories.
+ *
+ * In Goomph, we will always use the real p2.  While we work around limitations in
+ * gradle and p2, we will only use public APIs in both products.
+ */
 public class AsMavenPlugin extends ProjectPlugin {
 	@Override
 	protected void applyOnce(Project project) {

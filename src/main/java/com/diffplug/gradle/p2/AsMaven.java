@@ -18,34 +18,16 @@ package com.diffplug.gradle.p2;
 import java.io.File;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 import org.gradle.api.Project;
 
-import groovy.lang.Closure;
-
-import com.diffplug.common.base.Errors;
 import com.diffplug.gradle.FileMisc;
-import com.diffplug.gradle.GoomphCacheLocations;
-import com.diffplug.gradle.GroovyCompat;
 
-/** */
-public class P2Mavenify {
-	public static void init(Project project, Closure<P2Mavenify> configure) {
-		init(project, GroovyCompat.consumerFrom(configure));
-	}
-
-	public static void init(Project project, Consumer<P2Mavenify> configure) {
-		project.afterEvaluate(p -> {
-			P2Mavenify mavenify = new P2Mavenify(project);
-			configure.accept(mavenify);
-			Errors.rethrow().run(mavenify::run);
-		});
-	}
-
+/** Implementation of the p2 -> maven conversion. */
+class AsMaven {
 	final Project project;
 
-	public P2Mavenify(Project project) {
+	public AsMaven(Project project) {
 		this.project = project;
 	}
 
@@ -71,22 +53,24 @@ public class P2Mavenify {
 		}
 		// else, we'll need to run our own little thing
 		FileMisc.cleanDir(dir);
+
+		// install from p2
 		project.getLogger().info("Initalizing maven group " + mavenGroup + " from p2");
 		project.getLogger().info("Only needs to be done once, future builds will be much faster");
-		if (useBundlePool) {
-			project.getLogger().debug("P2Mavenify " + mavenGroup + " installing to bundle pool cache");
-			p2model.install(dir, mavenGroup, config -> {
-				config.bundlepool(GoomphCacheLocations.bundlePool());
-			});
-			project.getLogger().debug("P2Mavenify " + mavenGroup + " installing from bundle pool cache");
-			FileMisc.cleanDir(dir);
-			p2model.addArtifactRepo(GoomphCacheLocations.bundlePool());
-			p2model.install(dir, mavenGroup);
-		} else {
-			project.getLogger().debug("P2Mavenify " + mavenGroup + " installing from p2");
-			p2model.install(dir, mavenGroup);
-		}
+
+		File p2Dir = new File(dir, "__p2__");
+		project.getLogger().debug("P2Mavenify " + mavenGroup + " installing from p2");
+		p2model.install(p2Dir, mavenGroup);
+
+		// put the p2 into a maven repo
 		project.getLogger().debug("P2Mavenify " + mavenGroup + " creating maven repo");
+		try (MavenRepoBuilder maven = new MavenRepoBuilder(dir)) {
+			for (File plugin : new File(p2Dir, "plugins").listFiles()) {
+				if (plugin.isFile() && plugin.getName().endsWith(".jar")) {
+					maven.install(mavenGroup, plugin);
+				}
+			}
+		}
 
 		// write out the staleness token to indicate that everything is good
 		FileMisc.writeToken(dir, STALE_TOKEN, state);
@@ -95,8 +79,11 @@ public class P2Mavenify {
 	static final String STALE_TOKEN = "stale_token";
 
 	private String state() {
-		return mavenGroup + useBundlePool + destination + p2model.hashCode();
+		return mavenGroup + destination + p2model.hashCode() + GOOMPH_VERSION;
 	}
+
+	/** Bump this if we need to force people's deps to reload. */
+	static final int GOOMPH_VERSION = 1;
 
 	public void mavenGroup(String mavenGroup) {
 		this.mavenGroup = mavenGroup;
@@ -106,14 +93,6 @@ public class P2Mavenify {
 		this.destination = destination;
 	}
 
-	public void useBundlePool(boolean useBundlePool) {
-		this.useBundlePool = useBundlePool;
-	}
-
-	public void p2(Closure<P2DirectorModel> modelConfig) {
-		GroovyCompat.consumerFrom(modelConfig).accept(p2model);
-	}
-
 	public P2DirectorModel p2() {
 		return p2model;
 	}
@@ -121,9 +100,7 @@ public class P2Mavenify {
 	/** The group which will be used in the maven-ization. */
 	private String mavenGroup;
 	/** When this is true, the global bundle pool will be used to accelerate artifact downloads. */
-	private Object destination = "build/goomph-m2";
-	/** When this is true, the global bundle pool will be used to cache and accelerate artifact downloads. */
-	private boolean useBundlePool = true;
+	private Object destination = "build/goomph-asmaven";
 	/** The model we'd like to download. */
 	private P2DirectorModel p2model = new P2DirectorModel();
 }

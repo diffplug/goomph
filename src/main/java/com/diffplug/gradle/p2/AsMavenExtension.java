@@ -17,27 +17,27 @@ package com.diffplug.gradle.p2;
 
 import org.gradle.api.Project;
 
+/** DSL for {@link AsMavenPlugin}. */
 public class AsMavenExtension {
 	public static final String NAME = "p2AsMaven";
 
-	final P2Mavenify mavenify;
+	final AsMaven mavenify;
 
-	public AsMavenExtension(Project project) {
-		this.mavenify = new P2Mavenify(project);
+	AsMavenExtension(Project project) {
+		this.mavenify = new AsMaven(project);
 	}
 
+	/** Sets the maven group which the artifacts will be installed into. */
 	public void mavenGroup(String mavenGroup) {
 		mavenify.mavenGroup(mavenGroup);
 	}
 
+	/** The location of the repository.  Defaults to `build/goomph-asmaven`. */
 	public void destination(Object mavenGroup) {
 		mavenify.destination(mavenGroup);
 	}
 
-	public void useBundlePool(boolean useBundlePool) {
-		mavenify.useBundlePool(useBundlePool);
-	}
-
+	/** P2 model (update site and IUs). */
 	public P2DirectorModel getP2() {
 		return mavenify.p2();
 	}
