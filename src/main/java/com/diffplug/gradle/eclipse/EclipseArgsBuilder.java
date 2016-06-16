@@ -70,6 +70,9 @@ public class EclipseArgsBuilder {
 	}
 
 	public void addArg(String key, String value) {
+		if (value.contains(" ")) {
+			value = "\"" + value + "\"";
+		}
 		args.put(key, value);
 	}
 
