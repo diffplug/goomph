@@ -26,17 +26,6 @@ repositories {
 			resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 		}
 	}
-	ivy {
-		// Here's a hack for downloading stuff from the oomph p2 repository
-		url "http://download.eclipse.org/oomph/drops/release/1.2.1/"
-		layout "pattern", {
-			artifact "plugins/[artifact]_[revision].[ext]"
-		}
-
-		// There isn't a reliable way to get eclipse artifacts except through p2 repositories,
-		// which gradle does not yet support.  For now we're forcing it with ivy.
-		// https://discuss.gradle.org/t/is-it-possible-to-configure-a-p2-repository/6812/6
-	}
 }
 
 apply plugin: 'java-gradle-plugin'
@@ -63,7 +52,8 @@ dependencies {
 	compile "biz.aQute.bnd:biz.aQute.bndlib:${VER_BNDLIB}"
 	// p2
 	compile "org.eclipse.tycho:org.eclipse.osgi:${VER_ECLIPSE_OSGI}"
-
+	compile "org.apache.maven:maven-core:${VER_MAVEN}"
+	compile "org.apache.maven:maven-compat:${VER_MAVEN}"
 	// testing
 	testCompile "junit:junit:${VER_JUNIT}"
 }

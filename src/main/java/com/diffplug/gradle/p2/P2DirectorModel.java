@@ -17,8 +17,12 @@ package com.diffplug.gradle.p2;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -27,7 +31,6 @@ import groovy.lang.Closure;
 
 import com.diffplug.common.base.Consumers;
 import com.diffplug.common.collect.Sets;
-import com.diffplug.common.swt.os.OS;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GroovyCompat;
@@ -202,8 +205,7 @@ public class P2DirectorModel {
 		}
 
 		/** Adds `p2.os`, `p2.ws`, and `p2.arch` arguments. */
-		public void os(OS os) {
-			SwtPlatform platform = SwtPlatform.fromOS(os);
+		public void oswsarch(SwtPlatform platform) {
 			addArg("p2.os", platform.getOs());
 			addArg("p2.ws", platform.getWs());
 			addArg("p2.arch", platform.getArch());
@@ -247,7 +249,6 @@ public class P2DirectorModel {
 	 *
 	 * @param dstFolder the folder into which the installation will take place.
 	 * @param profile the name of the profile, doesn't really matter what it is.
-	 * @return args which you can pass to the eclipse command line
 	 */
 	public void install(File dstFolder, String profile, Consumer<ArgsBuilder> configModify) throws Exception {
 		// setup the args
@@ -276,5 +277,31 @@ public class P2DirectorModel {
 	public static void cleanCachedRepositories(File dstFile) throws IOException {
 		Path path = dstFile.toPath().resolve("p2/org.eclipse.equinox.p2.engine/.settings");
 		FileMisc.cleanDir(path.toFile());
+	}
+
+	/** Pings all the repositories in the model with the given timeout. */
+	public boolean pingAll(int msPerUrl) {
+		Set<String> all = new HashSet<>();
+		all.addAll(repos);
+		all.addAll(metadataRepo);
+		all.addAll(artifactRepo);
+		return all.stream().allMatch(url -> ping(url, msPerUrl));
+	}
+
+	private boolean ping(String url, int msPerUrl) {
+		if (url.startsWith("http://") || url.startsWith("https://")) {
+			try {
+				URL parsedUrl = new URL(url);
+				URLConnection connection = parsedUrl.openConnection();
+				connection.setConnectTimeout(msPerUrl);
+				try (InputStream input = connection.getInputStream()) {
+					return true;
+				}
+			} catch (IOException e) {
+				return false;
+			}
+		} else {
+			return true;
+		}
 	}
 }
