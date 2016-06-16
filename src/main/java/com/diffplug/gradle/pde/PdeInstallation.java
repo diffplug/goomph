@@ -136,6 +136,7 @@ class PdeInstallation {
 
 	/** Installs the bootstrap installation. */
 	private void install() throws Exception {
+		System.out.print("Installing pde " + release + "... ");
 		p2model().install(getRootFolder(), "goomph-pde-bootstrap-" + release, config -> {
 			// share the install for quickness
 			config.bundlepool(GoomphCacheLocations.bundlePool());
@@ -148,6 +149,7 @@ class PdeInstallation {
 		});
 		pdeBuildFolder = pdeBuilds[0];
 		FileMisc.writeToken(getRootFolder(), TOKEN, pdeBuildFolder.getAbsolutePath());
+		System.out.println("Success.");
 	}
 
 	/**

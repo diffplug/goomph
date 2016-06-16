@@ -72,6 +72,7 @@ class P2BootstrapInstallation {
 
 	/** Installs the bootstrap installation. */
 	private void install() throws IOException {
+		System.out.print("Installing p2 bootstrap " + release + "... ");
 		// clean the install folder
 		FileMisc.cleanDir(getRootFolder());
 		// download the URL
@@ -83,6 +84,7 @@ class P2BootstrapInstallation {
 		// delete the zip
 		target.delete();
 		FileMisc.writeToken(getRootFolder(), TOKEN);
+		System.out.print("Success.");
 	}
 
 	/**

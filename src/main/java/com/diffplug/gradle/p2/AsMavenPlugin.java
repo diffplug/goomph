@@ -32,6 +32,12 @@ import com.diffplug.gradle.ProjectPlugin;
  *     mavenGroup 'p2asmaven'
  *     p2.addRepo(ECLIPSE_UPDATE_SITE)
  *     p2.addIU('org.eclipse.jdt.core')
+ *     p2args {
+ *         addArg('profileProperties', 'org.eclipse.update.install.features=true')
+ *         addArg('p2.os', '*')
+ *         addArg('p2.ws', '*')
+ *         addArg('p2.arch', '*')
+ *     }
  * }
  *
  * dependencies {

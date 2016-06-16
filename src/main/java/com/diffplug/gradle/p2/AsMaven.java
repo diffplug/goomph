@@ -18,9 +18,12 @@ package com.diffplug.gradle.p2;
 import java.io.File;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import org.gradle.api.Project;
 
+import com.diffplug.common.base.Consumers;
 import com.diffplug.gradle.FileMisc;
 
 /** Implementation of the p2 -> maven conversion. */
@@ -48,22 +51,23 @@ class AsMaven {
 				project.getLogger().debug("P2Mavenify " + mavenGroup + " is satisfied");
 				return;
 			} else {
-				project.getLogger().info("P2Mavenify " + mavenGroup + " is dirty, redoing");
+				project.getLogger().lifecycle("P2Mavenify " + mavenGroup + " is dirty, redoing");
 			}
 		}
 		// else, we'll need to run our own little thing
 		FileMisc.cleanDir(dir);
 
 		// install from p2
-		project.getLogger().info("Initalizing maven group " + mavenGroup + " from p2");
-		project.getLogger().info("Only needs to be done once, future builds will be much faster");
+		project.getLogger().lifecycle("Initalizing maven group " + mavenGroup + " from p2");
+		project.getLogger().lifecycle("Only needs to be done once, future builds will be much faster");
 
 		File p2Dir = new File(dir, "__p2__");
-		project.getLogger().debug("P2Mavenify " + mavenGroup + " installing from p2");
-		p2model.install(p2Dir, mavenGroup);
+		p2Dir.mkdirs();
+		project.getLogger().lifecycle("P2Mavenify " + mavenGroup + " installing from p2");
+		p2model.install(p2Dir, mavenGroup, modifyP2args);
 
-		// put the p2 into a maven repo
-		project.getLogger().debug("P2Mavenify " + mavenGroup + " creating maven repo");
+		// put p2 into a maven repo
+		project.getLogger().lifecycle("P2Mavenify " + mavenGroup + " creating maven repo");
 		try (MavenRepoBuilder maven = new MavenRepoBuilder(dir)) {
 			for (File plugin : new File(p2Dir, "plugins").listFiles()) {
 				if (plugin.isFile() && plugin.getName().endsWith(".jar")) {
@@ -74,12 +78,16 @@ class AsMaven {
 
 		// write out the staleness token to indicate that everything is good
 		FileMisc.writeToken(dir, STALE_TOKEN, state);
+		project.getLogger().lifecycle("P2Mavenify " + mavenGroup + " is complete.");
 	}
 
 	static final String STALE_TOKEN = "stale_token";
 
+	/** The args passed to p2 director represent the full state. */
 	private String state() {
-		return mavenGroup + destination + p2model.hashCode() + GOOMPH_VERSION;
+		P2DirectorModel.ArgsBuilder args = p2model.argsForInstall(project.file(destination), mavenGroup);
+		modifyP2args.accept(args);
+		return args.toArgList().stream().collect(Collectors.joining("\n")) + GOOMPH_VERSION;
 	}
 
 	/** Bump this if we need to force people's deps to reload. */
@@ -97,10 +105,16 @@ class AsMaven {
 		return p2model;
 	}
 
+	public void modifyP2Args(Consumer<P2DirectorModel.ArgsBuilder> args) {
+		this.modifyP2args = Objects.requireNonNull(args);
+	}
+
 	/** The group which will be used in the maven-ization. */
 	private String mavenGroup;
 	/** When this is true, the global bundle pool will be used to accelerate artifact downloads. */
 	private Object destination = "build/goomph-p2asmaven";
 	/** The model we'd like to download. */
 	private P2DirectorModel p2model = new P2DirectorModel();
+	/** Modifies the p2director args before it is run. */
+	private Consumer<P2DirectorModel.ArgsBuilder> modifyP2args = Consumers.doNothing();
 }

@@ -17,6 +17,10 @@ package com.diffplug.gradle.p2;
 
 import org.gradle.api.Project;
 
+import groovy.lang.Closure;
+
+import com.diffplug.gradle.GroovyCompat;
+
 /** DSL for {@link AsMavenPlugin}. */
 public class AsMavenExtension {
 	public static final String NAME = "p2AsMaven";
@@ -40,5 +44,10 @@ public class AsMavenExtension {
 	/** P2 model (update site and IUs). */
 	public P2DirectorModel getP2() {
 		return mavenify.p2();
+	}
+
+	/** Modifies args passed to p2 director. */
+	public void p2args(Closure<P2DirectorModel.ArgsBuilder> argsBuilder) {
+		mavenify.modifyP2Args(GroovyCompat.consumerFrom(argsBuilder));
 	}
 }
