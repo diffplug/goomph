@@ -15,14 +15,8 @@
  */
 package com.diffplug.gradle;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -36,18 +30,16 @@ import org.gradle.api.file.FileCollection;
 import org.gradle.api.internal.file.UnionFileCollection;
 import org.gradle.api.internal.file.collections.SimpleFileCollection;
 import org.gradle.api.tasks.JavaExec;
-import org.gradle.process.ExecResult;
 import org.gradle.process.JavaExecSpec;
 
 import com.diffplug.common.base.Throwing;
-import com.diffplug.common.base.Unhandled;
 import com.diffplug.common.tree.TreeStream;
 
 /**
  * Easy way to execute code from a Gradle plugin in a separate JVM.
  *
- * Create an class which implements JavaExecable.  It should have some
- * fields which are input, some fields which are output, and a run() method.
+ * Create an class which implements `JavaExecable`.  It should have some
+ * fields which are input, some fields which are output, and a `run()` method.
  *
  * Here's what happens when you call {@link JavaExecable#exec(Project, JavaExecable)},
  *
@@ -116,7 +108,7 @@ public interface JavaExecable extends Serializable, Throwing.Runnable {
 		classpaths.add(project.getConfigurations().detachedConfiguration(project.getDependencies().gradleApi()));
 		FileCollection classpathsCombined = new UnionFileCollection(classpaths);
 
-		return execInternal(input, settings, execSpec -> JavaExecWinFriendly.javaExec(project, classpathsCombined, execSpec));
+		return JavaExecableImp.execInternal(input, settings, execSpec -> JavaExecWinFriendly.javaExec(project, classpathsCombined, execSpec));
 	}
 
 	/** @see #exec(Project, JavaExecable, com.diffplug.common.base.Throwing.Consumer) */
@@ -137,7 +129,7 @@ public interface JavaExecable extends Serializable, Throwing.Runnable {
 			}
 		}
 		FileCollection classpath = new SimpleFileCollection(files);
-		return execInternal(input, settings, execSpec -> JavaExecWinFriendly.javaExecWithoutGradle(classpath, execSpec));
+		return JavaExecableImp.execInternal(input, settings, execSpec -> JavaExecWinFriendly.javaExecWithoutGradle(classpath, execSpec));
 	}
 
 	/** @see #exec(Project, JavaExecable, com.diffplug.common.base.Throwing.Consumer) */
@@ -145,64 +137,19 @@ public interface JavaExecable extends Serializable, Throwing.Runnable {
 		return execWithoutGradle(input, unused -> {});
 	}
 
-	/** @see #exec(Project, JavaExecable, com.diffplug.common.base.Throwing.Consumer) */
-	@SuppressWarnings("unchecked")
-	static <T extends JavaExecable> T execInternal(T input, Throwing.Consumer<JavaExecSpec> settings, Throwing.Function<Throwing.Consumer<JavaExecSpec>, ExecResult> javaExecer) throws Throwable {
-		File tempFile = File.createTempFile("JavaExecOutside", ".temp");
-		try {
-			// write the input object to a file
-			write(tempFile, input);
-
-			ExecResult execResult = javaExecer.apply(execSpec -> {
-				// use the main below as the main
-				execSpec.setMain(JavaExecable.class.getName());
-				// pass the input object to the main
-				execSpec.args(tempFile.getAbsolutePath());
-				// let the user do stuff
-				settings.accept(execSpec);
-			});
-			execResult.rethrowFailure();
-			// load the resultant object after it has been executed and resaved
-			Object result = read(tempFile);
-			if (result instanceof JavaExecable) {
-				return (T) result;
-			} else if (result instanceof Throwable) {
-				// rethrow any exceptions, if there were any
-				throw (Throwable) result;
-			} else {
-				throw Unhandled.classException(result);
-			}
-		} finally {
-			tempFile.delete(); // delete the temp
-		}
-	}
-
 	/** Main which works in conjunction with {@link JavaExecable#exec(Project, JavaExecable, com.diffplug.common.base.Throwing.Consumer)}. */
 	public static void main(String[] args) throws IOException {
 		File file = new File(args[0]);
 		try {
 			// read the target object from the file
-			JavaExecable javaExecOutside = read(file);
+			JavaExecable javaExecOutside = JavaExecableImp.read(file);
 			// run the object's run method
 			javaExecOutside.run();
 			// save the object back to file
-			write(file, javaExecOutside);
+			JavaExecableImp.write(file, javaExecOutside);
 		} catch (Throwable t) {
 			// if it's an exception, write it out to file
-			write(file, t);
-		}
-	}
-
-	static <T extends Serializable> void write(File file, T object) throws IOException {
-		try (ObjectOutputStream output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
-			output.writeObject(object);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	static <T extends Serializable> T read(File file) throws ClassNotFoundException, IOException {
-		try (ObjectInputStream input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
-			return (T) input.readObject();
+			JavaExecableImp.write(file, t);
 		}
 	}
 
