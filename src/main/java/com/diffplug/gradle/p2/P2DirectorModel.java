@@ -17,12 +17,8 @@ package com.diffplug.gradle.p2;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -291,31 +287,5 @@ public class P2DirectorModel {
 	public static void cleanCachedRepositories(File dstFile) throws IOException {
 		Path path = dstFile.toPath().resolve("p2/org.eclipse.equinox.p2.engine/.settings");
 		FileMisc.cleanDir(path.toFile());
-	}
-
-	/** Pings all the repositories in the model with the given timeout. */
-	public boolean pingAll(int msPerUrl) {
-		Set<String> all = new HashSet<>();
-		all.addAll(repos);
-		all.addAll(metadataRepo);
-		all.addAll(artifactRepo);
-		return all.stream().allMatch(url -> ping(url, msPerUrl));
-	}
-
-	private boolean ping(String url, int msPerUrl) {
-		if (url.startsWith("http://") || url.startsWith("https://")) {
-			try {
-				URL parsedUrl = new URL(url);
-				URLConnection connection = parsedUrl.openConnection();
-				connection.setConnectTimeout(msPerUrl);
-				try (InputStream input = connection.getInputStream()) {
-					return true;
-				}
-			} catch (IOException e) {
-				return false;
-			}
-		} else {
-			return true;
-		}
 	}
 }
