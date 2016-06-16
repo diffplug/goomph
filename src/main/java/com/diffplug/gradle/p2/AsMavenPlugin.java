@@ -23,7 +23,7 @@ import com.diffplug.gradle.ProjectPlugin;
 /**
  * Downloads a set of artifacts from a p2 repository
  * and stuffs them into a local maven repository in the
- * `build/goomph-asmaven` folder, then adds this repository
+ * `build/goomph-p2asmaven` folder, then adds this repository
  * to the project.
  *
  * ```groovy

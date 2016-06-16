@@ -100,7 +100,7 @@ class AsMaven {
 	/** The group which will be used in the maven-ization. */
 	private String mavenGroup;
 	/** When this is true, the global bundle pool will be used to accelerate artifact downloads. */
-	private Object destination = "build/goomph-asmaven";
+	private Object destination = "build/goomph-p2asmaven";
 	/** The model we'd like to download. */
 	private P2DirectorModel p2model = new P2DirectorModel();
 }
