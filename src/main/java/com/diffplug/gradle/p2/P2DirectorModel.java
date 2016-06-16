@@ -160,12 +160,24 @@ public class P2DirectorModel {
 		repos.add(repo);
 	}
 
+	public void addRepo(File repo) {
+		addRepo("file:" + repo.getAbsolutePath());
+	}
+
 	public void addMetadataRepo(String repo) {
 		metadataRepo.add(repo);
 	}
 
+	public void addMetadataRepo(File repo) {
+		addMetadataRepo("file:" + repo.getAbsolutePath());
+	}
+
 	public void addArtifactRepo(String repo) {
 		artifactRepo.add(repo);
+	}
+
+	public void addArtifactRepo(File repo) {
+		addArtifactRepo("file:" + repo.getAbsolutePath());
 	}
 
 	/**
@@ -176,7 +188,7 @@ public class P2DirectorModel {
 		ArgsBuilder builder = new ArgsBuilder();
 		builder.clean();
 		builder.consolelog();
-		builder.application("org.eclipse.equinox.p2.director");
+		builder.application(APPLICATION);
 		repos.forEach(repo -> builder.addArg("repository", repo));
 		metadataRepo.forEach(repo -> builder.addArg("metadataRepository", repo));
 		artifactRepo.forEach(repo -> builder.addArg("artifactRepository", repo));
@@ -185,6 +197,8 @@ public class P2DirectorModel {
 		builder.addArg("destination", "file:" + dstFolder.getAbsolutePath());
 		return builder;
 	}
+
+	public static final String APPLICATION = "org.eclipse.equinox.p2.director";
 
 	/**
 	 * An extension of EclipseArgsBuilder with typed methods appropriate for p2 director.
