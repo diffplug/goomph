@@ -35,7 +35,8 @@ import com.diffplug.gradle.JDK;
 
 /**
  * Takes the template.build.properties and provides an API for setting
- * pieces of it. */
+ * pieces of it. (It lives in the src/main/resources directory).
+ */
 class PdeProductBuildProperties {
 	/** Returns the content of template.build.properties as a String. */
 	static String rawFile() {
@@ -48,15 +49,12 @@ class PdeProductBuildProperties {
 	}
 
 	private String content;
-	private final EclipseWuff eclipse;
 
 	public PdeProductBuildProperties(Project project) {
 		content = rawFile();
-		eclipse = new EclipseWuff(project);
 
 		setJava8(project);
 		setBasePlatform();
-		setBaseEclipseSDK();
 	}
 
 	public String getContent() {
@@ -87,15 +85,12 @@ class PdeProductBuildProperties {
 	public void setPluginPath(File... dirs) {
 		pluginPath.clear();
 		pluginPath.addAll(Arrays.asList(dirs));
-		pluginPath.add(eclipse.getDeltaPackDir());
 		setProp("pluginPath", Joiner.on(getSep()).join(pluginPath));
 	}
 
 	/** Returns all the paths upon which plugins will be looked up. */
 	public List<File> getPluginLookupPath() {
-		List<File> files = Lists.newArrayList(pluginPath);
-		files.add(0, eclipse.getSdkDir());
-		return files;
+		return pluginPath;
 	}
 
 	/** Sets the JRE and java targets which we're compiling against to Java 8. */
@@ -116,10 +111,6 @@ class PdeProductBuildProperties {
 		setProp("baseos", host.getOs());
 		setProp("basews", host.getWs());
 		setProp("basearch", host.getArch());
-	}
-
-	private void setBaseEclipseSDK() {
-		setProp("base", eclipse.getSdkDir().getAbsolutePath());
 	}
 
 	/** Sets the given tag to the given value. */

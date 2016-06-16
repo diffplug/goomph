@@ -41,7 +41,6 @@ import com.diffplug.common.collect.ImmutableMap;
 import com.diffplug.common.collect.Maps;
 import com.diffplug.common.io.Files;
 import com.diffplug.common.swt.os.SwtPlatform;
-import com.diffplug.gradle.CmdLine;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.ZipUtil;
 
@@ -240,8 +239,8 @@ public class PdeProductBuildTask extends DefaultTask {
 		}
 
 		// generate and execute the PDE build command
-		PdeBuild pdeBuild = new PdeBuild(getProject());
-		CmdLine.runCmd(pdeBuild.productBuildCmd(buildDir));
+		PdeInstallation installation = PdeInstallation.fromProject(getProject());
+		installation.run(installation.productBuildCmd(buildDir));
 	}
 
 	private static final String PLUGIN_PREFIX = "<plugin id=\"";

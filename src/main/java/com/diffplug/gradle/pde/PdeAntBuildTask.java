@@ -22,7 +22,7 @@ import org.gradle.api.tasks.TaskAction;
 
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.collect.Maps;
-import com.diffplug.gradle.CmdLine;
+import com.diffplug.gradle.eclipse.EclipseArgsBuilder;
 
 /**
  * Runs PDE build on an ant file.
@@ -67,15 +67,11 @@ public class PdeAntBuildTask extends DefaultTask {
 		Preconditions.checkNotNull(antFile, "antFile must not be null!");
 
 		// generate and execute the PDE build command
-		PdeBuild pdeBuild = new PdeBuild(getProject());
-		StringBuilder cmd = new StringBuilder();
-		cmd.append(pdeBuild.antBuildCmd(getProject().file(antFile)));
+		PdeInstallation installation = PdeInstallation.fromProject(getProject());
+		EclipseArgsBuilder args = installation.antBuildCmd(getProject().file(antFile));
 		for (Map.Entry<String, String> entry : buildProperties.entrySet()) {
-			cmd.append(" -D");
-			cmd.append(entry.getKey());
-			cmd.append("=");
-			cmd.append(entry.getValue());
+			args.addArg("D" + entry.getKey() + "=" + entry.getValue());
 		}
-		CmdLine.runCmd(cmd.toString());
+		installation.run(args);
 	}
 }
