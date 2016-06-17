@@ -19,6 +19,7 @@ import java.io.File;
 
 import org.gradle.internal.impldep.com.google.common.base.StandardSystemProperty;
 
+import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.eclipse.EclipseRelease;
 
 /** Creates a new folder for uploading to [goomph-p2-bootstrap](https://bintray.com/diffplug/opensource/goomph-p2-bootstrap). */
@@ -29,6 +30,7 @@ public class P2BootstrapInstallationCreate {
 	static final File INSTALL_TO = new File(StandardSystemProperty.USER_HOME.value() + "/Desktop/bootstrap");
 
 	public static void main(String[] args) throws Exception {
+		FileMisc.cleanDir(INSTALL_TO);
 		P2BootstrapInstallation installation = new P2BootstrapInstallation(RELEASE);
 		P2DirectorModel model = installation.p2model();
 		model.install(INSTALL_TO, "goomph-p2-bootstrap-" + RELEASE.version(), config -> {

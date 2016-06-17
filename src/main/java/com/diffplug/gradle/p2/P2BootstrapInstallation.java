@@ -96,9 +96,10 @@ class P2BootstrapInstallation {
 		P2DirectorModel model = new P2DirectorModel();
 		// the update site for the release we're downloading artifacts for
 		model.addRepo(release.updateSite());
-		// the p2 director application and its dependencies
-		model.addIU("org.eclipse.equinox.p2.director.app");
+		// core p2 features
 		model.addFeature("org.eclipse.equinox.p2.core.feature");
+		model.addIU("org.eclipse.equinox.p2.director.app");     // p2 director
+		model.addIU("org.eclipse.equinox.p2.repository.tools"); // p2 repository mirror
 		// failed transitive required for basic p2 operations
 		model.addIU("org.eclipse.core.net");
 		// failed transitive required for shared installations touchpoints
