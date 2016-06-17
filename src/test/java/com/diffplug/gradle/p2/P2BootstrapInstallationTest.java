@@ -20,12 +20,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.gradle.internal.Actions;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import com.diffplug.common.base.Consumers;
 import com.diffplug.common.base.Joiner;
 import com.diffplug.common.base.StringPrinter;
 import com.diffplug.gradle.GoomphCacheLocations;
@@ -49,7 +49,7 @@ public class P2BootstrapInstallationTest {
 			model.addRepo(EclipseRelease.official("4.5.2").updateSite());
 			model.addIU("org.eclipse.core.runtime");
 			File installed = folder.newFolder("installed");
-			model.install(installed, "profile", Consumers.doNothing());
+			model.install(installed, "profile", Actions.doNothing());
 			File plugins = new File(installed, "plugins");
 			List<String> pluginNames = Arrays.asList(plugins.listFiles()).stream()
 					.map(File::getName)

@@ -18,12 +18,12 @@ package com.diffplug.gradle.p2;
 import java.io.File;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import org.gradle.api.Action;
 import org.gradle.api.Project;
+import org.gradle.internal.Actions;
 
-import com.diffplug.common.base.Consumers;
 import com.diffplug.gradle.FileMisc;
 
 /** Implementation of the p2 -> maven conversion. */
@@ -86,7 +86,7 @@ class AsMaven {
 	/** The args passed to p2 director represent the full state. */
 	private String state() {
 		P2Model.DirectorArgsBuilder args = p2model.directorArgs(project.file(destination), mavenGroup);
-		modifyP2args.accept(args);
+		modifyP2args.execute(args);
 		return args.toArgList().stream().collect(Collectors.joining("\n")) + GOOMPH_VERSION;
 	}
 
@@ -105,7 +105,7 @@ class AsMaven {
 		return p2model;
 	}
 
-	public void modifyP2Args(Consumer<P2Model.DirectorArgsBuilder> args) {
+	public void modifyP2Args(Action<P2Model.DirectorArgsBuilder> args) {
 		this.modifyP2args = Objects.requireNonNull(args);
 	}
 
@@ -116,5 +116,5 @@ class AsMaven {
 	/** The model we'd like to download. */
 	private P2Model p2model = new P2Model();
 	/** Modifies the p2director args before it is run. */
-	private Consumer<P2Model.DirectorArgsBuilder> modifyP2args = Consumers.doNothing();
+	private Action<P2Model.DirectorArgsBuilder> modifyP2args = Actions.doNothing();
 }

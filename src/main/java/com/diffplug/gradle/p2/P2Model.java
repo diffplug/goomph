@@ -27,10 +27,10 @@ import java.util.function.Consumer;
 
 import org.gradle.api.Action;
 import org.gradle.api.XmlProvider;
+import org.gradle.internal.Actions;
 import org.gradle.internal.xml.XmlTransformer;
 import org.gradle.listener.ActionBroadcast;
 
-import groovy.lang.Closure;
 import groovy.util.Node;
 import groovy.xml.XmlUtil;
 
@@ -40,7 +40,6 @@ import com.diffplug.common.collect.Sets;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
-import com.diffplug.gradle.GroovyCompat;
 import com.diffplug.gradle.JavaExecable;
 import com.diffplug.gradle.eclipse.EclipseArgsBuilder;
 import com.diffplug.gradle.eclipse.EquinoxLauncher;
@@ -344,14 +343,9 @@ public class P2Model {
 		FileMisc.cleanDir(path.toFile());
 	}
 
-	/** Groovy-friendly version of {@link P2Model#install(File, String, Consumer)}. */
-	public void install(File dstFolder, String profile, Closure<DirectorArgsBuilder> configModify) throws Throwable {
-		install(dstFolder, profile, GroovyCompat.consumerFrom(configModify));
-	}
-
 	/** See {@link #install(File, String, Consumer)}. */
 	public void install(File dstFolder, String profile) throws Throwable {
-		install(dstFolder, profile, Consumers.doNothing());
+		install(dstFolder, profile, Actions.doNothing());
 	}
 
 	/**
@@ -366,10 +360,10 @@ public class P2Model {
 	 * @param dstFolder the folder into which the installation will take place.
 	 * @param profile the name of the profile, doesn't really matter what it is.
 	 */
-	public void install(File dstFolder, String profile, Consumer<DirectorArgsBuilder> configModify) throws Exception {
+	public void install(File dstFolder, String profile, Action<DirectorArgsBuilder> configModify) throws Exception {
 		// setup the args
 		DirectorArgsBuilder args = directorArgs(dstFolder, profile);
-		configModify.accept(args);
+		configModify.execute(args);
 		// ensure the bootstrap installation is installed
 		P2BootstrapInstallation installation = P2BootstrapInstallation.latest();
 		installation.ensureInstalled();

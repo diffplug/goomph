@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.file.FileCollection;
 import org.gradle.process.ExecResult;
@@ -34,8 +35,6 @@ import org.gradle.process.JavaExecSpec;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.gradle.util.CollectionUtils;
 
-import com.diffplug.common.base.Errors;
-import com.diffplug.common.base.Throwing;
 import com.diffplug.common.swt.os.OS;
 
 /**
@@ -47,33 +46,29 @@ public class JavaExecWinFriendly {
 	private JavaExecWinFriendly() {}
 
 	/** Calls javaExec() in a way which is friendly with windows classpath limitations. */
-	public static ExecResult javaExec(Project project, FileCollection classpath, Throwing.Consumer<JavaExecSpec> spec) throws IOException {
+	public static ExecResult javaExec(Project project, FileCollection classpath, Action<JavaExecSpec> spec) throws IOException {
 		if (OS.getNative().isWindows()) {
 			File classpathJar = toJarWithClasspath(classpath.getFiles());
 			ExecResult execResult = project.javaexec(execSpec -> {
-				Errors.rethrow().run(() -> {
-					// set the classpath
-					execSpec.jvmArgs("-cp", classpathJar.getAbsolutePath());
-					// handle the user
-					spec.accept(execSpec);
-				});
+				// set the classpath
+				execSpec.jvmArgs("-cp", classpathJar.getAbsolutePath());
+				// handle the user
+				spec.execute(execSpec);
 			});
 			classpathJar.delete();
 			return execResult;
 		} else {
 			return project.javaexec(execSpec -> {
-				Errors.rethrow().run(() -> {
-					// set the classpath
-					execSpec.setClasspath(classpath);
-					// handle the user
-					spec.accept(execSpec);
-				});
+				// set the classpath
+				execSpec.setClasspath(classpath);
+				// handle the user
+				spec.execute(execSpec);
 			});
 		}
 	}
 
 	/** Calls javaExec() in a way which is friendly with windows classpath limitations, and doesn't require gradle. */
-	public static ExecResult javaExecWithoutGradle(FileCollection classpath, Throwing.Consumer<JavaExecSpec> spec) throws IOException {
+	public static ExecResult javaExecWithoutGradle(FileCollection classpath, Action<JavaExecSpec> spec) throws IOException {
 		Project project = ProjectBuilder.builder().build();
 		return javaExec(project, classpath, spec);
 	}

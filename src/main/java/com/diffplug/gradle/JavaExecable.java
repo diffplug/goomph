@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.internal.file.UnionFileCollection;
@@ -94,12 +95,12 @@ public interface JavaExecable extends Serializable, Throwing.Runnable {
 	static final String BUILDSCRIPT_CLASSPATH = "classpath";
 
 	/**
-	 * @param project	the project on which we'll call {@link Project#javaexec(org.gradle.api.Action)}.
+	 * @param project	the project on which we'll call {@link Project#javaexec(Action)}.
 	 * @param input		the JavaExecable which we'll take as input and call run() on.
 	 * @param settings	any extra settings you'd like to set on the JavaExec (e.g. heap)
 	 * @return the JavaExecable after it has had run() called.
 	 */
-	public static <T extends JavaExecable> T exec(Project project, T input, Throwing.Consumer<JavaExecSpec> settings) throws Throwable {
+	public static <T extends JavaExecable> T exec(Project project, T input, Action<JavaExecSpec> settings) throws Throwable {
 		// copy the classpath from the project's buildscript (and its parents)
 		List<FileCollection> classpaths = TreeStream.toParent(ProjectPlugin.treeDef(), project)
 				.map(p -> p.getBuildscript().getConfigurations().getByName(BUILDSCRIPT_CLASSPATH))
@@ -111,13 +112,13 @@ public interface JavaExecable extends Serializable, Throwing.Runnable {
 		return JavaExecableImp.execInternal(input, settings, execSpec -> JavaExecWinFriendly.javaExec(project, classpathsCombined, execSpec));
 	}
 
-	/** @see #exec(Project, JavaExecable, com.diffplug.common.base.Throwing.Consumer) */
+	/** @see #exec(Project, JavaExecable, Action) */
 	public static <T extends JavaExecable> T exec(Project project, T input) throws Throwable {
 		return exec(project, input, unused -> {});
 	}
 
-	/** @see #exec(Project, JavaExecable, com.diffplug.common.base.Throwing.Consumer) */
-	public static <T extends JavaExecable> T execWithoutGradle(T input, Throwing.Consumer<JavaExecSpec> settings) throws Throwable {
+	/** @see #exec(Project, JavaExecable, Action) */
+	public static <T extends JavaExecable> T execWithoutGradle(T input, Action<JavaExecSpec> settings) throws Throwable {
 		ClassLoader classloader = JavaExec.class.getClassLoader();
 		@SuppressWarnings("resource")
 		URLClassLoader urlClassloader = (URLClassLoader) classloader;
@@ -132,12 +133,12 @@ public interface JavaExecable extends Serializable, Throwing.Runnable {
 		return JavaExecableImp.execInternal(input, settings, execSpec -> JavaExecWinFriendly.javaExecWithoutGradle(classpath, execSpec));
 	}
 
-	/** @see #exec(Project, JavaExecable, com.diffplug.common.base.Throwing.Consumer) */
+	/** @see #exec(Project, JavaExecable, Action) */
 	public static <T extends JavaExecable> T execWithoutGradle(T input) throws Throwable {
 		return execWithoutGradle(input, unused -> {});
 	}
 
-	/** Main which works in conjunction with {@link JavaExecable#exec(Project, JavaExecable, com.diffplug.common.base.Throwing.Consumer)}. */
+	/** Main which works in conjunction with {@link JavaExecable#exec(Project, JavaExecable, Action)}. */
 	public static void main(String[] args) throws IOException {
 		File file = new File(args[0]);
 		try {

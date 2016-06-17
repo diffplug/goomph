@@ -33,10 +33,10 @@ import org.gradle.api.file.CopySpec;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.language.jvm.tasks.ProcessResources;
 
-import groovy.lang.Closure;
 import groovy.util.Node;
 
 import com.diffplug.common.base.Suppliers;
+import com.diffplug.gradle.GroovyCompat;
 import com.diffplug.gradle.ProjectPlugin;
 
 /**
@@ -87,16 +87,9 @@ public class BuildPropertiesPlugin extends ProjectPlugin {
 				}
 			}
 			// handle the eclipse built-ins (properties files embedded in the src directory)
-			task.from("src", new Closure<CopySpec>(task) {
-				private static final long serialVersionUID = -2323499449461676280L;
-
-				@Override
-				public CopySpec call() {
-					return ((CopySpec) this.getDelegate())
-							.include("**/*.properties")
-							.exclude("**/*.java");
-				}
-			});
+			task.from("src", GroovyCompat.<CopySpec> closureFrom(task, spec -> {
+				return spec.include("**/*.properties").exclude("**/*.java");
+			}));
 		});
 	}
 

@@ -15,15 +15,20 @@
  */
 package com.diffplug.gradle;
 
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 import groovy.lang.Closure;
 
 public class GroovyCompat {
-	public static <T> Consumer<T> consumerFrom(Closure<T> closure) {
-		return val -> {
-			closure.setDelegate(val);
-			closure.call();
+	/** Creates a Groovy {@link Closure} from a Java 8 {@link Function}, uses the delegate as the input. */
+	@SuppressWarnings("serial")
+	public static <T> Closure<T> closureFrom(Object owner, Function<T, T> closure) {
+		return new Closure<T>(owner) {
+			@SuppressWarnings("unchecked")
+			@Override
+			public T call() {
+				return closure.apply((T) getDelegate());
+			}
 		};
 	}
 }

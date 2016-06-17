@@ -15,11 +15,8 @@
  */
 package com.diffplug.gradle.p2;
 
+import org.gradle.api.Action;
 import org.gradle.api.Project;
-
-import groovy.lang.Closure;
-
-import com.diffplug.gradle.GroovyCompat;
 
 /** DSL for {@link AsMavenPlugin}. */
 public class AsMavenExtension {
@@ -47,7 +44,7 @@ public class AsMavenExtension {
 	}
 
 	/** Modifies args passed to p2 director. */
-	public void p2args(Closure<P2Model.DirectorArgsBuilder> argsBuilder) {
-		mavenify.modifyP2Args(GroovyCompat.consumerFrom(argsBuilder));
+	public void p2args(Action<P2Model.DirectorArgsBuilder> argsBuilder) {
+		mavenify.modifyP2Args(argsBuilder);
 	}
 }

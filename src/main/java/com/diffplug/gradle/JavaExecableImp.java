@@ -25,6 +25,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.process.ExecResult;
 import org.gradle.process.JavaExecSpec;
@@ -49,7 +50,7 @@ class JavaExecableImp {
 
 	/** @see #exec(Project, JavaExecable, com.diffplug.common.base.Throwing.Consumer) */
 	@SuppressWarnings("unchecked")
-	static <T extends JavaExecable> T execInternal(T input, Throwing.Consumer<JavaExecSpec> settings, Throwing.Function<Throwing.Consumer<JavaExecSpec>, ExecResult> javaExecer) throws Throwable {
+	static <T extends JavaExecable> T execInternal(T input, Action<JavaExecSpec> settings, Throwing.Function<Action<JavaExecSpec>, ExecResult> javaExecer) throws Throwable {
 		File tempFile = File.createTempFile("JavaExecOutside", ".temp");
 		try {
 			// write the input object to a file
@@ -61,7 +62,7 @@ class JavaExecableImp {
 				// pass the input object to the main
 				execSpec.args(tempFile.getAbsolutePath());
 				// let the user do stuff
-				settings.accept(execSpec);
+				settings.execute(execSpec);
 			});
 			execResult.rethrowFailure();
 			// load the resultant object after it has been executed and resaved
