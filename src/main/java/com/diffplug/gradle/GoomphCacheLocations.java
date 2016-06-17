@@ -20,7 +20,7 @@ import java.nio.file.Path;
 import java.util.Optional;
 
 import com.diffplug.common.base.StandardSystemProperty;
-import com.diffplug.gradle.p2.P2DirectorModel;
+import com.diffplug.gradle.p2.P2Model;
 
 /**
  * There are a few things which goomph
@@ -45,7 +45,7 @@ public class GoomphCacheLocations {
 	 * the jars required for p2 director into a ~7MB download
 	 * available on bintray as [goomph-p2-bootstrap](https://bintray.com/diffplug/opensource/goomph-p2-bootstrap/view).
 	 *
-	 * This only gets downloaded if you use {@link P2DirectorModel}.
+	 * This only gets downloaded if you use {@link P2Model}.
 	 */
 	public static File p2bootstrap() {
 		return defOverride(ROOT + "/p2-bootstrap", override_p2bootstrap);

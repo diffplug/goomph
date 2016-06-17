@@ -42,12 +42,12 @@ public class AsMavenExtension {
 	}
 
 	/** P2 model (update site and IUs). */
-	public P2DirectorModel getP2() {
+	public P2Model getP2() {
 		return mavenify.p2();
 	}
 
 	/** Modifies args passed to p2 director. */
-	public void p2args(Closure<P2DirectorModel.ArgsBuilder> argsBuilder) {
+	public void p2args(Closure<P2Model.DirectorArgsBuilder> argsBuilder) {
 		mavenify.modifyP2Args(GroovyCompat.consumerFrom(argsBuilder));
 	}
 }

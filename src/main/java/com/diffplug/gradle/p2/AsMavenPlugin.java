@@ -46,7 +46,7 @@ import com.diffplug.gradle.ProjectPlugin;
  * }
  * ```
  *
- * The `p2` property inside `p2AsMaven` is a {@link P2DirectorModel}.
+ * The `p2` property inside `p2AsMaven` is a {@link P2Model}.
  *
  * The maven repository does not contain any dependency information,
  * just the raw jars.  In the example above, when p2 downloads

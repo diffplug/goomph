@@ -45,7 +45,7 @@ public class P2BootstrapInstallationTest {
 		// force a download
 		GoomphCacheLocations.override_p2bootstrap = folder.newFolder("p2-bootstrap");
 		try {
-			P2DirectorModel model = new P2DirectorModel();
+			P2Model model = new P2Model();
 			model.addRepo(EclipseRelease.official("4.5.2").updateSite());
 			model.addIU("org.eclipse.core.runtime");
 			File installed = folder.newFolder("installed");

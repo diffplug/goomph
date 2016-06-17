@@ -24,13 +24,13 @@ import com.diffplug.common.base.Joiner;
 import com.diffplug.common.collect.ArrayListMultimap;
 import com.diffplug.common.collect.ListMultimap;
 import com.diffplug.gradle.CmdLine;
-import com.diffplug.gradle.p2.P2DirectorModel;
+import com.diffplug.gradle.p2.P2Model;
 
 /**
  * A Gradle task which runs an `eclipsec` command at the console.
  * 
  * Probably not very useful in isolation, but it is used by
- * {@link P2DirectorModel} to run P2 tasks, so we'll keep it around.
+ * {@link P2Model} to run P2 tasks, so we'll keep it around.
  * 
  * WARNING: This part of Goomph currently has the following precondition:
  * your project must have the property VER_ECLIPSE=4.5.2 (or some other version),

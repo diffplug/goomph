@@ -92,18 +92,20 @@ class P2BootstrapInstallation {
 	 *
 	 * Useful for updating [bintray](https://bintray.com/diffplug/opensource/goomph-p2-bootstrap/view).
 	 */
-	P2DirectorModel p2model() {
-		P2DirectorModel model = new P2DirectorModel();
+	P2Model p2model() {
+		P2Model model = new P2Model();
 		// the update site for the release we're downloading artifacts for
 		model.addRepo(release.updateSite());
 		// core p2 features
 		model.addFeature("org.eclipse.equinox.p2.core.feature");
-		model.addIU("org.eclipse.equinox.p2.director.app");     // p2 director
+		model.addIU("org.eclipse.equinox.p2.director.app"); // p2 director
 		model.addIU("org.eclipse.equinox.p2.repository.tools"); // p2 repository mirror
 		// failed transitive required for basic p2 operations
 		model.addIU("org.eclipse.core.net");
 		// failed transitive required for shared installations touchpoints
 		model.addIU("org.eclipse.osgi.compatibility.state");
+		// ant tasks
+		model.addIU("org.eclipse.ant.core");
 		// eclipse infrastructure to make "eclipsec -application org.eclipse.equinox.p2.director" work
 		model.addIU("org.eclipse.core.runtime");
 		model.addIU("org.eclipse.update.configurator");

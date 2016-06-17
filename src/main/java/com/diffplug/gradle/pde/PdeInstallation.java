@@ -33,7 +33,7 @@ import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
 import com.diffplug.gradle.eclipse.EclipseArgsBuilder;
 import com.diffplug.gradle.eclipse.EclipseRelease;
-import com.diffplug.gradle.p2.P2DirectorModel;
+import com.diffplug.gradle.p2.P2Model;
 
 /** Wraps a PDE installation for the given eclipse release. */
 class PdeInstallation {
@@ -155,8 +155,8 @@ class PdeInstallation {
 	/**
 	 * Creates a model containing pde build and the native launder.
 	 */
-	P2DirectorModel p2model() {
-		P2DirectorModel model = new P2DirectorModel();
+	P2Model p2model() {
+		P2Model model = new P2Model();
 		// the update site for the release we're downloading artifacts for
 		model.addRepo(release.updateSite());
 		// the required IDE root product

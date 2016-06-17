@@ -20,16 +20,26 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import org.gradle.api.Action;
+import org.gradle.api.XmlProvider;
+import org.gradle.internal.xml.XmlTransformer;
+import org.gradle.listener.ActionBroadcast;
+
 import groovy.lang.Closure;
+import groovy.util.Node;
+import groovy.xml.XmlUtil;
 
 import com.diffplug.common.base.Consumers;
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.collect.Sets;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.FileMisc;
+import com.diffplug.gradle.GoomphCacheLocations;
 import com.diffplug.gradle.GroovyCompat;
 import com.diffplug.gradle.JavaExecable;
 import com.diffplug.gradle.eclipse.EclipseArgsBuilder;
@@ -103,24 +113,24 @@ import com.diffplug.gradle.eclipse.EquinoxLauncher;
  * }
  * ```
  */
-public class P2DirectorModel {
+public class P2Model {
 	/** Returns a deep copy of this model. */
-	public P2DirectorModel copy() {
-		P2DirectorModel copy = new P2DirectorModel();
+	public P2Model copy() {
+		P2Model copy = new P2Model();
 		copy.ius.addAll(ius);
 		copy.repos.addAll(repos);
-		copy.metadataRepo.addAll(metadataRepo);
-		copy.artifactRepo.addAll(artifactRepo);
+		copy.metadataRepos.addAll(metadataRepos);
+		copy.artifactRepos.addAll(artifactRepos);
 		return copy;
 	}
 
 	private Set<String> ius = Sets.newHashSet();
 	private Set<String> repos = Sets.newLinkedHashSet();
-	private Set<String> metadataRepo = Sets.newLinkedHashSet();
-	private Set<String> artifactRepo = Sets.newLinkedHashSet();
+	private Set<String> metadataRepos = Sets.newLinkedHashSet();
+	private Set<String> artifactRepos = Sets.newLinkedHashSet();
 
 	/** Combines all fields for easy implementation of equals and hashCode. */
-	private final List<Object> content = Arrays.asList(ius, repos, metadataRepo, artifactRepo);
+	private final List<Object> content = Arrays.asList(ius, repos, metadataRepos, artifactRepos);
 
 	/** Hash of the models current content. */
 	@Override
@@ -131,8 +141,8 @@ public class P2DirectorModel {
 	/** Two models are equal if all their fields are equal. */
 	@Override
 	public boolean equals(Object otherObj) {
-		if (otherObj instanceof P2DirectorModel) {
-			return content.equals(((P2DirectorModel) otherObj).content);
+		if (otherObj instanceof P2Model) {
+			return content.equals(((P2Model) otherObj).content);
 		} else {
 			return false;
 		}
@@ -163,7 +173,7 @@ public class P2DirectorModel {
 	}
 
 	public void addMetadataRepo(String repo) {
-		metadataRepo.add(repo);
+		metadataRepos.add(repo);
 	}
 
 	public void addMetadataRepo(File repo) {
@@ -171,39 +181,117 @@ public class P2DirectorModel {
 	}
 
 	public void addArtifactRepo(String repo) {
-		artifactRepo.add(repo);
+		artifactRepos.add(repo);
 	}
 
 	public void addArtifactRepo(File repo) {
 		addArtifactRepo("file:" + repo.getAbsolutePath());
 	}
 
+	public void addArtifactRepoBundlePool() {
+		addArtifactRepo(GoomphCacheLocations.bundlePool());
+	}
+
+	static final String FILE_PROTO = "file://";
+
+	///////////////////////
+	// P2 MIRROR via ANT //
+	///////////////////////
+	/**
+	 * Creates a p2.mirror ant task file which will mirror the
+	 * model's described IU's and repos into the given destination folder.
+	 */
+	@SuppressWarnings("unchecked")
+	public String mirrorAntFile(File dstFolder) {
+		Node p2mirror = new Node(null, "p2.mirror");
+		sourceNode(p2mirror);
+		Node destination = new Node(p2mirror, "destination");
+		destination.attributes().put("location", FILE_PROTO + dstFolder.getAbsolutePath());
+
+		for (String iu : ius) {
+			Node iuNode = new Node(p2mirror, "iu");
+
+			int slash = iu.indexOf('/');
+			if (slash == -1) {
+				iuNode.attributes().put("id", iu);
+			} else {
+				iuNode.attributes().put("id", iu.substring(0, slash));
+				iuNode.attributes().put("version", iu.substring(slash + 1));
+			}
+		}
+		return XmlUtil.serialize(p2mirror).replace("\r", "");
+	}
+
+	/** Creates an XML node representing all the repos in this model. */
+	private Node sourceNode(Node parent) {
+		Node source = new Node(parent, "source");
+		@SuppressWarnings("unchecked")
+		BiConsumer<Iterable<String>, Consumer<Map<String, String>>> addRepos = (urls, repoAttributes) -> {
+			for (String url : urls) {
+				Node repository = source.appendNode("repository");
+				repository.attributes().put("location", url);
+				repoAttributes.accept(repository.attributes());
+			}
+		};
+		addRepos.accept(repos, Consumers.doNothing());
+		addRepos.accept(metadataRepos, repoAttr -> repoAttr.put("kind", "metadata"));
+		addRepos.accept(artifactRepos, repoAttr -> repoAttr.put("kind", "artifact"));
+		return source;
+	}
+
+	public void mirror(File destination) {
+		ant(mirrorAntFile(destination));
+	}
+
+	public void mirror(File destination, Action<? super XmlProvider> action) {
+		ActionBroadcast<XmlProvider> xmlAction = new ActionBroadcast<XmlProvider>();
+		xmlAction.add(action);
+		XmlTransformer xmlTransformer = new XmlTransformer();
+		xmlTransformer.addAction(action);
+		ant(xmlTransformer.transform(mirrorAntFile(destination)));
+	}
+
+	private void ant(String buildfile) {
+		// TODO: implement ant
+	}
+
+	public static final String ANT_DIRECTOR = "org.eclipse.ant.core.antRunner";
+
+	public static class AntArgsBuilder extends EclipseArgsBuilder {
+		public void define(String key, String value) {
+			addArg("-D" + key + "=" + value);
+		}
+	}
+
+	////////////////
+	// P2DIRECTOR //
+	////////////////
 	/**
 	 * Returns the arguments required to call "eclipsec" and run the p2 director application
 	 * to install the artifacts from the repos in this model into the given directory and profile.
 	 */
-	public ArgsBuilder argsForInstall(File dstFolder, String profile) {
-		ArgsBuilder builder = new ArgsBuilder();
+	public DirectorArgsBuilder directorArgs(File dstFolder, String profile) {
+		DirectorArgsBuilder builder = new DirectorArgsBuilder();
 		builder.clean();
 		builder.consolelog();
-		builder.application(APPLICATION);
+		builder.application(P2_DIRECTOR);
 		repos.forEach(repo -> builder.addArg("repository", repo));
-		metadataRepo.forEach(repo -> builder.addArg("metadataRepository", repo));
-		artifactRepo.forEach(repo -> builder.addArg("artifactRepository", repo));
+		metadataRepos.forEach(repo -> builder.addArg("metadataRepository", repo));
+		artifactRepos.forEach(repo -> builder.addArg("artifactRepository", repo));
 		ius.forEach(iu -> builder.addArg("installIU", iu));
 		builder.addArg("profile", profile);
-		builder.addArg("destination", "file:" + dstFolder.getAbsolutePath());
+		builder.addArg("destination", FILE_PROTO + dstFolder.getAbsolutePath());
 		return builder;
 	}
 
-	public static final String APPLICATION = "org.eclipse.equinox.p2.director";
+	public static final String P2_DIRECTOR = "org.eclipse.equinox.p2.director";
 
 	/**
 	 * An extension of EclipseArgsBuilder with typed methods appropriate for p2 director.
 	 *
-	 * Created using {@link P2DirectorModel#argsForInstall(File, String)}.
+	 * Created using {@link P2Model#directorArgs(File, String)}.
 	 */
-	public static class ArgsBuilder extends EclipseArgsBuilder {
+	public static class DirectorArgsBuilder extends EclipseArgsBuilder {
 		/**
 		 * Adds a `bundlepool` argument.
 		 *
@@ -250,20 +338,20 @@ public class P2DirectorModel {
 		}
 	}
 
-	/** Groovy-friendly version of {@link P2DirectorModel#install(File, String, Consumer)}. */
-	public void install(File dstFolder, String profile, Closure<ArgsBuilder> configModify) throws Throwable {
+	/** Deletes the cached repository info (which may include references to local paths). */
+	public static void cleanCachedRepositories(File dstFile) throws IOException {
+		Path path = dstFile.toPath().resolve("p2/org.eclipse.equinox.p2.engine/.settings");
+		FileMisc.cleanDir(path.toFile());
+	}
+
+	/** Groovy-friendly version of {@link P2Model#install(File, String, Consumer)}. */
+	public void install(File dstFolder, String profile, Closure<DirectorArgsBuilder> configModify) throws Throwable {
 		install(dstFolder, profile, GroovyCompat.consumerFrom(configModify));
 	}
 
 	/** See {@link #install(File, String, Consumer)}. */
 	public void install(File dstFolder, String profile) throws Throwable {
 		install(dstFolder, profile, Consumers.doNothing());
-	}
-
-	/** Deletes the cached repository info (which may include references to local paths). */
-	public static void cleanCachedRepositories(File dstFile) throws IOException {
-		Path path = dstFile.toPath().resolve("p2/org.eclipse.equinox.p2.engine/.settings");
-		FileMisc.cleanDir(path.toFile());
 	}
 
 	/**
@@ -278,9 +366,9 @@ public class P2DirectorModel {
 	 * @param dstFolder the folder into which the installation will take place.
 	 * @param profile the name of the profile, doesn't really matter what it is.
 	 */
-	public void install(File dstFolder, String profile, Consumer<ArgsBuilder> configModify) throws Exception {
+	public void install(File dstFolder, String profile, Consumer<DirectorArgsBuilder> configModify) throws Exception {
 		// setup the args
-		ArgsBuilder args = argsForInstall(dstFolder, profile);
+		DirectorArgsBuilder args = directorArgs(dstFolder, profile);
 		configModify.accept(args);
 		// ensure the bootstrap installation is installed
 		P2BootstrapInstallation installation = P2BootstrapInstallation.latest();

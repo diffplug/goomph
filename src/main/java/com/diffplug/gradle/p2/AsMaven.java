@@ -85,7 +85,7 @@ class AsMaven {
 
 	/** The args passed to p2 director represent the full state. */
 	private String state() {
-		P2DirectorModel.ArgsBuilder args = p2model.argsForInstall(project.file(destination), mavenGroup);
+		P2Model.DirectorArgsBuilder args = p2model.directorArgs(project.file(destination), mavenGroup);
 		modifyP2args.accept(args);
 		return args.toArgList().stream().collect(Collectors.joining("\n")) + GOOMPH_VERSION;
 	}
@@ -101,11 +101,11 @@ class AsMaven {
 		this.destination = destination;
 	}
 
-	public P2DirectorModel p2() {
+	public P2Model p2() {
 		return p2model;
 	}
 
-	public void modifyP2Args(Consumer<P2DirectorModel.ArgsBuilder> args) {
+	public void modifyP2Args(Consumer<P2Model.DirectorArgsBuilder> args) {
 		this.modifyP2args = Objects.requireNonNull(args);
 	}
 
@@ -114,7 +114,7 @@ class AsMaven {
 	/** When this is true, the global bundle pool will be used to accelerate artifact downloads. */
 	private Object destination = "build/goomph-p2asmaven";
 	/** The model we'd like to download. */
-	private P2DirectorModel p2model = new P2DirectorModel();
+	private P2Model p2model = new P2Model();
 	/** Modifies the p2director args before it is run. */
-	private Consumer<P2DirectorModel.ArgsBuilder> modifyP2args = Consumers.doNothing();
+	private Consumer<P2Model.DirectorArgsBuilder> modifyP2args = Consumers.doNothing();
 }

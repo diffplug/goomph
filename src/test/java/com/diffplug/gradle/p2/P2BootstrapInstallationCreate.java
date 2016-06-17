@@ -32,10 +32,10 @@ public class P2BootstrapInstallationCreate {
 	public static void main(String[] args) throws Exception {
 		FileMisc.cleanDir(INSTALL_TO);
 		P2BootstrapInstallation installation = new P2BootstrapInstallation(RELEASE);
-		P2DirectorModel model = installation.p2model();
+		P2Model model = installation.p2model();
 		model.install(INSTALL_TO, "goomph-p2-bootstrap-" + RELEASE.version(), config -> {
 			config.roaming();
 		});
-		P2DirectorModel.cleanCachedRepositories(INSTALL_TO);
+		P2Model.cleanCachedRepositories(INSTALL_TO);
 	}
 }
