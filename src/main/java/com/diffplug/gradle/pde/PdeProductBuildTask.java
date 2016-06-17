@@ -240,7 +240,7 @@ public class PdeProductBuildTask extends DefaultTask {
 
 		// generate and execute the PDE build command
 		PdeInstallation installation = PdeInstallation.fromProject(getProject());
-		installation.run(installation.productBuildCmd(buildDir));
+		installation.productBuildCmd(buildDir).runUsing(installation);
 	}
 
 	private static final String PLUGIN_PREFIX = "<plugin id=\"";

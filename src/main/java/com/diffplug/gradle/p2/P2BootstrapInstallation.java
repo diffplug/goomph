@@ -18,16 +18,22 @@ package com.diffplug.gradle.p2;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Objects;
 
 import org.apache.commons.io.FileUtils;
 
+import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.collect.ImmutableSet;
+
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
+import com.diffplug.gradle.JavaExecable;
 import com.diffplug.gradle.ZipUtil;
+import com.diffplug.gradle.eclipse.EclipseApp;
 import com.diffplug.gradle.eclipse.EclipseRelease;
+import com.diffplug.gradle.eclipse.EquinoxLauncher;
 
 /** Wraps a Bootstrap installation for the given eclipse release. */
 class P2BootstrapInstallation {
@@ -52,12 +58,12 @@ class P2BootstrapInstallation {
 	}
 
 	/** The root of this installation. */
-	File getRootFolder() {
+	private File getRootFolder() {
 		return new File(GoomphCacheLocations.p2bootstrap(), release.toString());
 	}
 
 	/** Makes sure that the installation is prepared. */
-	public void ensureInstalled() throws IOException {
+	private void ensureInstalled() throws IOException {
 		if (!isInstalled()) {
 			install();
 		}
@@ -106,10 +112,107 @@ class P2BootstrapInstallation {
 		model.addIU("org.eclipse.osgi.compatibility.state");
 		// ant tasks
 		model.addIU("org.eclipse.ant.core");
+		model.addIU("org.apache.ant");
 		// eclipse infrastructure to make "eclipsec -application org.eclipse.equinox.p2.director" work
 		model.addIU("org.eclipse.core.runtime");
 		model.addIU("org.eclipse.update.configurator");
 		model.addIU("org.eclipse.equinox.ds");
 		return model;
 	}
+
+	/** Returns an EclipseArgsBuilder.Runner which runs within this JVM. */
+	public EclipseApp.Runner withinJvmRunner() throws IOException {
+		return args -> {
+			ensureInstalled();
+			EquinoxLauncher launcher = new EquinoxLauncher(getRootFolder());
+			launcher.setArgs(args);
+			launcher.run();
+		};
+	}
+
+	/** Returns an EclipseArgsBuilder.Runner which runs outside this JVM. */
+	public EclipseApp.Runner outsideJvmRunner() throws IOException {
+		return args -> {
+			ensureInstalled();
+			RunOutside runOutside = new RunOutside(getRootFolder(), args);
+			Errors.constrainTo(Exception.class).run(() -> JavaExecable.execWithoutGradle(runOutside));
+		};
+	}
+
+	/** Helper class for runnings outside this JVM. */
+	@SuppressWarnings("serial")
+	private static class RunOutside implements JavaExecable {
+		final File rootFolder;
+		final List<String> args;
+
+		public RunOutside(File rootFolder, List<String> args) {
+			this.rootFolder = rootFolder;
+			this.args = args;
+		}
+
+		@Override
+		public void run() throws Throwable {
+			EquinoxLauncher launcher = new EquinoxLauncher(rootFolder);
+			launcher.setArgs(args);
+			launcher.run();
+		}
+	}
+
+	/* Exception if you run two P2 tasks back to back.
+	!SESSION 2016-06-16 15:52:15.882 -----------------------------------------------
+	eclipse.buildId=unknown
+	java.version=1.8.0_74
+	java.vendor=Oracle Corporation
+	BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+	Framework arguments:  -application org.eclipse.equinox.p2.director -repository http://download.eclipse.org/eclipse/updates/4.5/R-4.5.2-201602121500/ -artifactRepository file:C:\Users\ntwigg\.goomph\shared-bundles -installIU org.eclipse.rcp.configuration.feature.group,org.eclipse.equinox.executable.feature.group -profile profile -destination file:C:\Users\ntwigg\Documents\DiffPlugDev\DiffPlug\targetplatform\build\goomph-p2asmaven\__p2__ -profileProperties org.eclipse.update.install.features=true -p2.os win32 -p2.ws win32 -p2.arch x86
+	Command-line arguments:  -clean -consolelog -application org.eclipse.equinox.p2.director -repository http://download.eclipse.org/eclipse/updates/4.5/R-4.5.2-201602121500/ -artifactRepository file:C:\Users\ntwigg\.goomph\shared-bundles -installIU org.eclipse.rcp.configuration.feature.group,org.eclipse.equinox.executable.feature.group -profile profile -destination file:C:\Users\ntwigg\Documents\DiffPlugDev\DiffPlug\targetplatform\build\goomph-p2asmaven\__p2__ -profileProperties org.eclipse.update.install.features=true -p2.os win32 -p2.ws win32 -p2.arch x86
+	
+	!ENTRY org.eclipse.update.configurator 4 0 2016-06-16 15:52:15.886
+	!MESSAGE FrameworkEvent ERROR
+	!STACK 0
+	org.osgi.framework.BundleException: Exception in org.eclipse.update.internal.configurator.ConfigurationActivator.start() of bundle org.eclipse.update.configurator.
+		at org.eclipse.osgi.internal.framework.BundleContextImpl.startActivator(BundleContextImpl.java:792)
+		at org.eclipse.osgi.internal.framework.BundleContextImpl.start(BundleContextImpl.java:721)
+		at org.eclipse.osgi.internal.framework.EquinoxBundle.startWorker0(EquinoxBundle.java:941)
+		at org.eclipse.osgi.internal.framework.EquinoxBundle$EquinoxModule.startWorker(EquinoxBundle.java:318)
+		at org.eclipse.osgi.container.Module.doStart(Module.java:571)
+		at org.eclipse.osgi.container.Module.start(Module.java:439)
+		at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1582)
+		at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.incStartLevel(ModuleContainer.java:1562)
+		at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.doContainerStartLevel(ModuleContainer.java:1533)
+		at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1476)
+		at org.eclipse.osgi.container.ModuleContainer$ContainerStartLevel.dispatchEvent(ModuleContainer.java:1)
+		at org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent(EventManager.java:230)
+		at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:340)
+	Caused by: javax.xml.parsers.FactoryConfigurationError: Provider for class javax.xml.parsers.SAXParserFactory cannot be created
+		at javax.xml.parsers.FactoryFinder.findServiceProvider(FactoryFinder.java:311)
+		at javax.xml.parsers.FactoryFinder.find(FactoryFinder.java:267)
+		at javax.xml.parsers.SAXParserFactory.newInstance(SAXParserFactory.java:127)
+		at org.eclipse.update.internal.configurator.ConfigurationParser.<clinit>(ConfigurationParser.java:34)
+		at org.eclipse.update.internal.configurator.PlatformConfiguration.loadConfig(PlatformConfiguration.java:1081)
+		at org.eclipse.update.internal.configurator.PlatformConfiguration.initializeCurrent(PlatformConfiguration.java:752)
+		at org.eclipse.update.internal.configurator.PlatformConfiguration.<init>(PlatformConfiguration.java:104)
+		at org.eclipse.update.internal.configurator.PlatformConfiguration.startup(PlatformConfiguration.java:707)
+		at org.eclipse.update.internal.configurator.ConfigurationActivator.getPlatformConfiguration(ConfigurationActivator.java:404)
+		at org.eclipse.update.internal.configurator.ConfigurationActivator.initialize(ConfigurationActivator.java:136)
+		at org.eclipse.update.internal.configurator.ConfigurationActivator.start(ConfigurationActivator.java:69)
+		at org.eclipse.osgi.internal.framework.BundleContextImpl$3.run(BundleContextImpl.java:771)
+		at org.eclipse.osgi.internal.framework.BundleContextImpl$3.run(BundleContextImpl.java:1)
+		at java.security.AccessController.doPrivileged(Native Method)
+		at org.eclipse.osgi.internal.framework.BundleContextImpl.startActivator(BundleContextImpl.java:764)
+		... 12 more
+	Caused by: java.lang.RuntimeException: Provider for class javax.xml.parsers.SAXParserFactory cannot be created
+		at javax.xml.parsers.FactoryFinder.findServiceProvider(FactoryFinder.java:308)
+		... 26 more
+	Caused by: java.util.ServiceConfigurationError: javax.xml.parsers.SAXParserFactory: Provider org.apache.xerces.jaxp.SAXParserFactoryImpl not found
+		at java.util.ServiceLoader.fail(ServiceLoader.java:239)
+		at java.util.ServiceLoader.access$300(ServiceLoader.java:185)
+		at java.util.ServiceLoader$LazyIterator.nextService(ServiceLoader.java:372)
+		at java.util.ServiceLoader$LazyIterator.next(ServiceLoader.java:404)
+		at java.util.ServiceLoader$1.next(ServiceLoader.java:480)
+		at javax.xml.parsers.FactoryFinder$1.run(FactoryFinder.java:294)
+		at java.security.AccessController.doPrivileged(Native Method)
+		at javax.xml.parsers.FactoryFinder.findServiceProvider(FactoryFinder.java:289)
+		... 26 more
+		*/
 }

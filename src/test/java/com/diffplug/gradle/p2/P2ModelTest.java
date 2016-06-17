@@ -16,13 +16,10 @@
 package com.diffplug.gradle.p2;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.diffplug.common.base.Joiner;
 import com.diffplug.common.base.StringPrinter;
 
 public class P2ModelTest {
@@ -39,36 +36,42 @@ public class P2ModelTest {
 	@Test
 	public void testDirectorArgs() {
 		File dest = new File("dest");
-		List<String> actual = testData().directorArgs(dest, "profile").toArgList();
-		List<String> expected = Arrays.asList(
+		String actual = testData().directorApp(dest, "profile").completeState();
+		String expected = StringPrinter.buildStringFromLines(
+				"-application org.eclipse.equinox.p2.director",
 				"-clean",
 				"-consolelog",
-				"-application", "org.eclipse.equinox.p2.director",
-				"-repository", "http://p2repo",
-				"-metadataRepository", "http://metadatarepo",
-				"-artifactRepository", "http://artifactrepo",
-				"-installIU", "com.diffplug.iu,com.diffplug.otheriu/1.0.0",
-				"-profile", "profile",
-				"-destination", P2Model.FILE_PROTO + dest.getAbsolutePath());
-		Assert.assertEquals(Joiner.on('\n').join(expected), Joiner.on('\n').join(actual));
+				"-repository http://p2repo",
+				"-metadataRepository http://metadatarepo",
+				"-artifactRepository http://artifactrepo",
+				"-installIU com.diffplug.iu,com.diffplug.otheriu/1.0.0",
+				"-profile profile",
+				"-destination file://" + dest.getAbsolutePath()
+				);
+		Assert.assertEquals(expected, actual);
 	}
 
 	@Test
 	public void testMirrorAntFile() {
 		File dest = new File("dest");
-		String mirrorAntFile = testData().mirrorAntFile(dest);
+		String actual = testData().mirrorApp(dest).completeState();
 		String expected = StringPrinter.buildStringFromLines(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><p2.mirror>",
-				"  <source>",
-				"    <repository location=\"http://p2repo\"/>",
-				"    <repository kind=\"metadata\" location=\"http://metadatarepo\"/>",
-				"    <repository kind=\"artifact\" location=\"http://artifactrepo\"/>",
-				"  </source>",
-				"  <destination location=\"file://" + dest.getAbsolutePath() + "\"/>",
-				"  <iu id=\"com.diffplug.iu\"/>",
-				"  <iu id=\"com.diffplug.otheriu\" version=\"1.0.0\"/>",
-				"</p2.mirror>");
-
-		Assert.assertEquals(expected, mirrorAntFile);
+				"### ARGS ###",
+				"-application org.eclipse.ant.core.antRunner",
+				"",
+				"### BUILD.XML ###",
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><project>",
+				"  <p2.mirror>",
+				"    <source>",
+				"      <repository location=\"http://p2repo\"/>",
+				"      <repository kind=\"metadata\" location=\"http://metadatarepo\"/>",
+				"      <repository kind=\"artifact\" location=\"http://artifactrepo\"/>",
+				"    </source>",
+				"    <destination location=\"file://" + dest.getAbsolutePath() + "\"/>",
+				"    <iu id=\"com.diffplug.iu\"/>",
+				"    <iu id=\"com.diffplug.otheriu\" version=\"1.0.0\"/>",
+				"  </p2.mirror>",
+				"</project>");
+		Assert.assertEquals(expected, actual);
 	}
 }

@@ -17,6 +17,7 @@ package com.diffplug.gradle.pde;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -31,12 +32,12 @@ import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.CmdLine;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
-import com.diffplug.gradle.eclipse.EclipseArgsBuilder;
+import com.diffplug.gradle.eclipse.EclipseApp;
 import com.diffplug.gradle.eclipse.EclipseRelease;
 import com.diffplug.gradle.p2.P2Model;
 
 /** Wraps a PDE installation for the given eclipse release. */
-class PdeInstallation {
+class PdeInstallation implements EclipseApp.Runner {
 	/** Returns a PdeInstallation appropriate for this project. */
 	static PdeInstallation fromProject(Project project) {
 		String version = (String) project.getProperties().get("GOOMPH_PDE_VER");
@@ -78,17 +79,8 @@ class PdeInstallation {
 	}
 
 	/** The root of this installation. */
-	File getRootFolder() {
+	private File getRootFolder() {
 		return new File(GoomphCacheLocations.pdeBootstrap(), release.toString());
-	}
-
-	static final String TOKEN = "installed";
-
-	/** Makes sure that the installation is prepared. */
-	void ensureInstalled() throws Exception {
-		if (!isInstalled()) {
-			install();
-		}
 	}
 
 	/** The `org.eclipse.pde.build` folder containing the product build properties file. */
@@ -105,18 +97,10 @@ class PdeInstallation {
 	}
 
 	/** Returns a command which will execute the PDE builder for a product. */
-	public EclipseArgsBuilder productBuildCmd(File buildDir) throws Exception {
-		EclipseArgsBuilder args = antBuildCmd(getPdeBuildProductBuildXml());
-		args.addArg("Dbuilder=" + quote(buildDir));
-		return args;
-	}
-
-	/** Returns a command which will execute the PDE builder for a generic ant build file. */
-	public EclipseArgsBuilder antBuildCmd(File buildfile) {
-		EclipseArgsBuilder args = new EclipseArgsBuilder();
-		args.application("org.eclipse.ant.core.antRunner");
-		args.addArg("buildfile", quote(buildfile));
-		return args;
+	public EclipseApp.Ant productBuildCmd(File buildDir) throws Exception {
+		EclipseApp.Ant antApp = new EclipseApp.Ant();
+		antApp.define("builder", quote(buildDir));
+		return antApp;
 	}
 
 	/**
@@ -126,6 +110,15 @@ class PdeInstallation {
 	 * guaranteed to be set when ensureInstalled completes.
 	 */
 	private File pdeBuildFolder;
+
+	static final String TOKEN = "installed";
+
+	/** Makes sure that the installation is prepared. */
+	private void ensureInstalled() throws Exception {
+		if (!isInstalled()) {
+			install();
+		}
+	}
 
 	/** Returns true iff it is installed. */
 	private boolean isInstalled() throws IOException {
@@ -137,12 +130,13 @@ class PdeInstallation {
 	/** Installs the bootstrap installation. */
 	private void install() throws Exception {
 		System.out.print("Installing pde " + release + "... ");
-		p2model().install(getRootFolder(), "goomph-pde-bootstrap-" + release, config -> {
-			// share the install for quickness
-			config.bundlepool(GoomphCacheLocations.bundlePool());
-			// create a native launcher
-			config.oswsarch(SwtPlatform.getRunning());
-		});
+		P2Model.DirectorApp directorApp = p2model().directorApp(getRootFolder(), "goomph-pde-bootstrap-" + release);
+		// share the install for quickness
+		directorApp.bundlepool(GoomphCacheLocations.bundlePool());
+		// create a native launcher
+		directorApp.oswsarch(SwtPlatform.getRunning());
+		directorApp.runUsingBootstrapper();
+		// find the plugins folder
 		File sharedPlugins = new File(GoomphCacheLocations.bundlePool(), "plugins");
 		File[] pdeBuilds = sharedPlugins.listFiles(file -> {
 			return file.isDirectory() && file.getName().startsWith("org.eclipse.pde.build_");
@@ -155,7 +149,7 @@ class PdeInstallation {
 	/**
 	 * Creates a model containing pde build and the native launder.
 	 */
-	P2Model p2model() {
+	public P2Model p2model() {
 		P2Model model = new P2Model();
 		// the update site for the release we're downloading artifacts for
 		model.addRepo(release.updateSite());
@@ -190,14 +184,13 @@ class PdeInstallation {
 		}
 	}
 
-	/** Runs the given arguments using the eclipsec embedded in this PdeInstallation. */
-	public void run(EclipseArgsBuilder args) throws Exception {
+	@Override
+	public void run(List<String> args) throws Exception {
 		ensureInstalled();
-
 		StringBuilder builder = new StringBuilder();
 		// add eclipsec
 		builder.append(quote(getEclipseConsoleExecutable().getCanonicalFile()));
-		for (String arg : args.toArgList()) {
+		for (String arg : args) {
 			// space
 			builder.append(' ');
 			// arg (possibly quoted)

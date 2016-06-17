@@ -18,7 +18,6 @@ package com.diffplug.gradle.p2;
 import java.io.File;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.gradle.api.Action;
 import org.gradle.api.Project;
@@ -64,7 +63,9 @@ class AsMaven {
 		File p2Dir = new File(dir, "__p2__");
 		p2Dir.mkdirs();
 		project.getLogger().lifecycle("P2Mavenify " + mavenGroup + " installing from p2");
-		p2model.install(p2Dir, mavenGroup, modifyP2args);
+		P2Model.DirectorApp app = p2model.directorApp(p2Dir, mavenGroup);
+		modifyP2args.execute(app);
+		app.runUsingBootstrapper();
 
 		// put p2 into a maven repo
 		project.getLogger().lifecycle("P2Mavenify " + mavenGroup + " creating maven repo");
@@ -85,9 +86,9 @@ class AsMaven {
 
 	/** The args passed to p2 director represent the full state. */
 	private String state() {
-		P2Model.DirectorArgsBuilder args = p2model.directorArgs(project.file(destination), mavenGroup);
+		P2Model.DirectorApp args = p2model.directorApp(project.file(destination), mavenGroup);
 		modifyP2args.execute(args);
-		return args.toArgList().stream().collect(Collectors.joining("\n")) + GOOMPH_VERSION;
+		return args.completeState() + GOOMPH_VERSION;
 	}
 
 	/** Bump this if we need to force people's deps to reload. */
@@ -105,7 +106,7 @@ class AsMaven {
 		return p2model;
 	}
 
-	public void modifyP2Args(Action<P2Model.DirectorArgsBuilder> args) {
+	public void modifyP2Args(Action<P2Model.DirectorApp> args) {
 		this.modifyP2args = Objects.requireNonNull(args);
 	}
 
@@ -116,5 +117,5 @@ class AsMaven {
 	/** The model we'd like to download. */
 	private P2Model p2model = new P2Model();
 	/** Modifies the p2director args before it is run. */
-	private Action<P2Model.DirectorArgsBuilder> modifyP2args = Actions.doNothing();
+	private Action<P2Model.DirectorApp> modifyP2args = Actions.doNothing();
 }

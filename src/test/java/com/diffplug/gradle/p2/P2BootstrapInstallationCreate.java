@@ -33,9 +33,9 @@ public class P2BootstrapInstallationCreate {
 		FileMisc.cleanDir(INSTALL_TO);
 		P2BootstrapInstallation installation = new P2BootstrapInstallation(RELEASE);
 		P2Model model = installation.p2model();
-		model.install(INSTALL_TO, "goomph-p2-bootstrap-" + RELEASE.version(), config -> {
-			config.roaming();
-		});
+		P2Model.DirectorApp app = model.directorApp(INSTALL_TO, "goomph-p2-bootstrap-" + RELEASE.version());
+		app.roaming();
+		app.runUsingBootstrapper();
 		P2Model.cleanCachedRepositories(INSTALL_TO);
 	}
 }

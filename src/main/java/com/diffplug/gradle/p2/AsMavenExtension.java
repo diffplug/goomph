@@ -44,7 +44,7 @@ public class AsMavenExtension {
 	}
 
 	/** Modifies args passed to p2 director. */
-	public void p2args(Action<P2Model.DirectorArgsBuilder> argsBuilder) {
+	public void p2args(Action<P2Model.DirectorApp> argsBuilder) {
 		mavenify.modifyP2Args(argsBuilder);
 	}
 }
