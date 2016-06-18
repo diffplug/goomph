@@ -25,7 +25,6 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import org.gradle.api.Action;
 import org.gradle.api.Project;
 
 import groovy.util.Node;
@@ -41,9 +40,8 @@ import com.diffplug.gradle.eclipserunner.EclipseApp;
  * Models a request for some artifacts from some
  * p2 repositories.
  * 
- * Install with p2 director using {@link #director(File, String, Action)}
- * 
- * Mirror with the ant p2 mirror task using {@link #mirror(File, Action)}.
+ * - Install with p2 director using {@link #directorApp(File, String)}.
+ * - Mirror with the ant p2 mirror task using {@link #mirrorApp(File)}.
  */
 public class P2Model {
 	/** Returns a deep copy of this model. */

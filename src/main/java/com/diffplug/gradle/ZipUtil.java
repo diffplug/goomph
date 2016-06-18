@@ -83,9 +83,9 @@ public class ZipUtil {
 	 * @param toOmit		a set of entries you'd like to leave out of the zip
 	 * @throws IOException
 	 */
-	public static void modify(ByteSource source, ByteSink sink, Map<String, ByteSource> toModify, Set<String> toOmit) throws IOException {
-		try (ZipInputStream zipInput = new ZipInputStream(source.openBufferedStream());
-				ZipOutputStream zipOutput = new ZipOutputStream(sink.openBufferedStream())) {
+	public static void modify(ByteSource input, ByteSink output, Map<String, ByteSource> toModify, Set<String> toOmit) throws IOException {
+		try (ZipInputStream zipInput = new ZipInputStream(input.openBufferedStream());
+				ZipOutputStream zipOutput = new ZipOutputStream(output.openBufferedStream())) {
 			while (true) {
 				// read the next entry
 				ZipEntry entry = zipInput.getNextEntry();
@@ -130,8 +130,8 @@ public class ZipUtil {
 	 * @param toOmit		a set of entries you'd like to leave out of the zip
 	 * @throws IOException
 	 */
-	public static void modify(File source, File sink, Map<String, File> toModify, Set<String> toOmit) throws IOException {
-		modify(Files.asByteSource(source), Files.asByteSink(sink), Maps.transformValues(toModify, Files::asByteSource), toOmit);
+	public static void modify(File input, File output, Map<String, File> toModify, Set<String> toOmit) throws IOException {
+		modify(Files.asByteSource(input), Files.asByteSink(output), Maps.transformValues(toModify, Files::asByteSource), toOmit);
 	}
 
 	/**
