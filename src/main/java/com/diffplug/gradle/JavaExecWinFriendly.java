@@ -55,7 +55,7 @@ public class JavaExecWinFriendly {
 				// handle the user
 				spec.execute(execSpec);
 			});
-			classpathJar.delete();
+			FileMisc.delete(classpathJar);
 			return execResult;
 		} else {
 			return project.javaexec(execSpec -> {

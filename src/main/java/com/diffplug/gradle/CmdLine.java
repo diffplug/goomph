@@ -78,7 +78,7 @@ public class CmdLine {
 					FileUtils.deleteDirectory(fileOrDir);
 				} else {
 					// delete the file
-					fileOrDir.delete();
+					FileMisc.delete(fileOrDir);
 				}
 			}
 		});

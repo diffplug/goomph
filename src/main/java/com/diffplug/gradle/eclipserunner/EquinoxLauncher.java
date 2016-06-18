@@ -34,6 +34,7 @@ import com.diffplug.common.collect.ImmutableMap;
 import com.diffplug.common.collect.Iterables;
 import com.diffplug.common.collect.SortedSetMultimap;
 import com.diffplug.common.collect.TreeMultimap;
+import com.diffplug.gradle.FileMisc;
 
 /**
  * Given a directory containing osgi jars, this class
@@ -58,7 +59,7 @@ public class EquinoxLauncher {
 		// populate the plugins
 		File pluginsDir = new File(installationRoot, "plugins");
 		Preconditions.checkArgument(pluginsDir.isDirectory(), "Eclipse launcher must have a plugins directory: %s", installationRoot);
-		for (File file : pluginsDir.listFiles()) {
+		for (File file : FileMisc.list(pluginsDir)) {
 			if (file.isFile()) {
 				String fileName = file.getName();
 				if (fileName.endsWith(".jar")) {

@@ -60,15 +60,15 @@ class AsMaven {
 		project.getLogger().lifecycle("Initalizing maven group " + mavenGroup + " from p2");
 		project.getLogger().lifecycle("Only needs to be done once, future builds will be much faster");
 
-		File p2Dir = new File(dir, "__p2__");
-		p2Dir.mkdirs();
+		File p2dir = new File(dir, "__p2__");
+		FileMisc.mkdirs(p2dir);
 		project.getLogger().lifecycle("P2Mavenify " + mavenGroup + " installing from p2");
 		getApp().runUsingBootstrapper(project);
 
 		// put p2 into a maven repo
 		project.getLogger().lifecycle("P2Mavenify " + mavenGroup + " creating maven repo");
 		try (MavenRepoBuilder maven = new MavenRepoBuilder(dir)) {
-			for (File plugin : new File(p2Dir, "plugins").listFiles()) {
+			for (File plugin : FileMisc.list(new File(p2dir, "plugins"))) {
 				if (plugin.isFile() && plugin.getName().endsWith(".jar")) {
 					maven.install(mavenGroup, plugin);
 				}

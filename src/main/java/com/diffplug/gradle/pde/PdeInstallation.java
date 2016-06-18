@@ -138,10 +138,9 @@ class PdeInstallation implements EclipseRunner {
 		directorApp.runUsingBootstrapper();
 		// find the plugins folder
 		File sharedPlugins = new File(GoomphCacheLocations.bundlePool(), "plugins");
-		File[] pdeBuilds = sharedPlugins.listFiles(file -> {
-			return file.isDirectory() && file.getName().startsWith("org.eclipse.pde.build_");
-		});
-		pdeBuildFolder = pdeBuilds[0];
+		pdeBuildFolder = FileMisc.list(sharedPlugins).stream().filter(file -> {
+			return file.getName().startsWith("org.eclipse.pde.build_") && file.isDirectory();
+		}).findFirst().get();
 		FileMisc.writeToken(getRootFolder(), TOKEN, pdeBuildFolder.getAbsolutePath());
 		System.out.println("Success.");
 	}

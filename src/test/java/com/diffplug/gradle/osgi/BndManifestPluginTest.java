@@ -22,6 +22,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.diffplug.common.base.StringPrinter;
+import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GradleIntegrationTest;
 import com.diffplug.gradle.ZipUtil;
 
@@ -101,7 +102,7 @@ public class BndManifestPluginTest extends GradleIntegrationTest {
 
 		// make sure the jar contains the proper manifest
 		File libsDir = file("build/libs");
-		File jar = libsDir.listFiles()[0];
+		File jar = FileMisc.list(libsDir).get(0);
 		String manifestContent = ZipUtil.read(jar, "META-INF/MANIFEST.MF");
 		Assert.assertEquals(expectedManifest, manifestContent);
 

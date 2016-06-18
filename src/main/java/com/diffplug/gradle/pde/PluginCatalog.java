@@ -38,6 +38,7 @@ import com.diffplug.common.collect.SetMultimap;
 import com.diffplug.common.collect.Sets;
 import com.diffplug.common.swt.os.OS;
 import com.diffplug.common.swt.os.SwtPlatform;
+import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.ZipUtil;
 
 /** Catalogs all of the plugins and their versions in the given paths. */
@@ -67,7 +68,7 @@ class PluginCatalog {
 				pluginRoot = plugins;
 			}
 
-			List<File> files = Arrays.asList(pluginRoot.listFiles());
+			List<File> files = FileMisc.list(pluginRoot);
 			Preconditions.checkArgument(files.size() > 0, "No plugins found in " + root);
 			// look for plugin.jar
 			files.stream().filter(file -> file.isFile() && file.getName().endsWith(".jar") && !file.getName().endsWith("_SNAPSHOT.jar"))
