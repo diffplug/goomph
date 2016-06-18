@@ -38,7 +38,6 @@ import org.codehaus.plexus.DefaultContainerConfiguration;
 import org.codehaus.plexus.DefaultPlexusContainer;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.classworlds.ClassWorld;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
@@ -56,12 +55,10 @@ class MavenRepoBuilder implements AutoCloseable {
 	final ArtifactInstaller installer;
 
 	MavenRepoBuilder(File root) throws Exception {
-		ClassWorld classWorld = new ClassWorld("plexus.core", Thread.currentThread().getContextClassLoader());
-		ClassRealm coreRealm = classWorld.getClassRealm("plexus.core");
+		ClassWorld classWorld = new ClassWorld("plexus.core", MavenRepoBuilder.class.getClassLoader());
 		ContainerConfiguration cc = new DefaultContainerConfiguration()
 				.setClassWorld(classWorld)
-				.setRealm(coreRealm)
-				.setClassPathScanning(PlexusConstants.SCANNING_INDEX)
+				.setClassPathScanning(PlexusConstants.SCANNING_CACHE)
 				.setAutoWiring(true)
 				.setName("maven");
 		container = new DefaultPlexusContainer(cc, new AbstractModule() {
