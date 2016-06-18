@@ -154,7 +154,7 @@ public class FileMisc {
 	/** Deletes the given file or directory if it exists, then creates a fresh directory in its place. */
 	public static void cleanDir(File dirToRemove) throws IOException {
 		if (dirToRemove.isFile()) {
-			dirToRemove.delete();
+			FileMisc.delete(dirToRemove);
 		} else if (dirToRemove.isDirectory()) {
 			try {
 				FileUtils.deleteDirectory(dirToRemove);
@@ -163,7 +163,7 @@ public class FileMisc {
 				// but deleting everything inside is just as good
 				for (File file : FileMisc.list(dirToRemove)) {
 					if (file.isFile()) {
-						file.delete();
+						FileMisc.delete(file);
 					} else {
 						FileUtils.deleteDirectory(file);
 					}
@@ -205,7 +205,7 @@ public class FileMisc {
 			}
 		}
 		// remove the directory which we're flattening away
-		dirToRemove.delete();
+		FileMisc.delete(dirToRemove);
 	}
 
 	/** Concats the first files and writes them to the last file. */

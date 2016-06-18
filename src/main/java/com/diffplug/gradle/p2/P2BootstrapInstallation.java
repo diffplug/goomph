@@ -86,7 +86,7 @@ class P2BootstrapInstallation {
 		// unzip it
 		ZipUtil.unzip(target, target.getParentFile());
 		// delete the zip
-		target.delete();
+		FileMisc.delete(target);
 		FileMisc.writeToken(getRootFolder(), TOKEN);
 		System.out.print("Success.");
 	}

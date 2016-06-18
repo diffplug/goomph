@@ -31,6 +31,7 @@ import com.diffplug.common.collect.Iterables;
 import com.diffplug.common.collect.ListMultimap;
 import com.diffplug.common.collect.Multimaps;
 import com.diffplug.common.io.Files;
+import com.diffplug.gradle.FileMisc;
 
 /**
  * Models an eclipse utility application and all of
@@ -213,7 +214,7 @@ public class EclipseApp {
 				args.add(tempFile.getAbsolutePath());
 				runner.run(args);
 			} finally {
-				tempFile.delete();
+				FileMisc.delete(tempFile);
 			}
 		}
 

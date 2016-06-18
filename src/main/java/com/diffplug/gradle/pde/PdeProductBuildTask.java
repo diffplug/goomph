@@ -215,7 +215,7 @@ public class PdeProductBuildTask extends DefaultTask {
 			File temp = File.createTempFile("tempPlugin", ".jar");
 			ZipUtil.modify(corePlugin, temp, ImmutableMap.of(productFilename, productOutput), Collections.emptySet());
 			Files.copy(temp, corePlugin);
-			temp.delete();
+			FileMisc.delete(temp);
 
 			// copy only the images needed by the product file
 			ImmutableList<String> endingsToCopy = ImmutableList.of(".xpm", ".icns", ".ico");
