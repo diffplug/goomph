@@ -92,7 +92,7 @@ public class AsMavenPlugin extends ProjectPlugin {
 		project.afterEvaluate(proj -> {
 			Errors.rethrow().run(extension.mavenify::run);
 			project.getRepositories().maven(maven -> {
-				maven.setUrl(extension.mavenify.getDestination());
+				maven.setUrl(extension.mavenify.getDestinationMaven());
 			});
 		});
 	}

@@ -33,9 +33,18 @@ class AsMaven {
 		this.project = project;
 	}
 
-	public File getDestination() {
-		return project.file(destination);
+	/** Returns the destination directory for the p2 repository. */
+	public File getDestinationP2() {
+		return new File(project.file(destination), SUBDIR_P2);
 	}
+
+	/** Returns the destination directory for the maven repository. */
+	public File getDestinationMaven() {
+		return new File(project.file(destination), SUBDIR_MAVEN);
+	}
+
+	private static final String SUBDIR_P2 = "p2";
+	private static final String SUBDIR_MAVEN = "maven";
 
 	public void run() throws Exception {
 		Objects.requireNonNull(mavenGroup, "Must set mavengroup");
@@ -55,19 +64,21 @@ class AsMaven {
 		}
 		// else, we'll need to run our own little thing
 		FileMisc.cleanDir(dir);
+		File p2dir = new File(dir, SUBDIR_P2);
+		File mavenDir = new File(dir, SUBDIR_MAVEN);
 
 		// install from p2
 		project.getLogger().lifecycle("Initalizing maven group " + mavenGroup + " from p2");
 		project.getLogger().lifecycle("Only needs to be done once, future builds will be much faster");
 
-		File p2dir = new File(dir, "__p2__");
 		FileMisc.mkdirs(p2dir);
 		project.getLogger().lifecycle("P2Mavenify " + mavenGroup + " installing from p2");
 		getApp().runUsingBootstrapper(project);
 
 		// put p2 into a maven repo
 		project.getLogger().lifecycle("P2Mavenify " + mavenGroup + " creating maven repo");
-		try (MavenRepoBuilder maven = new MavenRepoBuilder(dir)) {
+		FileMisc.mkdirs(mavenDir);
+		try (MavenRepoBuilder maven = new MavenRepoBuilder(mavenDir)) {
 			for (File plugin : FileMisc.list(new File(p2dir, "plugins"))) {
 				if (plugin.isFile() && plugin.getName().endsWith(".jar")) {
 					maven.install(mavenGroup, plugin);
@@ -88,7 +99,7 @@ class AsMaven {
 	}
 
 	private P2Model.MirrorApp getApp() {
-		P2Model.MirrorApp app = p2model.mirrorApp(project.file(destination));
+		P2Model.MirrorApp app = p2model.mirrorApp(getDestinationP2());
 		modifyAnt.execute(app);
 		return app;
 	}
@@ -113,7 +124,7 @@ class AsMaven {
 	}
 
 	/** The group which will be used in the maven-ization. */
-	private String mavenGroup = "p2";
+	private String mavenGroup;
 	/** When this is true, the global bundle pool will be used to accelerate artifact downloads. */
 	private Object destination = "build/goomph-p2asmaven";
 	/** The model we'd like to download. */
