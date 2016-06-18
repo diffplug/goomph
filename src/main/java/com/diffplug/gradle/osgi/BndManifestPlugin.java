@@ -37,6 +37,7 @@ import aQute.bnd.osgi.Constants;
 
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Throwing;
+import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.ProjectPlugin;
 
 /**
@@ -131,7 +132,7 @@ public class BndManifestPlugin extends ProjectPlugin {
 
 	/** Creates all parent files for the given file. */
 	private static void createParents(File file) {
-		file.getParentFile().mkdirs();
+		FileMisc.mkdirs(file.getParentFile());
 	}
 
 	/** Takes an action on a Bnd jar. */

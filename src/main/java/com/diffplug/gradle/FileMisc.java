@@ -67,7 +67,7 @@ public class FileMisc {
 			content = content.replace(entry.getKey(), entry.getValue());
 		}
 		// write it out
-		dstFile.getParentFile().mkdirs();
+		mkdirs(dstFile.getParentFile());
 		Files.write(content.getBytes(StandardCharsets.UTF_8), dstFile);
 	}
 
@@ -90,7 +90,7 @@ public class FileMisc {
 				}
 			}
 		}
-		dirToRemove.mkdirs();
+		mkdirs(dirToRemove);
 	}
 
 	/**
@@ -135,6 +135,18 @@ public class FileMisc {
 			throw new IllegalArgumentException("File " + dir + " is not a directory.");
 		} else {
 			return Arrays.asList(children);
+		}
+	}
+
+	/** Calls {@link File#mkdirs()} and throws an exception if it fails. */
+	public static void mkdirs(File dir) {
+		if (dir.isDirectory()) {
+			return;
+		} else if (dir.isFile()) {
+			throw new IllegalArgumentException("Can't mkdirs " + dir + " because it is a file.");
+		} else {
+			boolean success = dir.mkdirs();
+			Preconditions.checkArgument(success, "Unable to mkdirs on %s.", dir);
 		}
 	}
 

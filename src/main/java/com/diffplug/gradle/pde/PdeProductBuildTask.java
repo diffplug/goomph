@@ -207,7 +207,7 @@ public class PdeProductBuildTask extends DefaultTask {
 			List<String> lines = Files.readLines(productInput, StandardCharsets.UTF_8);
 			setProductFileVersions(productInput, dpVersion, lines, catalog);
 			// write it to its destination
-			productOutput.getParentFile().mkdirs();
+			FileMisc.mkdirs(productOutput.getParentFile());
 			Files.write(Joiner.on("\n").join(lines), productOutput, StandardCharsets.UTF_8);
 
 			// replace the product file in the plugin in the pluginPath

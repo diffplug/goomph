@@ -169,9 +169,9 @@ public class ZipUtil {
 			while ((entry = zipInput.getNextEntry()) != null) {
 				File dest = new File(destinationDir, entry.getName());
 				if (entry.isDirectory()) {
-					dest.mkdirs();
+					FileMisc.mkdirs(dest);
 				} else {
-					dest.getParentFile().mkdirs();
+					FileMisc.mkdirs(dest.getParentFile());
 					try (OutputStream output = new BufferedOutputStream(new FileOutputStream(dest))) {
 						copy(zipInput, output);
 					}
