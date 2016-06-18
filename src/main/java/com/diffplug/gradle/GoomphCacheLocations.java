@@ -19,6 +19,8 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.Optional;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import com.diffplug.common.base.StandardSystemProperty;
 import com.diffplug.gradle.p2.P2Model;
 
@@ -32,6 +34,7 @@ import com.diffplug.gradle.p2.P2Model;
  * - {@link #pdeBootstrap()}
  *
  */
+@SuppressFBWarnings("MS_SHOULD_BE_FINAL")
 public class GoomphCacheLocations {
 	private static final String ROOT = ".goomph";
 
