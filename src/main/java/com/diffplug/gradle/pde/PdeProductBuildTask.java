@@ -17,8 +17,6 @@ package com.diffplug.gradle.pde;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
@@ -41,6 +39,7 @@ import com.diffplug.common.collect.ImmutableMap;
 import com.diffplug.common.collect.Maps;
 import com.diffplug.common.io.Files;
 import com.diffplug.common.swt.os.SwtPlatform;
+
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.ZipUtil;
 
@@ -215,9 +214,7 @@ public class PdeProductBuildTask extends DefaultTask {
 			// replace the product file in the plugin in the pluginPath
 			File corePlugin = new File(getPluginPath(), "com.diffplug.core_" + dpVersion + ".jar");
 			File temp = File.createTempFile("tempPlugin", ".jar");
-			ZipUtil.modify(new FileInputStream(corePlugin), new FileOutputStream(temp),
-					ImmutableMap.of(productFilename, new FileInputStream(productOutput)),
-					Collections.emptySet());
+			ZipUtil.modify(corePlugin, temp, ImmutableMap.of(productFilename, productOutput), Collections.emptySet());
 			Files.copy(temp, corePlugin);
 			temp.delete();
 

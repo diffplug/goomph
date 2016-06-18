@@ -36,6 +36,10 @@ import org.apache.commons.io.IOUtils;
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.StringPrinter;
 import com.diffplug.common.base.Throwing;
+import com.diffplug.common.collect.Maps;
+import com.diffplug.common.io.ByteSink;
+import com.diffplug.common.io.ByteSource;
+import com.diffplug.common.io.Files;
 
 /** Utilities for mucking with zip files. */
 public class ZipUtil {
@@ -73,51 +77,61 @@ public class ZipUtil {
 	/**
 	 * Modifies only the specified entries in a zip file. 
 	 *
-	 * @param input 		an input stream from a zip file
-	 * @param output		an output stream to a zip file
+	 * @param input 		a source from a zip file
+	 * @param output		an output to a zip file
 	 * @param toModify		a map from path to an input stream for the entries you'd like to change
 	 * @param toOmit		a set of entries you'd like to leave out of the zip
 	 * @throws IOException
 	 */
-	public static void modify(InputStream input, OutputStream output, Map<String, InputStream> toModify, Set<String> toOmit) throws IOException {
-		ZipInputStream zipInput = new ZipInputStream(input);
-		ZipOutputStream zipOutput = new ZipOutputStream(output);
+	public static void modify(ByteSource source, ByteSink sink, Map<String, ByteSource> toModify, Set<String> toOmit) throws IOException {
+		try (ZipInputStream zipInput = new ZipInputStream(source.openBufferedStream());
+				ZipOutputStream zipOutput = new ZipOutputStream(sink.openBufferedStream())) {
+			while (true) {
+				// read the next entry
+				ZipEntry entry = zipInput.getNextEntry();
+				if (entry == null) {
+					break;
+				}
 
-		while (true) {
-			// read the next entry
-			ZipEntry entry = zipInput.getNextEntry();
-			if (entry == null) {
-				break;
+				ByteSource replacement = toModify.get(entry.getName());
+				if (replacement != null) {
+					// if it's the entry being modified, enter the modified stuff
+					try (InputStream replacementStream = replacement.openBufferedStream()) {
+						ZipEntry newEntry = new ZipEntry(entry.getName());
+						newEntry.setComment(entry.getComment());
+						newEntry.setExtra(entry.getExtra());
+						newEntry.setMethod(entry.getMethod());
+						newEntry.setTime(entry.getTime());
+
+						zipOutput.putNextEntry(newEntry);
+						copy(replacementStream, zipOutput);
+					}
+				} else if (!toOmit.contains(entry.getName())) {
+					// if it isn't being modified, just copy the file stream straight-up
+					ZipEntry newEntry = new ZipEntry(entry);
+					newEntry.setCompressedSize(-1);
+					zipOutput.putNextEntry(newEntry);
+					copy(zipInput, zipOutput);
+				}
+
+				// close the entries
+				zipInput.closeEntry();
+				zipOutput.closeEntry();
 			}
-
-			InputStream replacement = toModify.get(entry.getName());
-			if (replacement != null) {
-				// if it's the entry being modified, enter the modified stuff
-				ZipEntry newEntry = new ZipEntry(entry.getName());
-				newEntry.setComment(entry.getComment());
-				newEntry.setExtra(entry.getExtra());
-				newEntry.setMethod(entry.getMethod());
-				newEntry.setTime(entry.getTime());
-
-				zipOutput.putNextEntry(newEntry);
-				copy(replacement, zipOutput);
-				replacement.close();
-			} else if (!toOmit.contains(entry.getName())) {
-				// if it isn't being modified, just copy the file stream straight-up
-				ZipEntry newEntry = new ZipEntry(entry);
-				newEntry.setCompressedSize(-1);
-				zipOutput.putNextEntry(newEntry);
-				copy(zipInput, zipOutput);
-			}
-
-			// close the entries
-			zipInput.closeEntry();
-			zipOutput.closeEntry();
 		}
+	}
 
-		// close the streams
-		zipInput.close();
-		zipOutput.close();
+	/**
+	 * Modifies only the specified entries in a zip file. 
+	 *
+	 * @param input 		an input zip file
+	 * @param output		an output zip file
+	 * @param toModify		a map from path to File for the entries you'd like to change
+	 * @param toOmit		a set of entries you'd like to leave out of the zip
+	 * @throws IOException
+	 */
+	public static void modify(File source, File sink, Map<String, File> toModify, Set<String> toOmit) throws IOException {
+		modify(Files.asByteSource(source), Files.asByteSink(sink), Maps.transformValues(toModify, Files::asByteSource), toOmit);
 	}
 
 	/**
