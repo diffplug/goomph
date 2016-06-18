@@ -16,7 +16,6 @@
 package com.diffplug.gradle.pde;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 
 import org.gradle.api.Project;
@@ -34,7 +33,7 @@ class PdeBuild {
 
 	/** {eclipse}/plugins/org.eclipse.equinox.launcher_{somever}.jar */
 	private File launcherJar() {
-		List<File> files = Arrays.asList(eclipse.getSdkFile("plugins").listFiles());
+		List<File> files = FileMisc.list(eclipse.getSdkFile("plugins"));
 		return files.stream()
 				.filter(file -> file.getName().startsWith("org.eclipse.equinox.launcher_"))
 				.filter(file -> file.getName().endsWith(".jar"))
@@ -45,7 +44,7 @@ class PdeBuild {
 
 	/** {eclipse}/plugins/org.eclipse.pde.build_{somever}/ */
 	private File pdeBuildFolder() {
-		List<File> files = Arrays.asList(eclipse.getSdkFile("plugins").listFiles());
+		List<File> files = FileMisc.list(eclipse.getSdkFile("plugins"));
 		return files.stream()
 				.filter(file -> file.getName().startsWith("org.eclipse.pde.build_"))
 				.filter(File::isDirectory)

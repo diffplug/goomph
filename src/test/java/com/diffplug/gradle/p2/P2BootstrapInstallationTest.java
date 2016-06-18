@@ -16,7 +16,6 @@
 package com.diffplug.gradle.p2;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +26,7 @@ import org.junit.rules.TemporaryFolder;
 
 import com.diffplug.common.base.Joiner;
 import com.diffplug.common.base.StringPrinter;
+import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
 import com.diffplug.gradle.pde.EclipseRelease;
 
@@ -51,7 +51,7 @@ public class P2BootstrapInstallationTest {
 			model.directorApp(installed, "profile").runUsingBootstrapper();
 
 			File plugins = new File(installed, "plugins");
-			List<String> pluginNames = Arrays.asList(plugins.listFiles()).stream()
+			List<String> pluginNames = FileMisc.list(plugins).stream()
 					.map(File::getName)
 					.collect(Collectors.toList());
 			Assert.assertEquals(StringPrinter.buildStringFromLines(

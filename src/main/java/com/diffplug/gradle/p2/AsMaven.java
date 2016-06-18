@@ -68,7 +68,7 @@ class AsMaven {
 		// put p2 into a maven repo
 		project.getLogger().lifecycle("P2Mavenify " + mavenGroup + " creating maven repo");
 		try (MavenRepoBuilder maven = new MavenRepoBuilder(dir)) {
-			for (File plugin : new File(p2Dir, "plugins").listFiles()) {
+			for (File plugin : FileMisc.list(new File(p2Dir, "plugins"))) {
 				if (plugin.isFile() && plugin.getName().endsWith(".jar")) {
 					maven.install(mavenGroup, plugin);
 				}

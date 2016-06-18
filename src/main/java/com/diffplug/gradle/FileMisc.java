@@ -22,6 +22,8 @@ import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.PosixFilePermission;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -79,7 +81,7 @@ public class FileMisc {
 			} catch (IOException e) {
 				// we couldn't delete the directory,
 				// but deleting everything inside is just as good
-				for (File file : dirToRemove.listFiles()) {
+				for (File file : FileMisc.list(dirToRemove)) {
 					if (file.isFile()) {
 						file.delete();
 					} else {
@@ -112,7 +114,7 @@ public class FileMisc {
 	public static void flatten(File dirToRemove) throws IOException {
 		final File parent = dirToRemove.getParentFile();
 		// move each child directory to the parent
-		for (File child : dirToRemove.listFiles()) {
+		for (File child : FileMisc.list(dirToRemove)) {
 			boolean createDestDir = false;
 			if (child.isFile()) {
 				FileUtils.moveFileToDirectory(child, parent, createDestDir);
@@ -124,6 +126,16 @@ public class FileMisc {
 		}
 		// remove the directory which we're flattening away
 		dirToRemove.delete();
+	}
+
+	/** Lists the children of the given file in a safe way ({@link File#listFiles()} can return null). */
+	public static List<File> list(File dir) {
+		File[] children = dir.listFiles();
+		if (children == null) {
+			throw new IllegalArgumentException("File " + dir + " is not a directory.");
+		} else {
+			return Arrays.asList(children);
+		}
 	}
 
 	/** Concats the first files and writes them to the last file. */

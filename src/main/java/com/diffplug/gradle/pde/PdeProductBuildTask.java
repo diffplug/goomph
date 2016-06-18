@@ -39,7 +39,6 @@ import com.diffplug.common.collect.ImmutableMap;
 import com.diffplug.common.collect.Maps;
 import com.diffplug.common.io.Files;
 import com.diffplug.common.swt.os.SwtPlatform;
-
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.ZipUtil;
 
