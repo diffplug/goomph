@@ -13,22 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.diffplug.gradle;
+package com.diffplug.gradle.eclipserunner;
 
-import java.io.File;
+import java.util.List;
 
-import com.diffplug.common.swt.os.OS;
-
-/** Interface for the native file manager. */
-public class NativeFileManager {
-	/** Opens a file manager for the given file. */
-	public static void open(File file) {
-		try {
-			String template = OS.getNative().winMacLinux("explorer /select,%s", "open %s", "xdg-open %s");
-			String cmd = template.replace("%s", FileMisc.quote(file.getCanonicalFile()));
-			CmdLine.runCmd(cmd);
-		} catch (Exception e) {
-			System.err.println("Unable to open folder in file manager: " + e.getMessage());
-		}
-	}
+/**
+ * Runs the given args using a headless eclipse instance.
+ *
+ * The major implementations are:
+ *
+ * - {@link NativeRunner} for running against a native launcher (eclipsec.exe)
+ * - {@link JarRunner} for running against a folder of jars
+ */
+public interface EclipseRunner {
+	/** Runs the eclipse instance with the given arguments. */
+	void run(List<String> args) throws Exception;
 }

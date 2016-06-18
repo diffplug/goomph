@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.diffplug.gradle.eclipse;
+package com.diffplug.gradle.pde;
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -23,12 +23,9 @@ import javax.annotation.Nullable;
 import org.osgi.framework.Version;
 
 /**
- * Enum representing all the released versions of eclipse from 4.5.2 onwards.
+ * Models an Eclipse release, such as Mars SR2.
  *
- * If an enum is present here, then Goomph promises the following about it:
- *
- * - You can run PDE tasks using the given release
- * - There is a goomph-p2-bootstrap based on the given release
+ * Supports all official releases from 3.5.0 to present (currently 4.5.2).
  */
 public final class EclipseRelease {
 	final String id;
@@ -63,6 +60,7 @@ public final class EclipseRelease {
 		}
 	}
 
+	/** Returns a message describing the currently supported range of versions. */
 	public static String supportedRange() {
 		return "3.5.0 through 4.5.2";
 	}

@@ -22,6 +22,7 @@ import java.util.List;
 import org.gradle.api.Project;
 
 import com.diffplug.common.collect.MoreCollectors;
+import com.diffplug.gradle.FileMisc;
 
 /** Generates a command line which will execute PDE build. */
 class PdeBuild {
@@ -61,19 +62,15 @@ class PdeBuild {
 
 	/** Returns a command which will execute the PDE builder for a product. */
 	public String productBuildCmd(File buildDir) {
-		return antBuildCmd(productBuildXml()) + " -Dbuilder=" + quote(buildDir);
+		return antBuildCmd(productBuildXml()) + " -Dbuilder=" + FileMisc.quote(buildDir);
 	}
 
 	/** Returns a command which will execute the PDE builder for a generic ant build file. */
 	public String antBuildCmd(File buildfile) {
 		StringBuilder builder = new StringBuilder();
-		builder.append("java -jar " + quote(launcherJar()));
+		builder.append("java -jar " + FileMisc.quote(launcherJar()));
 		builder.append(" -application org.eclipse.ant.core.antRunner");
-		builder.append(" -buildfile " + quote(buildfile));
+		builder.append(" -buildfile " + FileMisc.quote(buildfile));
 		return builder.toString();
-	}
-
-	private static String quote(File toQuote) {
-		return "\"" + toQuote.getAbsolutePath() + "\"";
 	}
 }

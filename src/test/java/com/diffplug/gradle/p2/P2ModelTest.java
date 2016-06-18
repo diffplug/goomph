@@ -46,8 +46,7 @@ public class P2ModelTest {
 				"-artifactRepository http://artifactrepo",
 				"-installIU com.diffplug.iu,com.diffplug.otheriu/1.0.0",
 				"-profile profile",
-				"-destination file://" + dest.getAbsolutePath()
-				);
+				"-destination file://" + dest.getAbsolutePath());
 		Assert.assertEquals(expected, actual);
 	}
 

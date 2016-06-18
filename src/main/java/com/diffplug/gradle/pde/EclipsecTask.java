@@ -15,8 +15,6 @@
  */
 package com.diffplug.gradle.pde;
 
-import java.io.File;
-
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
 
@@ -24,6 +22,7 @@ import com.diffplug.common.base.Joiner;
 import com.diffplug.common.collect.ArrayListMultimap;
 import com.diffplug.common.collect.ListMultimap;
 import com.diffplug.gradle.CmdLine;
+import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.p2.P2Model;
 
 /**
@@ -60,7 +59,7 @@ public class EclipsecTask extends DefaultTask {
 		EclipseWuff eclipse = new EclipseWuff(getProject());
 
 		StringBuilder builder = new StringBuilder();
-		builder.append(quote(eclipse.getEclipseConsoleExecutable()));
+		builder.append(FileMisc.quote(eclipse.getEclipseConsoleExecutable()));
 		for (String key : args.keySet()) {
 			builder.append(" -");
 			builder.append(key);
@@ -69,10 +68,5 @@ public class EclipsecTask extends DefaultTask {
 		}
 		// execute the cmd
 		CmdLine.runCmd(builder.toString());
-	}
-
-	/** Returns the absolute path quoted. */
-	private static String quote(File file) {
-		return "\"" + file.getAbsolutePath() + "\"";
 	}
 }

@@ -32,12 +32,12 @@ import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.CmdLine;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
-import com.diffplug.gradle.eclipse.EclipseApp;
-import com.diffplug.gradle.eclipse.EclipseRelease;
+import com.diffplug.gradle.eclipserunner.EclipseApp;
+import com.diffplug.gradle.eclipserunner.EclipseRunner;
 import com.diffplug.gradle.p2.P2Model;
 
 /** Wraps a PDE installation for the given eclipse release. */
-class PdeInstallation implements EclipseApp.Runner {
+class PdeInstallation implements EclipseRunner {
 	/** Returns a PdeInstallation appropriate for this project. */
 	static PdeInstallation fromProject(Project project) {
 		String version = (String) project.getProperties().get("GOOMPH_PDE_VER");
@@ -97,9 +97,9 @@ class PdeInstallation implements EclipseApp.Runner {
 	}
 
 	/** Returns a command which will execute the PDE builder for a product. */
-	public EclipseApp.Ant productBuildCmd(File buildDir) throws Exception {
-		EclipseApp.Ant antApp = new EclipseApp.Ant();
-		antApp.define("builder", quote(buildDir));
+	public EclipseApp.AntRunner productBuildCmd(File buildDir) throws Exception {
+		EclipseApp.AntRunner antApp = new EclipseApp.AntRunner();
+		antApp.define("builder", FileMisc.quote(buildDir));
 		return antApp;
 	}
 
@@ -189,7 +189,7 @@ class PdeInstallation implements EclipseApp.Runner {
 		ensureInstalled();
 		StringBuilder builder = new StringBuilder();
 		// add eclipsec
-		builder.append(quote(getEclipseConsoleExecutable().getCanonicalFile()));
+		builder.append(FileMisc.quote(getEclipseConsoleExecutable().getCanonicalFile()));
 		for (String arg : args) {
 			// space
 			builder.append(' ');
@@ -204,10 +204,5 @@ class PdeInstallation implements EclipseApp.Runner {
 		}
 		// execute the cmd
 		CmdLine.runCmd(builder.toString());
-	}
-
-	/** Returns the absolute path quoted. */
-	private static String quote(File file) {
-		return "\"" + file.getAbsolutePath() + "\"";
 	}
 }

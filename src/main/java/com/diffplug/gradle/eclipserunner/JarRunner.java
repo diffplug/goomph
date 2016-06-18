@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.diffplug.gradle.eclipse;
+package com.diffplug.gradle.eclipserunner;
 
 import java.io.File;
 import java.util.HashMap;
@@ -36,18 +36,15 @@ import com.diffplug.common.collect.SortedSetMultimap;
 import com.diffplug.common.collect.TreeMultimap;
 
 /**
- * Given a directory containing an eclipse/equinox installation,
- * this verifies that the core bundles are available, and
- * provides an API for running an eclipse instance and working
- * with its {@link BundleContext}.
- *
- * Doesn't work with a shared install - requires a standard "plugins"
- * folder full of jars.
+ * Given a directory containing osgi jars, this class
+ * verifies that the core bundles are available, and
+ * provides an API for instantiating the OSGi runtime
+ * and accessing its {@link BundleContext}.
  *
  * See {@link #setProps(Map)} for precise details on the
  * default framework properties.
  */
-public class EquinoxLauncher {
+public class JarRunner implements EclipseRunner {
 	final File installationRoot;
 	final SortedSetMultimap<String, Version> plugins = TreeMultimap.create();
 
@@ -56,7 +53,7 @@ public class EquinoxLauncher {
 	 * ensures the the directory contains the plugins required
 	 * to run a barebones equinox instance.
 	 */
-	public EquinoxLauncher(File installationRoot) {
+	public JarRunner(File installationRoot) {
 		this.installationRoot = Objects.requireNonNull(installationRoot);
 		// populate the plugins
 		File pluginsDir = new File(installationRoot, "plugins");
@@ -108,7 +105,7 @@ public class EquinoxLauncher {
 	ImmutableMap<String, String> props = ImmutableMap.of();
 
 	/** Sets the application arguments which will be passed to the runtime. */
-	public EquinoxLauncher setArgs(List<String> args) {
+	public JarRunner setArgs(List<String> args) {
 		this.args = ImmutableList.copyOf(args);
 		return this;
 	}
@@ -138,7 +135,7 @@ public class EquinoxLauncher {
 	 * 	map.put(EclipseStarter.PROP_FRAMEWORK, <path to plugin "org.eclipse.osgi">);
 	 * ```
 	 */
-	public EquinoxLauncher setProps(Map<String, String> props) {
+	public JarRunner setProps(Map<String, String> props) {
 		this.props = ImmutableMap.copyOf(props);
 		return this;
 	}
@@ -216,5 +213,11 @@ public class EquinoxLauncher {
 				defaultMap.put(key, value);
 			}
 		});
+	}
+
+	@Override
+	public void run(List<String> args) throws Exception {
+		setArgs(args);
+		run();
 	}
 }

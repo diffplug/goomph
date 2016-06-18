@@ -27,9 +27,8 @@ import org.junit.rules.TemporaryFolder;
 
 import com.diffplug.common.base.Joiner;
 import com.diffplug.common.base.StringPrinter;
-
 import com.diffplug.gradle.GoomphCacheLocations;
-import com.diffplug.gradle.eclipse.EclipseRelease;
+import com.diffplug.gradle.pde.EclipseRelease;
 
 public class P2BootstrapInstallationTest {
 	@Rule

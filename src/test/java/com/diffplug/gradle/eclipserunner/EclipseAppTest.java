@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.diffplug.gradle.eclipse;
+package com.diffplug.gradle.eclipserunner;
 
 import org.gradle.internal.impldep.com.google.common.base.Joiner;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.diffplug.common.base.StringPrinter;
-
 import groovy.util.Node;
+
+import com.diffplug.common.base.StringPrinter;
+import com.diffplug.gradle.eclipserunner.EclipseApp;
 
 public class EclipseAppTest {
 	@Test
@@ -46,7 +47,7 @@ public class EclipseAppTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testAnt() {
-		EclipseApp.Ant ant = new EclipseApp.Ant();
+		EclipseApp.AntRunner ant = new EclipseApp.AntRunner();
 		ant.define("key", "value");
 		Node task = new Node(null, "anttask");
 		task.attributes().put("prop", "propvalue");

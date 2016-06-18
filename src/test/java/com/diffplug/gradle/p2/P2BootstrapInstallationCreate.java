@@ -20,7 +20,7 @@ import java.io.File;
 import org.gradle.internal.impldep.com.google.common.base.StandardSystemProperty;
 
 import com.diffplug.gradle.FileMisc;
-import com.diffplug.gradle.eclipse.EclipseRelease;
+import com.diffplug.gradle.pde.EclipseRelease;
 
 /** Creates a new folder for uploading to [goomph-p2-bootstrap](https://bintray.com/diffplug/opensource/goomph-p2-bootstrap). */
 public class P2BootstrapInstallationCreate {

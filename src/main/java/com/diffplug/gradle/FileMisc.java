@@ -225,4 +225,18 @@ public class FileMisc {
 	public static boolean hasToken(File dir, String name) throws IOException {
 		return readToken(dir, name).isPresent();
 	}
+
+	/** Quotes the given input string iff it contains whitespace. */
+	public static String quote(String input) {
+		if (input.contains(" ")) {
+			return "\"" + input + "\"";
+		} else {
+			return input;
+		}
+	}
+
+	/** Quotes the absolute path of the given file iff it contains whitespace. */
+	public static String quote(File input) {
+		return quote(input.getAbsolutePath());
+	}
 }

@@ -26,14 +26,13 @@ import org.apache.commons.io.FileUtils;
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.collect.ImmutableSet;
-
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
 import com.diffplug.gradle.JavaExecable;
 import com.diffplug.gradle.ZipUtil;
-import com.diffplug.gradle.eclipse.EclipseApp;
-import com.diffplug.gradle.eclipse.EclipseRelease;
-import com.diffplug.gradle.eclipse.EquinoxLauncher;
+import com.diffplug.gradle.eclipserunner.EclipseRunner;
+import com.diffplug.gradle.eclipserunner.JarRunner;
+import com.diffplug.gradle.pde.EclipseRelease;
 
 /** Wraps a Bootstrap installation for the given eclipse release. */
 class P2BootstrapInstallation {
@@ -121,17 +120,17 @@ class P2BootstrapInstallation {
 	}
 
 	/** Returns an EclipseArgsBuilder.Runner which runs within this JVM. */
-	public EclipseApp.Runner withinJvmRunner() throws IOException {
+	public EclipseRunner withinJvmRunner() throws IOException {
 		return args -> {
 			ensureInstalled();
-			EquinoxLauncher launcher = new EquinoxLauncher(getRootFolder());
+			JarRunner launcher = new JarRunner(getRootFolder());
 			launcher.setArgs(args);
 			launcher.run();
 		};
 	}
 
 	/** Returns an EclipseArgsBuilder.Runner which runs outside this JVM. */
-	public EclipseApp.Runner outsideJvmRunner() throws IOException {
+	public EclipseRunner outsideJvmRunner() throws IOException {
 		return args -> {
 			ensureInstalled();
 			RunOutside runOutside = new RunOutside(getRootFolder(), args);
@@ -152,7 +151,7 @@ class P2BootstrapInstallation {
 
 		@Override
 		public void run() throws Throwable {
-			EquinoxLauncher launcher = new EquinoxLauncher(rootFolder);
+			JarRunner launcher = new JarRunner(rootFolder);
 			launcher.setArgs(args);
 			launcher.run();
 		}

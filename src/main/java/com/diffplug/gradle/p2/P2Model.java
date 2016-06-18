@@ -27,15 +27,14 @@ import java.util.function.Consumer;
 
 import org.gradle.api.Action;
 
+import groovy.util.Node;
+
 import com.diffplug.common.base.Consumers;
 import com.diffplug.common.collect.Sets;
 import com.diffplug.common.swt.os.SwtPlatform;
-
-import groovy.util.Node;
-
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
-import com.diffplug.gradle.eclipse.EclipseApp;
+import com.diffplug.gradle.eclipserunner.EclipseApp;
 
 /**
  * Models a request for some artifacts from some
@@ -158,7 +157,7 @@ public class P2Model {
 	}
 
 	/** @see #mirrorApp(File) */
-	public static class MirrorApp extends EclipseApp.Ant {
+	public static class MirrorApp extends EclipseApp.AntRunner {
 		/** Runs this application, downloading a small bootstrapper if necessary. */
 		public void runUsingBootstrapper() throws Exception {
 			runUsing(P2BootstrapInstallation.latest().outsideJvmRunner());
