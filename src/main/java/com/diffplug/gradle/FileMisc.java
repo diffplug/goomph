@@ -31,6 +31,7 @@ import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 
+import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Joiner;
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.collect.Maps;
@@ -38,11 +39,90 @@ import com.diffplug.common.io.Files;
 
 /** Miscellaneous utilties for copying files around. */
 public class FileMisc {
+	///////////////////////////////////////////////////////////////////
+	// Replacements for File.* which check exceptional return values //
+	///////////////////////////////////////////////////////////////////
+	/** Lists the children of the given file in a safe way ({@link File#listFiles()} can return null). */
+	public static List<File> list(File dir) {
+		File[] children = dir.listFiles();
+		if (children == null) {
+			if (dir.isFile()) {
+				throw new IllegalArgumentException("Can't list " + dir + " because it is a file, not a directory.");
+			} else if (!dir.exists()) {
+				throw new IllegalArgumentException("Can't list " + dir + " because it does not exist.");
+			} else {
+				throw new IllegalArgumentException("Can't list " + dir + ", not sure why.");
+			}
+		} else {
+			return Arrays.asList(children);
+		}
+	}
+
+	/** Calls {@link File#mkdirs()} and throws an exception if it fails. */
+	public static void mkdirs(File dir) {
+		Errors.rethrow().run(() -> java.nio.file.Files.createDirectories(dir.toPath()));
+	}
+
+	/** Calls {@link File#mkdirs()} and throws an exception if it fails. */
+	public static void delete(File file) {
+		Errors.rethrow().run(() -> java.nio.file.Files.delete(file.toPath()));
+	}
+
+	//////////////////////////////
+	// Misc string manipulation //
+	//////////////////////////////
 	/** Enforces unix newlines on the given string. */
 	public static String toUnixNewline(String input) {
 		return input.replace("\r\n", "\n");
 	}
 
+	/** Quotes the given input string iff it contains whitespace. */
+	public static String quote(String input) {
+		if (input.contains(" ")) {
+			return "\"" + input + "\"";
+		} else {
+			return input;
+		}
+	}
+
+	/** Quotes the absolute path of the given file iff it contains whitespace. */
+	public static String quote(File input) {
+		return quote(input.getAbsolutePath());
+	}
+
+	/////////////////////////////////////
+	// Quick-n-dirty directory markers //
+	/////////////////////////////////////
+	/** Writes a file with the given name, to the given directory, containing the given value. */
+	public static void writeToken(File dir, String name, String value) throws IOException {
+		Preconditions.checkArgument(dir.isDirectory());
+		File token = new File(dir, name);
+		FileUtils.write(token, value, StandardCharsets.UTF_8);
+	}
+
+	/** Returns the contents of a file with the given name, if it exists. */
+	public static Optional<String> readToken(File dir, String name) throws IOException {
+		File token = new File(dir, name);
+		if (!token.isFile()) {
+			return Optional.empty();
+		} else {
+			return Optional.of(FileUtils.readFileToString(token, StandardCharsets.UTF_8));
+		}
+	}
+
+	/** Writes an empty file with the given name in the given directory. */
+	public static void writeToken(File dir, String name) throws IOException {
+		writeToken(dir, name, "");
+	}
+
+	/** Returns true iff the given directory has a file with the given name. */
+	public static boolean hasToken(File dir, String name) throws IOException {
+		return readToken(dir, name).isPresent();
+	}
+
+	////////////////////////////
+	// Misc file manipulation //
+	////////////////////////////
 	/**
 	 * Copies from src to dst and performs a simple
 	 * copy-replace templating operation along the way.
@@ -128,28 +208,6 @@ public class FileMisc {
 		dirToRemove.delete();
 	}
 
-	/** Lists the children of the given file in a safe way ({@link File#listFiles()} can return null). */
-	public static List<File> list(File dir) {
-		File[] children = dir.listFiles();
-		if (children == null) {
-			throw new IllegalArgumentException("File " + dir + " is not a directory.");
-		} else {
-			return Arrays.asList(children);
-		}
-	}
-
-	/** Calls {@link File#mkdirs()} and throws an exception if it fails. */
-	public static void mkdirs(File dir) {
-		if (dir.isDirectory()) {
-			return;
-		} else if (dir.isFile()) {
-			throw new IllegalArgumentException("Can't mkdirs " + dir + " because it is a file.");
-		} else {
-			boolean success = dir.mkdirs();
-			Preconditions.checkArgument(success, "Unable to mkdirs on %s.", dir);
-		}
-	}
-
 	/** Concats the first files and writes them to the last file. */
 	public static void concat(Iterable<File> toMerge, File dst) throws IOException {
 		try (FileChannel dstChannel = FileChannel.open(dst.toPath(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE)) {
@@ -162,6 +220,9 @@ public class FileMisc {
 		}
 	}
 
+	///////////////////////////
+	// Unix file permissions //
+	///////////////////////////
 	/** Permission bits. */
 	private static final int OWNER_READ_FILEMODE = 0400;
 	private static final int OWNER_WRITE_FILEMODE = 0200;
@@ -221,46 +282,5 @@ public class FileMisc {
 		return permissions.contains(PosixFilePermission.OWNER_EXECUTE) &&
 				permissions.contains(PosixFilePermission.GROUP_EXECUTE) &&
 				permissions.contains(PosixFilePermission.OTHERS_EXECUTE);
-	}
-
-	/** Writes a file with the given name, to the given directory, containing the given value. */
-	public static void writeToken(File dir, String name, String value) throws IOException {
-		Preconditions.checkArgument(dir.isDirectory());
-		File token = new File(dir, name);
-		FileUtils.write(token, value, StandardCharsets.UTF_8);
-	}
-
-	/** Returns the contents of a file with the given name, if it exists. */
-	public static Optional<String> readToken(File dir, String name) throws IOException {
-		File token = new File(dir, name);
-		if (!token.isFile()) {
-			return Optional.empty();
-		} else {
-			return Optional.of(FileUtils.readFileToString(token, StandardCharsets.UTF_8));
-		}
-	}
-
-	/** Writes an empty file with the given name in the given directory. */
-	public static void writeToken(File dir, String name) throws IOException {
-		writeToken(dir, name, "");
-	}
-
-	/** Returns true iff the given directory has a file with the given name. */
-	public static boolean hasToken(File dir, String name) throws IOException {
-		return readToken(dir, name).isPresent();
-	}
-
-	/** Quotes the given input string iff it contains whitespace. */
-	public static String quote(String input) {
-		if (input.contains(" ")) {
-			return "\"" + input + "\"";
-		} else {
-			return input;
-		}
-	}
-
-	/** Quotes the absolute path of the given file iff it contains whitespace. */
-	public static String quote(File input) {
-		return quote(input.getAbsolutePath());
 	}
 }
