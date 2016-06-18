@@ -43,8 +43,8 @@ public class AsMavenExtension {
 		return mavenify.p2();
 	}
 
-	/** Modifies args passed to p2 director. */
-	public void p2args(Action<P2Model.DirectorApp> argsBuilder) {
-		mavenify.modifyP2Args(argsBuilder);
+	/** Performs advanced actions by modifying the given {@link P2Model.MirrorApp}. */
+	public void p2ant(Action<P2Model.MirrorApp> argsBuilder) {
+		mavenify.modifyAntTask(argsBuilder);
 	}
 }

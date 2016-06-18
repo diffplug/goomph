@@ -26,6 +26,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import org.gradle.api.Action;
+import org.gradle.api.Project;
 
 import groovy.util.Node;
 
@@ -162,6 +163,11 @@ public class P2Model {
 		public void runUsingBootstrapper() throws Exception {
 			runUsing(P2BootstrapInstallation.latest().outsideJvmRunner());
 		}
+
+		/** Runs this application, downloading a small bootstrapper if necessary. */
+		public void runUsingBootstrapper(Project project) throws Exception {
+			runUsing(P2BootstrapInstallation.latest().outsideJvmRunner(project));
+		}
 	}
 
 	/** Creates an XML node representing all the repos in this model. */
@@ -259,6 +265,11 @@ public class P2Model {
 		/** Runs this application, downloading a small bootstrapper if necessary. */
 		public void runUsingBootstrapper() throws Exception {
 			runUsing(P2BootstrapInstallation.latest().outsideJvmRunner());
+		}
+
+		/** Runs this application, downloading a small bootstrapper if necessary. */
+		public void runUsingBootstrapper(Project project) throws Exception {
+			runUsing(P2BootstrapInstallation.latest().outsideJvmRunner(project));
 		}
 	}
 

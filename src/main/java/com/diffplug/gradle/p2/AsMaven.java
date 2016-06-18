@@ -63,9 +63,7 @@ class AsMaven {
 		File p2Dir = new File(dir, "__p2__");
 		p2Dir.mkdirs();
 		project.getLogger().lifecycle("P2Mavenify " + mavenGroup + " installing from p2");
-		P2Model.DirectorApp app = p2model.directorApp(p2Dir, mavenGroup);
-		modifyP2args.execute(app);
-		app.runUsingBootstrapper();
+		getApp().runUsingBootstrapper(project);
 
 		// put p2 into a maven repo
 		project.getLogger().lifecycle("P2Mavenify " + mavenGroup + " creating maven repo");
@@ -86,9 +84,13 @@ class AsMaven {
 
 	/** The args passed to p2 director represent the full state. */
 	private String state() {
-		P2Model.DirectorApp args = p2model.directorApp(project.file(destination), mavenGroup);
-		modifyP2args.execute(args);
-		return args.completeState() + GOOMPH_VERSION;
+		return getApp().completeState() + GOOMPH_VERSION;
+	}
+
+	private P2Model.MirrorApp getApp() {
+		P2Model.MirrorApp app = p2model.mirrorApp(project.file(destination));
+		modifyAnt.execute(app);
+		return app;
 	}
 
 	/** Bump this if we need to force people's deps to reload. */
@@ -106,16 +108,16 @@ class AsMaven {
 		return p2model;
 	}
 
-	public void modifyP2Args(Action<P2Model.DirectorApp> args) {
-		this.modifyP2args = Objects.requireNonNull(args);
+	public void modifyAntTask(Action<P2Model.MirrorApp> args) {
+		this.modifyAnt = Objects.requireNonNull(args);
 	}
 
 	/** The group which will be used in the maven-ization. */
-	private String mavenGroup;
+	private String mavenGroup = "p2";
 	/** When this is true, the global bundle pool will be used to accelerate artifact downloads. */
 	private Object destination = "build/goomph-p2asmaven";
 	/** The model we'd like to download. */
 	private P2Model p2model = new P2Model();
 	/** Modifies the p2director args before it is run. */
-	private Action<P2Model.DirectorApp> modifyP2args = Actions.doNothing();
+	private Action<P2Model.MirrorApp> modifyAnt = Actions.doNothing();
 }

@@ -57,32 +57,32 @@ import com.diffplug.common.tree.TreeStream;
  * ```java
  * static class Incrementer implements JavaExecable {
  *     private static final long serialVersionUID = -5728572785844814830L;
- * 
+ *
  *     int input;
  *     int output;
- * 
+ *
  *     Incrementer(int input) {
  *         this.input = input;
  *     }
- * 
+ *
  *     public int getOutput() {
  *         return output;
  *     }
- * 
+ *
  *     @Override
  *     public void run() throws Throwable {
  *         output = input + 1;
  *     }
  * }
- * 
- * @Test // obvious
+ *
+ * // obvious
  * public void testInternal() {
  *     Incrementer example = new Incrementer(5);
  *     example.run();
  *     Assert.assertEquals(6, example.output);
  * }
- * 
- * @Test // magic!
+ *
+ * // magic!
  * public void testExternal() throws Throwable {
  *     Incrementer example = new Incrementer(5);
  *     Incrementer result = JavaExecable.execWithoutGradle(example);
