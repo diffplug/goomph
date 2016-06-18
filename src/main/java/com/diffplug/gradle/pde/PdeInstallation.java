@@ -29,11 +29,11 @@ import com.diffplug.common.base.StringPrinter;
 import com.diffplug.common.base.Unhandled;
 import com.diffplug.common.swt.os.OS;
 import com.diffplug.common.swt.os.SwtPlatform;
-import com.diffplug.gradle.CmdLine;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
 import com.diffplug.gradle.eclipserunner.EclipseApp;
 import com.diffplug.gradle.eclipserunner.EclipseRunner;
+import com.diffplug.gradle.eclipserunner.NativeRunner;
 import com.diffplug.gradle.p2.P2Model;
 
 /** Wraps a PDE installation for the given eclipse release. */
@@ -187,22 +187,6 @@ class PdeInstallation implements EclipseRunner {
 	@Override
 	public void run(List<String> args) throws Exception {
 		ensureInstalled();
-		StringBuilder builder = new StringBuilder();
-		// add eclipsec
-		builder.append(FileMisc.quote(getEclipseConsoleExecutable().getCanonicalFile()));
-		for (String arg : args) {
-			// space
-			builder.append(' ');
-			// arg (possibly quoted)
-			if (arg.contains(" ")) {
-				builder.append('"');
-				builder.append(arg);
-				builder.append('"');
-			} else {
-				builder.append(arg);
-			}
-		}
-		// execute the cmd
-		CmdLine.runCmd(builder.toString());
+		new NativeRunner(getEclipseConsoleExecutable()).run(args);
 	}
 }

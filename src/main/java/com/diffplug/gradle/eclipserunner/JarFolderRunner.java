@@ -15,18 +15,24 @@
  */
 package com.diffplug.gradle.eclipserunner;
 
+import java.io.File;
 import java.util.List;
 
 /**
- * Runs the given args using a headless eclipse instance.
- *
- * The major implementations are:
- *
- * - {@link NativeRunner} for running against a native launcher (eclipsec.exe).
- * - {@link JarFolderRunner} for running within this JVM against a folder of jars.
- * - {@link JarFolderRunnerExternalJvm} for running outside this JVM against a folder of jars.
+ * Runs an `EclipseApp` within this JVM using a folder containing
+ * a `plugins` folder with the necessary jars.
  */
-public interface EclipseRunner {
-	/** Runs the eclipse instance with the given arguments. */
-	void run(List<String> args) throws Exception;
+public class JarFolderRunner implements EclipseRunner {
+	final File rootDirectory;
+
+	public JarFolderRunner(File rootDirectory) {
+		this.rootDirectory = rootDirectory;
+	}
+
+	@Override
+	public void run(List<String> args) throws Exception {
+		EquinoxLauncher launcher = new EquinoxLauncher(rootDirectory);
+		launcher.setArgs(args);
+		launcher.run();
+	}
 }

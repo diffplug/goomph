@@ -28,7 +28,7 @@ import com.diffplug.gradle.FileMisc;
 public class NativeRunner implements EclipseRunner {
 	final File eclipsec;
 
-	/** Pass it the location of the launcher. */
+	/** Pass it the location of the launcher file. */
 	public NativeRunner(File eclipsec) {
 		this.eclipsec = Objects.requireNonNull(eclipsec);
 	}

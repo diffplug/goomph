@@ -18,20 +18,19 @@ package com.diffplug.gradle.p2;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.Objects;
 
 import org.apache.commons.io.FileUtils;
+import org.gradle.api.Project;
 
-import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.collect.ImmutableSet;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
-import com.diffplug.gradle.JavaExecable;
 import com.diffplug.gradle.ZipUtil;
 import com.diffplug.gradle.eclipserunner.EclipseRunner;
-import com.diffplug.gradle.eclipserunner.JarRunner;
+import com.diffplug.gradle.eclipserunner.JarFolderRunner;
+import com.diffplug.gradle.eclipserunner.JarFolderRunnerExternalJvm;
 import com.diffplug.gradle.pde.EclipseRelease;
 
 /** Wraps a Bootstrap installation for the given eclipse release. */
@@ -123,9 +122,7 @@ class P2BootstrapInstallation {
 	public EclipseRunner withinJvmRunner() throws IOException {
 		return args -> {
 			ensureInstalled();
-			JarRunner launcher = new JarRunner(getRootFolder());
-			launcher.setArgs(args);
-			launcher.run();
+			new JarFolderRunner(getRootFolder()).run(args);
 		};
 	}
 
@@ -133,28 +130,16 @@ class P2BootstrapInstallation {
 	public EclipseRunner outsideJvmRunner() throws IOException {
 		return args -> {
 			ensureInstalled();
-			RunOutside runOutside = new RunOutside(getRootFolder(), args);
-			Errors.constrainTo(Exception.class).run(() -> JavaExecable.execWithoutGradle(runOutside));
+			new JarFolderRunnerExternalJvm(getRootFolder()).run(args);
 		};
 	}
 
-	/** Helper class for runnings outside this JVM. */
-	@SuppressWarnings("serial")
-	private static class RunOutside implements JavaExecable {
-		final File rootFolder;
-		final List<String> args;
-
-		public RunOutside(File rootFolder, List<String> args) {
-			this.rootFolder = rootFolder;
-			this.args = args;
-		}
-
-		@Override
-		public void run() throws Throwable {
-			JarRunner launcher = new JarRunner(rootFolder);
-			launcher.setArgs(args);
-			launcher.run();
-		}
+	/** Returns an EclipseArgsBuilder.Runner which runs outside this JVM. */
+	public EclipseRunner outsideJvmRunner(Project project) throws IOException {
+		return args -> {
+			ensureInstalled();
+			new JarFolderRunnerExternalJvm(getRootFolder(), project).run(args);
+		};
 	}
 
 	/* Exception if you run two P2 tasks back to back.

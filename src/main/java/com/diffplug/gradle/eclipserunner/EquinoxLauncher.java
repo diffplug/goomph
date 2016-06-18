@@ -44,16 +44,16 @@ import com.diffplug.common.collect.TreeMultimap;
  * See {@link #setProps(Map)} for precise details on the
  * default framework properties.
  */
-public class JarRunner implements EclipseRunner {
+public class EquinoxLauncher {
 	final File installationRoot;
 	final SortedSetMultimap<String, Version> plugins = TreeMultimap.create();
 
 	/**
-	 * Wraps a directory in the eclipse launcher API, and
+	 * Wraps a directory of jars in the launcher API, and
 	 * ensures the the directory contains the plugins required
 	 * to run a barebones equinox instance.
 	 */
-	public JarRunner(File installationRoot) {
+	public EquinoxLauncher(File installationRoot) {
 		this.installationRoot = Objects.requireNonNull(installationRoot);
 		// populate the plugins
 		File pluginsDir = new File(installationRoot, "plugins");
@@ -105,7 +105,7 @@ public class JarRunner implements EclipseRunner {
 	ImmutableMap<String, String> props = ImmutableMap.of();
 
 	/** Sets the application arguments which will be passed to the runtime. */
-	public JarRunner setArgs(List<String> args) {
+	public EquinoxLauncher setArgs(List<String> args) {
 		this.args = ImmutableList.copyOf(args);
 		return this;
 	}
@@ -135,7 +135,7 @@ public class JarRunner implements EclipseRunner {
 	 * 	map.put(EclipseStarter.PROP_FRAMEWORK, <path to plugin "org.eclipse.osgi">);
 	 * ```
 	 */
-	public JarRunner setProps(Map<String, String> props) {
+	public EquinoxLauncher setProps(Map<String, String> props) {
 		this.props = ImmutableMap.copyOf(props);
 		return this;
 	}
@@ -149,14 +149,18 @@ public class JarRunner implements EclipseRunner {
 		return new Running(props, args);
 	}
 
-	/** Runs the equinox launcher. */
+	/** Runs the equinox launcher (calls {@link #open()} and immediately closes it). */
 	public void run() throws Exception {
 		try (Running running = open()) {
 			running.run();
 		}
 	}
 
-	/** Represents a running instance of eclipse. */
+	/**
+	 * Represents a running instance of the equinox
+	 * OSGi container.  Shuts down the container when
+	 * you call {@link #close()}.
+	 */
 	public class Running implements AutoCloseable {
 		final BundleContext bundleContext;
 
@@ -179,7 +183,7 @@ public class JarRunner implements EclipseRunner {
 			Preconditions.checkState(Integer.valueOf(0).equals(result), "Unexpected return=0, was: %s", result);
 		}
 
-		/** Shutsdown the eclispe instance. */
+		/** Shutsdown the eclipse instance. */
 		@Override
 		public void close() throws Exception {
 			EclipseStarter.shutdown();
@@ -213,11 +217,5 @@ public class JarRunner implements EclipseRunner {
 				defaultMap.put(key, value);
 			}
 		});
-	}
-
-	@Override
-	public void run(List<String> args) throws Exception {
-		setArgs(args);
-		run();
 	}
 }
