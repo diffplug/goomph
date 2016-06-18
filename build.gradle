@@ -32,15 +32,6 @@ apply plugin: 'java-gradle-plugin'
 sourceCompatibility = VER_JAVA
 targetCompatibility = VER_JAVA
 
-// None of these eclipse jars are in the public repositories.  This means
-// that when someone downloads this plugin, unless they add the weird
-// ivy depenency, they won't be able to resolve the eclipse jars.
-//
-// To fix this, we embed the content of these eclispe jars into ourselves, as a "fat jar".
-configurations {
-	embeddedJars
-}
-
 dependencies {
 	// Compile misc
 	compile "com.diffplug.durian:durian-core:${VER_DURIAN}"
@@ -56,17 +47,6 @@ dependencies {
 	compile "org.apache.maven:maven-compat:${VER_MAVEN}"
 	// testing
 	testCompile "junit:junit:${VER_JUNIT}"
-}
-
-jar {
-	// this embeds the eclipse jars into our "fat jar"
-	from {
-		configurations.embeddedJars.collect{ it.isDirectory() ? it : zipTree(it) }
-	}
-	// the eclipse jars are signed, and our fat jar breaks the signatures
-	// so we've gotta be sure to filter out the signatures
-	exclude 'META-INF/*.RSA'
-	exclude 'META-INF/*.SF'
 }
 
 apply plugin: 'eclipse'
@@ -191,13 +171,8 @@ publishing {
 			artifact sourcesJar
 			artifact javadocJar
 			pom.withXml {
-				// remove the p2 dependencies because they are embedded
-				// also remove 'com.diffplug' dependencies so that we can use spotless on its dependencies
-				asNode().dependencies.'*'.each() {
-					if (it.groupId.text() == 'p2') {
-						it.parent().remove(it)
-					}
-				}
+				// findbugs annotations should have scope "provided"
+				asNode().dependencies.'*'.findAll() { it.groupId.text() == 'com.google.code.findbugs' }.each() { it.scope*.value = 'provided' }
 				// add MavenCentral requirements to the POM
 				asNode().children().last() + {
 					resolveStrategy = Closure.DELEGATE_FIRST
@@ -293,6 +268,12 @@ pluginBundle {
 			displayName = 'Goomph eclipse.projectdeps'
 			description = "Fixes an intermittent problem where dependencies on other projects within the workspace aren't always resolved correctly within Eclipse."
 			tags = ['eclipse']
+		}
+		p2AsMavenPlugin {
+			id = 'com.diffplug.gradle.p2.asmaven'
+			displayName = 'Goomph p2.asmaven'
+			description = "Downloads a set of artifacts from a p2 repository and stuffs them into a local maven repository."
+			tags = ['p2', 'eclipse', 'osgi']
 		}
 		osgiBndManifestPlugin {
 			id = 'com.diffplug.gradle.osgi.bndmanifest'
