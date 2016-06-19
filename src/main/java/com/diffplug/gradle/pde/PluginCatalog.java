@@ -18,7 +18,6 @@ package com.diffplug.gradle.pde;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Arrays;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -103,7 +102,7 @@ class PluginCatalog {
 			Filter filter = new Filter(platformFilter.replace(" ", ""));
 			boolean isSupportedOS = Arrays.asList(OS.values()).stream()
 					.map(SwtPlatform::fromOS)
-					.anyMatch(platform -> filter.match(new Hashtable<>(platform.platformProperties())));
+					.anyMatch(Errors.rethrow().wrapPredicate(platform -> filter.matchMap(platform.platformProperties())));
 			if (!isSupportedOS) {
 				unsupportedPlatform.add(name);
 				return;
