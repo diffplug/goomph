@@ -48,6 +48,8 @@ import org.eclipse.aether.installation.InstallationException;
 
 import com.google.inject.AbstractModule;
 
+import com.diffplug.gradle.FileMisc;
+
 /** Builds a maven repo out of a p2 repository. */
 class MavenRepoBuilder implements AutoCloseable {
 	final DefaultPlexusContainer container;
@@ -69,7 +71,7 @@ class MavenRepoBuilder implements AutoCloseable {
 		});
 		installer = container.lookup(ArtifactInstaller.class);
 		ArtifactRepositoryPolicy policy = new ArtifactRepositoryPolicy();
-		repo = new MavenArtifactRepository("id", "file:" + root.getAbsolutePath(), new DefaultRepositoryLayout(), policy, policy);
+		repo = new MavenArtifactRepository("id", FileMisc.PROTOCOL + root.getAbsolutePath(), new DefaultRepositoryLayout(), policy, policy);
 	}
 
 	@Override

@@ -46,7 +46,7 @@ public final class EclipseRelease {
 		}
 		return new EclipseRelease(
 				Objects.requireNonNull(id),
-				Version.valueOf(version),
+				Version.parseVersion(version),
 				Objects.requireNonNull(updateSite));
 	}
 
@@ -103,7 +103,7 @@ public final class EclipseRelease {
 		if (updateSite == null) {
 			return null;
 		} else {
-			return new EclipseRelease(version, Version.valueOf(version), updateSite);
+			return new EclipseRelease(version, Version.parseVersion(version), updateSite);
 		}
 	}
 

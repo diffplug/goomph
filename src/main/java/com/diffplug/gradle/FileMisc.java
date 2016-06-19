@@ -283,4 +283,7 @@ public class FileMisc {
 				permissions.contains(PosixFilePermission.GROUP_EXECUTE) &&
 				permissions.contains(PosixFilePermission.OTHERS_EXECUTE);
 	}
+
+	/** The `file://` protocol. */
+	public static final String PROTOCOL = "file://";
 }

@@ -99,7 +99,7 @@ public class P2Model {
 	}
 
 	public void addRepo(File repo) {
-		addRepo("file:" + repo.getAbsolutePath());
+		addRepo(FileMisc.PROTOCOL + repo.getAbsolutePath());
 	}
 
 	public void addMetadataRepo(String repo) {
@@ -107,7 +107,7 @@ public class P2Model {
 	}
 
 	public void addMetadataRepo(File repo) {
-		addMetadataRepo("file:" + repo.getAbsolutePath());
+		addMetadataRepo(FileMisc.PROTOCOL + repo.getAbsolutePath());
 	}
 
 	public void addArtifactRepo(String repo) {
@@ -115,14 +115,12 @@ public class P2Model {
 	}
 
 	public void addArtifactRepo(File repo) {
-		addArtifactRepo("file:" + repo.getAbsolutePath());
+		addArtifactRepo(FileMisc.PROTOCOL + repo.getAbsolutePath());
 	}
 
 	public void addArtifactRepoBundlePool() {
 		addArtifactRepo(GoomphCacheLocations.bundlePool());
 	}
-
-	static final String FILE_PROTO = "file://";
 
 	///////////////////////
 	// P2 MIRROR via ANT //
@@ -138,7 +136,7 @@ public class P2Model {
 		Node p2mirror = new Node(null, "p2.mirror");
 		sourceNode(p2mirror);
 		Node destination = new Node(p2mirror, "destination");
-		destination.attributes().put("location", FILE_PROTO + dstFolder.getAbsolutePath());
+		destination.attributes().put("location", FileMisc.PROTOCOL + dstFolder.getAbsolutePath());
 
 		for (String iu : ius) {
 			Node iuNode = new Node(p2mirror, "iu");
@@ -201,7 +199,7 @@ public class P2Model {
 		artifactRepos.forEach(repo -> builder.addArg("artifactRepository", repo));
 		ius.forEach(iu -> builder.addArg("installIU", iu));
 		builder.addArg("profile", profile);
-		builder.addArg("destination", FILE_PROTO + dstFolder.getAbsolutePath());
+		builder.addArg("destination", FileMisc.PROTOCOL + dstFolder.getAbsolutePath());
 		return builder;
 	}
 
