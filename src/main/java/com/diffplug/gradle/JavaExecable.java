@@ -107,9 +107,9 @@ public interface JavaExecable extends Serializable, Throwing.Runnable {
 				.collect(Collectors.toList());
 		// add the gradleApi, workaround from https://discuss.gradle.org/t/gradle-doesnt-add-the-same-dependencies-to-classpath-when-applying-plugins/9759/6?u=ned_twigg
 		classpaths.add(project.getConfigurations().detachedConfiguration(project.getDependencies().gradleApi()));
-		FileCollection classpathsCombined = new UnionFileCollection(classpaths);
-
-		return JavaExecableImp.execInternal(input, settings, execSpec -> JavaExecWinFriendly.javaExec(project, classpathsCombined, execSpec));
+		FileCollection classpath = new UnionFileCollection(classpaths);
+		// run it
+		return JavaExecableImp.execInternal(input, classpath, settings, execSpec -> JavaExecWinFriendly.javaExec(project, execSpec));
 	}
 
 	/** @see #exec(Project, JavaExecable, Action) */
@@ -130,7 +130,7 @@ public interface JavaExecable extends Serializable, Throwing.Runnable {
 			}
 		}
 		FileCollection classpath = new SimpleFileCollection(files);
-		return JavaExecableImp.execInternal(input, settings, execSpec -> JavaExecWinFriendly.javaExecWithoutGradle(classpath, execSpec));
+		return JavaExecableImp.execInternal(input, classpath, settings, execSpec -> JavaExecWinFriendly.javaExecWithoutGradle(execSpec));
 	}
 
 	/** @see #exec(Project, JavaExecable, Action) */

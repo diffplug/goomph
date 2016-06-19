@@ -23,18 +23,18 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.gradle.api.Action;
 import org.gradle.api.Project;
-import org.gradle.api.file.FileCollection;
 import org.gradle.process.ExecResult;
 import org.gradle.process.JavaExecSpec;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.gradle.util.CollectionUtils;
 
+import com.diffplug.common.base.Box;
+import com.diffplug.common.base.Errors;
 import com.diffplug.common.swt.os.OS;
 
 /**
@@ -46,46 +46,48 @@ public class JavaExecWinFriendly {
 	private JavaExecWinFriendly() {}
 
 	/** Calls javaExec() in a way which is friendly with windows classpath limitations. */
-	public static ExecResult javaExec(Project project, FileCollection classpath, Action<JavaExecSpec> spec) throws IOException {
+	public static ExecResult javaExec(Project project, Action<JavaExecSpec> spec) throws IOException {
 		if (OS.getNative().isWindows()) {
-			File classpathJar = toJarWithClasspath(classpath.getFiles());
+			Box.Nullable<File> classpathJarBox = Box.Nullable.ofNull();
 			ExecResult execResult = project.javaexec(execSpec -> {
-				// set the classpath
-				execSpec.jvmArgs("-cp", classpathJar.getAbsolutePath());
 				// handle the user
 				spec.execute(execSpec);
+				// create a jar which embeds the classpath
+				File classpathJar = toJarWithClasspath(execSpec.getClasspath());
+				// set the classpath to be just that one jar
+				execSpec.jvmArgs("-cp", classpathJar.getAbsolutePath());
+				// save the jar so it can be deleted later
+				classpathJarBox.set(classpathJar);
 			});
-			FileMisc.delete(classpathJar);
+			// delete the jar after the task has finished
+			FileMisc.delete(classpathJarBox.get());
 			return execResult;
 		} else {
-			return project.javaexec(execSpec -> {
-				// set the classpath
-				execSpec.setClasspath(classpath);
-				// handle the user
-				spec.execute(execSpec);
-			});
+			return project.javaexec(spec);
 		}
 	}
 
 	/** Calls javaExec() in a way which is friendly with windows classpath limitations, and doesn't require gradle. */
-	public static ExecResult javaExecWithoutGradle(FileCollection classpath, Action<JavaExecSpec> spec) throws IOException {
+	public static ExecResult javaExecWithoutGradle(Action<JavaExecSpec> spec) throws IOException {
 		Project project = ProjectBuilder.builder().build();
-		return javaExec(project, classpath, spec);
+		return javaExec(project, spec);
 	}
 
 	/** Creates a jar with a Class-Path entry to workaround the windows classpath limitation. */
-	private static File toJarWithClasspath(final Set<File> files) throws IOException {
-		File jarFile = File.createTempFile("long-classpath", ".jar");
-		try (ZipOutputStream zip = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(jarFile)))) {
-			zip.putNextEntry(new ZipEntry("META-INF/MANIFEST.MF"));
-			try (PrintWriter pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(zip, StandardCharsets.UTF_8)))) {
-				pw.println("Manifest-Version: 1.0");
-				String classPath = CollectionUtils.join(" ", CollectionUtils.collect(files, File::toURI));
-				String classPathEntry = "Class-Path: " + classPath;
-				pw.println(CollectionUtils.join("\n ", classPathEntry.split(MATCH_CHUNKS_OF_70_CHARACTERS)));
+	private static File toJarWithClasspath(Iterable<File> files) {
+		return Errors.rethrow().get(() -> {
+			File jarFile = File.createTempFile("long-classpath", ".jar");
+			try (ZipOutputStream zip = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(jarFile)))) {
+				zip.putNextEntry(new ZipEntry("META-INF/MANIFEST.MF"));
+				try (PrintWriter pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(zip, StandardCharsets.UTF_8)))) {
+					pw.println("Manifest-Version: 1.0");
+					String classPath = CollectionUtils.join(" ", CollectionUtils.collect(files, File::toURI));
+					String classPathEntry = "Class-Path: " + classPath;
+					pw.println(CollectionUtils.join("\n ", classPathEntry.split(MATCH_CHUNKS_OF_70_CHARACTERS)));
+				}
 			}
-		}
-		return jarFile;
+			return jarFile;
+		});
 	}
 
 	private static final String MATCH_CHUNKS_OF_70_CHARACTERS = "(?<=\\G.{70})";
