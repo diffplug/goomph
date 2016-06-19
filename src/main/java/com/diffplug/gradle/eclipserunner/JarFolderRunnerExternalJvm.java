@@ -25,6 +25,8 @@ import org.gradle.api.Project;
 import org.gradle.api.file.FileCollection;
 import org.gradle.process.JavaExecSpec;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import com.diffplug.common.base.Errors;
 import com.diffplug.gradle.JavaExecable;
 
@@ -70,6 +72,7 @@ public class JarFolderRunnerExternalJvm implements EclipseRunner {
 		});
 	}
 
+	@SuppressFBWarnings(value = "RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT", justification = "FindBugs thinks that setClasspath() doesn't have a side effect, but it actually does.")
 	private void modifyClassPath(JavaExecSpec execSpec) {
 		FileCollection classpath = execSpec.getClasspath();
 		execSpec.setClasspath(classpath.filter(file -> {
