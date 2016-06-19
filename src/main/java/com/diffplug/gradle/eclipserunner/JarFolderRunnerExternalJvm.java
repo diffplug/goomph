@@ -22,6 +22,8 @@ import java.util.Objects;
 import javax.annotation.Nullable;
 
 import org.gradle.api.Project;
+import org.gradle.api.file.FileCollection;
+import org.gradle.process.JavaExecSpec;
 
 import com.diffplug.common.base.Errors;
 import com.diffplug.gradle.JavaExecable;
@@ -61,11 +63,19 @@ public class JarFolderRunnerExternalJvm implements EclipseRunner {
 		RunOutside outside = new RunOutside(rootDirectory, args);
 		Errors.constrainTo(Exception.class).run(() -> {
 			if (project == null) {
-				JavaExecable.execWithoutGradle(outside);
+				JavaExecable.execWithoutGradle(outside, this::modifyClassPath);
 			} else {
-				JavaExecable.exec(project, outside);
+				JavaExecable.exec(project, outside, this::modifyClassPath);
 			}
 		});
+	}
+
+	private void modifyClassPath(JavaExecSpec execSpec) {
+		FileCollection classpath = execSpec.getClasspath();
+		execSpec.setClasspath(classpath.filter(file -> {
+			// we need org.eclipse.osgi, org.osgi.core will ruin everything
+			return !file.getName().startsWith("org.osgi.core");
+		}));
 	}
 
 	/** Helper class for running outside this JVM. */
