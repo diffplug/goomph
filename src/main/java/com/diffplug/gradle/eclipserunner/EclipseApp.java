@@ -145,10 +145,7 @@ public class EclipseApp {
 	 * will add `-flag A,B` to the command line.
 	 */
 	public void addArg(String key, String value) {
-		if (value.contains(" ")) {
-			value = "\"" + value + "\"";
-		}
-		args.put(key, value);
+		args.put(key, FileMisc.quote(value));
 	}
 
 	/** `addArg("flag")` will add "-flag" to command line. */
@@ -224,15 +221,12 @@ public class EclipseApp {
 		public void setTask(Node taskNode) {
 			Node project = new Node(null, "project");
 			project.append(taskNode);
-			buildXml = XmlUtil.serialize(project).replace("\r", "");
+			buildXml = FileMisc.toUnixNewline(XmlUtil.serialize(project));
 		}
 
 		/** Defines a property for the ant task. */
 		public void define(String key, String value) {
-			if (value.contains(" ")) {
-				value = "\"" + value + "\"";
-			}
-			addArg("D" + key + "=" + value);
+			addArg("D" + key + "=" + FileMisc.quote(value));
 		}
 
 		/** Defines a property to a file for the ant task. */
