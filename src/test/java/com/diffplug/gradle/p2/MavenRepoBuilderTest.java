@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import com.diffplug.common.io.Files;
 import com.diffplug.common.io.Resources;
+import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GradleIntegrationTest;
 
 public class MavenRepoBuilderTest extends GradleIntegrationTest {
@@ -42,10 +43,10 @@ public class MavenRepoBuilderTest extends GradleIntegrationTest {
 				"apply plugin: 'java'",
 				"repositories { maven { url '" + mavenRoot.getAbsolutePath().replace("\\", "/") + "' } }",
 				"dependencies {",
-				"    compile 'p2group:org.eclipse.ecf.provider.filetransfer.ssl:1.0.0.v20151130-0157'",
+				"    compile 'p2group:org.eclipse.ecf.provider.filetransfer.ssl:+'",
 				"}",
 				"apply plugin: 'eclipse'");
-		gradleRunner().withArguments("eclipse").build();
+		gradleRunner().forwardOutput().withArguments("eclipse").build();
 		String classpath = read(".classpath");
 		Assert.assertTrue(classpath.contains("org.eclipse.ecf.provider.filetransfer.ssl-1.0.0.v20151130-0157.jar\""));
 		Assert.assertTrue(classpath.contains("org.eclipse.ecf.provider.filetransfer.ssl-1.0.0.v20151130-0157-sources.jar\""));
@@ -58,5 +59,15 @@ public class MavenRepoBuilderTest extends GradleIntegrationTest {
 			Resources.copy(url, output);
 		}
 		return file;
+	}
+
+	public static void main(String[] args) throws Exception {
+		File p2 = new File("C:\\Users\\ntwigg\\Documents\\DiffPlugDev\\talk-gradle_and_eclipse_rcp\\targetplatform\\build\\goomph-p2asmaven\\p2");
+		File maven = new File("C:\\Users\\ntwigg\\Documents\\DiffPlugDev\\talk-gradle_and_eclipse_rcp\\targetplatform\\build\\goomph-p2asmaven\\maven");
+		try (MavenRepoBuilder builder = new MavenRepoBuilder(maven)) {
+			for (File plugin : FileMisc.list(new File(p2, "plugins"))) {
+				builder.install("group", plugin);
+			}
+		}
 	}
 }

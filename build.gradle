@@ -43,8 +43,6 @@ dependencies {
 	compile "biz.aQute.bnd:biz.aQute.bndlib:${VER_BNDLIB}"
 	// p2
 	compile "org.eclipse.tycho:org.eclipse.osgi:${VER_ECLIPSE_OSGI}"
-	compile "org.apache.maven:maven-core:${VER_MAVEN}"
-	compile "org.apache.maven:maven-compat:${VER_MAVEN}"
 	// testing
 	testCompile "junit:junit:${VER_JUNIT}"
 }

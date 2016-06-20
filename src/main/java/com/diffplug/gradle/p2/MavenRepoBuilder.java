@@ -16,97 +16,33 @@
 package com.diffplug.gradle.p2;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
+import java.util.stream.Collectors;
 
-import org.apache.maven.RepositoryUtils;
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.DefaultArtifact;
-import org.apache.maven.artifact.handler.ArtifactHandler;
-import org.apache.maven.artifact.handler.DefaultArtifactHandler;
-import org.apache.maven.artifact.installer.ArtifactInstallationException;
-import org.apache.maven.artifact.installer.ArtifactInstaller;
-import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.artifact.repository.ArtifactRepositoryPolicy;
-import org.apache.maven.artifact.repository.LegacyLocalRepositoryManager;
-import org.apache.maven.artifact.repository.MavenArtifactRepository;
-import org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout;
-import org.apache.maven.artifact.repository.metadata.ArtifactRepositoryMetadata;
-import org.apache.maven.artifact.repository.metadata.Versioning;
-import org.codehaus.plexus.ContainerConfiguration;
-import org.codehaus.plexus.DefaultContainerConfiguration;
-import org.codehaus.plexus.DefaultPlexusContainer;
-import org.codehaus.plexus.PlexusConstants;
-import org.codehaus.plexus.classworlds.ClassWorld;
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
-import org.eclipse.aether.RepositorySystem;
-import org.eclipse.aether.RepositorySystemSession;
-import org.eclipse.aether.installation.InstallRequest;
-import org.eclipse.aether.installation.InstallationException;
+import org.osgi.framework.Version;
 
-import com.google.inject.AbstractModule;
+import groovy.util.Node;
+import groovy.xml.XmlUtil;
 
+import com.diffplug.common.collect.HashMultimap;
+import com.diffplug.common.collect.Multimap;
 import com.diffplug.gradle.FileMisc;
 
 /** Builds a maven repo out of a p2 repository. */
 class MavenRepoBuilder implements AutoCloseable {
-	final DefaultPlexusContainer container;
-	final MavenArtifactRepository repo;
-	final ArtifactInstaller installer;
+	final File root;
+	final Multimap<Coordinate, Artifact> artifactMap = HashMultimap.create();
 
 	MavenRepoBuilder(File root) throws Exception {
-		ClassWorld classWorld = new ClassWorld("plexus.core", MavenRepoBuilder.class.getClassLoader());
-		ContainerConfiguration cc = new DefaultContainerConfiguration()
-				.setClassWorld(classWorld)
-				.setClassPathScanning(PlexusConstants.SCANNING_CACHE)
-				.setAutoWiring(true)
-				.setName("maven");
-		container = new DefaultPlexusContainer(cc, new AbstractModule() {
-			@Override
-			protected void configure() {
-				bind(ArtifactInstaller.class).to(DpArtifactInstaller.class);
-			}
-		});
-		installer = container.lookup(ArtifactInstaller.class);
-		ArtifactRepositoryPolicy policy = new ArtifactRepositoryPolicy();
-		repo = new MavenArtifactRepository("id", FileMisc.PROTOCOL + root.getAbsolutePath(), new DefaultRepositoryLayout(), policy, policy);
-	}
-
-	@Override
-	public void close() {
-		container.dispose();
-	}
-
-	@Component(role = ArtifactInstaller.class)
-	static class DpArtifactInstaller extends AbstractLogEnabled implements ArtifactInstaller {
-		@Requirement
-		private RepositorySystem repoSystem;
-
-		@Deprecated
-		public void install(String basedir, String finalName, Artifact artifact, ArtifactRepository localRepository) throws ArtifactInstallationException {
-			throw new UnsupportedOperationException();
-		}
-
-		public void install(File source, Artifact artifact, ArtifactRepository localRepository) throws ArtifactInstallationException {
-			RepositorySystemSession session = LegacyLocalRepositoryManager.overlay(localRepository, null, repoSystem);
-			InstallRequest request = new InstallRequest();
-
-			org.eclipse.aether.artifact.Artifact mainArtifact = RepositoryUtils.toArtifact(artifact);
-			mainArtifact = mainArtifact.setFile(source);
-			request.addArtifact(mainArtifact);
-			try {
-				repoSystem.install(session, request);
-			} catch (InstallationException e) {
-				throw new ArtifactInstallationException(e.getMessage(), e);
-			}
-			Versioning versioning = new Versioning();
-			versioning.updateTimestamp();
-			versioning.addVersion(artifact.getBaseVersion());
-			versioning.setRelease(artifact.getBaseVersion());
-			artifact.addMetadata(new ArtifactRepositoryMetadata(artifact, versioning));
-		}
+		this.root = Objects.requireNonNull(root);
 	}
 
 	/**
@@ -131,12 +67,7 @@ class MavenRepoBuilder implements AutoCloseable {
 				isSource = false;
 			}
 		}
-		String scope = "compile";
-		String type = "jar";
-		String classifier = isSource ? "sources" : "";
-		ArtifactHandler handler = new DefaultArtifactHandler("jar");
-		Artifact artifact = new DefaultArtifact(group, symbolicName, version, scope, type, classifier, handler);
-		installer.install(osgiJar, artifact, repo);
+		artifactMap.put(new Coordinate(group, symbolicName), new Artifact(Version.parseVersion(version), isSource, osgiJar));
 	}
 
 	/** Parses out a name from an OSGi manifest header. */
@@ -146,6 +77,111 @@ class MavenRepoBuilder implements AutoCloseable {
 			return input;
 		} else {
 			return input.substring(0, firstSemiColon);
+		}
+	}
+
+	@Override
+	public void close() throws Exception {
+		for (Coordinate coord : artifactMap.keySet()) {
+			File groupFolder = new File(root, coord.group);
+			File artifactFolder = new File(groupFolder, coord.artifactId);
+			FileMisc.mkdirs(artifactFolder);
+			Collection<Artifact> values = artifactMap.get(coord);
+			install(artifactFolder, coord, values);
+		}
+	}
+
+	private void install(File artifactFolder, Coordinate coord, Collection<Artifact> artifacts) throws IOException {
+		List<Version> allVersions = artifacts.stream()
+				.map(artifact -> artifact.version)
+				.distinct().sorted().collect(Collectors.toList());
+		// create the metadata
+		Node metadata = new Node(null, "metadata");
+		new Node(metadata, "groupId").setValue(coord.group);
+		new Node(metadata, "artifactId").setValue(coord.artifactId);
+		// the last one
+		new Node(metadata, "version").setValue(allVersions.get(allVersions.size() - 1));
+		Node versioning = new Node(metadata, "versioning");
+		Node versions = new Node(versioning, "versions");
+		for (Version version : allVersions) {
+			new Node(versions, "version").setValue(version.toString());
+		}
+		new Node(versioning, "lastUpdated").setValue(System.currentTimeMillis());
+		// create the metadata file
+		String mavenMetadataContent = FileMisc.toUnixNewline(XmlUtil.serialize(metadata));
+		File mavenMetadata = new File(artifactFolder, "maven-metadata.xml");
+		Files.write(mavenMetadata.toPath(), mavenMetadataContent.getBytes(StandardCharsets.UTF_8));
+		// write out the artifacts
+		for (Artifact artifact : artifacts) {
+			StringBuilder builder = new StringBuilder();
+			builder.append(coord.artifactId);
+			builder.append('-');
+			builder.append(artifact.version.toString());
+			if (artifact.isSources) {
+				builder.append("-sources");
+			}
+			builder.append(".jar");
+			File versionFolder = new File(artifactFolder, artifact.version.toString());
+			FileMisc.mkdirs(versionFolder);
+			Files.copy(artifact.jar.toPath(), new File(versionFolder, builder.toString()).toPath());
+		}
+	}
+
+	static class Coordinate {
+		final String group;
+		final String artifactId;
+
+		public Coordinate(String group, String artifactId) {
+			this.group = group;
+			this.artifactId = artifactId;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(group, artifactId);
+		}
+
+		@Override
+		public boolean equals(Object otherObj) {
+			if (otherObj instanceof Coordinate) {
+				Coordinate other = (Coordinate) otherObj;
+				return other.group.equals(group) && other.artifactId.equals(artifactId);
+			} else {
+				return false;
+			}
+		}
+	}
+
+	static final Comparator<Artifact> comparator;
+	static {
+		Comparator<Artifact> byVersion = Comparator.comparing(artifact -> artifact.version);
+		comparator = byVersion.thenComparing(artifact -> artifact.isSources ? 0 : 1);
+	}
+
+	static class Artifact implements Comparable<Artifact> {
+		final Version version;
+		final boolean isSources;
+		final File jar;
+
+		public Artifact(Version version, boolean isSources, File jar) {
+			this.version = Objects.requireNonNull(version);
+			this.isSources = isSources;
+			this.jar = Objects.requireNonNull(jar);
+		}
+
+		@Override
+		public int compareTo(Artifact other) {
+			return comparator.compare(this, other);
+		}
+
+		@Override
+		public boolean equals(Object otherObj) {
+			if (otherObj instanceof Artifact) {
+				Artifact other = (Artifact) otherObj;
+				return comparator.compare(this, other) == 0;
+			} else {
+				return false;
+			}
 		}
 	}
 }
