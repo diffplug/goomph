@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 
 import org.apache.commons.io.FileUtils;
 
@@ -43,29 +44,58 @@ public class FileMisc {
 	// Replacements for File.* which check exceptional return values //
 	///////////////////////////////////////////////////////////////////
 	/** Lists the children of the given file in a safe way ({@link File#listFiles()} can return null). */
-	public static List<File> list(File dir) {
-		File[] children = dir.listFiles();
-		if (children == null) {
-			if (dir.isFile()) {
-				throw new IllegalArgumentException("Can't list " + dir + " because it is a file, not a directory.");
-			} else if (!dir.exists()) {
-				throw new IllegalArgumentException("Can't list " + dir + " because it does not exist.");
+	public static List<File> list(File d) {
+		return retry(d, dir -> {
+			File[] children = dir.listFiles();
+			if (children == null) {
+				if (dir.isFile()) {
+					throw new IllegalArgumentException("Can't list " + dir + " because it is a file, not a directory.");
+				} else if (!dir.exists()) {
+					throw new IllegalArgumentException("Can't list " + dir + " because it does not exist.");
+				} else {
+					throw new IllegalArgumentException("Can't list " + dir + ", not sure why.");
+				}
 			} else {
-				throw new IllegalArgumentException("Can't list " + dir + ", not sure why.");
+				return Arrays.asList(children);
 			}
-		} else {
-			return Arrays.asList(children);
-		}
+		});
 	}
 
 	/** Calls {@link File#mkdirs()} and throws an exception if it fails. */
-	public static void mkdirs(File dir) {
-		Errors.rethrow().run(() -> java.nio.file.Files.createDirectories(dir.toPath()));
+	public static void mkdirs(File d) {
+		retry(d, dir -> {
+			Errors.rethrow().run(() -> java.nio.file.Files.createDirectories(dir.toPath()));
+			return null;
+		});
 	}
 
 	/** Calls {@link File#mkdirs()} and throws an exception if it fails. */
-	public static void delete(File file) {
-		Errors.rethrow().run(() -> java.nio.file.Files.delete(file.toPath()));
+	public static void delete(File f) {
+		retry(f, file -> {
+			Errors.rethrow().run(() -> java.nio.file.Files.delete(file.toPath()));
+			return null;
+		});
+	}
+
+	private static final int MS_RETRY = 250;
+
+	/**
+	 * Retries an action every ms, for 250ms, until it finally works or fails.
+	 *
+	 * Makes FS operations more reliable.
+	 */
+	private static <T> T retry(File input, Function<File, T> function) {
+		long start = System.currentTimeMillis();
+		RuntimeException lastException;
+		do {
+			try {
+				return function.apply(input);
+			} catch (RuntimeException e) {
+				lastException = e;
+				Errors.suppress().run(() -> Thread.sleep(1));
+			}
+		} while (System.currentTimeMillis() - start < MS_RETRY);
+		throw lastException;
 	}
 
 	//////////////////////////////
