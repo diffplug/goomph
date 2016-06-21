@@ -56,10 +56,10 @@ class AsMaven {
 		Optional<String> result = FileMisc.readToken(dir, STALE_TOKEN);
 		if (result.isPresent()) {
 			if (result.get().equals(state)) {
-				project.getLogger().debug("P2Mavenify " + mavenGroup + " is satisfied");
+				project.getLogger().debug("p2AsMaven " + mavenGroup + " is satisfied");
 				return;
 			} else {
-				project.getLogger().lifecycle("P2Mavenify " + mavenGroup + " is dirty, redoing");
+				project.getLogger().lifecycle("p2AsMaven " + mavenGroup + " is dirty, redoing");
 			}
 		}
 		// else, we'll need to run our own little thing
@@ -72,11 +72,11 @@ class AsMaven {
 		project.getLogger().lifecycle("Only needs to be done once, future builds will be much faster");
 
 		FileMisc.mkdirs(p2dir);
-		project.getLogger().lifecycle("P2Mavenify " + mavenGroup + " installing from p2");
+		project.getLogger().lifecycle("p2AsMaven " + mavenGroup + " installing from p2");
 		getApp().runUsingBootstrapper(project);
 
 		// put p2 into a maven repo
-		project.getLogger().lifecycle("P2Mavenify " + mavenGroup + " creating maven repo");
+		project.getLogger().lifecycle("p2AsMaven " + mavenGroup + " creating maven repo");
 		FileMisc.mkdirs(mavenDir);
 		try (MavenRepoBuilder maven = new MavenRepoBuilder(mavenDir)) {
 			for (File plugin : FileMisc.list(new File(p2dir, "plugins"))) {
@@ -88,24 +88,24 @@ class AsMaven {
 
 		// write out the staleness token to indicate that everything is good
 		FileMisc.writeToken(dir, STALE_TOKEN, state);
-		project.getLogger().lifecycle("P2Mavenify " + mavenGroup + " is complete.");
+		project.getLogger().lifecycle("p2AsMaven " + mavenGroup + " is complete.");
 	}
 
 	static final String STALE_TOKEN = "stale_token";
 
 	/** The args passed to p2 director represent the full state. */
 	private String state() {
-		return getApp().completeState() + GOOMPH_VERSION;
+		return "mirrorApp: " + getApp().completeState() + "\nmavenGroup: " + mavenGroup + "\ngoomph:" + GOOMPH_VERSION;
 	}
+
+	/** Bump this if we need to force people's deps to reload. */
+	static final int GOOMPH_VERSION = 1;
 
 	private P2Model.MirrorApp getApp() {
 		P2Model.MirrorApp app = p2model.mirrorApp(getDestinationP2());
 		modifyAnt.execute(app);
 		return app;
 	}
-
-	/** Bump this if we need to force people's deps to reload. */
-	static final int GOOMPH_VERSION = 1;
 
 	public void mavenGroup(String mavenGroup) {
 		this.mavenGroup = mavenGroup;
