@@ -55,7 +55,7 @@ public class JavaExecWinFriendly {
 				// create a jar which embeds the classpath
 				File classpathJar = toJarWithClasspath(execSpec.getClasspath());
 				// set the classpath to be just that one jar
-				execSpec.jvmArgs("-cp", classpathJar.getAbsolutePath());
+				execSpec.setClasspath(project.files(classpathJar));
 				// save the jar so it can be deleted later
 				classpathJarBox.set(classpathJar);
 			});
