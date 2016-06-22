@@ -16,8 +16,8 @@
 package com.diffplug.gradle.p2;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -25,16 +25,20 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import org.apache.commons.io.FileUtils;
 import org.gradle.api.Project;
 
 import groovy.util.Node;
 
 import com.diffplug.common.base.Consumers;
+import com.diffplug.common.base.Errors;
+import com.diffplug.common.base.Throwing;
 import com.diffplug.common.collect.Sets;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
 import com.diffplug.gradle.eclipserunner.EclipseApp;
+import com.diffplug.gradle.eclipserunner.EclipseRunner;
 
 /**
  * Models a request for some artifacts from some
@@ -200,6 +204,11 @@ public class P2Model {
 		ius.forEach(iu -> builder.addArg("installIU", iu));
 		builder.addArg("profile", profile);
 		builder.addArg("destination", FileMisc.PROTOCOL + dstFolder.getAbsolutePath());
+		// deletes cached repository information, which will often include local paths
+		builder.doLast.add(() -> {
+			Path path = dstFolder.toPath().resolve("p2/org.eclipse.equinox.p2.engine/.settings");
+			FileUtils.deleteDirectory(path.toFile());
+		});
 		return builder;
 	}
 
@@ -226,7 +235,7 @@ public class P2Model {
 		}
 
 		/** Adds `p2.os`, `p2.ws`, and `p2.arch` arguments. */
-		public void oswsarch(SwtPlatform platform) {
+		public void platform(SwtPlatform platform) {
 			addArg("p2.os", platform.getOs());
 			addArg("p2.ws", platform.getWs());
 			addArg("p2.arch", platform.getArch());
@@ -267,11 +276,15 @@ public class P2Model {
 		public void runUsingBootstrapper(Project project) throws Exception {
 			runUsing(P2BootstrapInstallation.latest().outsideJvmRunner(project));
 		}
-	}
 
-	/** Deletes the cached repository info (which may include references to local paths). */
-	public static void cleanCachedRepositories(File dstFile) throws IOException {
-		Path path = dstFile.toPath().resolve("p2/org.eclipse.equinox.p2.engine/.settings");
-		FileMisc.cleanDir(path.toFile());
+		final List<Throwing.Runnable> doLast = new ArrayList<>();
+
+		@Override
+		public void runUsing(EclipseRunner runner) throws Exception {
+			super.runUsing(runner);
+			for (Throwing.Runnable toRun : doLast) {
+				Errors.constrainTo(Exception.class).run(toRun);
+			}
+		}
 	}
 }

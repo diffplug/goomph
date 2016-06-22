@@ -36,6 +36,5 @@ public class P2BootstrapInstallationCreate {
 		P2Model.DirectorApp app = model.directorApp(INSTALL_TO, "goomph-p2-bootstrap-" + RELEASE.version());
 		app.roaming();
 		app.runUsingBootstrapper();
-		P2Model.cleanCachedRepositories(INSTALL_TO);
 	}
 }

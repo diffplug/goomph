@@ -192,8 +192,10 @@ public class EclipseApp {
 	 * [Ant task documentation](http://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Fguide%2Fp2_repositorytasks.htm)
 	 */
 	public static class AntRunner extends EclipseApp {
+		public static final String ID = "org.eclipse.ant.core.antRunner";
+
 		public AntRunner() {
-			super("org.eclipse.ant.core.antRunner");
+			super(ID);
 		}
 
 		/**

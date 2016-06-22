@@ -13,51 +13,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.diffplug.gradle;
+package com.diffplug.gradle.pde;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.gradle.api.Project;
 
+import com.diffplug.common.collect.ImmutableList;
+
 /**
  * Detects the JDK folder from the gradle project,
  * and wraps it in an API.
  */
-public class JDK {
-	private final File rootFile;
-	private final Path rootPath;
-
-	public JDK(Project project) {
+public class JdkConfig {
+	/** Creates a JDK using the project's `org.gradle.java.home` property. */
+	public JdkConfig(Project project) {
 		this(new File((String) project.property(KEY_JAVA)));
 	}
 
-	public JDK(File rootFile) {
-		this.rootFile = rootFile;
-		this.rootPath = rootFile.toPath();
+	public JdkConfig(File rootFile) {
+		this.rootFolder = rootFile;
 	}
 
 	/** The key for the Java home. */
 	private static final String KEY_JAVA = "org.gradle.java.home";
 
-	/** Returns the directory at the root of the JDK. */
-	public File getBinDir() {
-		return rootPath.resolve("bin").toFile();
+	/** Returns the folder at the root of the JDK. */
+	public File getRootFolder() {
+		return rootFolder;
 	}
 
-	/** Returns the directory at the root of the JDK. */
-	public File getRootDir() {
-		return rootFile;
-	}
+	public File rootFolder;
+	public String name = "JavaSE-1.8";
+	public String source = "1.8";
+	public String target = "1.8";
+	public List<String> jreLibs = ImmutableList.of(
+			"jre/lib/rt.jar",
+			"jre/lib/jsse.jar",
+			"jre/lib/jce.jar");
 
 	/** Returns the JDK's libs which you're going to link against. */
 	public List<File> getJdkLibs() {
-		Path jreLibBase = rootPath.resolve("jre/lib");
-		return Arrays.asList("rt.jar", "jsse.jar", "jce.jar").stream()
-				.map(lib -> jreLibBase.resolve(lib).toFile())
+		return jreLibs.stream()
+				.map(lib -> rootFolder.toPath().resolve(lib).toFile())
 				.collect(Collectors.toList());
 	}
 }

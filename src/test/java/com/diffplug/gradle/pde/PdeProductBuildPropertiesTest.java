@@ -20,12 +20,12 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.diffplug.gradle.pde.PdeProductBuildProperties;
+import com.diffplug.gradle.pde.PdeBuildProperties;
 
 public class PdeProductBuildPropertiesTest {
 	/** Tests that we can read the raw template file. */
 	@Test
 	public void testWeCanRead() throws IOException {
-		Assert.assertEquals(PdeProductBuildProperties.rawFile(), PdeProductBuildProperties.rawFile());
+		Assert.assertEquals(PdeBuildProperties.rawFile(), PdeBuildProperties.rawFile());
 	}
 }

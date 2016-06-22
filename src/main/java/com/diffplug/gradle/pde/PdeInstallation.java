@@ -17,10 +17,12 @@ package com.diffplug.gradle.pde;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.apache.commons.io.FileUtils;
 import org.gradle.api.Project;
 import org.osgi.framework.Version;
 
@@ -37,9 +39,9 @@ import com.diffplug.gradle.eclipserunner.NativeRunner;
 import com.diffplug.gradle.p2.P2Model;
 
 /** Wraps a PDE installation for the given eclipse release. */
-class PdeInstallation implements EclipseRunner {
+public class PdeInstallation implements EclipseRunner {
 	/** Returns a PdeInstallation appropriate for this project. */
-	static PdeInstallation fromProject(Project project) {
+	public static PdeInstallation fromProject(Project project) {
 		String version = (String) project.getProperties().get("GOOMPH_PDE_VER");
 		String updateSite = (String) project.getProperties().get("GOOMPH_PDE_UDPATE_SITE");
 		String id = (String) project.getProperties().get("GOOMPH_PDE_ID");
@@ -97,9 +99,10 @@ class PdeInstallation implements EclipseRunner {
 	}
 
 	/** Returns a command which will execute the PDE builder for a product. */
-	public EclipseApp.AntRunner productBuildCmd(File buildDir) throws Exception {
-		EclipseApp.AntRunner antApp = new EclipseApp.AntRunner();
-		antApp.define("builder", FileMisc.quote(buildDir));
+	public EclipseApp productBuildCmd(File buildDir) throws Exception {
+		EclipseApp antApp = new EclipseApp(EclipseApp.AntRunner.ID);
+		antApp.addArg("buildfile", getPdeBuildProductBuildXml().getAbsolutePath());
+		antApp.addArg("Dbuilder=" + FileMisc.quote(buildDir));
 		return antApp;
 	}
 
@@ -134,7 +137,7 @@ class PdeInstallation implements EclipseRunner {
 		// share the install for quickness
 		directorApp.bundlepool(GoomphCacheLocations.bundlePool());
 		// create a native launcher
-		directorApp.oswsarch(SwtPlatform.getRunning());
+		directorApp.platform(SwtPlatform.getRunning());
 		directorApp.runUsingBootstrapper();
 		// find the plugins folder
 		File sharedPlugins = new File(GoomphCacheLocations.bundlePool(), "plugins");
@@ -145,10 +148,8 @@ class PdeInstallation implements EclipseRunner {
 		System.out.println("Success.");
 	}
 
-	/**
-	 * Creates a model containing pde build and the native launder.
-	 */
-	public P2Model p2model() {
+	/** Creates a model containing pde build and the native launder. */
+	P2Model p2model() {
 		P2Model model = new P2Model();
 		// the update site for the release we're downloading artifacts for
 		model.addRepo(release.updateSite());
@@ -186,6 +187,19 @@ class PdeInstallation implements EclipseRunner {
 	@Override
 	public void run(List<String> args) throws Exception {
 		ensureInstalled();
-		new NativeRunner(getEclipseConsoleExecutable()).run(args);
+		// set a clean workspace
+		List<String> actualArgs = new ArrayList<>();
+		actualArgs.add("-data");
+		File workspace = new File(getRootFolder(), "workspace");
+		actualArgs.add(workspace.getAbsolutePath());
+		// add the user's args
+		actualArgs.addAll(args);
+		// run the code
+		try {
+			new NativeRunner(getEclipseConsoleExecutable()).run(actualArgs);
+		} finally {
+			// clean the workspace directory
+			FileUtils.deleteDirectory(workspace);
+		}
 	}
 }
