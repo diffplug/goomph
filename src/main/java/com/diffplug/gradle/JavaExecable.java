@@ -23,6 +23,7 @@ import java.net.URLClassLoader;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.gradle.api.Action;
@@ -119,16 +120,21 @@ public interface JavaExecable extends Serializable, Throwing.Runnable {
 
 	/** @see #exec(Project, JavaExecable, Action) */
 	public static <T extends JavaExecable> T execWithoutGradle(T input, Action<JavaExecSpec> settings) throws Throwable {
-		ClassLoader classloader = JavaExec.class.getClassLoader();
-		@SuppressWarnings("resource")
-		URLClassLoader urlClassloader = (URLClassLoader) classloader;
 		Set<File> files = new LinkedHashSet<>();
-		for (URL url : urlClassloader.getURLs()) {
-			String name = url.getFile();
-			if (name != null) {
-				files.add(new File(name));
+		Consumer<Class<?>> addPeerClasses = clazz -> {
+			URLClassLoader urlClassloader = (URLClassLoader) clazz.getClassLoader();
+			for (URL url : urlClassloader.getURLs()) {
+				String name = url.getFile();
+				if (name != null) {
+					files.add(new File(name));
+				}
 			}
-		}
+		};
+		// add the classes that goomph needs
+		addPeerClasses.accept(JavaExecable.class);
+		// add the gradle API
+		addPeerClasses.accept(JavaExec.class);
+
 		FileCollection classpath = new SimpleFileCollection(files);
 		return JavaExecableImp.execInternal(input, classpath, settings, execSpec -> JavaExecWinFriendly.javaExecWithoutGradle(execSpec));
 	}
