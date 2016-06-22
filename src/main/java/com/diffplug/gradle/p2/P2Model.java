@@ -32,6 +32,7 @@ import groovy.util.Node;
 
 import com.diffplug.common.base.Consumers;
 import com.diffplug.common.base.Errors;
+import com.diffplug.common.base.StringPrinter;
 import com.diffplug.common.base.Throwing;
 import com.diffplug.common.collect.Sets;
 import com.diffplug.common.swt.os.SwtPlatform;
@@ -80,6 +81,24 @@ public class P2Model {
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public String toString() {
+		return StringPrinter.buildString(printer -> {
+			BiConsumer<String, Set<String>> add = (name, set) -> {
+				for (String element : set) {
+					printer.print(name);
+					printer.print(": ");
+					printer.print(element);
+					printer.println("");
+				}
+			};
+			add.accept("repo", repos);
+			add.accept("metadataRepo", metadataRepos);
+			add.accept("artifactRepo", artifactRepos);
+			add.accept("ius", ius);
+		});
 	}
 
 	public void addIU(String iu) {
