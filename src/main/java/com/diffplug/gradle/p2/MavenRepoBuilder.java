@@ -152,12 +152,6 @@ class MavenRepoBuilder implements AutoCloseable {
 		}
 	}
 
-	static final Comparator<Artifact> comparator;
-	static {
-		Comparator<Artifact> byVersion = Comparator.comparing(artifact -> artifact.version);
-		comparator = byVersion.thenComparing(artifact -> artifact.isSources ? 0 : 1);
-	}
-
 	static class Artifact implements Comparable<Artifact> {
 		final Version version;
 		final boolean isSources;
@@ -167,6 +161,13 @@ class MavenRepoBuilder implements AutoCloseable {
 			this.version = Objects.requireNonNull(version);
 			this.isSources = isSources;
 			this.jar = Objects.requireNonNull(jar);
+		}
+
+		// Comparison and equality based on version and classifier, but not jar
+		static final Comparator<Artifact> comparator;
+		static {
+			Comparator<Artifact> byVersion = Comparator.comparing(artifact -> artifact.version);
+			comparator = byVersion.thenComparing(artifact -> artifact.isSources ? 0 : 1);
 		}
 
 		@Override
@@ -182,6 +183,11 @@ class MavenRepoBuilder implements AutoCloseable {
 			} else {
 				return false;
 			}
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(version, isSources);
 		}
 	}
 }
