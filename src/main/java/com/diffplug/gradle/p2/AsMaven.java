@@ -17,7 +17,6 @@ package com.diffplug.gradle.p2;
 
 import java.io.File;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.gradle.api.Action;
 import org.gradle.api.Project;
@@ -53,14 +52,11 @@ class AsMaven {
 
 		// if we've already written a token which confirms we're done with these inputs, then bail
 		File dir = project.file(destination);
-		Optional<String> result = FileMisc.readToken(dir, STALE_TOKEN);
-		if (result.isPresent()) {
-			if (result.get().equals(state)) {
-				project.getLogger().debug("p2AsMaven " + mavenGroup + " is satisfied");
-				return;
-			} else {
-				project.getLogger().lifecycle("p2AsMaven " + mavenGroup + " is dirty, redoing");
-			}
+		if (FileMisc.hasToken(dir, STALE_TOKEN, state)) {
+			project.getLogger().debug("p2AsMaven " + mavenGroup + " is satisfied");
+			return;
+		} else {
+			project.getLogger().lifecycle("p2AsMaven " + mavenGroup + " is dirty.");
 		}
 		// else, we'll need to run our own little thing
 		FileMisc.cleanDir(dir);

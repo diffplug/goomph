@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import org.gradle.api.Action;
 import org.gradle.api.DefaultTask;
@@ -169,7 +168,7 @@ public class PdeBuildTask extends DefaultTask {
 		properties.setConfigs(platforms); // for all configs
 		properties.setJDK(config);
 
-		List<File> pluginPaths = pluginPath.stream().map(getProject()::file).collect(Collectors.toList());
+		List<File> pluginPaths = FileMisc.parseListFile(getProject(), pluginPath);
 		properties.setPluginPaths(pluginPaths);
 
 		// now that we've set the base values, give the product part a wack at it (if there is one)

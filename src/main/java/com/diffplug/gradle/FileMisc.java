@@ -29,8 +29,10 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
+import org.gradle.api.Project;
 
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Joiner;
@@ -150,6 +152,11 @@ public class FileMisc {
 		return readToken(dir, name).isPresent();
 	}
 
+	/** Returns true iff the given directory has a file with the given name containing the given content. */
+	public static boolean hasToken(File dir, String name, String content) throws IOException {
+		return readToken(dir, name).map(str -> content.equals(str)).orElse(false);
+	}
+
 	////////////////////////////
 	// Misc file manipulation //
 	////////////////////////////
@@ -248,6 +255,10 @@ public class FileMisc {
 				}
 			}
 		}
+	}
+
+	public static List<File> parseListFile(Project project, List<Object> inputs) {
+		return inputs.stream().map(project::file).collect(Collectors.toList());
 	}
 
 	///////////////////////////
