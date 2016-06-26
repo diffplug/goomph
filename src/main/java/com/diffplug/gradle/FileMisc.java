@@ -82,7 +82,7 @@ public class FileMisc {
 	private static final int MS_RETRY = 250;
 
 	/**
-	 * Retries an action every ms, for 250ms, until it finally works or fails.
+	 * Retries an action every ms, for 250ms, until it finally works or fails. 
 	 *
 	 * Makes FS operations more reliable.
 	 */
@@ -120,6 +120,15 @@ public class FileMisc {
 	/** Quotes the absolute path of the given file iff it contains whitespace. */
 	public static String quote(File input) {
 		return quote(input.getAbsolutePath());
+	}
+
+	/** Throws an exception if the given input property contains whitespace. */
+	public static String noQuote(String input) {
+		if (input.contains(" ")) {
+			throw new IllegalArgumentException("Cannot contain whitespace: '" + input + "'");
+		} else {
+			return input;
+		}
 	}
 
 	/////////////////////////////////////

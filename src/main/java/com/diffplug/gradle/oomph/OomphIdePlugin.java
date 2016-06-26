@@ -44,17 +44,16 @@ public class OomphIdePlugin extends ProjectPlugin {
 	@Override
 	protected void applyOnce(Project project) {
 		OomphIdeExtension extension = project.getExtensions().create(OomphIdeExtension.NAME, OomphIdeExtension.class, project);
-		project.afterEvaluate(proj -> {
-			Task setupIde = proj.getTasks().create("setupIde");
-			setupIde.doFirst(unused -> {
-				Errors.rethrow().run(extension::setup);
-			});
 
-			Task runIde = proj.getTasks().create("ide");
-			runIde.dependsOn(setupIde);
-			runIde.doFirst(unused -> {
-				Errors.rethrow().run(extension::run);
-			});
+		Task setupIde = project.getTasks().create("ideSetup");
+		setupIde.doFirst(unused -> {
+			Errors.rethrow().run(extension::setup);
+		});
+
+		Task runIde = project.getTasks().create("ide");
+		runIde.dependsOn(setupIde);
+		runIde.doFirst(unused -> {
+			Errors.rethrow().run(extension::run);
 		});
 	}
 }

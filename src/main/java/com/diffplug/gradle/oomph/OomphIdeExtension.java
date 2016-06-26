@@ -16,13 +16,21 @@
 package com.diffplug.gradle.oomph;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 
+import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Preconditions;
+import com.diffplug.common.io.Files;
 import com.diffplug.common.swt.os.SwtPlatform;
+
+import com.diffplug.gradle.ConfigMisc;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
 import com.diffplug.gradle.p2.P2Model;
@@ -33,7 +41,7 @@ public class OomphIdeExtension {
 
 	private final Project project;
 
-	OomphIdeExtension(Project project) {
+	public OomphIdeExtension(Project project) {
 		this.project = Objects.requireNonNull(project);
 	}
 
@@ -47,9 +55,16 @@ public class OomphIdeExtension {
 	private Action<OomphTargetPlatform> targetPlatform = null;
 
 	/** Sets the targetplatform configuration. */
-	public void targetPlatform(Action<OomphTargetPlatform> targetPlatform) {
+	public void targetplatform(Action<OomphTargetPlatform> targetPlatform) {
 		Preconditions.checkArgument(this.targetPlatform == null, "Can only set targetplatform once");
 		this.targetPlatform = targetPlatform;
+	}
+
+	private Action<Map<String, String>> eclipseIni = null;
+
+	private void eclipseIni(Action<Map<String, String>> eclipseIni) {
+		Preconditions.checkArgument(this.eclipseIni == null, "Can only set eclipseIni once");
+		this.eclipseIni = eclipseIni;
 	}
 
 	private Object ideDir = "build/oomph-ide";
@@ -63,23 +78,34 @@ public class OomphIdeExtension {
 		return project.file(ideDir);
 	}
 
+	private File getWorkspaceDir() {
+		return new File(getIdeDir(), "workspace");
+	}
+
 	private String state() {
 		return getIdeDir().toString() + Objects.toString(targetPlatform) + p2;
+	}
+
+	private Map<String, Supplier<byte[]>> pathToContent = new HashMap<>();
+
+	public void configProps(String file, Action<Map<String, String>> configSupplier) {
+		pathToContent.put(file, ConfigMisc.props(configSupplier));
 	}
 
 	static final String STALE_TOKEN = "token_stale";
 
 	/** Sets up an IDE as described in this model from scratch. */
 	void setup() throws Exception {
+		File dir = getIdeDir();
 		// if we've got a clean token, we're all good
-		if (FileMisc.hasToken(getIdeDir(), STALE_TOKEN, state())) {
+		if (FileMisc.hasToken(dir, STALE_TOKEN, state())) {
 			return;
 		}
 		// else we've gotta set it up
-		FileMisc.cleanDir(getIdeDir());
+		FileMisc.cleanDir(dir);
 		// now we can install the IDE
 		p2.addArtifactRepoBundlePool();
-		P2Model.DirectorApp app = p2.directorApp(getIdeDir(), "OomphIde");
+		P2Model.DirectorApp app = p2.directorApp(dir, "OomphIde");
 		app.consolelog();
 		// share the install for quickness
 		app.bundlepool(GoomphCacheLocations.bundlePool());
@@ -87,12 +113,34 @@ public class OomphIdeExtension {
 		app.platform(SwtPlatform.getRunning());
 		// create it
 		app.runUsingBootstrapper(project);
-		// TODO: setup workspace
+		// TODO: set the initial workspace
+		setInitialWorkspace();
+		// TODO: update eclipse.ini
+
 		if (targetPlatform != null) {
 			OomphTargetPlatform targetPlatformInstance = new OomphTargetPlatform(project);
 			targetPlatform.execute(targetPlatformInstance);
 			// TODO: setup targetplatform in workspace
 		}
+		pathToContent.forEach((path, content) -> {
+			File target = new File(dir, path);
+			FileMisc.mkdirs(target.getParentFile());
+			Errors.rethrow().run(() -> Files.write(content.get(), target));
+		});
+	}
+
+	/** Sets the workspace directory. */
+	private void setInitialWorkspace() throws IOException {
+		File workspace = getWorkspaceDir();
+		FileMisc.cleanDir(workspace);
+		configProps("configuration/.settings/org.eclipse.ui.ide.prefs", map -> {
+			map.put("MAX_RECENT_WORKSPACES", "5");
+			map.put("RECENT_WORKSPACES", workspace.getAbsolutePath());
+			map.put("RECENT_WORKSPACES_PROTOCOL", "3");
+			map.put("SHOW_RECENT_WORKSPACES", "false");
+			map.put("SHOW_WORKSPACE_SELECTION_DIALOG", "false");
+			map.put("eclipse.preferences.version", "1");
+		});
 	}
 
 	/** Runs the IDE which was setup by {@link #setup()}. */
