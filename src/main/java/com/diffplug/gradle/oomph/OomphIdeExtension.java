@@ -17,6 +17,7 @@ package com.diffplug.gradle.oomph;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +36,6 @@ import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.ConfigMisc;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
-import com.diffplug.gradle.oomph.internal.WorkspaceModel;
 import com.diffplug.gradle.p2.P2Model;
 
 /** DSL for {@link OomphIdePlugin}. */
@@ -119,8 +119,8 @@ public class OomphIdeExtension {
 		app.runUsingBootstrapper(project);
 		// set the application to use "${ide}/workspace"
 		setInitialWorkspace();
-		// point to the dependent projects
-		createProjects();
+		// import the projects
+		importProjects();
 		// TODO: update eclipse.ini
 
 		if (targetPlatform != null) {
@@ -149,24 +149,25 @@ public class OomphIdeExtension {
 		});
 	}
 
-	private void createProjects() throws IOException {
-		File projectsDir = new File(getWorkspaceDir(), ".metadata/.plugins/org.eclipse.core.resources/.projects");
-
+	private void importProjects() throws IOException {
 		String root = "C:\\Users\\ntwigg\\Documents\\DiffPlugDev\\talk-gradle_and_eclipse_rcp\\com.diffplug.";
 		List<File> projects = Arrays.asList("needs17", "needs18", "needsBoth", "rcpdemo", "talks.rxjava_and_swt").stream()
 				.map(p -> new File(root + p))
 				.collect(Collectors.toList());
-		ProjectCreator.create(getWorkspaceDir(), projects);
-		//		for (String proj : projs) {
-		//			File projDir = new File(root + proj);
-		//			String name = projDir.getName();
-		//WorkspaceModel.writeProjectLocation(new File(projectsDir, name), projDir);
-		//			
-		//		}
+		ProjectImporter.execute(getIdeDir(), new ArrayList<>(projects));
 	}
 
 	/** Runs the IDE which was setup by {@link #setup()}. */
 	void run() {
 
+	}
+
+	public static void main(String[] args) {
+		File ideDir = new File("C:\\Users\\ntwigg\\Documents\\DiffPlugDev\\talk-gradle_and_eclipse_rcp\\build\\oomph-ide");
+		String root = "C:\\Users\\ntwigg\\Documents\\DiffPlugDev\\talk-gradle_and_eclipse_rcp\\com.diffplug.";
+		List<File> projects = Arrays.asList("needs17", "needs18", "needsBoth", "rcpdemo", "talks.rxjava_and_swt").stream()
+				.map(p -> new File(root + p + "/.project"))
+				.collect(Collectors.toList());
+		ProjectImporter.execute(ideDir, new ArrayList<>(projects));
 	}
 }
