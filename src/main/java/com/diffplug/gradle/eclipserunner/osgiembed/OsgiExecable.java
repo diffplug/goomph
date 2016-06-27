@@ -73,10 +73,17 @@ public interface OsgiExecable extends Serializable, Runnable {
 			try {
 				Bundle bundle = FrameworkUtil.getBundle(OsgiExecable.class);
 				Class<?> clazz = bundle.loadClass(delegate);
-				Constructor<?> constructor = clazz.getConstructor(ReflectionHost.class);
-				ReflectionClient<?> client = (ReflectionClient<?>) (Object) constructor.newInstance(this);
+				Constructor<?>[] constructors = clazz.getDeclaredConstructors();
+				if (constructors.length != 1) {
+					throw new IllegalArgumentException(delegate + " must have only one constructor, this had " + constructors.length);
+				}
+				if (constructors[0].getParameterCount() != 1) {
+					throw new IllegalArgumentException(delegate + "'s constructor must take one argument, this took " + constructors[0].getParameterCount());
+				}
+				constructors[0].setAccessible(true);
+				ReflectionClient<?> client = (ReflectionClient<?>) (Object) constructors[0].newInstance(this);
 				client.run();
-			} catch (NoSuchMethodException | SecurityException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			} catch (SecurityException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				throw new RuntimeException(e);
 			}
 		}

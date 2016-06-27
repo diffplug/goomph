@@ -150,6 +150,7 @@ public class OomphIdeExtension {
 	}
 
 	private void importProjects() throws IOException {
+		project.getLogger().lifecycle("Importing projects");
 		String root = "C:\\Users\\ntwigg\\Documents\\DiffPlugDev\\talk-gradle_and_eclipse_rcp\\com.diffplug.";
 		List<File> projects = Arrays.asList("needs17", "needs18", "needsBoth", "rcpdemo", "talks.rxjava_and_swt").stream()
 				.map(p -> new File(root + p))
