@@ -54,13 +54,14 @@ public class JavaExecWinFriendly {
 				spec.execute(execSpec);
 				// create a jar which embeds the classpath
 				File classpathJar = toJarWithClasspath(execSpec.getClasspath());
+				classpathJar.deleteOnExit();
 				// set the classpath to be just that one jar
 				execSpec.setClasspath(project.files(classpathJar));
 				// save the jar so it can be deleted later
 				classpathJarBox.set(classpathJar);
 			});
 			// delete the jar after the task has finished
-			FileMisc.delete(classpathJarBox.get());
+			Errors.suppress().run(() -> FileMisc.delete(classpathJarBox.get()));
 			return execResult;
 		} else {
 			return project.javaexec(spec);
