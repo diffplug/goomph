@@ -24,10 +24,10 @@ import java.util.function.Supplier;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.gradle.api.Action;
 
-import com.diffplug.common.base.Errors;
-
 import groovy.util.Node;
 import groovy.xml.XmlUtil;
+
+import com.diffplug.common.base.Errors;
 
 /** Utilities for creating configuration content. */
 public class ConfigMisc {

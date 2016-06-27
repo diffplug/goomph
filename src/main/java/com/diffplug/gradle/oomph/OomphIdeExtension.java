@@ -17,7 +17,9 @@ package com.diffplug.gradle.oomph;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -29,10 +31,10 @@ import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.io.Files;
 import com.diffplug.common.swt.os.SwtPlatform;
-
 import com.diffplug.gradle.ConfigMisc;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
+import com.diffplug.gradle.oomph.internal.WorkspaceModel;
 import com.diffplug.gradle.p2.P2Model;
 
 /** DSL for {@link OomphIdePlugin}. */
@@ -43,6 +45,7 @@ public class OomphIdeExtension {
 
 	public OomphIdeExtension(Project project) {
 		this.project = Objects.requireNonNull(project);
+		classicTheme();
 	}
 
 	private final P2Model p2 = new P2Model();
@@ -58,13 +61,6 @@ public class OomphIdeExtension {
 	public void targetplatform(Action<OomphTargetPlatform> targetPlatform) {
 		Preconditions.checkArgument(this.targetPlatform == null, "Can only set targetplatform once");
 		this.targetPlatform = targetPlatform;
-	}
-
-	private Action<Map<String, String>> eclipseIni = null;
-
-	private void eclipseIni(Action<Map<String, String>> eclipseIni) {
-		Preconditions.checkArgument(this.eclipseIni == null, "Can only set eclipseIni once");
-		this.eclipseIni = eclipseIni;
 	}
 
 	private Object ideDir = "build/oomph-ide";
@@ -92,6 +88,13 @@ public class OomphIdeExtension {
 		pathToContent.put(file, ConfigMisc.props(configSupplier));
 	}
 
+	public void classicTheme() {
+		configProps("workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.e4.ui.css.swt.theme.prefs", props -> {
+			props.put("eclipse.preferences.version", "1");
+			props.put("themeid", "org.eclipse.e4.ui.css.theme.e4_classic");
+		});
+	}
+
 	static final String STALE_TOKEN = "token_stale";
 
 	/** Sets up an IDE as described in this model from scratch. */
@@ -113,8 +116,10 @@ public class OomphIdeExtension {
 		app.platform(SwtPlatform.getRunning());
 		// create it
 		app.runUsingBootstrapper(project);
-		// TODO: set the initial workspace
+		// set the application to use "${ide}/workspace"
 		setInitialWorkspace();
+		// point to the dependent projects
+		createProjects();
 		// TODO: update eclipse.ini
 
 		if (targetPlatform != null) {
@@ -141,6 +146,18 @@ public class OomphIdeExtension {
 			map.put("SHOW_WORKSPACE_SELECTION_DIALOG", "false");
 			map.put("eclipse.preferences.version", "1");
 		});
+	}
+
+	private void createProjects() throws IOException {
+		File projectsDir = new File(getWorkspaceDir(), ".metadata/.plugins/org.eclipse.core.resources/.projects");
+
+		String root = "C:\\Users\\ntwigg\\Documents\\DiffPlugDev\\talk-gradle_and_eclipse_rcp\\com.diffplug.";
+		List<String> projs = Arrays.asList("needs17", "needs18", "needsBoth", "rcpdemo", "talks.rxjava_and_swt");
+		for (String proj : projs) {
+			File projDir = new File(root + proj);
+			String name = projDir.getName();
+			WorkspaceModel.writeProjectLocation(new File(projectsDir, name), projDir);
+		}
 	}
 
 	/** Runs the IDE which was setup by {@link #setup()}. */
