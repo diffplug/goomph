@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -37,6 +36,7 @@ import org.gradle.api.Project;
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Joiner;
 import com.diffplug.common.base.Preconditions;
+import com.diffplug.common.base.Throwing;
 import com.diffplug.common.collect.Maps;
 import com.diffplug.common.io.Files;
 
@@ -66,7 +66,7 @@ public class FileMisc {
 	/** Calls {@link File#mkdirs()} and throws an exception if it fails. */
 	public static void mkdirs(File d) {
 		retry(d, dir -> {
-			Errors.rethrow().run(() -> java.nio.file.Files.createDirectories(dir.toPath()));
+			java.nio.file.Files.createDirectories(dir.toPath());
 			return null;
 		});
 	}
@@ -74,30 +74,30 @@ public class FileMisc {
 	/** Calls {@link File#mkdirs()} and throws an exception if it fails. */
 	public static void delete(File f) {
 		retry(f, file -> {
-			Errors.rethrow().run(() -> java.nio.file.Files.delete(file.toPath()));
+			java.nio.file.Files.delete(file.toPath());
 			return null;
 		});
 	}
 
-	private static final int MS_RETRY = 250;
+	private static final int MS_RETRY = 500;
 
 	/**
 	 * Retries an action every ms, for 250ms, until it finally works or fails. 
 	 *
 	 * Makes FS operations more reliable.
 	 */
-	private static <T> T retry(File input, Function<File, T> function) {
+	private static <T> T retry(File input, Throwing.Function<File, T> function) {
 		long start = System.currentTimeMillis();
-		RuntimeException lastException;
+		Throwable lastException;
 		do {
 			try {
 				return function.apply(input);
-			} catch (RuntimeException e) {
+			} catch (Throwable e) {
 				lastException = e;
 				Errors.suppress().run(() -> Thread.sleep(1));
 			}
 		} while (System.currentTimeMillis() - start < MS_RETRY);
-		throw lastException;
+		throw Errors.asRuntime(lastException);
 	}
 
 	//////////////////////////////
