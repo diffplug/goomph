@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.gradle.api.Action;
 import org.gradle.api.Project;
@@ -152,12 +153,16 @@ public class OomphIdeExtension {
 		File projectsDir = new File(getWorkspaceDir(), ".metadata/.plugins/org.eclipse.core.resources/.projects");
 
 		String root = "C:\\Users\\ntwigg\\Documents\\DiffPlugDev\\talk-gradle_and_eclipse_rcp\\com.diffplug.";
-		List<String> projs = Arrays.asList("needs17", "needs18", "needsBoth", "rcpdemo", "talks.rxjava_and_swt");
-		for (String proj : projs) {
-			File projDir = new File(root + proj);
-			String name = projDir.getName();
-			WorkspaceModel.writeProjectLocation(new File(projectsDir, name), projDir);
-		}
+		List<File> projects = Arrays.asList("needs17", "needs18", "needsBoth", "rcpdemo", "talks.rxjava_and_swt").stream()
+				.map(p -> new File(root + p))
+				.collect(Collectors.toList());
+		ProjectCreator.create(getWorkspaceDir(), projects);
+		//		for (String proj : projs) {
+		//			File projDir = new File(root + proj);
+		//			String name = projDir.getName();
+		//WorkspaceModel.writeProjectLocation(new File(projectsDir, name), projDir);
+		//			
+		//		}
 	}
 
 	/** Runs the IDE which was setup by {@link #setup()}. */

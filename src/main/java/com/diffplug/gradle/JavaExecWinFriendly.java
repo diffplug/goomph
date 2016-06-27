@@ -74,10 +74,12 @@ public class JavaExecWinFriendly {
 		return javaExec(project, spec);
 	}
 
+	public static final String LONG_CLASSPATH_JAR_PREFIX = "long-classpath";
+
 	/** Creates a jar with a Class-Path entry to workaround the windows classpath limitation. */
 	private static File toJarWithClasspath(Iterable<File> files) {
 		return Errors.rethrow().get(() -> {
-			File jarFile = File.createTempFile("long-classpath", ".jar");
+			File jarFile = File.createTempFile(LONG_CLASSPATH_JAR_PREFIX, ".jar");
 			try (ZipOutputStream zip = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(jarFile)))) {
 				zip.putNextEntry(new ZipEntry("META-INF/MANIFEST.MF"));
 				try (PrintWriter pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(zip, StandardCharsets.UTF_8)))) {

@@ -56,12 +56,12 @@ class P2BootstrapInstallation {
 	}
 
 	/** The root of this installation. */
-	private File getRootFolder() {
+	File getRootFolder() {
 		return new File(GoomphCacheLocations.p2bootstrap(), release.toString());
 	}
 
 	/** Makes sure that the installation is prepared. */
-	private void ensureInstalled() throws IOException {
+	void ensureInstalled() throws IOException {
 		if (!isInstalled()) {
 			install();
 		}

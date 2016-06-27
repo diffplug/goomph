@@ -149,14 +149,14 @@ public interface JavaExecable extends Serializable, Throwing.Runnable {
 		File file = new File(args[0]);
 		try {
 			// read the target object from the file
-			JavaExecable javaExecOutside = JavaExecableImp.read(file);
+			JavaExecable javaExecOutside = SerializableMisc.read(file);
 			// run the object's run method
 			javaExecOutside.run();
 			// save the object back to file
-			JavaExecableImp.write(file, javaExecOutside);
+			SerializableMisc.write(file, javaExecOutside);
 		} catch (Throwable t) {
 			// if it's an exception, write it out to file
-			JavaExecableImp.write(file, t);
+			SerializableMisc.writeThrowable(file, t);
 		}
 	}
 
