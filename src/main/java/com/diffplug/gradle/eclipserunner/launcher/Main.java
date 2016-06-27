@@ -122,7 +122,7 @@ public class Main {
 		}
 	}
 
-	private final Thread splashHandler = new SplashHandler();
+	protected final Thread splashHandler = new SplashHandler();
 
 	//splash screen system properties
 	public static final String SPLASH_HANDLE = "org.eclipse.equinox.launcher.splash.handle"; //$NON-NLS-1$
@@ -564,7 +564,7 @@ public class Main {
 	 * @param args command-line arguments
 	 * @exception Exception thrown if a problem occurs during the launch
 	 */
-	protected void basicRun(String[] args) throws Exception {
+	public void basicRun(String[] args) throws Exception {
 		System.getProperties().put("eclipse.startTime", Long.toString(System.currentTimeMillis())); //$NON-NLS-1$
 		commands = args;
 		String[] passThruArgs = processCommandLine(args);
@@ -636,7 +636,8 @@ public class Main {
 		}
 	}
 
-	private void invokeFramework(String[] passThruArgs, URL[] bootPath) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, Error, Exception, InvocationTargetException {
+	@SuppressWarnings("resource")
+	protected void invokeFramework(String[] passThruArgs, URL[] bootPath) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, Error, Exception, InvocationTargetException {
 		String type = PARENT_CLASSLOADER_BOOT;
 		try {
 			String javaVersion = System.getProperty("java.version"); //$NON-NLS-1$
@@ -2346,6 +2347,7 @@ public class Main {
 	 * Look for the specified spash file in the given JAR and extract it to the config 
 	 * area for caching purposes.
 	 */
+	@SuppressWarnings("resource")
 	private String extractFromJAR(String jarPath, String jarEntry) {
 		String configLocation = System.getProperty(PROP_CONFIG_AREA);
 		if (configLocation == null) {
