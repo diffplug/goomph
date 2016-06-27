@@ -19,13 +19,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
-
 import com.diffplug.common.base.Errors;
 import com.diffplug.gradle.JavaExecable;
 import com.diffplug.gradle.eclipserunner.EclipseIniLauncher;
@@ -39,6 +32,7 @@ class ProjectImporter {
 		});
 	}
 
+	/** Launch the eclipse instance that we have installed. */
 	private static class Java implements JavaExecable {
 		private static final long serialVersionUID = -7563836594137010936L;
 
@@ -59,34 +53,19 @@ class ProjectImporter {
 		}
 	}
 
-	private static class Osgi implements OsgiExecable {
+	/**
+	 * Launch the project importer within that eclipse.  Use reflection to ensure
+	 * that we don't have to have the eclipse jars as dependencies, since we
+	 * can get them inside the OSGi container.
+	 */
+	static class Osgi extends OsgiExecable.ReflectionHost {
 		private static final long serialVersionUID = 6542985814638851088L;
 
 		ArrayList<File> projects;
 
 		public Osgi(ArrayList<File> projects) {
+			super("com.diffplug.gradle.oomph.ProjectImporterInternal");
 			this.projects = Objects.requireNonNull(projects);
-		}
-
-		@Override
-		public void run() {
-			IWorkspace workspace = ResourcesPlugin.getWorkspace();
-			for (File projectFile : projects) {
-				try {
-					Path path = new Path(projectFile.toString());
-					IProjectDescription description = workspace.loadProjectDescription(path);
-
-					IProject project = workspace.getRoot().getProject(description.getName());
-					if (project.isOpen() == false) {
-						project.create(description, null);
-						project.open(null);
-					} else {
-						project.refreshLocal(IResource.DEPTH_INFINITE, null);
-					}
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
-			}
 		}
 	}
 }

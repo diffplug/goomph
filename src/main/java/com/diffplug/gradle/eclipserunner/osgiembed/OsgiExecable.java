@@ -17,10 +17,14 @@ package com.diffplug.gradle.eclipserunner.osgiembed;
 
 import java.io.File;
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
 
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.SerializableMisc;
@@ -48,6 +52,42 @@ public interface OsgiExecable extends Serializable, Runnable {
 			return SerializableMisc.read(tempFile);
 		} finally {
 			FileMisc.delete(tempFile);
+		}
+	}
+
+	/**
+	 * Defines data which will be passed  reflection to code within the OSGi runtime - the reflection
+	 * allows us to call code for which we don't have the necessary dependencies to resolve its imports
+	 * unless it is only instantiated within the OSGi container.
+	 */
+	@SuppressWarnings("serial")
+	public static abstract class ReflectionHost implements OsgiExecable {
+		private final String delegate;
+
+		protected ReflectionHost(String delegate) {
+			this.delegate = Objects.requireNonNull(delegate);
+		}
+
+		@Override
+		public void run() {
+			try {
+				Bundle bundle = FrameworkUtil.getBundle(OsgiExecable.class);
+				Class<?> clazz = bundle.loadClass(delegate);
+				Constructor<?> constructor = clazz.getConstructor(ReflectionHost.class);
+				ReflectionClient<?> client = (ReflectionClient<?>) (Object) constructor.newInstance(this);
+				client.run();
+			} catch (NoSuchMethodException | SecurityException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
+
+	/** Client code which gets called within the OSGi runtime. */
+	public static abstract class ReflectionClient<Host extends ReflectionHost> implements Runnable {
+		protected final Host host;
+
+		protected ReflectionClient(Host host) {
+			this.host = Objects.requireNonNull(host);
 		}
 	}
 }
