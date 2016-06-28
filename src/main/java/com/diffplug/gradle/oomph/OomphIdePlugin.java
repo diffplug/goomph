@@ -63,7 +63,7 @@ public class OomphIdePlugin extends ProjectPlugin {
 		});
 
 		// setupIde depends on the eclipse tasks in this project
-		project.getTasks().whenTaskAdded(task -> {
+		project.getTasks().all(task -> {
 			if ("eclipse".equals(task.getName())) {
 				setupIde.dependsOn(task);
 			}

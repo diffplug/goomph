@@ -67,12 +67,14 @@ public class OomphIdeExtension {
 		this.eclipseIni = eclipseIni;
 	}
 
+	private String targetPlatformName = null;
 	private Action<OomphTargetPlatform> targetPlatform = null;
 
 	/** Sets the targetplatform configuration. */
-	public void targetplatform(Action<OomphTargetPlatform> targetPlatform) {
+	public void targetplatform(String name, Action<OomphTargetPlatform> targetPlatform) {
 		Preconditions.checkArgument(this.targetPlatform == null, "Can only set targetplatform once");
-		this.targetPlatform = targetPlatform;
+		this.targetPlatformName = Objects.requireNonNull(name);
+		this.targetPlatform = Objects.requireNonNull(targetPlatform);
 	}
 
 	private Object ideDir = "build/oomph-ide";
@@ -82,12 +84,14 @@ public class OomphIdeExtension {
 		this.ideDir = ideDir;
 	}
 
-	private String perspective = "org.eclipse.jdt.ui.JavaPerspective";
-
-	/** Sets the default perspective. */
-	public void perspective(String perspective) {
-		this.perspective = perspective;
-	}
+	// TODO: figure out how to set the initial java perspective
+	//
+	// private String perspective = "org.eclipse.jdt.ui.JavaPerspective";
+	//
+	// /** Sets the default perspective. */
+	// public void perspective(String perspective) {
+	// 	this.perspective = perspective;
+	// }
 
 	/** Adds all eclipse projects from all the gradle projects. */
 	public void addAllProjects() {
@@ -99,7 +103,7 @@ public class OomphIdeExtension {
 			// this project depends on all the others
 			project.evaluationDependsOn(p.getPath());
 			// and on all of their eclipse tasks
-			project.getTasks().whenTaskAdded(task -> {
+			p.getTasks().all(task -> {
 				if ("eclipse".equals(task.getName())) {
 					setupIde.dependsOn(task);
 				}
@@ -116,7 +120,6 @@ public class OomphIdeExtension {
 	void addProjectFile(File projectFile) {
 		Preconditions.checkArgument(projectFile.getName().equals(".project"), "Project file must be '.project', was %s", projectFile);
 		projectFiles.add(projectFile);
-		System.out.println("Add file");
 	}
 
 	private File getIdeDir() {
@@ -219,13 +222,11 @@ public class OomphIdeExtension {
 		project.getLogger().lifecycle("Internal setup");
 		SetupWithinEclipse internal = new SetupWithinEclipse(ideDir);
 		internal.add(new ProjectImporter(projectFiles));
-		if (perspective != null) {
-			internal.add(new PerspectiveSetter(perspective));
-		}
 		// setup the targetplatform
 		if (targetPlatform != null) {
 			OomphTargetPlatform targetPlatformInstance = new OomphTargetPlatform(project);
 			targetPlatform.execute(targetPlatformInstance);
+			internal.add(new TargetPlatformSetter(targetPlatformName, targetPlatformInstance.getInstallations()));
 		}
 		Errors.constrainTo(IOException.class).run(() -> JavaExecable.exec(project, internal));
 	}
@@ -233,6 +234,7 @@ public class OomphIdeExtension {
 	/** Runs the IDE which was setup by {@link #setup()}. */
 	void run() throws IOException {
 		String cmd = OS.getNative().winMacLinux("eclipse.exe", "eclipse", "eclipse");
-		Runtime.getRuntime().exec(cmd, new String[0], getIdeDir());
+		String[] cmds = new String[]{"cmd", "/c", cmd};
+		Runtime.getRuntime().exec(cmds, null, getIdeDir());
 	}
 }

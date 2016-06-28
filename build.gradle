@@ -50,12 +50,13 @@ dependencies {
 	compile "biz.aQute.bnd:biz.aQute.bndlib:${VER_BNDLIB}"
 	// p2
 	compile "org.eclipse.tycho:org.eclipse.osgi:${VER_ECLIPSE_OSGI}"
-	// goomph, compileOnly for project setup
+	// goomph, compileOnly for project setup (need to figure out how to bootstrap goomph)
 	compileOnly 'p2:org.eclipse.core.jobs:3.7.0.v20150330-2103'
 	compileOnly 'p2:org.eclipse.core.runtime:3.11.1.v20150903-1804'
 	compileOnly 'p2:org.eclipse.core.resources:3.10.1.v20150725-1910'
 	compileOnly 'p2:org.eclipse.equinox.common:3.7.0.v20150402-1709'
 	compileOnly 'p2:org.eclipse.ui.workbench:3.107.1.v20160120-2131'
+	compileOnly 'p2:org.eclipse.pde.core:3.10.102.v20160128-0556'
 	// testing
 	testCompile "junit:junit:${VER_JUNIT}"
 }
