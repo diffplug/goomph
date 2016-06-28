@@ -95,6 +95,7 @@ public final class EclipseRelease {
 			case "4.5.0": return root + "4.5/R-4.5-201506032000/";
 			case "4.5.1": return root + "4.5/R-4.5.1-201509040015/";
 			case "4.5.2": return root + "4.5/R-4.5.2-201602121500/";
+			case "4.6.0": return root + "4.6/R-4.6-201606061100/";
 			default: return null;
 			}
 			// @formatter:on
