@@ -37,12 +37,18 @@ class AsMaven {
 		return new File(project.file(destination), SUBDIR_P2);
 	}
 
+	/** Returns the destination directory for the p2 repository. */
+	public File getDestinationP2Runnable() {
+		return new File(project.file(destination), SUBDIR_P2_RUNNABLE);
+	}
+
 	/** Returns the destination directory for the maven repository. */
 	public File getDestinationMaven() {
 		return new File(project.file(destination), SUBDIR_MAVEN);
 	}
 
 	private static final String SUBDIR_P2 = "p2";
+	private static final String SUBDIR_P2_RUNNABLE = "p2runnable";
 	private static final String SUBDIR_MAVEN = "maven";
 
 	public void run() throws Exception {
@@ -71,6 +77,14 @@ class AsMaven {
 		project.getLogger().lifecycle("p2AsMaven " + mavenGroup + " installing from p2");
 		getApp().runUsingBootstrapper(project);
 
+		if (repo2runnable) {
+			project.getLogger().lifecycle("p2AsMaven " + mavenGroup + " creating runnable repo");
+			Repo2Runnable app = new Repo2Runnable();
+			app.source(getDestinationP2());
+			app.destination(getDestinationP2Runnable());
+			app.runUsingBootstrapper(project);
+		}
+
 		// put p2 into a maven repo
 		project.getLogger().lifecycle("p2AsMaven " + mavenGroup + " creating maven repo");
 		FileMisc.mkdirs(mavenDir);
@@ -91,7 +105,7 @@ class AsMaven {
 
 	/** The args passed to p2 director represent the full state. */
 	private String state() {
-		return "mirrorApp: " + getApp().completeState() + "\nmavenGroup: " + mavenGroup + "\ngoomph:" + GOOMPH_VERSION;
+		return "mirrorApp: " + getApp().completeState() + "\nmavenGroup: " + mavenGroup + "\ngoomph:" + GOOMPH_VERSION + "\nrepo2runnable:" + repo2runnable;
 	}
 
 	/** Bump this if we need to force people's deps to reload. */
@@ -127,4 +141,11 @@ class AsMaven {
 	private P2Model p2model = new P2Model();
 	/** Modifies the p2director args before it is run. */
 	private Action<P2Model.MirrorApp> modifyAnt = Actions.doNothing();
+	/** Run repo2runnable. */
+	private boolean repo2runnable = false;
+
+	/** Sets that repo2runnable will run. */
+	public void repo2runnable() {
+		repo2runnable = true;
+	}
 }

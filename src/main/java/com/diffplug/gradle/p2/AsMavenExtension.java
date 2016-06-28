@@ -47,4 +47,9 @@ public class AsMavenExtension {
 	public void p2ant(Action<P2Model.MirrorApp> argsBuilder) {
 		mavenify.modifyAntTask(argsBuilder);
 	}
+
+	/** Sets the maven group which the artifacts will be installed into. */
+	public void repo2runnable() {
+		mavenify.repo2runnable();
+	}
 }
