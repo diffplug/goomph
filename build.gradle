@@ -77,9 +77,9 @@ tasks.eclipse.dependsOn(cleanEclipse)
 jar.manifest.attributes(
 	'Manifest-Version': '1.0',
 	'Bundle-SymbolicName': 'com.diffplug.gradle.goomph',
-	'Export-Package': 'com.diffplug.gradle.eclipserunner.osgiembed',
 	'Bundle-Name': 'com.diffplug.gradle.goomph',
 	'Bundle-Version': '0.0.0.SNAPSHOT',
+	'Export-Package': 'com.diffplug.gradle.osgi',
 	'Bundle-ClassPath': '.',
 	'Bundle-ManifestVersion': '2',
 	'DynamicImport-Package': '*'

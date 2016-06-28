@@ -1,5 +1,5 @@
 /**
- * The contents of the launcher jar as of Eclipse Mars, for embedding purposes.
+ * The contents of the launcher jar as of Eclipse Mars.2, for embedding purposes - NOT API.
  */
 @SuppressFBWarnings({
 		"DM_DEFAULT_ENCODING",

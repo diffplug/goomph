@@ -21,7 +21,7 @@ import java.util.Objects;
 
 import com.diffplug.gradle.JavaExecable;
 import com.diffplug.gradle.eclipserunner.EclipseIniLauncher;
-import com.diffplug.gradle.eclipserunner.osgiembed.OsgiExecable;
+import com.diffplug.gradle.osgi.OsgiExecable;
 
 /**
  * Runs a series of actions with the OSGi context.

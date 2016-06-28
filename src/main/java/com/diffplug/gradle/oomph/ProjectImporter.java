@@ -19,7 +19,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.diffplug.gradle.eclipserunner.osgiembed.OsgiExecable;
+import com.diffplug.gradle.osgi.OsgiExecable;
 
 /** Imports all of the given project files. */
 class ProjectImporter extends OsgiExecable.ReflectionHost {

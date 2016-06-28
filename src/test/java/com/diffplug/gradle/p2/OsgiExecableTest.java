@@ -19,7 +19,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.diffplug.gradle.eclipserunner.EquinoxLauncher;
-import com.diffplug.gradle.eclipserunner.osgiembed.OsgiExecable;
+import com.diffplug.gradle.osgi.OsgiExecable;
 
 public class OsgiExecableTest {
 	static class Incrementer implements OsgiExecable {

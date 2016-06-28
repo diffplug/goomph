@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 
-import com.diffplug.gradle.eclipserunner.osgiembed.OsgiExecable;
+import com.diffplug.gradle.osgi.OsgiExecable;
 
 /** @see ProjectImporter */
 class ProjectImporterInternal extends OsgiExecable.ReflectionClient<ProjectImporter> {

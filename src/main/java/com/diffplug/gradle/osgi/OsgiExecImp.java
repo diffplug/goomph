@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.diffplug.gradle.eclipserunner.osgiembed;
+package com.diffplug.gradle.osgi;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.diffplug.gradle.eclipserunner.osgiembed;
+package com.diffplug.gradle.osgi;
 
 import java.io.File;
 import java.io.Serializable;
@@ -27,12 +27,49 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 
 import com.diffplug.gradle.FileMisc;
+import com.diffplug.gradle.JavaExecable;
 import com.diffplug.gradle.SerializableMisc;
 
 /**
  * Runs code that lives outside an OSGi
  * container inside of it.  Works just like
- * {@link com.diffplug.gradle.JavaExecable}.
+ * {@link JavaExecable}.
+ *
+ * Make sure the code you execute only uses
+ * classes which are available to the OSGi
+ * runtime you're using.  If you'd like to call
+ * some code which is only available inside the
+ * OSGi container, use a {@link ReflectionHost}
+ * and {@link ReflectionClient} pair, as such:
+ * 
+ * ```java
+ * class ProjectImporter extends OsgiExecable.ReflectionHost {
+ *     private static final long serialVersionUID = 6542985814638851088L;
+ * 
+ *     ArrayList<File> projects;
+ * 
+ *     public ProjectImporter(Collection<File> projects) {
+ *         super("com.diffplug.gradle.oomph.ProjectImporterInternal");
+ *         this.projects = new ArrayList<>(projects);
+ *     }
+ * }
+ * 
+ * class ProjectImporterInternal extends OsgiExecable.ReflectionClient<ProjectImporter> {
+ *     ProjectImporterInternal(ProjectImporter host) {
+ *         super(host);
+ *     }
+ * 
+ *     @Override
+ *     public void run() {
+ *         // add all projects to the workspace
+ *         IWorkspace workspace = ResourcesPlugin.getWorkspace();
+ *         for (File projectFile : host.projects) {
+ *             try {
+ *                 Path path = new Path(projectFile.toString());
+ *                 IProjectDescription description = workspace.loadProjectDescription(path);
+ *   ...
+ *   ...
+ * ```
  */
 public interface OsgiExecable extends Serializable, Runnable {
 	/** Executes the given {@link OsgiExecable} within an embedded OSGi runtime. */
@@ -56,7 +93,7 @@ public interface OsgiExecable extends Serializable, Runnable {
 	}
 
 	/**
-	 * Defines data which will be passed  reflection to code within the OSGi runtime - the reflection
+	 * Defines data which will be passed via reflection to code within the OSGi runtime - the reflection
 	 * allows us to call code for which we don't have the necessary dependencies to resolve its imports
 	 * unless it is only instantiated within the OSGi container.
 	 */

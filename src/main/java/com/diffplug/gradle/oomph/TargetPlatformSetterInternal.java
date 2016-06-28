@@ -23,7 +23,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 
-import com.diffplug.gradle.eclipserunner.osgiembed.OsgiExecable;
+import com.diffplug.gradle.osgi.OsgiExecable;
 
 /** @see TargetPlatformSetter */
 class TargetPlatformSetterInternal extends OsgiExecable.ReflectionClient<TargetPlatformSetter> {
