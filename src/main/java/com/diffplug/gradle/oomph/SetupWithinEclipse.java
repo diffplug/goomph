@@ -17,8 +17,6 @@ package com.diffplug.gradle.oomph;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 import com.diffplug.gradle.JavaExecable;
@@ -54,16 +52,5 @@ class SetupWithinEclipse implements JavaExecable {
 				OsgiExecable.exec(running.bundleContext(), host);
 			}
 		}
-	}
-
-	public static void main(String[] args) throws Throwable {
-		File eclipseRoot = new File("C:\\Users\\ntwigg\\Documents\\DiffPlugDev\\talk-gradle_and_eclipse_rcp\\ide\\build\\oomph-ide");
-		File projectRoot = new File("C:\\Users\\ntwigg\\Documents\\DiffPlugDev\\talk-gradle_and_eclipse_rcp");
-		List<File> files = Arrays.asList(
-				new File(projectRoot, "target.frommaven/build"),
-				new File(projectRoot, "target.fromp2/build/goomph-p2asmaven/p2"));
-		SetupWithinEclipse within = new SetupWithinEclipse(eclipseRoot);
-		within.add(new TargetPlatformSetter("setup", files));
-		within.run();
 	}
 }

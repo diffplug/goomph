@@ -15,6 +15,7 @@
  */
 package com.diffplug.gradle;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -52,8 +53,11 @@ public class ConfigMisc {
 	public static byte[] props(Map<String, String> map) {
 		Properties properties = new Properties();
 		map.forEach((key, value) -> properties.put(key, value));
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		Errors.rethrow().run(() -> properties.store(output, ""));
-		return output.toByteArray();
+		try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+			Errors.rethrow().run(() -> properties.store(output, ""));
+			return output.toByteArray();
+		} catch (IOException e) {
+			throw Errors.asRuntime(e);
+		}
 	}
 }

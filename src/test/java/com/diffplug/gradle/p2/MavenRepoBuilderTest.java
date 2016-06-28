@@ -62,8 +62,8 @@ public class MavenRepoBuilderTest extends GradleIntegrationTest {
 	}
 
 	public static void main(String[] args) throws Exception {
-		File p2 = new File("C:\\Users\\ntwigg\\Documents\\DiffPlugDev\\talk-gradle_and_eclipse_rcp\\targetplatform\\build\\goomph-p2asmaven\\p2");
-		File maven = new File("C:\\Users\\ntwigg\\Documents\\DiffPlugDev\\talk-gradle_and_eclipse_rcp\\targetplatform\\build\\goomph-p2asmaven\\maven");
+		File p2 = new File("C:\\Users\\ntwigg\\Documents\\DiffPlugDev\\talk-gradle_and_eclipse_rcp\\targetplatform\\build\\p2asmaven\\p2");
+		File maven = new File("C:\\Users\\ntwigg\\Documents\\DiffPlugDev\\talk-gradle_and_eclipse_rcp\\targetplatform\\build\\p2asmaven\\maven");
 		try (MavenRepoBuilder builder = new MavenRepoBuilder(maven)) {
 			for (File plugin : FileMisc.list(new File(p2, "plugins"))) {
 				builder.install("group", plugin);

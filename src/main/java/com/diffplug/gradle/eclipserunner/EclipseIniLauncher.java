@@ -25,6 +25,8 @@ import java.util.Objects;
 import org.eclipse.core.runtime.adaptor.EclipseStarter;
 import org.osgi.framework.BundleContext;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import com.diffplug.common.base.Box;
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.gradle.eclipserunner.launcher.Main;
@@ -80,6 +82,8 @@ public class EclipseIniLauncher {
 		private Running() throws Exception {
 			Box.Nullable<BundleContext> context = Box.Nullable.ofNull();
 			Main main = new Main() {
+				@SuppressFBWarnings(value = "DMI_THREAD_PASSED_WHERE_RUNNABLE_EXPECTED", justification = "splashHandler is a thread rather than a runnable.  Almost definitely a small bug, " +
+						"but there's a lot of small bugs in the copy-pasted launcher code.  It's battle-tested, FWIW.")
 				@Override
 				protected void invokeFramework(String[] passThruArgs, URL[] bootPath) throws Exception {
 					context.set(EclipseStarter.startup(passThruArgs, splashHandler));
@@ -104,13 +108,6 @@ public class EclipseIniLauncher {
 		@Override
 		public void close() throws Exception {
 			EclipseStarter.shutdown();
-		}
-	}
-
-	public static void main(String[] args) throws Exception {
-		EclipseIniLauncher launcher = new EclipseIniLauncher(new File("C:\\Users\\ntwigg\\Documents\\DiffPlugDev\\talk-gradle_and_eclipse_rcp\\build\\oomph-ide"));
-		try (EclipseIniLauncher.Running running = launcher.open()) {
-			System.out.println("bundleContext=" + running.bundleContext());
 		}
 	}
 }

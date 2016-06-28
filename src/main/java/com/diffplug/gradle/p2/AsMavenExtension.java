@@ -33,7 +33,7 @@ public class AsMavenExtension {
 		mavenify.mavenGroup(mavenGroup);
 	}
 
-	/** The location of the repository.  Defaults to `build/goomph-p2asmaven`. */
+	/** The location of the repository.  Defaults to `build/p2asmaven`. */
 	public void destination(Object mavenGroup) {
 		mavenify.destination(mavenGroup);
 	}

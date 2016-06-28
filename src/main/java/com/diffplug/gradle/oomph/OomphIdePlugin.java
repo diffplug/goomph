@@ -40,7 +40,7 @@ import com.diffplug.gradle.ProjectPlugin;
  *     addAllProjects()
  *     targetplatform {
  *         installation('target.frommaven/build')
- *         installation('target.fromp2/build/goomph-p2asmaven/p2')
+ *         installation('target.fromp2/build/p2asmaven/p2')
  *     }
  *     // sets up the classic look
  *     classicTheme()

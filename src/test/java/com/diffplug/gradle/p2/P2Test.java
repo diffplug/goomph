@@ -23,7 +23,7 @@ import com.diffplug.gradle.pde.EclipseRelease;
 
 public class P2Test {
 	public static void main(String[] unused) throws Exception {
-		File dir = new File("C:\\Users\\ntwigg\\Documents\\DiffPlugDev\\DiffPlug\\targetplatform\\build\\goomph-p2asmaven\\__p2__");
+		File dir = new File("C:\\Users\\ntwigg\\Documents\\DiffPlugDev\\DiffPlug\\targetplatform\\build\\p2asmaven\\__p2__");
 		FileMisc.cleanDir(dir);
 
 		P2Model model = new P2Model();
