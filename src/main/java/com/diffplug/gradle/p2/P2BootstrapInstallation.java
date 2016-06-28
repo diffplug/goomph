@@ -27,7 +27,7 @@ import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.collect.ImmutableSet;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
-import com.diffplug.gradle.ZipUtil;
+import com.diffplug.gradle.ZipMisc;
 import com.diffplug.gradle.eclipserunner.EclipseRunner;
 import com.diffplug.gradle.eclipserunner.JarFolderRunner;
 import com.diffplug.gradle.eclipserunner.JarFolderRunnerExternalJvm;
@@ -84,7 +84,7 @@ class P2BootstrapInstallation {
 		URL url = new URL(DOWNLOAD_ROOT + release.version() + DOWNLOAD_FILE);
 		FileUtils.copyURLToFile(url, target);
 		// unzip it
-		ZipUtil.unzip(target, target.getParentFile());
+		ZipMisc.unzip(target, target.getParentFile());
 		// delete the zip
 		FileMisc.delete(target);
 		FileMisc.writeToken(getRootFolder(), TOKEN);

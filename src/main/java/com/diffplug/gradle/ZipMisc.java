@@ -42,7 +42,7 @@ import com.diffplug.common.io.ByteSource;
 import com.diffplug.common.io.Files;
 
 /** Utilities for mucking with zip files. */
-public class ZipUtil {
+public class ZipMisc {
 	/**
 	 * Reads the given entry from the zip.
 	 * 

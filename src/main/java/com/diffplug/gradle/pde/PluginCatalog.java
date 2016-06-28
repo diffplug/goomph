@@ -34,7 +34,7 @@ import com.diffplug.common.collect.SetMultimap;
 import com.diffplug.common.collect.Sets;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.FileMisc;
-import com.diffplug.gradle.ZipUtil;
+import com.diffplug.gradle.ZipMisc;
 
 /** Catalogs all of the plugins and their versions in the given paths. */
 class PluginCatalog {
@@ -70,7 +70,7 @@ class PluginCatalog {
 			// look for plugin.jar
 			files.stream().filter(file -> file.isFile() && file.getName().endsWith(".jar"))
 					.forEach(Errors.rethrow().wrap(file -> {
-						ZipUtil.read(file, MANIFEST_PATH, input -> addManifest(supported, new Manifest(input)));
+						ZipMisc.read(file, MANIFEST_PATH, input -> addManifest(supported, new Manifest(input)));
 					}));
 			// look for folder-style plugins (especially org.eclipse.core.runtime.compatibility.registry)
 			files.stream().filter(file -> file.isDirectory()).forEach(Errors.rethrow().wrap(file -> {

@@ -31,7 +31,7 @@ import org.osgi.framework.BundleException;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.JavaExecWinFriendly;
 import com.diffplug.gradle.SerializableMisc;
-import com.diffplug.gradle.ZipUtil;
+import com.diffplug.gradle.ZipMisc;
 
 class OsgiExecImp {
 	/** The name of this bundle, which contains the osgiembed package. */
@@ -56,7 +56,7 @@ class OsgiExecImp {
 					return bundle;
 				} else if (name.contains("/" + JavaExecWinFriendly.LONG_CLASSPATH_JAR_PREFIX)) {
 					// we're running with JavaExecWinFriendly, so we've gotta parse its classpath
-					String content = ZipUtil.read(new File(name), "META-INF/MANIFEST.MF");
+					String content = ZipMisc.read(new File(name), "META-INF/MANIFEST.MF");
 					try (InputStream input = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8))) {
 						Manifest manifest = new Manifest(input);
 						String classpath = manifest.getMainAttributes().getValue("Class-Path");
