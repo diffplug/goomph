@@ -40,6 +40,7 @@ import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
 import com.diffplug.gradle.eclipserunner.EclipseApp;
 import com.diffplug.gradle.eclipserunner.EclipseRunner;
+import com.diffplug.gradle.pde.EclipseRelease;
 
 /**
  * Models a request for some artifacts from some
@@ -115,6 +116,10 @@ public class P2Model {
 
 	public void addFeature(String feature, String version) {
 		addIU(feature + ".feature.group", version);
+	}
+
+	public void addRepoEclipse(String release) {
+		addRepo(EclipseRelease.official(release).updateSite());
 	}
 
 	public void addRepo(String repo) {

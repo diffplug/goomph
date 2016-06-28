@@ -28,7 +28,6 @@ import com.diffplug.common.base.Joiner;
 import com.diffplug.common.base.StringPrinter;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
-import com.diffplug.gradle.pde.EclipseRelease;
 
 public class P2BootstrapInstallationTest {
 	@Rule
@@ -45,7 +44,7 @@ public class P2BootstrapInstallationTest {
 		GoomphCacheLocations.override_p2bootstrap = folder.newFolder("p2-bootstrap");
 		try {
 			P2Model model = new P2Model();
-			model.addRepo(EclipseRelease.official("4.5.2").updateSite());
+			model.addRepoEclipse("4.5.2");
 			model.addIU("org.eclipse.core.runtime");
 			File installed = folder.newFolder("installed");
 			model.directorApp(installed, "profile").runUsingBootstrapper();

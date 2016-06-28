@@ -25,7 +25,7 @@ import org.osgi.framework.Version;
 /**
  * Models an Eclipse release, such as Mars SR2.
  *
- * Supports all official releases from 3.5.0 to present (currently 4.5.2).
+ * Supports all official releases from 3.5.0 to present (currently 4.6.0).
  */
 public final class EclipseRelease {
 	final String id;

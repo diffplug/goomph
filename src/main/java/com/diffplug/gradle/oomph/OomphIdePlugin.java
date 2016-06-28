@@ -35,10 +35,14 @@ import com.diffplug.gradle.ProjectPlugin;
  * apply plugin: 'com.diffplug.gradle.oomph.ide'
  * oomphIde {
  *     // setup the components to download
- *     p2.addRepo(EclipseRelease.official('4.5.2').updateSite())
+ *     p2.addRepoEclipse('4.6.0')
  *     p2.addIU('org.eclipse.platform.ide')
  *     p2.addFeature('org.eclipse.jdt')
  *     p2.addFeature('org.eclipse.pde')
+ *
+ *     // add buildship
+ *     p2.addRepo('http://download.eclipse.org/buildship/updates/e45/releases/1.0')
+ *     p2.addFeature('org.eclipse.buildship', '1.0.16.v20160615-0737')
  *
  *     eclipseIni {
  *         vmargs('-Xmx2g')	// IDE can have 2 gigs of RAM, if it wants
