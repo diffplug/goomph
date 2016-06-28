@@ -15,20 +15,18 @@
  */
 package com.diffplug.gradle.oomph;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Objects;
 
 import com.diffplug.gradle.eclipserunner.osgiembed.OsgiExecable;
 
-/** Imports all of the given project files. */
-class ProjectImporter extends OsgiExecable.ReflectionHost {
-	private static final long serialVersionUID = 6542985814638851088L;
+/** Sets the default perspective. */
+class PerspectiveSetter extends OsgiExecable.ReflectionHost {
+	private static final long serialVersionUID = -1797055186013217389L;
 
-	ArrayList<File> projects;
+	String perspective;
 
-	public ProjectImporter(Collection<File> projects) {
-		super("com.diffplug.gradle.oomph.ProjectImporterInternal");
-		this.projects = new ArrayList<>(projects);
+	public PerspectiveSetter(String perspective) {
+		super("com.diffplug.gradle.oomph.PerspectiveSetterInternal");
+		this.perspective = Objects.requireNonNull(perspective);
 	}
 }

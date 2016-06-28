@@ -19,8 +19,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +34,11 @@ import org.gradle.internal.impldep.com.google.common.base.Preconditions;
 
 import com.diffplug.common.base.Unhandled;
 
+/**
+ * Api for manipulating eclipse.ini, see
+ * [Eclipse docs](https://wiki.eclipse.org/Eclipse.ini)
+ * for more details.
+ */
 public class EclipseIni {
 	/** Models double, single, and no dash. */
 	private enum Dash {
@@ -105,6 +113,7 @@ public class EclipseIni {
 
 	List<Line> lines = new ArrayList<>();
 
+	/** Parses an eclipse.ini from the given file. */
 	public static EclipseIni parseFrom(File file) throws FileNotFoundException, IOException {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.ISO_8859_1))) {
 			EclipseIni ini = new EclipseIni();
@@ -113,6 +122,15 @@ public class EclipseIni {
 				ini.lines.add(Line.parse(line));
 			}
 			return ini;
+		}
+	}
+
+	/** Writes this eclipse.ini out to a file. */
+	public void writeTo(File file) throws FileNotFoundException {
+		try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.ISO_8859_1))) {
+			for (Line line : lines) {
+				writer.println(line.toString());
+			}
 		}
 	}
 
@@ -132,4 +150,45 @@ public class EclipseIni {
 				.collect(Collectors.toList())
 				.toArray(new String[lines.size()]);
 	}
+
+	/** Sets a property, replacing its existing value or inserting just before vmargs. */
+	public void set(String key, String value) {
+		Line keyLine = Line.parse(key);
+		int idx = lines.indexOf(keyLine);
+		if (idx != -1) {
+			// remove the old key
+			lines.remove(idx);
+			// and if there was a value, remove the value
+			if (lines.size() > idx && lines.get(idx).dash == Dash.NONE) {
+				lines.remove(idx);
+			}
+		} else {
+			// make sure we do it before the vmargs
+			idx = lines.indexOf(VM_ARGS);
+			if (idx == -1) {
+				idx = lines.size();
+			}
+		}
+		lines.add(idx, keyLine);
+		lines.add(idx + 1, Line.parse(value));
+	}
+
+	/** Sets the given property to a file. */
+	public void set(String key, File file) {
+		set(key, file.getAbsolutePath().replace('\\', '/'));
+	}
+
+	/** Sets the vmargs arguments, such as `-Xmx2g` to set the maximum heap size. */
+	public void vmargs(String... vmargs) {
+		int idx = lines.indexOf(VM_ARGS);
+		if (idx != -1) {
+			lines = lines.subList(0, idx);
+		}
+		lines.add(VM_ARGS);
+		for (String vmarg : vmargs) {
+			lines.add(Line.parse(vmarg));
+		}
+	}
+
+	private static final Line VM_ARGS = new Line(Dash.SINGLE, "vmargs");
 }

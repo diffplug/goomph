@@ -16,26 +16,30 @@
 package com.diffplug.gradle.oomph;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import org.gradle.api.Action;
 import org.gradle.api.Project;
+import org.gradle.api.Task;
+import org.gradle.plugins.ide.eclipse.GenerateEclipseProject;
 
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.io.Files;
+import com.diffplug.common.swt.os.OS;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.ConfigMisc;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
+import com.diffplug.gradle.JavaExecable;
+import com.diffplug.gradle.eclipserunner.EclipseIni;
 import com.diffplug.gradle.p2.P2Model;
 
 /** DSL for {@link OomphIdePlugin}. */
@@ -46,7 +50,6 @@ public class OomphIdeExtension {
 
 	public OomphIdeExtension(Project project) {
 		this.project = Objects.requireNonNull(project);
-		classicTheme();
 	}
 
 	private final P2Model p2 = new P2Model();
@@ -54,6 +57,14 @@ public class OomphIdeExtension {
 	/** Returns the P2 model so that users can add the features they'd like. */
 	public P2Model getP2() {
 		return p2;
+	}
+
+	private Action<EclipseIni> eclipseIni;
+
+	/** Sets properties in the `eclipse.ini`. */
+	public void eclipseIni(Action<EclipseIni> eclipseIni) {
+		Preconditions.checkArgument(this.eclipseIni == null, "Can only set eclipseIni once");
+		this.eclipseIni = eclipseIni;
 	}
 
 	private Action<OomphTargetPlatform> targetPlatform = null;
@@ -71,6 +82,43 @@ public class OomphIdeExtension {
 		this.ideDir = ideDir;
 	}
 
+	private String perspective = "org.eclipse.jdt.ui.JavaPerspective";
+
+	/** Sets the default perspective. */
+	public void perspective(String perspective) {
+		this.perspective = perspective;
+	}
+
+	/** Adds all eclipse projects from all the gradle projects. */
+	public void addAllProjects() {
+		Task setupIde = project.getTasks().getByName(OomphIdePlugin.SETUP);
+		project.getRootProject().getAllprojects().forEach(p -> {
+			if (p == project) {
+				return;
+			}
+			// this project depends on all the others
+			project.evaluationDependsOn(p.getPath());
+			// and on all of their eclipse tasks
+			project.getTasks().whenTaskAdded(task -> {
+				if ("eclipse".equals(task.getName())) {
+					setupIde.dependsOn(task);
+				}
+				if (task instanceof GenerateEclipseProject) {
+					addProjectFile(((GenerateEclipseProject) task).getOutputFile());
+				}
+			});
+		});
+	}
+
+	private Set<File> projectFiles = new HashSet<>();
+
+	/** Adds the given project file. */
+	void addProjectFile(File projectFile) {
+		Preconditions.checkArgument(projectFile.getName().equals(".project"), "Project file must be '.project', was %s", projectFile);
+		projectFiles.add(projectFile);
+		System.out.println("Add file");
+	}
+
 	private File getIdeDir() {
 		return project.file(ideDir);
 	}
@@ -80,15 +128,17 @@ public class OomphIdeExtension {
 	}
 
 	private String state() {
-		return getIdeDir().toString() + Objects.toString(targetPlatform) + p2;
+		return getIdeDir().toString() + Objects.toString(targetPlatform) + p2 + projectFiles.hashCode();
 	}
 
 	private Map<String, Supplier<byte[]>> pathToContent = new HashMap<>();
 
+	/** Sets the given path within the ide directory to be a property file. */
 	public void configProps(String file, Action<Map<String, String>> configSupplier) {
 		pathToContent.put(file, ConfigMisc.props(configSupplier));
 	}
 
+	/** Sets the theme to be the classic eclipse look. */
 	public void classicTheme() {
 		configProps("workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.e4.ui.css.swt.theme.prefs", props -> {
 			props.put("eclipse.preferences.version", "1");
@@ -119,20 +169,18 @@ public class OomphIdeExtension {
 		app.runUsingBootstrapper(project);
 		// set the application to use "${ide}/workspace"
 		setInitialWorkspace();
-		// import the projects
-		importProjects();
-		// TODO: update eclipse.ini
-
-		if (targetPlatform != null) {
-			OomphTargetPlatform targetPlatformInstance = new OomphTargetPlatform(project);
-			targetPlatform.execute(targetPlatformInstance);
-			// TODO: setup targetplatform in workspace
-		}
+		// setup the eclipse.ini file
+		setupEclipseIni(dir);
+		// setup any config files
 		pathToContent.forEach((path, content) -> {
 			File target = new File(dir, path);
 			FileMisc.mkdirs(target.getParentFile());
 			Errors.rethrow().run(() -> Files.write(content.get(), target));
 		});
+		// perform internal setup
+		internalSetup(dir);
+		// write out a staleness token
+		FileMisc.writeToken(dir, STALE_TOKEN, state());
 	}
 
 	/** Sets the workspace directory. */
@@ -140,35 +188,51 @@ public class OomphIdeExtension {
 		File workspace = getWorkspaceDir();
 		FileMisc.cleanDir(workspace);
 		configProps("configuration/.settings/org.eclipse.ui.ide.prefs", map -> {
+			map.put("eclipse.preferences.version", "1");
 			map.put("MAX_RECENT_WORKSPACES", "5");
 			map.put("RECENT_WORKSPACES", workspace.getAbsolutePath());
 			map.put("RECENT_WORKSPACES_PROTOCOL", "3");
 			map.put("SHOW_RECENT_WORKSPACES", "false");
 			map.put("SHOW_WORKSPACE_SELECTION_DIALOG", "false");
+		});
+		// turn off quickstarts and tipsAndTricks
+		configProps("workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.ide.prefs", map -> {
 			map.put("eclipse.preferences.version", "1");
+			map.put("quickStart", "false");
+			map.put("tipsAndTricks", "false");
 		});
 	}
 
-	private void importProjects() throws IOException {
-		project.getLogger().lifecycle("Importing projects");
-		String root = "C:\\Users\\ntwigg\\Documents\\DiffPlugDev\\talk-gradle_and_eclipse_rcp\\com.diffplug.";
-		List<File> projects = Arrays.asList("needs17", "needs18", "needsBoth", "rcpdemo", "talks.rxjava_and_swt").stream()
-				.map(p -> new File(root + p))
-				.collect(Collectors.toList());
-		ProjectImporter.execute(getIdeDir(), new ArrayList<>(projects));
+	/** Sets the eclipse.ini file. */
+	private void setupEclipseIni(File ideDir) throws FileNotFoundException, IOException {
+		File iniFile = new File(ideDir, "eclipse.ini");
+		EclipseIni ini = EclipseIni.parseFrom(iniFile);
+		ini.set("-data", getWorkspaceDir());
+		if (eclipseIni != null) {
+			eclipseIni.execute(ini);
+		}
+		ini.writeTo(iniFile);
+	}
+
+	/** Performs setup actions with a running OSGi container. */
+	private void internalSetup(File ideDir) throws IOException {
+		project.getLogger().lifecycle("Internal setup");
+		SetupWithinEclipse internal = new SetupWithinEclipse(ideDir);
+		internal.add(new ProjectImporter(projectFiles));
+		if (perspective != null) {
+			internal.add(new PerspectiveSetter(perspective));
+		}
+		// setup the targetplatform
+		if (targetPlatform != null) {
+			OomphTargetPlatform targetPlatformInstance = new OomphTargetPlatform(project);
+			targetPlatform.execute(targetPlatformInstance);
+		}
+		Errors.constrainTo(IOException.class).run(() -> JavaExecable.exec(project, internal));
 	}
 
 	/** Runs the IDE which was setup by {@link #setup()}. */
-	void run() {
-
-	}
-
-	public static void main(String[] args) {
-		File ideDir = new File("C:\\Users\\ntwigg\\Documents\\DiffPlugDev\\talk-gradle_and_eclipse_rcp\\build\\oomph-ide");
-		String root = "C:\\Users\\ntwigg\\Documents\\DiffPlugDev\\talk-gradle_and_eclipse_rcp\\com.diffplug.";
-		List<File> projects = Arrays.asList("needs17", "needs18", "needsBoth", "rcpdemo", "talks.rxjava_and_swt").stream()
-				.map(p -> new File(root + p + "/.project"))
-				.collect(Collectors.toList());
-		ProjectImporter.execute(ideDir, new ArrayList<>(projects));
+	void run() throws IOException {
+		String cmd = OS.getNative().winMacLinux("eclipse.exe", "eclipse", "eclipse");
+		Runtime.getRuntime().exec(cmd, new String[0], getIdeDir());
 	}
 }

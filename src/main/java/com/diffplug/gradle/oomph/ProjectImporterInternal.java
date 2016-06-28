@@ -22,18 +22,21 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 
 import com.diffplug.gradle.eclipserunner.osgiembed.OsgiExecable;
 
-/** Imports projects into the workspace. */
-class ProjectImporterInternal extends OsgiExecable.ReflectionClient<ProjectImporter.Osgi> {
-	ProjectImporterInternal(ProjectImporter.Osgi host) {
+/** @see ProjectImporter */
+class ProjectImporterInternal extends OsgiExecable.ReflectionClient<ProjectImporter> {
+	ProjectImporterInternal(ProjectImporter host) {
 		super(host);
 	}
 
 	@Override
 	public void run() {
+		// add all projects to the workspace
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		for (File projectFile : host.projects) {
 			try {
@@ -48,6 +51,21 @@ class ProjectImporterInternal extends OsgiExecable.ReflectionClient<ProjectImpor
 					project.refreshLocal(IResource.DEPTH_INFINITE, null);
 				}
 			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+		// save the workspace
+		try {
+			boolean full = false;
+			IProgressMonitor monitor = null;
+			IStatus status = workspace.save(full, monitor);
+			if (!status.isOK()) {
+				throw new IllegalStateException(status.getMessage(), status.getException());
+			}
+		} catch (Exception e) {
+			if (e instanceof RuntimeException) {
+				throw (RuntimeException) e;
+			} else {
 				throw new RuntimeException(e);
 			}
 		}
