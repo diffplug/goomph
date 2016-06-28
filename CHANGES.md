@@ -2,14 +2,17 @@
 
 ### Version 3.0.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/)) ([snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
+We added a ton of stuff 3.0.0.  Everything in the `p2` and `pde` packages has been revamped, but the `eclipse`
+and `osgi` packages are unchanged.
+
 * BREAKING CHANGE: Everything in the `pde` package has been revamped.
 	+ Wuff/Unpuzzle are no longer required.
+* BREAKING CHANGE: Renamed ZipUtil to ZipMisc.
+* BREAKING CHANGE: Renamed P2DirectorModel to P2Model.
 * Added the ability to download a small (~10MB) archive with everything required to run p2 director and the p2 ant tasks.
-* Added `
-
 * `ProjectDepsPlugin` can now replace binary dependencies with an eclipse project.
 * Added `NativeFileManager` for opening the native file manager to look at a file (for debugging).
-* Added a lot of functionality to `ZipUtil` and `FileMisc`.
+* Added `OomphIdePlugin`.
 
 ### Version 2.1.1 - May 9th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/2.1.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/2.1.1/view))
 
