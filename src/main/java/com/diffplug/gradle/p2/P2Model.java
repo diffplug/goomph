@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.Project;
@@ -150,6 +152,68 @@ public class P2Model {
 		addArtifactRepo(GoomphCacheLocations.bundlePool());
 	}
 
+	/**
+	 * Removes all missing local repositories (to fix "No repository found at" warnings).
+	 * 
+	 * Returns true iff any repos were removed.
+	 */
+	private boolean removeNonExistentLocal() {
+		// predicate which matches local repositories which don't exist
+		Predicate<String> nonExistentLocal = repo -> {
+			if (!repo.startsWith(FileMisc.PROTOCOL)) {
+				// it's not local
+				return false;
+			}
+			File file = new File(repo.substring(FileMisc.PROTOCOL.length()));
+			if (!file.isDirectory()) {
+				// it is local and there's no directory, we match
+				return true;
+			} else {
+				// if there's an artifacts.xml/jar or a content.xml/jar, then it's not a match
+				for (File child : FileMisc.list(file)) {
+					if (child.isFile()) {
+						if (child.getName().startsWith("artifacts.") || child.getName().startsWith("content.")) {
+							return false;
+						}
+					}
+				}
+				// else, it is a non-existent local
+				return true;
+			}
+		};
+		// remove unreachable local repositories
+		boolean anyRemoved = false;
+		anyRemoved |= repos.removeIf(nonExistentLocal);
+		anyRemoved |= metadataRepos.removeIf(nonExistentLocal);
+		anyRemoved |= artifactRepos.removeIf(nonExistentLocal);
+		return anyRemoved;
+	}
+
+	/**
+	 * So there are places where we add the local bundle pool
+	 * to act as an artifact cache.  But sometimes, that cache
+	 * doesn't exist yet.  To make sure we don't get an error
+	 * just because a cache doesn't exist, we take the following
+	 * action:
+	 * 
+	 * - Copy the current model.
+	 * - Remove all local repos which don't exist
+	 * - Call the supplier.
+	 * - If removed any repos, put them back.
+	 * - Return the result.
+	 */
+	private <T> T performWithoutNonExistentLocalRepos(Supplier<T> supplier) {
+		P2Model backup = copy();
+		boolean needToRestore = removeNonExistentLocal();
+		T result = supplier.get();
+		if (needToRestore) {
+			repos.addAll(backup.repos);
+			metadataRepos.addAll(backup.metadataRepos);
+			artifactRepos.addAll(backup.artifactRepos);
+		}
+		return result;
+	}
+
 	///////////////////////
 	// P2 MIRROR via ANT //
 	///////////////////////
@@ -159,26 +223,28 @@ public class P2Model {
 	 */
 	@SuppressWarnings("unchecked")
 	public MirrorApp mirrorApp(File dstFolder) {
-		MirrorApp ant = new MirrorApp();
+		return performWithoutNonExistentLocalRepos(() -> {
+			MirrorApp ant = new MirrorApp();
 
-		Node p2mirror = new Node(null, "p2.mirror");
-		sourceNode(p2mirror);
-		Node destination = new Node(p2mirror, "destination");
-		destination.attributes().put("location", FileMisc.PROTOCOL + dstFolder.getAbsolutePath());
+			Node p2mirror = new Node(null, "p2.mirror");
+			sourceNode(p2mirror);
+			Node destination = new Node(p2mirror, "destination");
+			destination.attributes().put("location", FileMisc.PROTOCOL + dstFolder.getAbsolutePath());
 
-		for (String iu : ius) {
-			Node iuNode = new Node(p2mirror, "iu");
+			for (String iu : ius) {
+				Node iuNode = new Node(p2mirror, "iu");
 
-			int slash = iu.indexOf('/');
-			if (slash == -1) {
-				iuNode.attributes().put("id", iu);
-			} else {
-				iuNode.attributes().put("id", iu.substring(0, slash));
-				iuNode.attributes().put("version", iu.substring(slash + 1));
+				int slash = iu.indexOf('/');
+				if (slash == -1) {
+					iuNode.attributes().put("id", iu);
+				} else {
+					iuNode.attributes().put("id", iu.substring(0, slash));
+					iuNode.attributes().put("version", iu.substring(slash + 1));
+				}
 			}
-		}
-		ant.setTask(p2mirror);
-		return ant;
+			ant.setTask(p2mirror);
+			return ant;
+		});
 	}
 
 	/** @see #mirrorApp(File) */
@@ -219,21 +285,23 @@ public class P2Model {
 	 * to install the artifacts from the repos in this model into the given directory and profile.
 	 */
 	public DirectorApp directorApp(File dstFolder, String profile) {
-		DirectorApp builder = new DirectorApp();
-		builder.clean();
-		builder.consolelog();
-		repos.forEach(repo -> builder.addArg("repository", repo));
-		metadataRepos.forEach(repo -> builder.addArg("metadataRepository", repo));
-		artifactRepos.forEach(repo -> builder.addArg("artifactRepository", repo));
-		ius.forEach(iu -> builder.addArg("installIU", iu));
-		builder.addArg("profile", profile);
-		builder.addArg("destination", FileMisc.PROTOCOL + dstFolder.getAbsolutePath());
-		// deletes cached repository information, which will often include local paths
-		builder.doLast.add(() -> {
-			Path path = dstFolder.toPath().resolve("p2/org.eclipse.equinox.p2.engine/.settings");
-			FileUtils.deleteDirectory(path.toFile());
+		return performWithoutNonExistentLocalRepos(() -> {
+			DirectorApp builder = new DirectorApp();
+			builder.clean();
+			builder.consolelog();
+			repos.forEach(repo -> builder.addArg("repository", repo));
+			metadataRepos.forEach(repo -> builder.addArg("metadataRepository", repo));
+			artifactRepos.forEach(repo -> builder.addArg("artifactRepository", repo));
+			ius.forEach(iu -> builder.addArg("installIU", iu));
+			builder.addArg("profile", profile);
+			builder.addArg("destination", FileMisc.PROTOCOL + dstFolder.getAbsolutePath());
+			// deletes cached repository information, which will often include local paths
+			builder.doLast.add(() -> {
+				Path path = dstFolder.toPath().resolve("p2/org.eclipse.equinox.p2.engine/.settings");
+				FileUtils.deleteDirectory(path.toFile());
+			});
+			return builder;
 		});
-		return builder;
 	}
 
 	/**
