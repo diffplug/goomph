@@ -149,6 +149,28 @@ public class OomphIdeExtension {
 		});
 	}
 
+	/** Sets a nice font and whitespace settings. */
+	public void niceText() {
+		niceText(OS.getNative().winMacLinux("9.0", "11.0", "10.0"));
+	}
+
+	/** Sets a nice font and whitespace settings. */
+	public void niceText(String fontSize) {
+		// visible whitespace
+		configProps("workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.editors.prefs", props -> {
+			props.put("eclipse.preferences.version", "1");
+			props.put("showCarriageReturn", "false");
+			props.put("showLineFeed", "false");
+			props.put("showWhitespaceCharacters", "true");
+		});
+		// improved fonts
+		configProps("workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.workbench.prefs", props -> {
+			props.put("eclipse.preferences.version", "1");
+			String font = OS.getNative().winMacLinux("Consolas", "Monaco", "Monospace");
+			props.put("org.eclipse.jface.textfont", "1|" + font + "|" + fontSize + "|0|WINDOWS|1|-12|0|0|0|400|0|0|0|0|3|2|1|49|" + font);
+		});
+	}
+
 	static final String STALE_TOKEN = "token_stale";
 
 	/** Sets up an IDE as described in this model from scratch. */
