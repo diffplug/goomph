@@ -38,9 +38,22 @@ import com.diffplug.gradle.eclipserunner.EclipseRunner;
 import com.diffplug.gradle.eclipserunner.NativeRunner;
 import com.diffplug.gradle.p2.P2Model;
 
-/** Wraps a PDE installation for the given eclipse release. */
+/** Wraps a PDE installation for the given eclipse release.*/
 public class PdeInstallation implements EclipseRunner {
-	/** Returns a PdeInstallation appropriate for this project. */
+	/**
+	 * Returns a PdeInstallation based on `GOOMPH_PDE_VER`, and other factors.
+	 * 
+	 * You must specify which version of Eclipse should be used by Goomph.
+	 * - Option #1: To use an officially supported release, use this:
+	 *     + `GOOMPH_PDE_VER`=4.5.2 (or any official release)
+	 * - Option #2: To use any release (e.g. milestone, nightly, etc)
+	 *     + `GOOMPH_PDE_VER`=<any version>
+	 *     + `GOOMPH_PDE_UDPATE_SITE`=<url to update site>
+	 *     + `GOOMPH_PDE_ID`=<the ID used for caching, cannot be a version listed in Option #1)
+	 * 
+	 * You must do one or the other, specify only `VER` for Option #1,
+	 * or specify `VER`, `UPDATE_SITE`, and `ID` for Option #2.
+	 */
 	public static PdeInstallation fromProject(Project project) {
 		String version = (String) project.getProperties().get("GOOMPH_PDE_VER");
 		String updateSite = (String) project.getProperties().get("GOOMPH_PDE_UDPATE_SITE");

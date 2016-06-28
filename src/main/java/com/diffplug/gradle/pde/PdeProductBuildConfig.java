@@ -35,9 +35,7 @@ import com.diffplug.common.collect.ImmutableList;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.FileMisc;
 
-/**
- * Configures the "product" part of a PDE build task.
- */
+/** Models the "product" part of {@link PdeBuildTask}. */
 public class PdeProductBuildConfig {
 	private final Project project;
 

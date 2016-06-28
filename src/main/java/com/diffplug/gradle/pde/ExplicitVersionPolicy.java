@@ -28,7 +28,7 @@ import com.diffplug.common.collect.ImmutableSet;
 import com.diffplug.common.collect.Immutables;
 import com.diffplug.common.collect.Maps;
 
-/** Specifies a policy for which bundles we will keep multiple versions of. */
+/** Specifies a policy for which bundles we will keep multiple versions of, used in {@link PdeBuildTask}. */
 public class ExplicitVersionPolicy {
 	/** A map from plugin name to the list of versions that are okay to resolve with the first entry. */
 	private Map<String, Resolve> resolvable = Maps.newHashMap();

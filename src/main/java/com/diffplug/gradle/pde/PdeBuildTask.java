@@ -33,13 +33,12 @@ import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.FileMisc;
 
 /**
- * Runs PDE build to make an RCP application or a P2 repository.
- * 
- * WARNING: This part of Goomph currently has the following precondition:
- * your project must have the property VER_ECLIPSE=4.5.2 (or some other version),
- * and you must have installed that Eclipse using Wuff. We will remove this
- * restriction in the future.
- * 
+ * Runs PDE build to make an RCP application or a p2 repository.
+ *
+ * Your project must have defined `GOOMPH_PDE_VER`, see
+ * {@link PdeInstallation#fromProject(org.gradle.api.Project)}
+ * for details.
+ *
  * ```groovy
  * import com.diffplug.gradle.pde.*
  * import com.diffplug.gradle.ZipMisc
