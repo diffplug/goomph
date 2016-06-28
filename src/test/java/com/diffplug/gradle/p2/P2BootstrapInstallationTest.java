@@ -52,6 +52,7 @@ public class P2BootstrapInstallationTest {
 			File plugins = new File(installed, "plugins");
 			List<String> pluginNames = FileMisc.list(plugins).stream()
 					.map(File::getName)
+					.sorted()
 					.collect(Collectors.toList());
 			Assert.assertEquals(StringPrinter.buildStringFromLines(
 					"org.eclipse.core.contenttype_3.5.0.v20150421-2214.jar",
