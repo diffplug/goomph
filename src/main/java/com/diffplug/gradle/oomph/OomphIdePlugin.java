@@ -23,7 +23,13 @@ import com.diffplug.common.base.Errors;
 import com.diffplug.gradle.ProjectPlugin;
 
 /**
- * Oomph IDE.
+ * Downloads and sets up an Eclipse IDE.
+ * 
+ * Note that it will be in the "Resources Perspective" the first time you open it,
+ * and you'll probably want to switch to the Java perspective, look in the top
+ * right of the window for this:
+ * 
+ * ![Perspective bar](http://help.eclipse.org/mars/topic/org.eclipse.platform.doc.user/images/Image211_perspective.png)
  *
  * ```groovy
  * apply plugin: 'com.diffplug.gradle.oomph.ide'
@@ -33,17 +39,24 @@ import com.diffplug.gradle.ProjectPlugin;
  *     p2.addIU('org.eclipse.platform.ide')
  *     p2.addFeature('org.eclipse.jdt')
  *     p2.addFeature('org.eclipse.pde')
- * 
+ *
+ *     eclipseIni {
+ *         vmargs('-Xmx2g')	// IDE can have 2 gigs of RAM, if it wants
+ *     }
+ *
  *     // determine which projects to import.  There are two options:
  *     // 1) It will automatically find eclipse tasks in this same project
  *     // 2) If you call "addAllProjects()" then it will add all eclipse tasks in all projects
  *     addAllProjects()
- *     targetplatform {
+ *
+ *     // if you're using PDE, then you'll need a targetplatform
+ *     targetplatform 'goomph-target', {
  *         installation('target.frommaven/build')
  *         installation('target.fromp2/build/p2asmaven/p2')
  *     }
- *     // sets up the classic look
- *     classicTheme()
+ *
+ *     classicTheme()   // oldschool cool
+ *     niceText()       // nice fonts and visible whitespace
  * }
  * ```
  */

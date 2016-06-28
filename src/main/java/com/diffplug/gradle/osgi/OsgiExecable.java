@@ -43,6 +43,7 @@ import com.diffplug.gradle.SerializableMisc;
  * and {@link ReflectionClient} pair, as such:
  * 
  * ```java
+ * 
  * class ProjectImporter extends OsgiExecable.ReflectionHost {
  *     private static final long serialVersionUID = 6542985814638851088L;
  * 
@@ -67,8 +68,7 @@ import com.diffplug.gradle.SerializableMisc;
  *             try {
  *                 Path path = new Path(projectFile.toString());
  *                 IProjectDescription description = workspace.loadProjectDescription(path);
- *   ...
- *   ...
+ *   etc.
  * ```
  */
 public interface OsgiExecable extends Serializable, Runnable {

@@ -22,7 +22,7 @@ import org.gradle.api.Project;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.eclipserunner.EclipseApp;
 
-/** Modles the repo2runnable application. */
+/** Models the repo2runnable application. */
 public class Repo2Runnable extends EclipseApp {
 	public Repo2Runnable() {
 		super("org.eclipse.equinox.p2.repository.repo2runnable");

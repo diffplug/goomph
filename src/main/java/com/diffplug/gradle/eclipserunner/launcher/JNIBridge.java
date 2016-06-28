@@ -16,6 +16,8 @@
 package com.diffplug.gradle.eclipserunner.launcher;
 
 /**
+ * Copied straight from Eclipse Mars.2.
+ *
  * <b>Note:</b> This class should not be referenced programmatically by
  * other Java code. This class exists only for the purpose of interacting with
  * a native launcher. To launch Eclipse programmatically, use 

@@ -29,15 +29,16 @@ import com.diffplug.gradle.ProjectPlugin;
  * ```groovy
  * apply plugin: 'com.diffplug.gradle.p2.asmaven'
  * p2AsMaven {
+ *     // the maven group they shall have
  *     mavenGroup 'p2asmaven'
+ *     // the repositories and artifacts to download
  *     p2.addRepo(ECLIPSE_UPDATE_SITE)
  *     p2.addIU('org.eclipse.jdt.core')
- *     p2args {
- *         addArg('profileProperties', 'org.eclipse.update.install.features=true')
- *         addArg('p2.os', '*')
- *         addArg('p2.ws', '*')
- *         addArg('p2.arch', '*')
- *     }
+
+ *     // copies all artifacts to the `p2runnable` folder in a "runnable" form
+ *     // appropriate for target platforms and PDE build
+ *     // e.g. org.eclipse.equinox.launcher will be extracted.
+ *     repo2runnable()
  * }
  *
  * dependencies {

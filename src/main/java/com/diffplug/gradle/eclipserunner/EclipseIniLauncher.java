@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Map;
 import java.util.Objects;
 
 import org.eclipse.core.runtime.adaptor.EclipseStarter;
@@ -36,9 +35,6 @@ import com.diffplug.gradle.eclipserunner.launcher.Main;
  * verifies that the core bundles are available, and
  * provides an API for instantiating the OSGi runtime
  * and accessing its {@link BundleContext}.
- *
- * See {@link #setProps(Map)} for precise details on the
- * default framework properties.
  */
 public class EclipseIniLauncher {
 	final File installationRoot;

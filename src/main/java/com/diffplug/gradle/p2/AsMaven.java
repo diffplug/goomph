@@ -144,7 +144,11 @@ class AsMaven {
 	/** Run repo2runnable. */
 	private boolean repo2runnable = false;
 
-	/** Sets that repo2runnable will run. */
+	/**
+	 * Appropriate for PDE build - creates a subfolder `p2runnable` with all jars in their runnable form.
+	 *
+	 * Required especially for native launchers and target platforms (equinox.executable).
+	 */
 	public void repo2runnable() {
 		repo2runnable = true;
 	}

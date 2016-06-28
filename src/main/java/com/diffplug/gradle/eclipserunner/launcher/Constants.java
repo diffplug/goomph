@@ -16,6 +16,8 @@
 package com.diffplug.gradle.eclipserunner.launcher;
 
 /**
+ * Copied straight from Eclipse Mars.2.
+ *
  * @author aniefer
  *
  */

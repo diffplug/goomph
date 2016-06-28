@@ -56,6 +56,7 @@ import com.diffplug.common.tree.TreeStream;
  * Example usage:
  * 
  * ```java
+ * 
  * static class Incrementer implements JavaExecable {
  *     private static final long serialVersionUID = -5728572785844814830L;
  *

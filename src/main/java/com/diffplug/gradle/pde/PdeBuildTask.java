@@ -41,46 +41,39 @@ import com.diffplug.gradle.FileMisc;
  * restriction in the future.
  * 
  * ```groovy
- * import com.diffplug.gradle.*
  * import com.diffplug.gradle.pde.*
- * import com.diffplug.common.swt.os.*
-
- * task diffplugP2(type: PdeProductBuildTask) {
- *     // the directory which will contain the results of the build
- *     buildDir(P2_BUILD_DIR)
- *     // copy the product file and its referenced images
- *     copyProductAndImgs('../com.diffplug.core', 'plugins/com.diffplug.core')
- *     // set the plugins to be the delta pack (implicit)
- *     // and the combined targetplatform / obfuscation result
- *     setPluginPath(PDE_PREP_DIR)
- *     // if multiple versions of a plugin are detected between the pluginPath / targetplatform,
- *     // you must list the plugin name, and all versions which are available.  only the first
- *     // plugin will be included in the final product build
- *     resolveWithFirst('org.apache.commons.codec', '1.9.0', '1.6.0.v201305230611')
- *     resolveWithFirst('org.apache.commons.logging', '1.2.0', '1.1.1.v201101211721')
- *     // set the build properties to be as shown
- *     addBuildProperty('topLevelElementType', 'product')
- *     addBuildProperty('topLevelElementId',   APP_ID)
- *     addBuildProperty('product', '/com.diffplug.core/' + APP_ID)
- *     addBuildProperty('runPackager', 'false')
- *     addBuildProperty('groupConfigurations',     'true')
- *     addBuildProperty('filteredDependencyCheck', 'true')
- *     addBuildProperty('resolution.devMode',      'true')
- *     // configure some P2 pieces
- *     addBuildProperty('p2.build.repo',   'file:' + project.file(P2_REPO_DIR).absolutePath)
- *     addBuildProperty('p2.gathering',    'true')
- *     addBuildProperty('skipDirector',    'true')
-
- *     // configure gradle's staleness detector
- *     inputs.dir(PDE_PREP_DIR)
- *     outputs.dir(P2_REPO_DIR)
-
+ * import com.diffplug.gradle.ZipMisc
+ * 
+ * task buildP2(type: PdeBuildTask) {
+ *     // set the base platform
+ *     base(rootProject.file('target.fromp2/build/p2asmaven/p2runnable'))
+ *     // configure where the projects will come from
+ *     addPluginPath(rootProject.file('target.frommaven/build'))
+ *     // and where they will go
+ *     destination(P2_DIR)
+ *     // specify that this is a product build
+ *     product {
+ *         id 'com.diffplug.rcpdemo.product'
+ *         version rootProject.version
+ *         productPluginDir rootProject.file('com.diffplug.rcpdemo')
+ *         productFileWithinPlugin 'rcpdemo.product'
+ *         explicitVersionPolicy({
+ *             it.resolve('com.google.guava', '17.0.0', '18.0.0').with('17.0.0', '18.0.0')
+ *         })
+ *     }
+ *     // set the build properties to be appropriate for p2
+ *     props['p2.build.repo'] = 'file://' + project.file(P2_DIR).absolutePath
+ *     props['p2.gathering'] =    'true'
+ *     props['skipDirector'] =    'true'
+ *     props['runPackager'] = 'false'
+ *     props['groupConfigurations'] = 'true'
+ * 
+ *     // p2.compress doesn't work, so we'll do it manually
  *     doLast {
- *         // artifact compression reduces content.xml from ~1MB to ~100kB
  *         def compressXml = { name ->
  *             def xml = project.file(P2_REPO_DIR + "/${name}.xml")
  *             def jar = project.file(P2_REPO_DIR + "/${name}.jar")
- *             ZipUtil.zip(xml, "${name}.xml", jar)
+ *             ZipMisc.zip(xml, "${name}.xml", jar)
  *             xml.delete()
  *         }
  *         compressXml('artifacts')

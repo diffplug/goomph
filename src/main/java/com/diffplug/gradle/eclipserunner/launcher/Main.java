@@ -25,6 +25,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
+ * Copied straight from Eclipse Mars.2.
+ *
  * The launcher for Eclipse.
  * 
  * <b>Note:</b> This class should not be referenced programmatically by
