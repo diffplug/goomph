@@ -286,6 +286,11 @@ public class P2Model {
 			addArg("shared", shared.getAbsolutePath());
 		}
 
+		/** Adds a profile property. */
+		public void profileProperty(String key, String value) {
+			addArg("profileProperties", FileMisc.noQuote(key) + "=" + FileMisc.noQuote(value));
+		}
+
 		/** Runs this application, downloading a small bootstrapper if necessary. */
 		public void runUsingBootstrapper() throws Exception {
 			runUsing(P2BootstrapInstallation.latest().outsideJvmRunner());

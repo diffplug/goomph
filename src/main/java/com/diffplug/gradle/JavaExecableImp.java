@@ -15,15 +15,7 @@
  */
 package com.diffplug.gradle;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
 import org.gradle.api.Action;
 import org.gradle.api.Project;
@@ -36,26 +28,13 @@ import com.diffplug.common.base.Unhandled;
 
 /** Private implementation details. */
 class JavaExecableImp {
-	static <T extends Serializable> void write(File file, T object) throws IOException {
-		try (ObjectOutputStream output = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
-			output.writeObject(object);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	static <T extends Serializable> T read(File file) throws ClassNotFoundException, IOException {
-		try (ObjectInputStream input = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
-			return (T) input.readObject();
-		}
-	}
-
 	/** @see #exec(Project, JavaExecable, com.diffplug.common.base.Throwing.Consumer) */
 	@SuppressWarnings("unchecked")
 	static <T extends JavaExecable> T execInternal(T input, FileCollection classpath, Action<JavaExecSpec> settings, Throwing.Function<Action<JavaExecSpec>, ExecResult> javaExecer) throws Throwable {
 		File tempFile = File.createTempFile("JavaExecOutside", ".temp");
 		try {
 			// write the input object to a file
-			JavaExecableImp.write(tempFile, input);
+			SerializableMisc.write(tempFile, input);
 
 			ExecResult execResult = javaExecer.apply(execSpec -> {
 				// use the main below as the main
@@ -69,7 +48,7 @@ class JavaExecableImp {
 			});
 			execResult.rethrowFailure();
 			// load the resultant object after it has been executed and resaved
-			Object result = JavaExecableImp.read(tempFile);
+			Object result = SerializableMisc.read(tempFile);
 			if (result instanceof JavaExecable) {
 				return (T) result;
 			} else if (result instanceof Throwable) {

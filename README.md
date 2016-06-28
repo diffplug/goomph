@@ -44,13 +44,22 @@ Below is an index of Goomph's capabilities, followed by more-detailed sections w
 	+ [`projectdeps`](https://diffplug.github.io/goomph/javadoc/2.1.1/com/diffplug/gradle/eclipse/ProjectDepsPlugin.html) fixes an intermittent problem where dependencies on other projects within the workspace aren't always resolved correctly within Eclipse.
 * `com.diffplug.gradle.swt`
 	+ [`nativedeps`](https://diffplug.github.io/goomph/javadoc/2.1.1/com/diffplug/gradle/swt/NativeDepsPlugin.html) adds the platform-specific SWT jars to the runtime classpath so that SWT code can run.
+* `com.diffplug.gradle.p2`
+	+ [`asmaven`](https://diffplug.github.io/goomph/javadoc/2.1.1/com/diffplug/gradle/p2/AsMavenPlugin.html) downloads dependencies from a p2 repository and makes them available in a local maven repository.
 * `com.diffplug.gradle.pde`
 	+ [`PdeProductBuildTask`](https://diffplug.github.io/goomph/javadoc/2.1.1/com/diffplug/gradle/pde/PdeProductBuildTask.html) runs PDE build to build an RCP product.
 	+ [`PdeAntBuildTask`](https://diffplug.github.io/goomph/javadoc/2.1.1/com/diffplug/gradle/pde/PdeAntBuildTask.html) runs PDE on an ant file
 	+ [`P2DirectorModel`](https://diffplug.github.io/goomph/javadoc/2.1.1/com/diffplug/gradle/pde/P2DirectorModel.html) runs P2 director to execute P2 actions.
 	+ [`EclipsecTask`](https://diffplug.github.io/goomph/javadoc/2.1.1/com/diffplug/gradle/pde/EclipsecTask.html) runs a console command using `eclipsec`.
+
+
 * `com.diffplug.gradle` (miscellaneous infrastructure)
-	+ [`CmdLineTask`](https://diffplug.github.io/goomph/javadoc/2.1.1/com/diffplug/gradle/CmdLineTask.html) runs a series of shell commands, possibly copying or moving files in the meantime
+	+ [`CmdLineTask`](https://diffplug.github.io/goomph/javadoc/2.1.1/com/diffplug/gradle/CmdLineTask.html) runs a series of shell commands, possibly copying or moving files in the meantime.
+	+ [`JavaExecable`](https://diffplug.github.io/goomph/javadoc/2.1.1/com/diffplug/gradle/JavaExecable.html) makes it easy to run a chunk of code in a separate JVM, and get the result back in this one.
+	+ [`JavaExecWinFriendly`](https://diffplug.github.io/goomph/javadoc/2.1.1/com/diffplug/gradle/JavaExecWinFriendly.html) overcomes limitations in Windows' commandline length and long classpaths.
+
+* `com.diffplug.gradle.eclipserunner`
+	+ Infrastructure for running headless eclipse applications.  Used to power a lot of the infrastructure above.
 
 <!---freshmark /javadoc -->
 
@@ -60,6 +69,8 @@ Below is an index of Goomph's capabilities, followed by more-detailed sections w
 * Thanks to Peter Kriens for the excellent [bnd](https://github.com/bndtools/bnd).
 * Thanks to JRuyi and Agemo Cui for [osgibnd-gradle-plugin](https://github.com/jruyi/osgibnd-gradle-plugin), which inspired `BndManifestPlugin`.
 * Thanks to Neil Fraser of Google for [diff-match-patch](https://code.google.com/p/google-diff-match-patch/) which is very helpful for testing.
+* Thanks to Thipor Kong for his [handy workaround](https://discuss.gradle.org/t/javaexec-fails-for-long-classpaths-on-windows/15266).
+
 * Formatted by [spotless](https://github.com/diffplug/spotless), [as such](https://github.com/diffplug/durian/blob/v2.0/build.gradle?ts=4#L70-L90).
 * Bugs found by [findbugs](http://findbugs.sourceforge.net/), [as such](https://github.com/diffplug/durian/blob/v2.0/build.gradle?ts=4#L92-L116).
 * Scripts in the `.ci` folder are inspired by [Ben Limmer's work](http://benlimmer.com/2013/12/26/automatically-publish-javadoc-to-gh-pages-with-travis-ci/).
