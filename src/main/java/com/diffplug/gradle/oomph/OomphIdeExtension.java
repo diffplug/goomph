@@ -201,6 +201,9 @@ public class OomphIdeExtension {
 		// turn off quickstarts and tipsAndTricks
 		configProps("workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.ide.prefs", map -> {
 			map.put("eclipse.preferences.version", "1");
+			map.put("PROBLEMS_FILTERS_MIGRATE", "true");
+			map.put("TASKS_FILTERS_MIGRATE", "true");
+			map.put("platformState", Long.toString(System.currentTimeMillis() / 1000));
 			map.put("quickStart", "false");
 			map.put("tipsAndTricks", "false");
 		});
