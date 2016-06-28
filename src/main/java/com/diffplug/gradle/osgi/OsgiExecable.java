@@ -76,6 +76,7 @@ public interface OsgiExecable extends Serializable, Runnable {
 	public static <T extends OsgiExecable> T exec(BundleContext context, T input) throws Exception {
 		// find OsgiExecImp.execInternal within the OSGi runtime
 		Bundle bundle = OsgiExecImp.loadBundle(context);
+		bundle.start();
 		Class<?> clazz = bundle.loadClass(OsgiExecImp.class.getName());
 		Method execInternal = clazz.getMethod("execInternal", File.class);
 		// write the input to a tempfile

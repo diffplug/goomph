@@ -51,9 +51,7 @@ class OsgiExecImp {
 			String name = url.getFile();
 			if (name != null) {
 				if (name.contains("/goomph")) {
-					Bundle bundle = context.installBundle(FileMisc.PROTOCOL + name);
-					bundle.start();
-					return bundle;
+					return context.installBundle(FileMisc.PROTOCOL + name);
 				} else if (name.contains("/" + JavaExecWinFriendly.LONG_CLASSPATH_JAR_PREFIX)) {
 					// we're running with JavaExecWinFriendly, so we've gotta parse its classpath
 					String content = ZipMisc.read(new File(name), "META-INF/MANIFEST.MF");
@@ -62,9 +60,7 @@ class OsgiExecImp {
 						String classpath = manifest.getMainAttributes().getValue("Class-Path");
 						for (String piece : classpath.split(" ")) {
 							if (piece.contains("/goomph")) {
-								Bundle bundle = context.installBundle(piece);
-								bundle.start();
-								return bundle;
+								return context.installBundle(piece);
 							}
 						}
 					}
