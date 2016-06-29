@@ -132,7 +132,7 @@ public class EclipseApp {
 	//////////////////////////////
 	// Basic arg infrastructure //
 	//////////////////////////////
-	private final ListMultimap<String, String> args = Multimaps.newListMultimap(new LinkedHashMap<>(), ArrayList::new);
+	protected final ListMultimap<String, String> args = Multimaps.newListMultimap(new LinkedHashMap<>(), ArrayList::new);
 
 	/**
 	 * `addArg("flag", "value")` will add `-flag value` to command line.

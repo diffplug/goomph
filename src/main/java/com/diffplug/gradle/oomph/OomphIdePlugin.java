@@ -78,7 +78,7 @@ public class OomphIdePlugin extends ProjectPlugin {
 		// ide
 		Task ide = project.getTasks().create(IDE);
 		ide.doFirst(unused -> {
-			Errors.rethrow().run(extension::run);
+			Errors.rethrow().run(extension::ide);
 		});
 		// ideSetup -> eclipse
 		project.getTasks().all(task -> {

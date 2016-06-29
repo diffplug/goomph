@@ -331,6 +331,12 @@ public class P2Model {
 			addArg("p2.os", platform.getOs());
 			addArg("p2.ws", platform.getWs());
 			addArg("p2.arch", platform.getArch());
+			if (platform.getOs().equals("macosx")) {
+				String dest = args.get("destination").get(0);
+				if (!dest.endsWith(".app")) {
+					System.err.println("WARNING: Mac installs should end with '.app', this is " + dest);
+				}
+			}
 		}
 
 		/**

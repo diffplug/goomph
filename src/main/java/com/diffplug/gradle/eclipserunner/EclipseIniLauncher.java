@@ -28,6 +28,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import com.diffplug.common.base.Box;
 import com.diffplug.common.base.Preconditions;
+import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.eclipserunner.launcher.Main;
 
 /**
@@ -37,7 +38,6 @@ import com.diffplug.gradle.eclipserunner.launcher.Main;
  * and accessing its {@link BundleContext}.
  */
 public class EclipseIniLauncher {
-	final File installationRoot;
 	final EclipseIni eclipseIni;
 
 	/**
@@ -46,9 +46,10 @@ public class EclipseIniLauncher {
 	 * to run a barebones equinox instance.
 	 */
 	public EclipseIniLauncher(File installationRoot) throws FileNotFoundException, IOException {
-		this.installationRoot = Objects.requireNonNull(installationRoot);
+		FileMisc.assertMacApp(installationRoot);
+		Objects.requireNonNull(installationRoot);
 		// populate the plugins
-		eclipseIni = EclipseIni.parseFrom(new File(installationRoot, "eclipse.ini"));
+		eclipseIni = EclipseIni.parseFrom(new File(installationRoot, FileMisc.macContentsEclipse() + "eclipse.ini"));
 	}
 
 	/**

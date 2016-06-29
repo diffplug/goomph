@@ -80,21 +80,12 @@ public class OomphIdeExtension {
 		this.targetPlatform = Objects.requireNonNull(targetPlatform);
 	}
 
-	private Object ideDir = "build/oomph-ide";
+	private Object ideDir = "build/oomph-ide" + FileMisc.macApp();
 
 	/** Sets the folder where the ide will be built. */
 	public void ideDir(Object ideDir) {
 		this.ideDir = ideDir;
 	}
-
-	// TODO: figure out how to set the initial java perspective
-	//
-	// private String perspective = "org.eclipse.jdt.ui.JavaPerspective";
-	//
-	// /** Sets the default perspective. */
-	// public void perspective(String perspective) {
-	// 	this.perspective = perspective;
-	// }
 
 	/** Adds all eclipse projects from all the gradle projects. */
 	public void addAllProjects() {
@@ -130,7 +121,7 @@ public class OomphIdeExtension {
 	}
 
 	private File getWorkspaceDir() {
-		return new File(getIdeDir(), "workspace");
+		return new File(getIdeDir(), FileMisc.macContentsEclipse() + "workspace");
 	}
 
 	String state() {
@@ -210,7 +201,7 @@ public class OomphIdeExtension {
 		setupEclipseIni(dir);
 		// setup any config files
 		pathToContent.forEach((path, content) -> {
-			File target = new File(dir, path);
+			File target = new File(dir, FileMisc.macContentsEclipse() + path);
 			FileMisc.mkdirs(target.getParentFile());
 			Errors.rethrow().run(() -> Files.write(content.get(), target));
 		});
@@ -251,9 +242,14 @@ public class OomphIdeExtension {
 
 	/** Sets the eclipse.ini file. */
 	private void setupEclipseIni(File ideDir) throws FileNotFoundException, IOException {
-		File iniFile = new File(ideDir, "eclipse.ini");
+		File iniFile = new File(ideDir, FileMisc.macContentsEclipse() + "eclipse.ini");
 		EclipseIni ini = EclipseIni.parseFrom(iniFile);
 		ini.set("-data", getWorkspaceDir());
+		// p2 director makes an invalid mac install out of the box.  Blech.
+		if (OS.getNative().isMac()) {
+			ini.set("-install", new File(ideDir, "Contents/MacOS"));
+			ini.set("-configuration", new File(ideDir, "Contents/Eclipse/configuration"));
+		}
 		if (eclipseIni != null) {
 			eclipseIni.execute(ini);
 		}
@@ -275,9 +271,9 @@ public class OomphIdeExtension {
 	}
 
 	/** Runs the IDE which was setup by {@link #ideSetup()}. */
-	void run() throws IOException {
-		String cmd = OS.getNative().winMacLinux("eclipse.exe", "eclipse", "eclipse");
-		String[] cmds = new String[]{"cmd", "/c", cmd, "-showsplash", SPLASH};
-		Runtime.getRuntime().exec(cmds, null, getIdeDir());
+	void ide() throws IOException {
+		String launcher = OS.getNative().winMacLinux("eclipse.exe", "Contents/MacOS/eclipse", "eclipse");
+		String[] args = new String[]{getIdeDir().getAbsolutePath() + "/" + launcher, "-showsplash", SPLASH};
+		Runtime.getRuntime().exec(args, null, getIdeDir());
 	}
 }

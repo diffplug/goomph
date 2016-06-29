@@ -28,7 +28,6 @@ import org.osgi.framework.Version;
 
 import com.diffplug.common.base.Comparison;
 import com.diffplug.common.base.StringPrinter;
-import com.diffplug.common.base.Unhandled;
 import com.diffplug.common.swt.os.OS;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.FileMisc;
@@ -91,11 +90,17 @@ public class PdeInstallation implements EclipseRunner {
 
 	public PdeInstallation(EclipseRelease release) {
 		this.release = Objects.requireNonNull(release);
+		// warn if mac and pre-Mars
+		if (OS.getNative().isMac()) {
+			if (Comparison.compare(release.version(), Version.parseVersion("4.5.0")) == Comparison.LESSER) {
+				throw new IllegalArgumentException("On mac, must be 4.5.0 (Mars) or later, because of folder layout problems.");
+			}
+		}
 	}
 
 	/** The root of this installation. */
 	private File getRootFolder() {
-		return new File(GoomphCacheLocations.pdeBootstrap(), release.toString());
+		return new File(GoomphCacheLocations.pdeBootstrap(), release.toString() + FileMisc.macApp());
 	}
 
 	/** The `org.eclipse.pde.build` folder containing the product build properties file. */
@@ -175,26 +180,12 @@ public class PdeInstallation implements EclipseRunner {
 		return model;
 	}
 
-	/** Returns true iff this Eclipse is Mars or later. */
-	private boolean isMarsOrLater() {
-		return Comparison.compare(release.version(), MARS).lesserEqualGreater(false, true, true);
-	}
-
-	private static final Version MARS = Version.parseVersion("4.5.0");
-
 	/** Returns the eclipse console executable. */
-	private File getEclipseConsoleExecutable() {
-		OS os = OS.getNative();
-		if (os.isWindows()) {
-			return new File(getRootFolder(), "eclipsec.exe");
-		} else if (os.isMac()) {
-			String path = isMarsOrLater() ? "../MacOS/eclipse" : "eclipse.app/Contents/MacOS/eclipse";
-			return new File(path);
-		} else if (os.isLinux()) {
-			return new File("eclipse");
-		} else {
-			throw Unhandled.objectException(os);
-		}
+	private String getEclipseConsoleExecutable() {
+		return OS.getNative().winMacLinux(
+				"eclipsec.exe",
+				"Contents/MacOS/eclipse",
+				"eclipse");
 	}
 
 	@Override
@@ -203,13 +194,13 @@ public class PdeInstallation implements EclipseRunner {
 		// set a clean workspace
 		List<String> actualArgs = new ArrayList<>();
 		actualArgs.add("-data");
-		File workspace = new File(getRootFolder(), "workspace");
+		File workspace = new File(getRootFolder(), FileMisc.macContentsEclipse() + "workspace");
 		actualArgs.add(workspace.getAbsolutePath());
 		// add the user's args
 		actualArgs.addAll(args);
 		// run the code
 		try {
-			new NativeRunner(getEclipseConsoleExecutable()).run(actualArgs);
+			new NativeRunner(new File(getRootFolder(), getEclipseConsoleExecutable())).run(actualArgs);
 		} finally {
 			// clean the workspace directory
 			FileUtils.deleteDirectory(workspace);

@@ -39,6 +39,7 @@ import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.base.Throwing;
 import com.diffplug.common.collect.Maps;
 import com.diffplug.common.io.Files;
+import com.diffplug.common.swt.os.OS;
 
 /** Miscellaneous utilties for copying files around. */
 public class FileMisc {
@@ -336,4 +337,21 @@ public class FileMisc {
 
 	/** The `file://` protocol. */
 	public static final String PROTOCOL = "file://";
+
+	/** Returns ".app" on macOS, and empty string on all others. */
+	public static String macApp() {
+		return OS.getNative().winMacLinux("", ".app", "");
+	}
+
+	/** Returns "Contents/Eclipse/" on macOS, and empty string on all others. */
+	public static String macContentsEclipse() {
+		return OS.getNative().winMacLinux("", "Contents/Eclipse/", "");
+	}
+
+	/** Ensures that the given file ends with ".app" on macOS, does nothing on all others. */
+	public static void assertMacApp(File file) {
+		if (OS.getNative().isMac()) {
+			Preconditions.checkArgument(file.getName().endsWith(".app"), "Mac installations must end in .app");
+		}
+	}
 }
