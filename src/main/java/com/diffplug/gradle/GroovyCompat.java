@@ -18,6 +18,7 @@ package com.diffplug.gradle;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import groovy.lang.Closure;
 
 public class GroovyCompat {
@@ -37,7 +38,8 @@ public class GroovyCompat {
 	@SuppressWarnings("serial")
 	public static <T> Closure<T> closureFrom(Object owner, Consumer<T> closure) {
 		return new Closure<T>(owner) {
-			@SuppressWarnings({"unused", "unchecked"})
+			@SuppressFBWarnings(value = "UMAC_UNCALLABLE_METHOD_OF_ANONYMOUS_CLASS", justification = "This does get called from Groovy")
+			@SuppressWarnings("unchecked")
 			public void doCall() {
 				closure.accept((T) getDelegate());
 			}
