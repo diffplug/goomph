@@ -25,10 +25,12 @@ import com.diffplug.gradle.ProjectPlugin;
 /**
  * Downloads and sets up an Eclipse IDE.
  * 
+ * `gradlew ide` will launch the IDE.
+ * 
  * Note that it will be in the "Resources Perspective" the first time you open it,
  * and you'll probably want to switch to the Java perspective, look in the top
  * right of the window for this:
- * 
+ *
  * ![Perspective bar](http://help.eclipse.org/mars/topic/org.eclipse.platform.doc.user/images/Image211_perspective.png)
  *
  * ```groovy
@@ -68,28 +70,33 @@ public class OomphIdePlugin extends ProjectPlugin {
 	@Override
 	protected void applyOnce(Project project) {
 		OomphIdeExtension extension = project.getExtensions().create(OomphIdeExtension.NAME, OomphIdeExtension.class, project);
-		Task setupIde = project.getTasks().create(SETUP);
-		setupIde.doFirst(unused -> {
-			Errors.rethrow().run(extension::setup);
+		// ideSetup
+		Task ideSetup = project.getTasks().create(IDE_SETUP);
+		ideSetup.doFirst(unused -> {
+			Errors.rethrow().run(extension::ideSetup);
 		});
-
-		Task runIde = project.getTasks().create(RUN);
-		runIde.dependsOn(setupIde);
-		runIde.doFirst(unused -> {
+		// ide
+		Task ide = project.getTasks().create(IDE);
+		ide.doFirst(unused -> {
 			Errors.rethrow().run(extension::run);
 		});
-
-		// setupIde depends on the eclipse tasks in this project
+		// ideSetup -> eclipse
 		project.getTasks().all(task -> {
 			if ("eclipse".equals(task.getName())) {
-				setupIde.dependsOn(task);
+				ideSetup.dependsOn(task);
 			}
 			if (task instanceof GenerateEclipseProject) {
 				extension.addProjectFile(((GenerateEclipseProject) task).getOutputFile());
 			}
 		});
+		// tie ide to idesetup iff setup is required
+		project.afterEvaluate(p -> {
+			if (!extension.isClean()) {
+				ide.dependsOn(ideSetup);
+			}
+		});
 	}
 
-	static final String SETUP = "ideSetup";
-	static final String RUN = "ide";
+	static final String IDE_SETUP = "ideSetup";
+	static final String IDE = "ide";
 }

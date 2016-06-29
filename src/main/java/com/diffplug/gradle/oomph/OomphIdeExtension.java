@@ -19,10 +19,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.function.Supplier;
 
 import org.gradle.api.Action;
@@ -32,7 +32,10 @@ import org.gradle.plugins.ide.eclipse.GenerateEclipseProject;
 
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Preconditions;
+import com.diffplug.common.io.ByteSink;
+import com.diffplug.common.io.ByteSource;
 import com.diffplug.common.io.Files;
+import com.diffplug.common.io.Resources;
 import com.diffplug.common.swt.os.OS;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.ConfigMisc;
@@ -95,7 +98,7 @@ public class OomphIdeExtension {
 
 	/** Adds all eclipse projects from all the gradle projects. */
 	public void addAllProjects() {
-		Task setupIde = project.getTasks().getByName(OomphIdePlugin.SETUP);
+		Task setupIde = project.getTasks().getByName(OomphIdePlugin.IDE_SETUP);
 		project.getRootProject().getAllprojects().forEach(p -> {
 			if (p == project) {
 				return;
@@ -114,7 +117,7 @@ public class OomphIdeExtension {
 		});
 	}
 
-	private Set<File> projectFiles = new HashSet<>();
+	private SortedSet<File> projectFiles = new TreeSet<>();
 
 	/** Adds the given project file. */
 	void addProjectFile(File projectFile) {
@@ -130,20 +133,24 @@ public class OomphIdeExtension {
 		return new File(getIdeDir(), "workspace");
 	}
 
-	private String state() {
-		return getIdeDir().toString() + Objects.toString(targetPlatform) + p2 + projectFiles.hashCode();
+	String state() {
+		OomphTargetPlatform platformInstance = new OomphTargetPlatform(project);
+		if (targetPlatform != null) {
+			targetPlatform.execute(platformInstance);
+		}
+		return getIdeDir() + "\n" + platformInstance + "\n" + p2 + "\n" + projectFiles;
 	}
 
 	private Map<String, Supplier<byte[]>> pathToContent = new HashMap<>();
 
 	/** Sets the given path within the ide directory to be a property file. */
-	public void configProps(String file, Action<Map<String, String>> configSupplier) {
+	public void configProp(String file, Action<Map<String, String>> configSupplier) {
 		pathToContent.put(file, ConfigMisc.props(configSupplier));
 	}
 
 	/** Sets the theme to be the classic eclipse look. */
 	public void classicTheme() {
-		configProps("workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.e4.ui.css.swt.theme.prefs", props -> {
+		configProp("workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.e4.ui.css.swt.theme.prefs", props -> {
 			props.put("eclipse.preferences.version", "1");
 			props.put("themeid", "org.eclipse.e4.ui.css.theme.e4_classic");
 		});
@@ -157,14 +164,14 @@ public class OomphIdeExtension {
 	/** Sets a nice font and whitespace settings. */
 	public void niceText(String fontSize) {
 		// visible whitespace
-		configProps("workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.editors.prefs", props -> {
+		configProp("workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.editors.prefs", props -> {
 			props.put("eclipse.preferences.version", "1");
 			props.put("showCarriageReturn", "false");
 			props.put("showLineFeed", "false");
 			props.put("showWhitespaceCharacters", "true");
 		});
 		// improved fonts
-		configProps("workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.workbench.prefs", props -> {
+		configProp("workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.workbench.prefs", props -> {
 			props.put("eclipse.preferences.version", "1");
 			String font = OS.getNative().winMacLinux("Consolas", "Monaco", "Monospace");
 			props.put("org.eclipse.jface.textfont", "1|" + font + "|" + fontSize + "|0|WINDOWS|1|-12|0|0|0|400|0|0|0|0|3|2|1|49|" + font);
@@ -173,18 +180,23 @@ public class OomphIdeExtension {
 
 	static final String STALE_TOKEN = "token_stale";
 
+	/** Returns true iff the installation is clean. */
+	boolean isClean() {
+		return Errors.rethrow().get(() -> FileMisc.hasToken(getIdeDir(), STALE_TOKEN, state()));
+	}
+
 	/** Sets up an IDE as described in this model from scratch. */
-	void setup() throws Exception {
-		File dir = getIdeDir();
-		// if we've got a clean token, we're all good
-		if (FileMisc.hasToken(dir, STALE_TOKEN, state())) {
+	void ideSetup() throws Exception {
+		if (isClean()) {
 			return;
 		}
+		File dir = getIdeDir();
 		// else we've gotta set it up
 		FileMisc.cleanDir(dir);
 		// now we can install the IDE
-		p2.addArtifactRepoBundlePool();
-		P2Model.DirectorApp app = p2.directorApp(dir, "OomphIde");
+		P2Model p2cached = p2.copy();
+		p2cached.addArtifactRepoBundlePool();
+		P2Model.DirectorApp app = p2cached.directorApp(dir, "OomphIde");
 		app.consolelog();
 		// share the install for quickness
 		app.bundlepool(GoomphCacheLocations.bundlePool());
@@ -204,15 +216,21 @@ public class OomphIdeExtension {
 		});
 		// perform internal setup
 		internalSetup(dir);
+		// write out the splash image
+		ByteSource source = Resources.asByteSource(OomphIdeExtension.class.getResource(SPLASH));
+		ByteSink sink = Files.asByteSink(new File(dir, SPLASH));
+		source.copyTo(sink);
 		// write out a staleness token
 		FileMisc.writeToken(dir, STALE_TOKEN, state());
 	}
+
+	static final String SPLASH = "splash.bmp";
 
 	/** Sets the workspace directory. */
 	private void setInitialWorkspace() throws IOException {
 		File workspace = getWorkspaceDir();
 		FileMisc.cleanDir(workspace);
-		configProps("configuration/.settings/org.eclipse.ui.ide.prefs", map -> {
+		configProp("configuration/.settings/org.eclipse.ui.ide.prefs", map -> {
 			map.put("eclipse.preferences.version", "1");
 			map.put("MAX_RECENT_WORKSPACES", "5");
 			map.put("RECENT_WORKSPACES", workspace.getAbsolutePath());
@@ -221,7 +239,7 @@ public class OomphIdeExtension {
 			map.put("SHOW_WORKSPACE_SELECTION_DIALOG", "false");
 		});
 		// turn off quickstarts and tipsAndTricks
-		configProps("workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.ide.prefs", map -> {
+		configProp("workspace/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.ide.prefs", map -> {
 			map.put("eclipse.preferences.version", "1");
 			map.put("PROBLEMS_FILTERS_MIGRATE", "true");
 			map.put("TASKS_FILTERS_MIGRATE", "true");
@@ -256,10 +274,10 @@ public class OomphIdeExtension {
 		Errors.constrainTo(IOException.class).run(() -> JavaExecable.exec(project, internal));
 	}
 
-	/** Runs the IDE which was setup by {@link #setup()}. */
+	/** Runs the IDE which was setup by {@link #ideSetup()}. */
 	void run() throws IOException {
 		String cmd = OS.getNative().winMacLinux("eclipse.exe", "eclipse", "eclipse");
-		String[] cmds = new String[]{"cmd", "/c", cmd};
+		String[] cmds = new String[]{"cmd", "/c", cmd, "-showsplash", SPLASH};
 		Runtime.getRuntime().exec(cmds, null, getIdeDir());
 	}
 }

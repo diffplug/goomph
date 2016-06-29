@@ -15,6 +15,7 @@
  */
 package com.diffplug.gradle;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import groovy.lang.Closure;
@@ -28,6 +29,17 @@ public class GroovyCompat {
 			@Override
 			public T call() {
 				return closure.apply((T) getDelegate());
+			}
+		};
+	}
+
+	/** Creates a Groovy {@link Closure} from a Java 8 {@link Consumer}, uses the delegate as the input. */
+	@SuppressWarnings("serial")
+	public static <T> Closure<T> closureFrom(Object owner, Consumer<T> closure) {
+		return new Closure<T>(owner) {
+			@SuppressWarnings({"unused", "unchecked"})
+			public void doCall() {
+				closure.accept((T) getDelegate());
 			}
 		};
 	}
