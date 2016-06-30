@@ -80,17 +80,17 @@ public class OomphIdePlugin extends ProjectPlugin {
 		ide.doFirst(unused -> {
 			Errors.rethrow().run(extension::ide);
 		});
-		// ideSetup -> eclipse
-		project.getTasks().all(task -> {
-			if ("eclipse".equals(task.getName())) {
-				ideSetup.dependsOn(task);
-			}
-			if (task instanceof GenerateEclipseProject) {
-				extension.addProjectFile(((GenerateEclipseProject) task).getOutputFile());
-			}
-		});
-		// tie ide to idesetup iff setup is required
 		project.afterEvaluate(p -> {
+			// ideSetup -> eclipse
+			project.getTasks().all(task -> {
+				if ("eclipse".equals(task.getName())) {
+					ideSetup.dependsOn(task);
+				}
+				if (task instanceof GenerateEclipseProject) {
+					extension.addProjectFile(((GenerateEclipseProject) task).getOutputFile());
+				}
+			});
+			// tie ide to idesetup iff setup is required
 			if (!extension.isClean()) {
 				ide.dependsOn(ideSetup);
 			}
