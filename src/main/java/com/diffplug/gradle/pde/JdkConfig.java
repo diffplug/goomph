@@ -17,10 +17,12 @@ package com.diffplug.gradle.pde;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.gradle.api.Project;
 
+import com.diffplug.common.base.StandardSystemProperty;
 import com.diffplug.common.collect.ImmutableList;
 
 /**
@@ -28,17 +30,22 @@ import com.diffplug.common.collect.ImmutableList;
  * and wraps it in an API.
  */
 public class JdkConfig {
+	/** The key for the Java home. */
+	private static final String KEY_JAVA = "org.gradle.java.home";
+
 	/** Creates a JDK using the project's `org.gradle.java.home` property. */
 	public JdkConfig(Project project) {
-		this(new File((String) project.property(KEY_JAVA)));
+		String javaHome = (String) project.property(KEY_JAVA);
+		if (javaHome == null) {
+			javaHome = StandardSystemProperty.JAVA_HOME.value();
+		}
+		Objects.requireNonNull(javaHome, "Could not find JRE dir, set 'org.gradle.java.home' to fix.");
+		this.rootFolder = new File(javaHome);
 	}
 
 	public JdkConfig(File rootFile) {
 		this.rootFolder = rootFile;
 	}
-
-	/** The key for the Java home. */
-	private static final String KEY_JAVA = "org.gradle.java.home";
 
 	/** Returns the folder at the root of the JDK. */
 	public File getRootFolder() {
