@@ -17,6 +17,7 @@ package com.diffplug.gradle.pde;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -27,6 +28,7 @@ import org.gradle.api.Project;
 import org.osgi.framework.Version;
 
 import com.diffplug.common.base.Comparison;
+import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.base.StringPrinter;
 import com.diffplug.common.swt.os.OS;
 import com.diffplug.common.swt.os.SwtPlatform;
@@ -157,11 +159,13 @@ public class PdeInstallation implements EclipseRunner {
 		// create a native launcher
 		directorApp.platform(SwtPlatform.getRunning());
 		directorApp.runUsingBootstrapper();
+		// parse out the pde.build version
+		File bundleInfo = new File(getRootFolder(), "configuration/org.eclipse.equinox.simpleconfigurator/bundles.info");
+		Preconditions.checkArgument(bundleInfo.isFile(), "Needed to find the pde.build folder: %s", bundleInfo);
+		String pdeBuildLine = Files.readAllLines(bundleInfo.toPath()).stream().filter(line -> line.startsWith("org.eclipse.pde.build,")).findFirst().get();
+		String pdeBuildVersion = pdeBuildLine.split(",")[1];
 		// find the plugins folder
-		File sharedPlugins = new File(GoomphCacheLocations.bundlePool(), "plugins");
-		pdeBuildFolder = FileMisc.list(sharedPlugins).stream().filter(file -> {
-			return file.getName().startsWith("org.eclipse.pde.build_") && file.isDirectory();
-		}).findFirst().get();
+		pdeBuildFolder = new File(GoomphCacheLocations.bundlePool(), "plugins/org.eclipse.pde.build_" + pdeBuildVersion);
 		FileMisc.writeToken(getRootFolder(), TOKEN, pdeBuildFolder.getAbsolutePath());
 		System.out.println("Success.");
 	}
