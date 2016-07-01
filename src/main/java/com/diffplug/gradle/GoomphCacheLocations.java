@@ -32,11 +32,32 @@ import com.diffplug.gradle.p2.P2Model;
  *
  * - {@link #p2bootstrap()}
  * - {@link #pdeBootstrap()}
+ * - {@link #bundlePool()}
+ * - {@link #workspaces()}
  *
  */
 @SuppressFBWarnings("MS_SHOULD_BE_FINAL")
 public class GoomphCacheLocations {
 	private static final String ROOT = ".goomph";
+
+	/**
+	 * When Goomph creates an IDE for you, it must
+	 * also create an eclipse workspace.  Unfortunately,
+	 * that workspace cannot be a subdirectory of the 
+	 * project directory (an eclipse limitation).  This is a
+	 * problem for single-project builds.
+	 * 
+	 * As a workaround, we put all eclipse workspaces in a central
+	 * location, which is tied to their project directory.  Whenever
+	 * a new workspace is created, we do a quick check to make there
+	 * aren't any stale workspaces.  If the workspace has gone stale,
+	 * we delete it.
+	 */
+	public static File workspaces() {
+		return defOverride(ROOT + "/ide-workspaces", override_workspaces);
+	}
+
+	public static File override_workspaces = null;
 
 	/**
 	 * Location where the p2-bootstrap application

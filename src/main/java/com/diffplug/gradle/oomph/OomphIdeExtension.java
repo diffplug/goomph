@@ -50,9 +50,11 @@ public class OomphIdeExtension {
 	public static final String NAME = "oomphIde";
 
 	private final Project project;
+	private final WorkspaceRegistry workspaceRegistry;
 
-	public OomphIdeExtension(Project project) {
+	public OomphIdeExtension(Project project) throws IOException {
 		this.project = Objects.requireNonNull(project);
+		this.workspaceRegistry = WorkspaceRegistry.instance();
 	}
 
 	private final P2Model p2 = new P2Model();
@@ -121,7 +123,7 @@ public class OomphIdeExtension {
 	}
 
 	private File getWorkspaceDir() {
-		return new File(getIdeDir(), FileMisc.macContentsEclipse() + "workspace");
+		return workspaceRegistry.workspaceDir(project, getIdeDir());
 	}
 
 	String state() {
@@ -184,6 +186,7 @@ public class OomphIdeExtension {
 		File dir = getIdeDir();
 		// else we've gotta set it up
 		FileMisc.cleanDir(dir);
+		FileMisc.cleanDir(getWorkspaceDir());
 		// now we can install the IDE
 		P2Model p2cached = p2.copy();
 		p2cached.addArtifactRepoBundlePool();
@@ -272,6 +275,9 @@ public class OomphIdeExtension {
 
 	/** Runs the IDE which was setup by {@link #ideSetup()}. */
 	void ide() throws IOException {
+		// clean any stale workspaces
+		workspaceRegistry.clean();
+		// then launch
 		String launcher = OS.getNative().winMacLinux("eclipse.exe", "Contents/MacOS/eclipse", "eclipse");
 		String[] args = new String[]{getIdeDir().getAbsolutePath() + "/" + launcher, "-showsplash", SPLASH};
 		Runtime.getRuntime().exec(args, null, getIdeDir());
