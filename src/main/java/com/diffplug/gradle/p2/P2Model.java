@@ -112,12 +112,14 @@ public class P2Model {
 		ius.add(iu + "/" + version);
 	}
 
+	private static final String FEATURE_GROUP = ".feature.group";
+
 	public void addFeature(String feature) {
-		addIU(feature + ".feature.group");
+		addIU(feature + FEATURE_GROUP);
 	}
 
 	public void addFeature(String feature, String version) {
-		addIU(feature + ".feature.group", version);
+		addIU(feature + FEATURE_GROUP, version);
 	}
 
 	public void addRepoEclipse(String release) {
