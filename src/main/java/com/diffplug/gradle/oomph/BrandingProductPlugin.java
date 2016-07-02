@@ -124,8 +124,8 @@ class BrandingProductPlugin {
 			return input;
 		} else {
 			int max = Math.max(input.getHeight(), input.getWidth());
-			int dx = (input.getWidth() - max) / 2;
-			int dy = (input.getHeight() - max) / 2;
+			int dx = (max - input.getWidth()) / 2;
+			int dy = (max - input.getHeight()) / 2;
 			return createImg(max, max, input.getType(), graphics -> {
 				graphics.drawImage(input, dx, dy, null);
 			});
