@@ -27,7 +27,25 @@ output = [
 output = prefixDelimiterReplace(input, 'https://{{org}}.github.io/{{name}}/javadoc/', '/', 'snapshot');
 -->
 
-Note: The docs below are currently for 3.0.0-SNAPSHOT.  We'll be releasing 3.0.0 shortly.
+Note: **The docs below are currently for 3.0.0-SNAPSHOT**.  We'll be releasing 3.0.0 around 7/5.  To help us iterate on the snapshot, make sure you've got this at the top of your buildscript:
+
+```
+buildscript {
+	repositories {
+		// we're iterating with our early adopters on a snapshot right now
+		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+		// the standard gradle plugin portal
+		maven { url 'https://plugins.gradle.org/m2/' }
+	}
+	// make sure we don't cache stale snapshot versions
+	configurations.all {
+		resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+	}
+	dependencies {
+		classpath "com.diffplug.gradle:goomph:3.0.0-SNAPSHOT"
+	}
+}
+```
 
 ## IDE-as-build-artifact.
 
@@ -39,16 +57,14 @@ When you run `gradlew ide`, it builds and downloads an IDE into `build/oomphIde`
 ```groovy
 apply plugin: 'com.diffplug.gradle.oomph.ide'
 oomphIde {
-	p2.addRepoEclipse('4.6.0')             // 4.6.0 neon has lots of new features
-	p2.addIU("org.eclipse.platform.ide");  // we want the Eclipse IDE
-	p2.addFeature("org.eclipse.jdt");      // with the Java development tools
-
+	jdt {}
 	eclipseIni {
 		vmargs('-Xmx2g')    // IDE can have up to 2 gigs of RAM
 	}
-
-	classicTheme()  // oldschool cool
-	niceText()      // with nice fonts and visible whitespace
+	style {
+		classicTheme()  // oldschool cool
+		niceText()      // with nice fonts and visible whitespace
+	}
 }
 ```
 
