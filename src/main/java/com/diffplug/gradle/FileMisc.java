@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -196,6 +197,13 @@ public class FileMisc {
 		// write it out
 		mkdirs(dstFile.getParentFile());
 		Files.write(content.getBytes(StandardCharsets.UTF_8), dstFile);
+	}
+
+	/** Modifies the given file in place. */
+	public static void modifyFile(File file, Function<String, String> modifier) throws IOException {
+		String content = new String(Files.toByteArray(file), StandardCharsets.UTF_8);
+		String result = modifier.apply(content);
+		Files.write(result.getBytes(StandardCharsets.UTF_8), file);
 	}
 
 	/** Deletes the given file or directory if it exists, then creates a fresh directory in its place. */

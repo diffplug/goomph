@@ -46,6 +46,11 @@ import com.diffplug.gradle.ProjectPlugin;
  *     p2.addRepo('http://download.eclipse.org/buildship/updates/e45/releases/1.0')
  *     p2.addFeature('org.eclipse.buildship', '1.0.16.v20160615-0737')
  *
+ *     // sets the icon that will be used by the generated IDE
+ *     icon('images/logo.png')
+ *     splash('images/logo_large.png')
+ *     perspective('org.eclipse.jdt.ui.JavaPerspective')
+ *
  *     eclipseIni {
  *         vmargs('-Xmx2g')	// IDE can have 2 gigs of RAM, if it wants
  *     }
@@ -64,6 +69,10 @@ import com.diffplug.gradle.ProjectPlugin;
  *     classicTheme()   // oldschool cool
  *     niceText()       // nice fonts and visible whitespace
  * }
+ * 
+ * See {@link OomphIdeExtension} for all available arguments.
+ * 
+ * {@link IUs} contains common installable units.
  * ```
  */
 public class OomphIdePlugin extends ProjectPlugin {
