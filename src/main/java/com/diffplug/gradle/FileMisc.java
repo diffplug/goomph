@@ -137,7 +137,7 @@ public class FileMisc {
 	/////////////////////////////////////
 	/** Writes a file with the given name, to the given directory, containing the given value. */
 	public static void writeToken(File dir, String name, String value) throws IOException {
-		Preconditions.checkArgument(dir.isDirectory());
+		Preconditions.checkArgument(dir.isDirectory(), "Need to create directory first!  %s", dir);
 		File token = new File(dir, name);
 		FileUtils.write(token, value, StandardCharsets.UTF_8);
 	}
