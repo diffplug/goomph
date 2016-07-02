@@ -25,11 +25,11 @@ public class IUs {
 
 	private static final String FEATURE_GROUP = ".feature.group";
 
-	/** Required IU for every IDE, contained within {@link P2Model#addRepoEclipse(String). */
+	/** Required IU for every IDE, contained within {@link P2Model#addRepoEclipse(String)}. */
 	public static final String IDE = "org.eclipse.platform.ide";
-	/** Required IU for every IDE, contained within {@link P2Model#addRepoEclipse(String). */
+	/** Required IU for every IDE, contained within {@link P2Model#addRepoEclipse(String)}. */
 	public static final String JDT = "org.eclipse.jdt" + FEATURE_GROUP;
-	/** Required IU for every IDE, contained within {@link P2Model#addRepoEclipse(String). */
+	/** Required IU for every IDE, contained within {@link P2Model#addRepoEclipse(String)}. */
 	public static final String PDE = "org.eclipse.pde" + FEATURE_GROUP;
 	/** The error log view.  Included in the PDE, but helpful in lots of other places too. */
 	public static final String ERROR_LOG = "org.eclipse.ui.views.log";

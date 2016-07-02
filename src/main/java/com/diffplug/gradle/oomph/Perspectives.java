@@ -18,7 +18,7 @@ package com.diffplug.gradle.oomph;
 /**
  * Listing of common eclipse perspectives (window layouts).
  * 
- * Useful for setting initial perspective {@link OomphBranding#perspective(String)}.
+ * Useful for setting initial perspective {@link OomphIdeExtension#perspective(String)}.
  */
 public class Perspectives {
 	private Perspectives() {}

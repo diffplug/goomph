@@ -26,21 +26,21 @@ import com.diffplug.gradle.osgi.OsgiExecable;
 /**
  * Runs a series of actions with the OSGi context.
  *
- * Uses {@link OsgiExecable.ReflectionHost} so that we can
- * compile the code against the eclipse code within Goomph,
+ * It's highly recommended to use {@link OsgiExecable.ReflectionHost}
+ * so that we can compile against the eclipse code within Goomph,
  * and then run it against the OSGi runtime.
  */
 class SetupWithinEclipse implements JavaExecable {
 	private static final long serialVersionUID = -7563836594137010936L;
 
 	File eclipseRoot;
-	ArrayList<OsgiExecable.ReflectionHost> actionsWithinEclipse = new ArrayList<>();
+	ArrayList<OsgiExecable> actionsWithinEclipse = new ArrayList<>();
 
 	public SetupWithinEclipse(File eclipseRoot) {
 		this.eclipseRoot = Objects.requireNonNull(eclipseRoot);
 	}
 
-	public void add(OsgiExecable.ReflectionHost action) {
+	public void add(OsgiExecable action) {
 		actionsWithinEclipse.add(action);
 	}
 
@@ -48,7 +48,7 @@ class SetupWithinEclipse implements JavaExecable {
 	public void run() throws Throwable {
 		EclipseIniLauncher launcher = new EclipseIniLauncher(eclipseRoot);
 		try (EclipseIniLauncher.Running running = launcher.open()) {
-			for (OsgiExecable.ReflectionHost host : actionsWithinEclipse) {
+			for (OsgiExecable host : actionsWithinEclipse) {
 				OsgiExecable.exec(running.bundleContext(), host);
 			}
 		}
