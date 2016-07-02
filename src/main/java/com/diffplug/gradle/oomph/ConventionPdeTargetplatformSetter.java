@@ -25,9 +25,8 @@ import org.osgi.framework.ServiceReference;
 
 import com.diffplug.gradle.osgi.OsgiExecable;
 
-/** @see TargetPlatformSetter */
-class TargetPlatformSetterInternal extends OsgiExecable.ReflectionClient<TargetPlatformSetter> {
-	TargetPlatformSetterInternal(TargetPlatformSetter host) {
+class ConventionPdeTargetplatformSetter extends OsgiExecable.ReflectionClient<ConventionPde.TargetPlatformSetter> {
+	ConventionPdeTargetplatformSetter(ConventionPde.TargetPlatformSetter host) {
 		super(host);
 	}
 

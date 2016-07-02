@@ -31,6 +31,8 @@ import java.util.function.Function;
 
 import javax.imageio.ImageIO;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.collect.ImmutableList;
 import com.diffplug.common.io.ByteSource;
@@ -90,6 +92,7 @@ class BrandingProductPlugin {
 	 *
 	 * The map is used to modify the template files.
 	 */
+	@SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
 	public static void create(File root, BufferedImage splash, BufferedImage icon, Map<String, Function<String, String>> map) throws IOException {
 		FileMisc.cleanDir(root);
 		Objects.requireNonNull(splash);

@@ -36,6 +36,7 @@ import com.diffplug.common.base.Consumers;
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.StringPrinter;
 import com.diffplug.common.base.Throwing;
+import com.diffplug.common.collect.ImmutableSet;
 import com.diffplug.common.collect.Sets;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.FileMisc;
@@ -120,6 +121,10 @@ public class P2Model {
 
 	public void addFeature(String feature, String version) {
 		addIU(feature + FEATURE_GROUP, version);
+	}
+
+	public ImmutableSet<String> getRepos() {
+		return ImmutableSet.copyOf(repos);
 	}
 
 	public void addRepoEclipse(String release) {

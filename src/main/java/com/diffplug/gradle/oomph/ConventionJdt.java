@@ -15,22 +15,10 @@
  */
 package com.diffplug.gradle.oomph;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-
-import com.diffplug.gradle.osgi.OsgiExecable;
-
-/** Sets the default perspective. */
-class TargetPlatformSetter extends OsgiExecable.ReflectionHost {
-	private static final long serialVersionUID = 3285583309500818867L;
-
-	String name;
-	ArrayList<File> targetPlatforms;
-
-	public TargetPlatformSetter(String name, Collection<File> targetPlatforms) {
-		super("com.diffplug.gradle.oomph.TargetPlatformSetterInternal");
-		this.name = name;
-		this.targetPlatforms = new ArrayList<>(targetPlatforms);
+public class ConventionJdt extends OomphConvention {
+	ConventionJdt(OomphIdeExtension extension) {
+		super(extension);
+		requireIUs(IUs.IDE, IUs.JDT, IUs.ERROR_LOG);
+		setPerspectiveOver(Perspectives.JAVA, Perspectives.RESOURCES);
 	}
 }

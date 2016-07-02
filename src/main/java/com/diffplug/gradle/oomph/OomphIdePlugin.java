@@ -17,63 +17,110 @@ package com.diffplug.gradle.oomph;
 
 import org.gradle.api.Project;
 import org.gradle.api.Task;
-import org.gradle.plugins.ide.eclipse.GenerateEclipseProject;
 
 import com.diffplug.common.base.Errors;
+import com.diffplug.gradle.GoomphCacheLocations;
 import com.diffplug.gradle.ProjectPlugin;
+import com.diffplug.gradle.pde.EclipseRelease;
 
 /**
- * Downloads and sets up an Eclipse IDE.
- * 
- * `gradlew ide` will launch the IDE.
- * 
- * Note that it will be in the "Resources Perspective" the first time you open it,
- * and you'll probably want to switch to the Java perspective, look in the top
- * right of the window for this:
+ * Downloads and sets up an Eclipse IDE.  Each IDE created by
+ * Goomph stores its plugins centrally in {@link GoomphCacheLocations#bundlePool()}.
+ * This means it only takes ~1MB of extra diskspace per IDE, so that you can install
+ * many IDE's, each with their own settings and plugins, while being very efficient
+ * with your disk and network resources.
  *
- * ![Perspective bar](http://help.eclipse.org/mars/topic/org.eclipse.platform.doc.user/images/Image211_perspective.png)
+ * `gradlew ide` will launch the IDE.
+ *
+ * To create an IDE for java projects:
  *
  * ```groovy
  * apply plugin: 'com.diffplug.gradle.oomph.ide'
  * oomphIde {
- *     // setup the components to download
- *     p2.addRepoEclipse('4.6.0')
- *     p2.addIU('org.eclipse.platform.ide')
- *     p2.addFeature('org.eclipse.jdt')
- *     p2.addFeature('org.eclipse.pde')
- *
- *     // add buildship
- *     p2.addRepo('http://download.eclipse.org/buildship/updates/e45/releases/1.0')
- *     p2.addFeature('org.eclipse.buildship', '1.0.16.v20160615-0737')
- *
- *     // sets the icon that will be used by the generated IDE
- *     icon('images/logo.png')
- *     splash('images/logo_large.png')
- *     perspective('org.eclipse.jdt.ui.JavaPerspective')
- *
- *     eclipseIni {
- *         vmargs('-Xmx2g')	// IDE can have 2 gigs of RAM, if it wants
- *     }
- *
- *     // determine which projects to import.  There are two options:
- *     // 1) It will automatically find eclipse tasks in this same project
- *     // 2) If you call "addAllProjects()" then it will add all eclipse tasks in all projects
- *     addAllProjects()
- *
- *     // if you're using PDE, then you'll need a targetplatform
- *     targetplatform 'goomph-target', {
- *         installation('target.frommaven/build')
- *         installation('target.fromp2/build/p2asmaven/p2')
- *     }
- *
- *     classicTheme()   // oldschool cool
- *     niceText()       // nice fonts and visible whitespace
+ *     jdt {}
  * }
- * 
- * See {@link OomphIdeExtension} for all available arguments.
- * 
- * {@link IUs} contains common installable units.
  * ```
+ *
+ * For an Eclipse Plugin project with a target platform:
+ * 
+ * ```groovy
+ * oomphIde {
+ *     pde {
+ *         targetplatform {
+ *             installation('target.maven/build')
+ *             installation('target.p2/build/p2asmaven/p2')
+ *         }
+ *     }
+ * }
+ * ```
+ * 
+ * You can also set the icon and splashscreen used to launch
+ * the IDE for your project, as well as detailed settings.
+ * 
+ * ```groovy
+ * oomphIde {
+ *     icon   'images/icon.png'
+ *     splash 'images/mascot.png'
+ *     jdt {}
+ *     eclipseIni {
+ *         vmargs('-Xmx2g')	// IDE can have up to 2 gigs of RAM
+ *     }
+ *     workspaceProp '.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.e4.ui.css.swt.theme.prefs', { 
+ *         it.put('themeid', 'org.eclipse.e4.ui.css.theme.e4_classic')
+ *     }
+ * }
+ * ```
+ * 
+ * The Eclipse IDE has a broad ecosystem.  You can use Goomph
+ * to configure any combination of pieces from this ecosystem, but
+ * this requires detailed knowledge of the update sites and installable
+ * units that these projects use.
+ * 
+ * ```groovy
+ * oomphIde {
+ *     p2.addRepo('http://download.eclipse.org/buildship/updates/e45/releases/1.0')
+ *     p2.addIU('org.eclipse.buildship')
+ * }
+ * ```
+ * 
+ * ### Which version of eclipse will it use?
+ * 
+ * If you specify a repository manually, it will use that version.
+ * 
+ * ```groovy
+ * oomphIde {
+ *     // Use Mars SR2
+ *     p2.addRepoOfficial('4.5.2')
+ *     // Use the latest Neon milestone
+ *     p2.addRepo('http://download.eclipse.org/eclipse/updates/4.6milestones')
+ *     jdt {}
+ * }
+ * ```
+ * 
+ * If you don't specify any repositories, then the latest and greatest
+ * official eclipse release will automatically be used, currently {@link EclipseRelease#LATEST}.
+ * 
+ * ### Which projects get imported?
+ * 
+ * Any eclipse projects which are defined in this project will be automatically
+ * imported.  When creating the ide, these are the task dependencies:
+ * 
+ * `ide` -> `ideSetup` -> `eclipse`
+ * 
+ * If you have a multiproject build, you can do the following:
+ * 
+ * ```groovy
+ * oomphIde {
+ *     // adds the eclipse project from the given project
+ *     addProject(':gradle-project:path')
+ *     // adds eclipse projects from every Gradle project in the build
+ *     addAllProjects()
+ * }
+ * ```
+ * 
+ * ### How do I control the details?
+ * 
+ * See {@link OomphIdeExtension} for the full DSL.
  */
 public class OomphIdePlugin extends ProjectPlugin {
 	@Override
@@ -91,14 +138,7 @@ public class OomphIdePlugin extends ProjectPlugin {
 		});
 		project.afterEvaluate(p -> {
 			// ideSetup -> eclipse
-			project.getTasks().all(task -> {
-				if ("eclipse".equals(task.getName())) {
-					ideSetup.dependsOn(task);
-				}
-				if (task instanceof GenerateEclipseProject) {
-					extension.addProjectFile(((GenerateEclipseProject) task).getOutputFile());
-				}
-			});
+			extension.addDependency(p);
 			// tie ide to idesetup iff setup is required
 			if (!extension.isClean()) {
 				ide.dependsOn(ideSetup);

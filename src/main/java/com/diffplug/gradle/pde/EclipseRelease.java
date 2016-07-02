@@ -60,9 +60,15 @@ public final class EclipseRelease {
 		}
 	}
 
+	public static final String LATEST = "4.6.0";
+
+	public static EclipseRelease latestOfficial() {
+		return official(LATEST);
+	}
+
 	/** Returns a message describing the currently supported range of versions. */
 	public static String supportedRange() {
-		return "3.5.0 through 4.5.2";
+		return "3.5.0 through " + LATEST;
 	}
 
 	@Nullable

@@ -19,7 +19,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -37,6 +39,7 @@ import org.gradle.plugins.ide.eclipse.GenerateEclipseProject;
 
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Preconditions;
+import com.diffplug.common.base.Suppliers;
 import com.diffplug.common.base.Unhandled;
 import com.diffplug.common.collect.ImmutableMap;
 import com.diffplug.common.io.Files;
@@ -48,37 +51,42 @@ import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
 import com.diffplug.gradle.JavaExecable;
 import com.diffplug.gradle.eclipserunner.EclipseIni;
+import com.diffplug.gradle.osgi.OsgiExecable;
 import com.diffplug.gradle.p2.P2Model;
+import com.diffplug.gradle.pde.EclipseRelease;
 
 /** DSL for {@link OomphIdePlugin}. */
 public class OomphIdeExtension {
 	public static final String NAME = "oomphIde";
 
-	private final Project project;
-	private final WorkspaceRegistry workspaceRegistry;
-	private final SortedSet<File> projectFiles = new TreeSet<>();
-	private final Map<String, Supplier<byte[]>> workspaceToContent = new HashMap<>();
-	private final P2Model p2 = new P2Model();
+	final Project project;
+	final WorkspaceRegistry workspaceRegistry;
+	final SortedSet<File> projectFiles = new TreeSet<>();
+	final Map<String, Supplier<byte[]>> workspaceToContent = new HashMap<>();
+	final P2Model p2 = new P2Model();
+	final List<Supplier<OsgiExecable>> internalSetupActions = new ArrayList<>();
 
 	@Nonnull
-	private String name;
+	String name;
 	@Nonnull
-	private String perspective;
+	String perspective;
 	@Nonnull
-	private Object ideDir = "build/oomph-ide" + FileMisc.macApp();
+	Object ideDir = "build/oomph-ide" + FileMisc.macApp();
 
-	private Action<EclipseIni> eclipseIni;
+	Action<EclipseIni> eclipseIni;
 
-	private Object icon, splash;
-
-	private String targetPlatformName;
-	private Action<OomphTargetPlatform> targetPlatform;
+	Object icon, splash;
 
 	public OomphIdeExtension(Project project) throws IOException {
 		this.project = Objects.requireNonNull(project);
 		this.workspaceRegistry = WorkspaceRegistry.instance();
 		this.name = project.getRootProject().getName();
 		this.perspective = Perspectives.RESOURCES;
+	}
+
+	/** Returns the underlying project. */
+	public Project getProject() {
+		return project;
 	}
 
 	/** Returns the P2 model so that users can add the features they'd like. */
@@ -112,13 +120,6 @@ public class OomphIdeExtension {
 		this.eclipseIni = eclipseIni;
 	}
 
-	/** Sets the targetplatform configuration. */
-	public void targetplatform(String name, Action<OomphTargetPlatform> targetPlatform) {
-		Preconditions.checkArgument(this.targetPlatform == null, "Can only set targetplatform once");
-		this.targetPlatformName = Objects.requireNonNull(name);
-		this.targetPlatform = Objects.requireNonNull(targetPlatform);
-	}
-
 	/** Sets the folder where the ide will be built. */
 	public void ideDir(Object ideDir) {
 		this.ideDir = Objects.requireNonNull(ideDir);
@@ -126,29 +127,33 @@ public class OomphIdeExtension {
 
 	/** Adds all eclipse projects from all gradle projects. */
 	public void addAllProjects() {
-		Task setupIde = project.getTasks().getByName(OomphIdePlugin.IDE_SETUP);
 		project.getRootProject().getAllprojects().forEach(p -> {
 			if (p == project) {
 				return;
 			}
 			// this project depends on all the others
-			project.evaluationDependsOn(p.getPath());
-			// and on all of their eclipse tasks
-			p.getTasks().all(task -> {
-				if ("eclipse".equals(task.getName())) {
-					setupIde.dependsOn(task);
-				}
-				if (task instanceof GenerateEclipseProject) {
-					addProjectFile(((GenerateEclipseProject) task).getOutputFile());
-				}
-			});
+			addDependency(project.evaluationDependsOn(p.getPath()));
 		});
 	}
 
-	/** Adds the given project file. */
-	void addProjectFile(File projectFile) {
-		Preconditions.checkArgument(projectFile.getName().equals(".project"), "Project file must be '.project', was %s", projectFile);
-		projectFiles.add(projectFile);
+	/** Adds the eclipse project from the given project path. */
+	public void addProject(String projectPath) {
+		addDependency(project.evaluationDependsOn(projectPath));
+	}
+
+	/** Adds the eclipse tasks from the given project as a dependency of our IDE setup task. */
+	void addDependency(Project eclipseProject) {
+		Task ideSetup = project.getTasks().getByName(OomphIdePlugin.IDE_SETUP);
+		eclipseProject.getTasks().all(task -> {
+			if ("eclipse".equals(task.getName())) {
+				ideSetup.dependsOn(task);
+			}
+			if (task instanceof GenerateEclipseProject) {
+				File projectFile = ((GenerateEclipseProject) task).getOutputFile();
+				Preconditions.checkArgument(projectFile.getName().equals(".project"), "Project file must be '.project', was %s", projectFile);
+				projectFiles.add(projectFile);
+			}
+		});
 	}
 
 	private File getIdeDir() {
@@ -160,46 +165,22 @@ public class OomphIdeExtension {
 	}
 
 	String state() {
-		OomphTargetPlatform platformInstance = new OomphTargetPlatform(project);
-		if (targetPlatform != null) {
-			targetPlatform.execute(platformInstance);
-		}
-		return getIdeDir() + "\n" + platformInstance + "\n" + p2 + "\n" + projectFiles;
+		return getIdeDir() + "\n" + p2 + "\n" + projectFiles;
 	}
 
-	/** Sets the given path within the ide directory to be a property file. */
+	/** Sets the given path within the workspace directory to be a property file. */
 	public void workspaceProp(String file, Action<Map<String, String>> configSupplier) {
 		workspaceToContent.put(file, ConfigMisc.props(configSupplier));
 	}
 
-	/** Sets the theme to be the classic eclipse look. */
-	public void classicTheme() {
-		workspaceProp(".metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.e4.ui.css.swt.theme.prefs", props -> {
-			props.put("eclipse.preferences.version", "1");
-			props.put("themeid", "org.eclipse.e4.ui.css.theme.e4_classic");
-		});
+	/** Adds an action which will be run inside our running application. */
+	public void addInternalSetupAction(OsgiExecable internalSetupAction) {
+		addInternalSetupActionLazy(Suppliers.ofInstance(internalSetupAction));
 	}
 
-	/** Sets a nice font and whitespace settings. */
-	public void niceText() {
-		niceText(OS.getNative().winMacLinux("9.0", "11.0", "10.0"));
-	}
-
-	/** Sets a nice font and whitespace settings. */
-	public void niceText(String fontSize) {
-		// visible whitespace
-		workspaceProp(".metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.editors.prefs", props -> {
-			props.put("eclipse.preferences.version", "1");
-			props.put("showCarriageReturn", "false");
-			props.put("showLineFeed", "false");
-			props.put("showWhitespaceCharacters", "true");
-		});
-		// improved fonts
-		workspaceProp(".metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.workbench.prefs", props -> {
-			props.put("eclipse.preferences.version", "1");
-			String font = OS.getNative().winMacLinux("Consolas", "Monaco", "Monospace");
-			props.put("org.eclipse.jface.textfont", "1|" + font + "|" + fontSize + "|0|WINDOWS|1|-12|0|0|0|400|0|0|0|0|3|2|1|49|" + font);
-		});
+	/** Adds an action which will be run inside our running application. */
+	public void addInternalSetupActionLazy(Supplier<OsgiExecable> internalSetupAction) {
+		internalSetupActions.add(internalSetupAction);
 	}
 
 	static final String STALE_TOKEN = "token_stale";
@@ -221,6 +202,9 @@ public class OomphIdeExtension {
 		FileMisc.cleanDir(workspaceDir);
 		// now we can install the IDE
 		P2Model p2cached = p2.copy();
+		if (p2cached.getRepos().isEmpty()) {
+			p2cached.addRepo(EclipseRelease.latestOfficial().updateSite());
+		}
 		p2cached.addArtifactRepoBundlePool();
 		P2Model.DirectorApp app = p2cached.directorApp(ideDir, "OomphIde");
 		app.consolelog();
@@ -230,8 +214,6 @@ public class OomphIdeExtension {
 		app.platform(SwtPlatform.getRunning());
 		// create it
 		app.runUsingBootstrapper(project);
-		// set the application to use "${ide}/workspace"
-		//setInitialWorkspace();
 		// write out the branding product
 		writeBrandingPlugin(ideDir);
 		// setup the eclipse.ini file
@@ -249,6 +231,8 @@ public class OomphIdeExtension {
 	}
 
 	private BufferedImage loadImg(Object obj) throws IOException {
+		File file = project.file(obj);
+		Preconditions.checkArgument(file.isFile(), "Image file %s does not exist!", file);
 		return ImageIO.read(project.file(obj));
 	}
 
@@ -257,12 +241,15 @@ public class OomphIdeExtension {
 		BufferedImage iconImg, splashImg;
 		int numSet = Booleans.countTrue(icon != null, splash != null);
 		if (numSet == 0) {
+			// nothing is set, use Goomph
 			iconImg = BrandingProductPlugin.getGoomphIcon();
 			splashImg = BrandingProductPlugin.getGoomphSplash();
 		} else if (numSet == 1) {
+			// anything is set, use it for everything 
 			iconImg = loadImg(Optional.ofNullable(icon).orElse(splash));
 			splashImg = iconImg;
 		} else if (numSet == 2) {
+			// both are set, use them each 
 			iconImg = loadImg(icon);
 			splashImg = loadImg(splash);
 		} else {
@@ -303,11 +290,7 @@ public class OomphIdeExtension {
 		SetupWithinEclipse internal = new SetupWithinEclipse(ideDir);
 		internal.add(new ProjectImporter(projectFiles));
 		// setup the targetplatform
-		if (targetPlatform != null) {
-			OomphTargetPlatform targetPlatformInstance = new OomphTargetPlatform(project);
-			targetPlatform.execute(targetPlatformInstance);
-			internal.add(new TargetPlatformSetter(targetPlatformName, targetPlatformInstance.getInstallations()));
-		}
+		internalSetupActions.stream().map(Supplier::get).forEach(internal::add);
 		Errors.constrainTo(IOException.class).run(() -> JavaExecable.exec(project, internal));
 	}
 
@@ -319,5 +302,26 @@ public class OomphIdeExtension {
 		String launcher = OS.getNative().winMacLinux("eclipse.exe", "Contents/MacOS/eclipse", "eclipse");
 		String[] args = new String[]{getIdeDir().getAbsolutePath() + "/" + launcher};
 		Runtime.getRuntime().exec(args, null, getIdeDir());
+	}
+
+	/////////////////
+	// Conventions //
+	/////////////////
+	/** Convenience methods for setting the style. */
+	public void style(Action<ConventionStyle> action) {
+		ConventionStyle convention = new ConventionStyle(this);
+		action.execute(convention);
+	}
+
+	/** Adds the java development tools. */
+	public void jdt(Action<ConventionJdt> action) {
+		ConventionJdt convention = new ConventionJdt(this);
+		action.execute(convention);
+	}
+
+	/** Adds the plugin-development environment, @see ConventionPde. */
+	public void pde(Action<ConventionPde> action) {
+		ConventionPde convention = new ConventionPde(this);
+		action.execute(convention);
 	}
 }
