@@ -12,8 +12,8 @@
 			<property name="applicationXMI" value="org.eclipse.platform/LegacyIDE.e4xmi"/>
 			<property name="cssTheme" value="org.eclipse.e4.ui.css.theme.e4_default"/>
 			<property name="applicationCSSResources" value="platform:/plugin/org.eclipse.ui.themes/images/"/>
-			<property name="buildIdLocation" value="0,220"/>
-			<property name="buildIdSize" value="395,40"/>
+			<property name="startupMessageRect" value="%startupMessageRect%"/>
+			<property name="startupProgressRect" value="%startupProgressRect%"/>
 		</product> 
 	</extension> 
 </plugin>

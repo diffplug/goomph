@@ -266,9 +266,7 @@ public class OomphIdeExtension {
 		}
 
 		File branding = new File(ideDir, FileMisc.macContentsEclipse() + "dropins/com.diffplug.goomph.branding");
-		BrandingProductPlugin.create(branding, splashImg, iconImg, ImmutableMap.of(
-				"plugin.xml", str -> str.replace("%name%", name),
-				"plugin_customization.ini", str -> str.replace("org.eclipse.jdt.ui.JavaPerspective", perspective)));
+		BrandingProductPlugin.create(branding, splashImg, iconImg, name, perspective);
 		File bundlesInfo = new File(ideDir, FileMisc.macContentsEclipse() + "configuration/org.eclipse.equinox.simpleconfigurator/bundles.info");
 		FileMisc.modifyFile(bundlesInfo, content -> {
 			return content + "com.diffplug.goomph.branding,1.0.0,dropins/com.diffplug.goomph.branding/,4,true" + System.lineSeparator();

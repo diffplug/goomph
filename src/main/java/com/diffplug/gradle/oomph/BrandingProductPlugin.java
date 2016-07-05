@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -35,6 +34,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.collect.ImmutableList;
+import com.diffplug.common.collect.ImmutableMap;
 import com.diffplug.common.io.ByteSource;
 import com.diffplug.common.io.Resources;
 import com.diffplug.gradle.FileMisc;
@@ -87,13 +87,32 @@ class BrandingProductPlugin {
 
 	static final ImmutableList<String> template;
 
+	private static String rect(int x, int y, int width, int height) {
+		return x + "," + y + "," + width + "," + height;
+	}
+
+	private static final int MESSAGE_HEIGHT = 20;
+	private static final int MESSAGE_MARGIN = 7;
+	private static final int MESSAGE_VOFFSET = 40;
+
+	private static final int PROGRESS_HEIGHT = 10;
+	private static final int PROGRESS_MARGIN = 2;
+
 	/**
 	 * Writes out an eclipse product to the given root project.
 	 *
 	 * The map is used to modify the template files.
 	 */
 	@SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
-	public static void create(File root, BufferedImage splash, BufferedImage icon, Map<String, Function<String, String>> map) throws IOException {
+	public static void create(File root, BufferedImage splash, BufferedImage icon, String name, String perspective) throws IOException {
+		String startupMessageRect = rect(MESSAGE_MARGIN, splash.getHeight() - MESSAGE_VOFFSET, splash.getWidth() - 2 * MESSAGE_MARGIN, MESSAGE_HEIGHT);
+		String startupProgressRect = rect(PROGRESS_MARGIN, splash.getHeight() - PROGRESS_MARGIN - PROGRESS_HEIGHT, splash.getWidth() - 2 * PROGRESS_MARGIN, PROGRESS_HEIGHT);
+		ImmutableMap<String, Function<String, String>> map = ImmutableMap.of(
+				"plugin.xml", str -> str.replace("%name%", name)
+						.replace("%startupMessageRect%", startupMessageRect)
+						.replace("%startupProgressRect%", startupProgressRect),
+				"plugin_customization.ini", str -> str.replace("org.eclipse.jdt.ui.JavaPerspective", perspective));
+
 		FileMisc.cleanDir(root);
 		Objects.requireNonNull(splash);
 		icon = makeSquare(icon);
