@@ -19,39 +19,31 @@ import org.eclipse.pde.core.target.ITargetDefinition;
 import org.eclipse.pde.core.target.ITargetLocation;
 import org.eclipse.pde.core.target.ITargetPlatformService;
 import org.eclipse.pde.core.target.LoadTargetDefinitionJob;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.framework.ServiceReference;
 
-import com.diffplug.gradle.osgi.OsgiExecable;
-
-class ConventionPdeTargetplatformSetter extends OsgiExecable.ReflectionClient<ConventionPde.TargetPlatformSetter> {
-	ConventionPdeTargetplatformSetter(ConventionPde.TargetPlatformSetter host) {
+class ConventionPdeTargetPlatformSetter extends SetupAction.Internal<ConventionPde.TargetPlatformSetter> {
+	ConventionPdeTargetPlatformSetter(ConventionPde.TargetPlatformSetter host) {
 		super(host);
 	}
 
 	@Override
-	public void run() {
-		BundleContext bundleContext = FrameworkUtil.getBundle(OsgiExecable.class).getBundleContext();
-		ServiceReference<ITargetPlatformService> reference = bundleContext.getServiceReference(ITargetPlatformService.class);
-		ITargetPlatformService service = bundleContext.getService(reference);
-		try {
+	protected void runWithinEclipse() throws Throwable {
+		EclipseMisc.withService(ITargetPlatformService.class, targetPlatformService -> {
 			// create the target
-			ITargetDefinition target = service.newTarget();
-			ITargetLocation[] locations = new ITargetLocation[host.targetPlatforms.size()];
+			ITargetDefinition target = targetPlatformService.newTarget();
+			ITargetLocation[] locations = new ITargetLocation[host.installations.size()];
 			for (int i = 0; i < locations.length; ++i) {
 				String configuration = null; // default config location
-				locations[i] = service.newProfileLocation(host.targetPlatforms.get(i).getAbsolutePath(), configuration);
+				locations[i] = targetPlatformService.newProfileLocation(host.installations.get(i).getAbsolutePath(), configuration);
 			}
 			target.setTargetLocations(locations);
 			target.setName(host.name);
-			service.saveTargetDefinition(target);
+			targetPlatformService.saveTargetDefinition(target);
 			// set it to be active
 			LoadTargetDefinitionJob.load(target);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		} finally {
-			bundleContext.ungetService(reference);
-		}
+		});
+		// wait for the target to load
+		EclipseMisc.waitForJobsToFinish();
+		// and save the workspace
+		SaveWorkspaceInternal.save();
 	}
 }

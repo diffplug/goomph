@@ -16,7 +16,7 @@
 package com.diffplug.gradle.oomph;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import com.diffplug.gradle.JavaExecable;
@@ -34,23 +34,25 @@ class SetupWithinEclipse implements JavaExecable {
 	private static final long serialVersionUID = -7563836594137010936L;
 
 	File eclipseRoot;
-	ArrayList<OsgiExecable> actionsWithinEclipse = new ArrayList<>();
+	List<SetupAction> actionsWithinEclipse;
 
-	public SetupWithinEclipse(File eclipseRoot) {
+	public SetupWithinEclipse(File eclipseRoot, List<SetupAction> list) {
 		this.eclipseRoot = Objects.requireNonNull(eclipseRoot);
-	}
-
-	public void add(OsgiExecable action) {
-		actionsWithinEclipse.add(action);
+		this.actionsWithinEclipse = Objects.requireNonNull(list);
 	}
 
 	@Override
 	public void run() throws Throwable {
 		EclipseIniLauncher launcher = new EclipseIniLauncher(eclipseRoot);
 		try (EclipseIniLauncher.Running running = launcher.open()) {
-			for (OsgiExecable host : actionsWithinEclipse) {
-				OsgiExecable.exec(running.bundleContext(), host);
+			// run the plugins
+			System.out.println("Running internal setup actions...");
+			for (SetupAction action : actionsWithinEclipse) {
+				System.out.print("    " + action.getDescription() + "... ");
+				OsgiExecable.exec(running.bundleContext(), action);
+				System.out.println("done.");
 			}
+			System.out.println("Internal setup complete.");
 		}
 	}
 }

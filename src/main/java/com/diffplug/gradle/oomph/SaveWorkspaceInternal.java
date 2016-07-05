@@ -15,37 +15,32 @@
  */
 package com.diffplug.gradle.oomph;
 
-import java.io.File;
-
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 
-/** @see ProjectImporter */
-class ProjectImporterInternal extends SetupAction.Internal<ProjectImporter> {
-	ProjectImporterInternal(ProjectImporter host) {
+/** @see SaveWorkspace */
+class SaveWorkspaceInternal extends SetupAction.Internal<SaveWorkspace> {
+	public SaveWorkspaceInternal(SaveWorkspace host) {
 		super(host);
 	}
 
 	@Override
 	public void runWithinEclipse() throws CoreException {
-		// add all projects to the workspace
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		for (File projectFile : host.projects) {
-			Path path = new Path(projectFile.toString());
-			IProjectDescription description = workspace.loadProjectDescription(path);
+		save();
+	}
 
-			IProject project = workspace.getRoot().getProject(description.getName());
-			if (project.isOpen() == false) {
-				project.create(description, null);
-				project.open(null);
-			} else {
-				project.refreshLocal(IResource.DEPTH_INFINITE, null);
-			}
+	static void save() throws CoreException {
+		// save the workspace
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+
+		boolean full = false;
+		IProgressMonitor monitor = null;
+		IStatus status = workspace.save(full, monitor);
+		if (!status.isOK()) {
+			throw new IllegalStateException(status.getMessage(), status.getException());
 		}
 	}
 }

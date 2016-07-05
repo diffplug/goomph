@@ -19,7 +19,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,11 +34,12 @@ import javax.imageio.ImageIO;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
+import org.gradle.api.specs.Spec;
+import org.gradle.api.specs.Specs;
 import org.gradle.plugins.ide.eclipse.GenerateEclipseProject;
 
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Preconditions;
-import com.diffplug.common.base.Suppliers;
 import com.diffplug.common.base.Unhandled;
 import com.diffplug.common.collect.ImmutableMap;
 import com.diffplug.common.io.Files;
@@ -50,8 +50,8 @@ import com.diffplug.gradle.ConfigMisc;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
 import com.diffplug.gradle.JavaExecable;
+import com.diffplug.gradle.Lazyable;
 import com.diffplug.gradle.eclipserunner.EclipseIni;
-import com.diffplug.gradle.osgi.OsgiExecable;
 import com.diffplug.gradle.p2.P2Model;
 import com.diffplug.gradle.pde.EclipseRelease;
 
@@ -64,7 +64,7 @@ public class OomphIdeExtension {
 	final SortedSet<File> projectFiles = new TreeSet<>();
 	final Map<String, Supplier<byte[]>> workspaceToContent = new HashMap<>();
 	final P2Model p2 = new P2Model();
-	final List<Supplier<OsgiExecable>> internalSetupActions = new ArrayList<>();
+	final Lazyable<List<SetupAction>> setupActions = Lazyable.ofList();
 
 	@Nonnull
 	String name;
@@ -127,12 +127,21 @@ public class OomphIdeExtension {
 
 	/** Adds all eclipse projects from all gradle projects. */
 	public void addAllProjects() {
+		addAllProjects(Specs.satisfyAll());
+	}
+
+	/** Adds all eclipse projects from all gradle projects whose paths meet the given spec. */
+	public void addAllProjects(Spec<String> include) {
 		project.getRootProject().getAllprojects().forEach(p -> {
+			// this project is automatically included by logic
+			// in OomphIdePlugin
 			if (p == project) {
 				return;
 			}
 			// this project depends on all the others
-			addDependency(project.evaluationDependsOn(p.getPath()));
+			if (include.isSatisfiedBy(p.getPath())) {
+				addDependency(project.evaluationDependsOn(p.getPath()));
+			}
 		});
 	}
 
@@ -174,13 +183,13 @@ public class OomphIdeExtension {
 	}
 
 	/** Adds an action which will be run inside our running application. */
-	public void addInternalSetupAction(OsgiExecable internalSetupAction) {
-		addInternalSetupActionLazy(Suppliers.ofInstance(internalSetupAction));
+	public void addSetupAction(SetupAction internalSetupAction) {
+		setupActions.getRoot().add(internalSetupAction);
 	}
 
-	/** Adds an action which will be run inside our running application. */
-	public void addInternalSetupActionLazy(Supplier<OsgiExecable> internalSetupAction) {
-		internalSetupActions.add(internalSetupAction);
+	/** Eventually adds some actions which will be run inside our running application. */
+	public void addSetupActionLazy(Action<List<SetupAction>> lazyInternalSetupAction) {
+		setupActions.addLazyAction(lazyInternalSetupAction);
 	}
 
 	static final String STALE_TOKEN = "token_stale";
@@ -286,11 +295,16 @@ public class OomphIdeExtension {
 
 	/** Performs setup actions with a running OSGi container. */
 	private void internalSetup(File ideDir) throws IOException {
-		project.getLogger().lifecycle("Internal setup");
-		SetupWithinEclipse internal = new SetupWithinEclipse(ideDir);
-		internal.add(new ProjectImporter(projectFiles));
-		// setup the targetplatform
-		internalSetupActions.stream().map(Supplier::get).forEach(internal::add);
+		// get the user setup actions
+		List<SetupAction> list = setupActions.getResult();
+		// add the project importer
+		list.add(new ProjectImporter(projectFiles));
+		// order the actions
+		List<SetupAction> ordered = SetupAction.order(list);
+		// save the workspace as the last step
+		ordered.add(new SaveWorkspace());
+
+		SetupWithinEclipse internal = new SetupWithinEclipse(ideDir, ordered);
 		Errors.constrainTo(IOException.class).run(() -> JavaExecable.exec(project, internal));
 	}
 

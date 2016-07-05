@@ -15,23 +15,16 @@
  */
 package com.diffplug.gradle.oomph;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
+/** Last plugin to run, saves the workspace. */
+class SaveWorkspace extends SetupAction {
+	private static final long serialVersionUID = -3084624702911429068L;
 
-/** Imports all of the given project files. */
-public class ProjectImporter extends SetupAction {
-	private static final long serialVersionUID = 6542985814638851088L;
-
-	ArrayList<File> projects;
-
-	public ProjectImporter(Collection<File> projects) {
-		super("com.diffplug.gradle.oomph.ProjectImporterInternal");
-		this.projects = new ArrayList<>(projects);
+	public SaveWorkspace() {
+		super("com.diffplug.gradle.oomph.SaveWorkspaceInternal");
 	}
 
 	@Override
 	public String getDescription() {
-		return "import projects";
+		return "save workspace";
 	}
 }

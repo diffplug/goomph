@@ -17,10 +17,11 @@ package com.diffplug.gradle.oomph;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import org.gradle.api.Action;
 
-import com.diffplug.gradle.osgi.OsgiExecable;
+import com.diffplug.gradle.OrderingConstraints;
 
 public class ConventionPde extends OomphConvention {
 	ConventionPde(OomphIdeExtension extension) {
@@ -36,10 +37,10 @@ public class ConventionPde extends OomphConvention {
 
 	/** Creates a targetplatform with the given name and content. */
 	public void targetplatform(String name, Action<TargetPlatform> targetplatform) {
-		extension.addInternalSetupActionLazy(() -> {
+		extension.addSetupActionLazy(actions -> {
 			TargetPlatform instance = new TargetPlatform();
 			targetplatform.execute(instance);
-			return new TargetPlatformSetter(name, instance.installations);
+			actions.add(new TargetPlatformSetter(name, instance.installations));
 		});
 	}
 
@@ -53,17 +54,28 @@ public class ConventionPde extends OomphConvention {
 		}
 	}
 
-	/** Sets the default perspective. */
-	static class TargetPlatformSetter extends OsgiExecable.ReflectionHost {
+	/** Sets the target platform. */
+	public static class TargetPlatformSetter extends SetupAction {
 		private static final long serialVersionUID = 3285583309500818867L;
 
 		String name;
-		ArrayList<File> targetPlatforms;
+		ArrayList<File> installations;
 
-		public TargetPlatformSetter(String name, ArrayList<File> targetPlatforms) {
-			super("com.diffplug.gradle.oomph.ConventionPdeTargetplatformSetter");
-			this.name = name;
-			this.targetPlatforms = targetPlatforms;
+		public TargetPlatformSetter(String name, ArrayList<File> installations) {
+			super("com.diffplug.gradle.oomph.ConventionPdeTargetPlatformSetter");
+			this.name = Objects.requireNonNull(name);
+			this.installations = Objects.requireNonNull(installations);
+		}
+
+		@Override
+		protected void populateOrdering(OrderingConstraints<Class<? extends SetupAction>> ordering) {
+			// we must set a targetplatform before importing projects
+			ordering.before(ProjectImporter.class);
+		}
+
+		@Override
+		public String getDescription() {
+			return "create targetplatform";
 		}
 	}
 }
