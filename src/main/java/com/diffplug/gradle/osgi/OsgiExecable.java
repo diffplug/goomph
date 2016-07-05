@@ -60,7 +60,6 @@ import com.diffplug.gradle.SerializableMisc;
  *         super(host);
  *     }
  * 
- *     @Override
  *     public void run() {
  *         // add all projects to the workspace
  *         IWorkspace workspace = ResourcesPlugin.getWorkspace();

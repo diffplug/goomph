@@ -15,6 +15,8 @@
  */
 package com.diffplug.gradle.oomph;
 
+import com.diffplug.gradle.p2.P2Model;
+
 /**
  * A listing of common IUs.
  * 
