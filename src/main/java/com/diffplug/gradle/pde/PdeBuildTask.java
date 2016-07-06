@@ -168,7 +168,6 @@ public class PdeBuildTask extends DefaultTask {
 			PdeProductBuildConfig product = new PdeProductBuildConfig(getProject());
 			productConfig.execute(product);
 			List<File> roots = new ArrayList<>();
-			roots.add(base);
 			roots.addAll(pluginPaths);
 			product.setup(destination, properties, platforms, roots);
 		}
