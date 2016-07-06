@@ -29,9 +29,11 @@ import aQute.lib.filter.Filter;
 
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Preconditions;
+import com.diffplug.common.collect.HashBasedTable;
 import com.diffplug.common.collect.HashMultimap;
 import com.diffplug.common.collect.SetMultimap;
 import com.diffplug.common.collect.Sets;
+import com.diffplug.common.collect.Table;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.ZipMisc;
@@ -40,6 +42,7 @@ import com.diffplug.gradle.ZipMisc;
 class PluginCatalog {
 	/** A map from plugin name to a set of available versions. */
 	private final SetMultimap<String, Version> availableVersions = HashMultimap.create();
+	private final Table<String, Version, File> toFile = HashBasedTable.create();
 	/** A version mapping policy. */
 	private final ExplicitVersionPolicy versionPolicy;
 	/** A set containing plugins which are specific to platforms which we don't support. */
@@ -55,7 +58,7 @@ class PluginCatalog {
 	 * exists with two versions, an exception is thrown, unless it is
 	 * handled by the MultipleVersionPolicy.
 	 */
-	PluginCatalog(ExplicitVersionPolicy versionPolicy, List<SwtPlatform> supported, List<File> roots) {
+	public PluginCatalog(ExplicitVersionPolicy versionPolicy, List<SwtPlatform> supported, List<File> roots) {
 		this.versionPolicy = Objects.requireNonNull(versionPolicy);
 		for (File root : roots) {
 			Preconditions.checkArgument(root.exists(), "Root '%s' does not exist.", root);
@@ -70,14 +73,14 @@ class PluginCatalog {
 			// look for plugin.jar
 			files.stream().filter(file -> file.isFile() && file.getName().endsWith(".jar"))
 					.forEach(Errors.rethrow().wrap(file -> {
-						ZipMisc.read(file, MANIFEST_PATH, input -> addManifest(supported, new Manifest(input)));
+						ZipMisc.read(file, MANIFEST_PATH, input -> addManifest(supported, new Manifest(input), file));
 					}));
 			// look for folder-style plugins (especially org.eclipse.core.runtime.compatibility.registry)
-			files.stream().filter(file -> file.isDirectory()).forEach(Errors.rethrow().wrap(file -> {
-				File manifestFile = new File(file, MANIFEST_PATH);
+			files.stream().filter(file -> file.isDirectory()).forEach(Errors.rethrow().wrap(folder -> {
+				File manifestFile = new File(folder, MANIFEST_PATH);
 				if (manifestFile.exists()) {
-					try (FileInputStream input = new FileInputStream(new File(file, MANIFEST_PATH))) {
-						addManifest(supported, new Manifest(input));
+					try (FileInputStream input = new FileInputStream(new File(folder, MANIFEST_PATH))) {
+						addManifest(supported, new Manifest(input), folder);
 					}
 				}
 			}));
@@ -85,7 +88,7 @@ class PluginCatalog {
 	}
 
 	/** Adds a manifest to the catalog. */
-	private void addManifest(List<SwtPlatform> supported, Manifest parsed) {
+	private void addManifest(List<SwtPlatform> supported, Manifest parsed, File plugin) {
 		// parse out the name (looking out for the ";singleton=true" names
 		String name = parsed.getMainAttributes().getValue(BUNDLE_NAME);
 		int splitIdx = name.indexOf(';');
@@ -109,6 +112,7 @@ class PluginCatalog {
 		String versionRaw = parsed.getMainAttributes().getValue(BUNDLE_VERSION);
 		Version version = Version.parseVersion(versionRaw);
 		availableVersions.put(name, version);
+		toFile.put(name, version, plugin);
 	}
 
 	/** Returns true if the given plugin is for a supported platform. */
@@ -119,6 +123,11 @@ class PluginCatalog {
 	/** Returns the version for the given plugin. */
 	Set<Version> getVersionsFor(String plugin) {
 		return versionPolicy.useVersions(plugin, availableVersions.get(plugin));
+	}
+
+	/** Returns a file for the given plugin and version. */
+	File getFile(String plugin, Version version) {
+		return toFile.get(plugin, version);
 	}
 
 	@Override
