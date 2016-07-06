@@ -16,9 +16,11 @@
 package com.diffplug.gradle.p2;
 
 import java.io.File;
+import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,7 +39,6 @@ import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.StringPrinter;
 import com.diffplug.common.base.Throwing;
 import com.diffplug.common.collect.ImmutableSet;
-import com.diffplug.common.collect.Sets;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
@@ -52,7 +53,9 @@ import com.diffplug.gradle.pde.EclipseRelease;
  * - Install with p2 director using {@link #directorApp(File, String)}.
  * - Mirror with the ant p2 mirror task using {@link #mirrorApp(File)}.
  */
-public class P2Model {
+public class P2Model implements Serializable {
+	private static final long serialVersionUID = 6458767795698285906L;
+
 	/** Returns a deep copy of this model. */
 	public P2Model copy() {
 		P2Model copy = new P2Model();
@@ -63,10 +66,10 @@ public class P2Model {
 		return copy;
 	}
 
-	private Set<String> ius = Sets.newHashSet();
-	private Set<String> repos = Sets.newLinkedHashSet();
-	private Set<String> metadataRepos = Sets.newLinkedHashSet();
-	private Set<String> artifactRepos = Sets.newLinkedHashSet();
+	private Set<String> ius = new LinkedHashSet<>();
+	private Set<String> repos = new LinkedHashSet<>();
+	private Set<String> metadataRepos = new LinkedHashSet<>();
+	private Set<String> artifactRepos = new LinkedHashSet<>();
 
 	/** Combines all fields for easy implementation of equals and hashCode. */
 	private final List<Object> content = Arrays.asList(ius, repos, metadataRepos, artifactRepos);
