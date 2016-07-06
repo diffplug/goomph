@@ -27,6 +27,7 @@ import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.collect.ImmutableSet;
 import com.diffplug.common.collect.Immutables;
 import com.diffplug.common.collect.Maps;
+import com.diffplug.gradle.Lazyable;
 
 /** Specifies a policy for which bundles we will keep multiple versions of, used in {@link PdeBuildTask}. */
 public class ExplicitVersionPolicy {
@@ -44,6 +45,13 @@ public class ExplicitVersionPolicy {
 		return mapping;
 	}
 
+	/** Creates a deep copy of this ExplicitVersionPolicy. */
+	public ExplicitVersionPolicy copy() {
+		ExplicitVersionPolicy clone = new ExplicitVersionPolicy();
+		resolvable.forEach((key, resolve) -> clone.resolvable.put(key, new Resolve(resolve)));
+		return clone;
+	}
+
 	/**
 	 * Represents a given plugin and its input versions,
 	 * and specifies the versions to use when resolving it.
@@ -55,6 +63,11 @@ public class ExplicitVersionPolicy {
 		private Resolve(String... accepts) {
 			Preconditions.checkArgument(accepts.length > 1, "Only applies for plugins with multiple versions.");
 			this.accepts = parse(accepts);
+		}
+
+		private Resolve(Resolve source) {
+			this.accepts = source.accepts;
+			this.takes = source.takes;
 		}
 
 		public void with(String... takes) {
@@ -94,5 +107,10 @@ public class ExplicitVersionPolicy {
 				}
 			}
 		}
+	}
+
+	/** Creates a Lazyable ExplicitVersionPolicy. */
+	static Lazyable<ExplicitVersionPolicy> createLazyable() {
+		return new Lazyable<>(new ExplicitVersionPolicy(), ExplicitVersionPolicy::copy);
 	}
 }
