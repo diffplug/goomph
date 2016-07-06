@@ -39,7 +39,7 @@ public class Lazyable<C> {
 
 	/** 
 	 * @param root		The original element.
-	 * @param combine	Copies the type, so the actions can be applied to it.
+	 * @param copier	Copies the type, so the actions can be applied to it.
 	 */
 	public Lazyable(C root, Function<? super C, ? extends C> copier) {
 		this.root = Objects.requireNonNull(root);
