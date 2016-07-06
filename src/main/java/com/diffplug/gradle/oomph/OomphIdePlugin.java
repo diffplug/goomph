@@ -30,7 +30,7 @@ import com.diffplug.gradle.pde.EclipseRelease;
  * many IDE's, each with their own settings and plugins, while being very efficient
  * with your disk and network resources.
  *
- * `gradlew ide` will launch the IDE.
+ * - `gradlew ide` launches the IDE, after running any required setup tasks.
  *
  * To create an IDE for java projects:
  *
@@ -83,7 +83,7 @@ import com.diffplug.gradle.pde.EclipseRelease;
  * }
  * ```
  * 
- * ### Which version of eclipse will it use?
+ * ## Which version of eclipse will it use?
  * 
  * If you specify a repository manually, it will use that version.
  * 
@@ -100,12 +100,28 @@ import com.diffplug.gradle.pde.EclipseRelease;
  * If you don't specify any repositories, then the latest and greatest
  * official eclipse release will automatically be used, currently {@link EclipseRelease#LATEST}.
  * 
- * ### Which projects get imported?
+ * ## What if I want to change my setup
  * 
- * Any eclipse projects which are defined in this project will be automatically
- * imported.  When creating the ide, these are the task dependencies:
+ * It helps to know a little about the guts of the tasks.
  * 
- * `ide` -> `ideSetup` -> `eclipse`
+ * `ide` -> `ideSetupWorkspace` -> `ideSetupP2`
+ * 
+ * - `ideSetupP2` installs plugins and updates their versions.
+ *     + If you change something about the p2 model or the icons,
+ *       this will rerun to generate exactly the plugins which
+ *       have been specified.
+ * - `ideSetupWorkspace` imports the projects and sets user settings.
+ *     + If you change the projects or user settings, this will not rerun
+ *       automatically, because that would wipe out any changes you've made
+ *       manually while using the IDE.  If you want to wipe out the workspace,
+ *       you can run `ideClean` and it will wipe the workspace.
+ * - `ide` runs the IDE.
+ * 
+ * ## Which projects get imported?
+ * 
+ * If the gradle project to which you applied this plugin
+ * also contains an eclipse project, it will automatically
+ * be imported into the workspace.
  * 
  * If you have a multiproject build, you can do the following:
  * 
@@ -118,7 +134,7 @@ import com.diffplug.gradle.pde.EclipseRelease;
  * }
  * ```
  * 
- * ### How do I control the details?
+ * ## How do I control the details?
  * 
  * See {@link OomphIdeExtension} for the full DSL.
  */
@@ -126,26 +142,47 @@ public class OomphIdePlugin extends ProjectPlugin {
 	@Override
 	protected void applyOnce(Project project) {
 		OomphIdeExtension extension = project.getExtensions().create(OomphIdeExtension.NAME, OomphIdeExtension.class, project);
-		// ideSetup
-		Task ideSetup = project.getTasks().create(IDE_SETUP);
-		ideSetup.doFirst(unused -> {
-			Errors.rethrow().run(extension::ideSetup);
+		// ideSetupP2
+		Task ideSetupP2 = project.getTasks().create(IDE_SETUP_P2);
+		ideSetupP2.doFirst(unused -> {
+			Errors.rethrow().run(extension::ideSetupP2);
 		});
+		// ideSetupWorkspace
+		Task ideSetupWorkspace = project.getTasks().create(IDE_SETUP_WORKSPACE);
+		ideSetupWorkspace.doFirst(unused -> {
+			Errors.rethrow().run(extension::ideSetupWorkspace);
+		});
+		ideSetupWorkspace.dependsOn(ideSetupP2);
 		// ide
 		Task ide = project.getTasks().create(IDE);
 		ide.doFirst(unused -> {
 			Errors.rethrow().run(extension::ide);
 		});
+
 		project.afterEvaluate(p -> {
 			// ideSetup -> eclipse
 			extension.addDependency(p);
-			// tie ide to idesetup iff setup is required
-			if (!extension.isClean()) {
-				ide.dependsOn(ideSetup);
+			// tie ide to ideSetupP2 iff setup is required
+			if (!extension.p2isClean()) {
+				ide.dependsOn(ideSetupP2);
+			}
+			// tie ide to ideSetupWorkspace if there's no workspace
+			if (!extension.workspaceExists()) {
+				ide.dependsOn(ideSetupWorkspace);
 			}
 		});
+
+		// ideClean
+		Task ideClean = project.getTasks().create(IDE_CLEAN);
+		ideClean.doFirst(unused -> {
+			extension.ideClean();
+		});
+		ideSetupP2.mustRunAfter(ideClean);
+		ideSetupWorkspace.mustRunAfter(ideClean);
 	}
 
-	static final String IDE_SETUP = "ideSetup";
 	static final String IDE = "ide";
+	static final String IDE_SETUP_WORKSPACE = "ideSetupWorkspace";
+	static final String IDE_SETUP_P2 = "ideSetupP2";
+	static final String IDE_CLEAN = "ideClean";
 }

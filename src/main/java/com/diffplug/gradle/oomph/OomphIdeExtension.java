@@ -31,6 +31,7 @@ import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 
+import org.apache.commons.io.FileUtils;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
@@ -41,7 +42,6 @@ import org.gradle.plugins.ide.eclipse.GenerateEclipseProject;
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.base.Unhandled;
-import com.diffplug.common.collect.ImmutableMap;
 import com.diffplug.common.io.Files;
 import com.diffplug.common.primitives.Booleans;
 import com.diffplug.common.swt.os.OS;
@@ -51,6 +51,7 @@ import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
 import com.diffplug.gradle.JavaExecable;
 import com.diffplug.gradle.Lazyable;
+import com.diffplug.gradle.StateBuilder;
 import com.diffplug.gradle.eclipserunner.EclipseIni;
 import com.diffplug.gradle.p2.P2Model;
 import com.diffplug.gradle.pde.EclipseRelease;
@@ -152,7 +153,7 @@ public class OomphIdeExtension {
 
 	/** Adds the eclipse tasks from the given project as a dependency of our IDE setup task. */
 	void addDependency(Project eclipseProject) {
-		Task ideSetup = project.getTasks().getByName(OomphIdePlugin.IDE_SETUP);
+		Task ideSetup = project.getTasks().getByName(OomphIdePlugin.IDE_SETUP_WORKSPACE);
 		eclipseProject.getTasks().all(task -> {
 			if ("eclipse".equals(task.getName())) {
 				ideSetup.dependsOn(task);
@@ -173,10 +174,6 @@ public class OomphIdeExtension {
 		return workspaceRegistry.workspaceDir(project, getIdeDir());
 	}
 
-	String state() {
-		return getIdeDir() + "\n" + p2 + "\n" + projectFiles;
-	}
-
 	/** Sets the given path within the workspace directory to be a property file. */
 	public void workspaceProp(String file, Action<Map<String, String>> configSupplier) {
 		workspaceToContent.put(file, ConfigMisc.props(configSupplier));
@@ -192,24 +189,38 @@ public class OomphIdeExtension {
 		setupActions.addLazyAction(lazyInternalSetupAction);
 	}
 
+	////////////////
+	// ideSetupP2 //
+	////////////////
 	static final String STALE_TOKEN = "token_stale";
 
-	/** Returns true iff the installation is clean. */
-	boolean isClean() {
-		return Errors.rethrow().get(() -> FileMisc.hasToken(getIdeDir(), STALE_TOKEN, state()));
+	/** Returns the full state of the installation, but not the workspace. */
+	String p2state() {
+		StateBuilder state = new StateBuilder(project);
+		state.add("ideDir", getIdeDir());
+		state.add("p2", p2);
+		state.addFile("icon", icon);
+		state.addFile("splash", splash);
+		state.add("name", name);
+		state.add("perspective", perspective);
+		return state.toString();
 	}
 
-	/** Sets up an IDE as described in this model from scratch. */
-	void ideSetup() throws Exception {
-		if (isClean()) {
+	/** Returns true iff the installation is clean. */
+	boolean p2isClean() {
+		return Errors.rethrow().get(() -> FileMisc.hasToken(getIdeDir(), STALE_TOKEN, p2state()));
+	}
+
+	/** Creates or updates the installed plugins in this model. */
+	void ideSetupP2() throws Exception {
+		if (p2isClean()) {
 			return;
 		}
 		File ideDir = getIdeDir();
-		File workspaceDir = getWorkspaceDir();
-		// else we've gotta set it up
-		FileMisc.cleanDir(ideDir);
-		FileMisc.cleanDir(workspaceDir);
-		// now we can install the IDE
+		// make sure the directory exists
+		if (!ideDir.isDirectory()) {
+			FileMisc.cleanDir(ideDir);
+		}
 		P2Model p2cached = p2.copy();
 		if (p2cached.getRepos().isEmpty()) {
 			p2cached.addRepo(EclipseRelease.latestOfficial().updateSite());
@@ -227,16 +238,8 @@ public class OomphIdeExtension {
 		writeBrandingPlugin(ideDir);
 		// setup the eclipse.ini file
 		setupEclipseIni(ideDir);
-		// setup any config files
-		workspaceToContent.forEach((path, content) -> {
-			File target = new File(workspaceDir, path);
-			FileMisc.mkdirs(target.getParentFile());
-			Errors.rethrow().run(() -> Files.write(content.get(), target));
-		});
-		// perform internal setup
-		internalSetup(ideDir);
 		// write out a staleness token
-		FileMisc.writeToken(ideDir, STALE_TOKEN, state());
+		FileMisc.writeToken(ideDir, STALE_TOKEN, p2state());
 	}
 
 	private BufferedImage loadImg(Object obj) throws IOException {
@@ -291,6 +294,33 @@ public class OomphIdeExtension {
 		ini.writeTo(iniFile);
 	}
 
+	///////////////////////
+	// ideSetupWorkspace //
+	///////////////////////
+	/** Returns true iff the workspace already exists. */
+	boolean workspaceExists() {
+		File workspaceDir = getWorkspaceDir();
+		return workspaceDir.isDirectory() && !FileMisc.list(workspaceDir).isEmpty();
+	}
+
+	/** Sets up an IDE as described in this model from scratch. */
+	void ideSetupWorkspace() throws Exception {
+		if (workspaceExists()) {
+			project.getLogger().lifecycle("Skipping " + OomphIdePlugin.IDE_SETUP_WORKSPACE + " because it already exists, run " + OomphIdePlugin.IDE_CLEAN + " to force a rebuild.");
+		}
+		File workspaceDir = getWorkspaceDir();
+		// else we've gotta set it up
+		FileMisc.cleanDir(workspaceDir);
+		// setup any config files
+		workspaceToContent.forEach((path, content) -> {
+			File target = new File(workspaceDir, path);
+			FileMisc.mkdirs(target.getParentFile());
+			Errors.rethrow().run(() -> Files.write(content.get(), target));
+		});
+		// perform internal setup
+		internalSetup(getIdeDir());
+	}
+
 	/** Performs setup actions with a running OSGi container. */
 	private void internalSetup(File ideDir) throws IOException {
 		// get the user setup actions
@@ -306,7 +336,10 @@ public class OomphIdeExtension {
 		Errors.constrainTo(IOException.class).run(() -> JavaExecable.exec(project, internal));
 	}
 
-	/** Runs the IDE which was setup by {@link #ideSetup()}. */
+	/////////
+	// ide //
+	/////////
+	/** Runs the IDE which was setup by {@link #ideSetupWorkspace()}. */
 	void ide() throws IOException {
 		// clean any stale workspaces
 		workspaceRegistry.clean();
@@ -314,6 +347,12 @@ public class OomphIdeExtension {
 		String launcher = OS.getNative().winMacLinux("eclipse.exe", "Contents/MacOS/eclipse", "eclipse");
 		String[] args = new String[]{getIdeDir().getAbsolutePath() + "/" + launcher};
 		Runtime.getRuntime().exec(args, null, getIdeDir());
+	}
+
+	/** Cleans everything from p2 and workspace. */
+	void ideClean() {
+		FileUtils.deleteQuietly(getIdeDir());
+		FileUtils.deleteQuietly(getWorkspaceDir());
 	}
 
 	/////////////////

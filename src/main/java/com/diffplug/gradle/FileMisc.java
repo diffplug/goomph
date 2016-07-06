@@ -73,7 +73,7 @@ public class FileMisc {
 		});
 	}
 
-	/** Calls {@link File#mkdirs()} and throws an exception if it fails. */
+	/** Calls {@link File#delete()} and throws an exception if it fails. */
 	public static void delete(File f) {
 		retry(f, file -> {
 			java.nio.file.Files.delete(file.toPath());
