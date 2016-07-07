@@ -38,7 +38,6 @@ import com.diffplug.common.base.Consumers;
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.StringPrinter;
 import com.diffplug.common.base.Throwing;
-import com.diffplug.common.collect.ImmutableSet;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
@@ -230,6 +229,8 @@ public class P2Model implements Serializable {
 	/**
 	 * Creates a p2.mirror ant task file which will mirror the
 	 * model's described IU's and repos into the given destination folder.
+	 * 
+	 * @see MirrorApp
 	 */
 	@SuppressWarnings("unchecked")
 	public MirrorApp mirrorApp(File dstFolder) {
@@ -257,7 +258,13 @@ public class P2Model implements Serializable {
 		});
 	}
 
-	/** @see #mirrorApp(File) */
+	/**
+	 * An extension of {@link EclipseApp.AntRunner} which is
+	 * pre-populated with an ant file appropriate for running
+	 * the p2.mirror ant task.
+	 *
+	 * Created using {@link P2Model#mirrorApp(File)}.
+	 */
 	public static class MirrorApp extends EclipseApp.AntRunner {
 		/** Runs this application, downloading a small bootstrapper if necessary. */
 		public void runUsingBootstrapper() throws Exception {
