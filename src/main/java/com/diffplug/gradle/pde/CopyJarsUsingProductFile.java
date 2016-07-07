@@ -37,6 +37,8 @@ import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.Lazyable;
 
 /**
+ * THIS CLASS IS EXPERIMENTAL AND SUBJECT TO CHANGE.
+ * 
  * Copies jars into a folder, using a product file and an
  * {@link ExplicitVersionPolicy} to decide which jars to copy.
  * Useful for passing jars to analysis tools.

@@ -79,28 +79,28 @@ It turns out that the tooling required to implement "IDE-as-build-artifact" is t
 
 Below is an index of Goomph's capabilities, followed by more-detailed sections which describe their usage.  Of course, you can always consult the javadoc as described above.
 
-* `com.diffplug.gradle.osgi`
+* `com.diffplug.gradle.osgi` - Plugin for generating OSGi metadata.
 	+ [`bndmanifest`](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/osgi/BndManifestPlugin.html) generates a manifest using purely bnd, and outputs it for IDE consumption.
 	+ [`OsgiExecable`](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/osgi/OsgiExecable.html) makes it easy to run a chunk of code within an OSGi container, and get the result from outside the container.
-* `com.diffplug.gradle.eclipse`
+* `com.diffplug.gradle.eclipse` - Plugins for creating and manipulating eclipse project files.
 	+ [`buildproperties`](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/eclipse/BuildPropertiesPlugin.html) uses [`build.properties`](http://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Fguide%2Ftools%2Feditors%2Fmanifest_editor%2Fbuild.htm) to control a gradle build, and fixes eclipse project classpath to include binary assets specified in `build.properties`.
 	+ [`excludebuildfolder`](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/eclipse/ExcludeBuildFolderPlugin.html) excludes the gradle `build` folder from Eclipse's resource indexing.
 	+ [`projectdeps`](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/eclipse/ProjectDepsPlugin.html) fixes an intermittent problem where dependencies on other projects within the workspace aren't always resolved correctly within Eclipse.
-* `com.diffplug.gradle.p2`
+	+ [`resourcefilters`](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/eclipse/ResourceFiltersPlugin.html) adds resource filters to the eclipse project.
+* `com.diffplug.gradle.p2` - Tasks and plugins for manipulating p2 data.
 	+ [`asmaven`](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/p2/AsMavenPlugin.html) downloads dependencies from a p2 repository and makes them available in a local maven repository.
 	+ [`P2Model`](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/p2/P2Model.html) models a set of p2 repositories and IUs, and provides convenience methods for running p2-director or the p2.mirror ant task against these.
-* `com.diffplug.gradle.pde`
+* `com.diffplug.gradle.pde` - Tasks for running Eclipse PDE using a downloaded eclipse instance.
 	+ [`PdeBuildTask`](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/pde/PdeBuildTask.html) runs PDE build to build an RCP product.
 	+ [`PdeAntBuildTask`](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/pde/PdeAntBuildTask.html) runs PDE on an ant file.
-* `com.diffplug.gradle.swt`
+* `com.diffplug.gradle.swt` - Plugins for working with SWT in Gradle.
 	+ [`nativedeps`](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/swt/NativeDepsPlugin.html) adds the platform-specific SWT jars to the runtime classpath so that SWT code can run.
-* `com.diffplug.gradle` (miscellaneous infrastructure)
+* `com.diffplug.gradle` - Miscellaneous infrastructure.
 	+ [`CmdLineTask`](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/CmdLineTask.html) runs a series of shell commands, possibly copying or moving files in the meantime.
 	+ [`JavaExecable`](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/JavaExecable.html) makes it easy to run a chunk of code in a separate JVM, and get the result back in this one.
 	+ [`JavaExecWinFriendly`](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/JavaExecWinFriendly.html) overcomes limitations in Windows' commandline length and long classpaths.
-* `com.diffplug.gradle.eclipserunner`
-	+ Infrastructure for running headless eclipse applications.  Used to power a the infrastructure above.
-
+* `com.diffplug.gradle.eclipserunner` - Infrastructure for running headless eclipse applications.  Used to powerd the infrastructure above.
+ddd
 <!---freshmark /javadoc -->
 
 ## Acknowledgements

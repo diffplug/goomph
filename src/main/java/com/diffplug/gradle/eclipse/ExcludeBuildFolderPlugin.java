@@ -17,8 +17,6 @@ package com.diffplug.gradle.eclipse;
 
 import org.gradle.api.Project;
 
-import groovy.util.Node;
-
 import com.diffplug.gradle.ProjectPlugin;
 
 /**
@@ -33,22 +31,14 @@ import com.diffplug.gradle.ProjectPlugin;
  * ```groovy
  * apply plugin: 'com.diffplug.gradle.eclipse.excludebuildfolder'
  * ```
+ * 
+ * If you'd like to exclude more than just the build folder,
+ * you might want to look at the more general {@link ResourceFiltersPlugin}.
  */
 public class ExcludeBuildFolderPlugin extends ProjectPlugin {
 	@Override
 	protected void applyOnce(Project project) {
-		EclipseProjectPlugin.modifyEclipseProject(project, eclipseModel -> {
-			// create a filterResources node
-			eclipseModel.getProject().getFile().getXmlTransformer().addAction(xmlProvider -> {
-				Node filterNode = xmlProvider.asNode().appendNode("filteredResources").appendNode("filter");
-				filterNode.appendNode("id", project.getName().hashCode()); // any random string will work, we'll use the project name's hash
-				filterNode.appendNode("name", "");
-				filterNode.appendNode("type", 10);
-				// make sure that it matches the build folder
-				Node matcher = filterNode.appendNode("matcher");
-				matcher.appendNode("id", "org.eclipse.ui.ide.multiFilter");
-				matcher.appendNode("arguments", "1.0-name-matches-false-false-build");
-			});
-		});
+		ResourceFiltersPlugin resourceFilters = ProjectPlugin.getPlugin(project, ResourceFiltersPlugin.class);
+		resourceFilters.extension.filters.add(ResourceFilter.exclude().folders().projectRelativePath("build/*"));
 	}
 }
