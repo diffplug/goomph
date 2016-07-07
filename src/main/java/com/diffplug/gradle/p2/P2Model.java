@@ -126,8 +126,8 @@ public class P2Model implements Serializable {
 		addIU(feature + FEATURE_GROUP, version);
 	}
 
-	public ImmutableSet<String> getRepos() {
-		return ImmutableSet.copyOf(repos);
+	public Set<String> getRepos() {
+		return repos;
 	}
 
 	public void addRepoEclipse(String release) {
