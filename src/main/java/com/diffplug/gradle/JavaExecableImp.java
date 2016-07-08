@@ -16,10 +16,17 @@
 package com.diffplug.gradle;
 
 import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.function.Consumer;
 
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.file.FileCollection;
+import org.gradle.api.internal.file.collections.SimpleFileCollection;
+import org.gradle.api.tasks.JavaExec;
 import org.gradle.process.ExecResult;
 import org.gradle.process.JavaExecSpec;
 
@@ -60,5 +67,24 @@ class JavaExecableImp {
 		} finally {
 			FileMisc.forceDelete(tempFile); // delete the temp
 		}
+	}
+
+	static FileCollection fromLocalClassloader() {
+		Set<File> files = new LinkedHashSet<>();
+		Consumer<Class<?>> addPeerClasses = clazz -> {
+			URLClassLoader urlClassloader = (URLClassLoader) clazz.getClassLoader();
+			for (URL url : urlClassloader.getURLs()) {
+				String name = url.getFile();
+				if (name != null) {
+					files.add(new File(name));
+				}
+			}
+		};
+		// add the classes that goomph needs
+		addPeerClasses.accept(JavaExecable.class);
+		// add the gradle API
+		addPeerClasses.accept(JavaExec.class);
+
+		return new SimpleFileCollection(files);
 	}
 }

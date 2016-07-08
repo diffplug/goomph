@@ -73,7 +73,7 @@ public class FileMisc {
 		});
 	}
 
-	/** Calls {@link FileUtils#forceDelete()} and throws an exception if it fails. */
+	/** Calls {@link FileUtils#forceDelete(File)} and throws an exception if it fails. */
 	public static void forceDelete(File f) {
 		retry(f, file -> {
 			FileUtils.forceDelete(f);

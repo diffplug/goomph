@@ -18,20 +18,13 @@ package com.diffplug.gradle;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.internal.file.UnionFileCollection;
-import org.gradle.api.internal.file.collections.SimpleFileCollection;
-import org.gradle.api.tasks.JavaExec;
 import org.gradle.process.JavaExecSpec;
 
 import com.diffplug.common.base.Throwing;
@@ -108,8 +101,10 @@ public interface JavaExecable extends Serializable, Throwing.Runnable {
 				.collect(Collectors.toList());
 		// add the gradleApi, workaround from https://discuss.gradle.org/t/gradle-doesnt-add-the-same-dependencies-to-classpath-when-applying-plugins/9759/6?u=ned_twigg
 		classpaths.add(project.getConfigurations().detachedConfiguration(project.getDependencies().gradleApi()));
-		FileCollection classpath = new UnionFileCollection(classpaths);
+		// add stuff from the local classloader too, to fix testkit's classpath
+		classpaths.add(JavaExecableImp.fromLocalClassloader());
 		// run it
+		FileCollection classpath = new UnionFileCollection(classpaths);
 		return JavaExecableImp.execInternal(input, classpath, settings, execSpec -> JavaExecWinFriendly.javaExec(project, execSpec));
 	}
 
@@ -120,22 +115,7 @@ public interface JavaExecable extends Serializable, Throwing.Runnable {
 
 	/** @see #exec(Project, JavaExecable, Action) */
 	public static <T extends JavaExecable> T execWithoutGradle(T input, Action<JavaExecSpec> settings) throws Throwable {
-		Set<File> files = new LinkedHashSet<>();
-		Consumer<Class<?>> addPeerClasses = clazz -> {
-			URLClassLoader urlClassloader = (URLClassLoader) clazz.getClassLoader();
-			for (URL url : urlClassloader.getURLs()) {
-				String name = url.getFile();
-				if (name != null) {
-					files.add(new File(name));
-				}
-			}
-		};
-		// add the classes that goomph needs
-		addPeerClasses.accept(JavaExecable.class);
-		// add the gradle API
-		addPeerClasses.accept(JavaExec.class);
-
-		FileCollection classpath = new SimpleFileCollection(files);
+		FileCollection classpath = JavaExecableImp.fromLocalClassloader();
 		return JavaExecableImp.execInternal(input, classpath, settings, execSpec -> JavaExecWinFriendly.javaExecWithoutGradle(execSpec));
 	}
 
