@@ -19,7 +19,7 @@ import org.gradle.api.Action;
 import org.gradle.api.Project;
 
 /** DSL for {@link AsMavenPlugin}. */
-public class AsMavenExtension {
+public class AsMavenExtension implements P2Declarative {
 	public static final String NAME = "p2AsMaven";
 
 	final AsMaven mavenify;
@@ -39,6 +39,7 @@ public class AsMavenExtension {
 	}
 
 	/** P2 model (update site and IUs). */
+	@Override
 	public P2Model getP2() {
 		return mavenify.p2();
 	}

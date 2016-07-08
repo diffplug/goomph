@@ -32,9 +32,9 @@ import com.diffplug.gradle.ProjectPlugin;
  *     // the maven group they shall have
  *     mavenGroup 'p2asmaven'
  *     // the repositories and artifacts to download
- *     p2.addRepo(ECLIPSE_UPDATE_SITE)
- *     p2.addIU('org.eclipse.jdt.core')
-
+ *     repo ECLIPSE_UPDATE_SITE
+ *     iu   'org.eclipse.jdt.core'
+ * 
  *     // copies all artifacts to the `p2runnable` folder in a "runnable" form
  *     // appropriate for target platforms and PDE build
  *     // e.g. org.eclipse.equinox.launcher will be extracted.

@@ -47,8 +47,8 @@ import com.diffplug.gradle.pde.EclipseRelease;
  * oomphIde {
  *     pde {
  *         targetplatform {
- *             installation('target.maven/build')
- *             installation('target.p2/build/p2asmaven/p2')
+ *             installation 'target.maven/build'
+ *             installation 'target.p2/build/p2asmaven/p2'
  *         }
  *     }
  * }
@@ -78,8 +78,8 @@ import com.diffplug.gradle.pde.EclipseRelease;
  * 
  * ```groovy
  * oomphIde {
- *     p2.addRepo('http://download.eclipse.org/buildship/updates/e45/releases/1.0')
- *     p2.addIU('org.eclipse.buildship')
+ *     repo 'http://download.eclipse.org/buildship/updates/e45/releases/1.0'
+ *     iu   'org.eclipse.buildship'
  * }
  * ```
  * 
@@ -92,7 +92,7 @@ import com.diffplug.gradle.pde.EclipseRelease;
  *     // Use Mars SR2
  *     p2.addRepoOfficial('4.5.2')
  *     // Use the latest Neon milestone
- *     p2.addRepo('http://download.eclipse.org/eclipse/updates/4.6milestones')
+ *     repo 'http://download.eclipse.org/eclipse/updates/4.6milestones'
  *     jdt {}
  * }
  * ```

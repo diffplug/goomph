@@ -122,6 +122,7 @@ Used to power the infrastructure above.
 * Andrey Hihlovskiy's excellent [Wuff](https://github.com/akhikhl/wuff) and [Unpuzzle](https://github.com/akhikhl/unpuzzle) libraries have been a huge boon to everyone trying to get Gradle and Eclipse to collaborate.
 * Thanks to Peter Kriens for the excellent [bnd](https://github.com/bndtools/bnd).
 * Thanks to JRuyi and Agemo Cui for [osgibnd-gradle-plugin](https://github.com/jruyi/osgibnd-gradle-plugin), which inspired `BndManifestPlugin`.
+* Thanks to Stefan Oehme for his feedback on Goomph's design.
 * Thanks to Neil Fraser of Google for [diff-match-patch](https://code.google.com/p/google-diff-match-patch/) which is very helpful for testing.
 * Thanks to Thipor Kong for his [handy windows cmdline length workaround for the classpath](https://discuss.gradle.org/t/javaexec-fails-for-long-classpaths-on-windows/15266).
 * Formatted by [spotless](https://github.com/diffplug/spotless).

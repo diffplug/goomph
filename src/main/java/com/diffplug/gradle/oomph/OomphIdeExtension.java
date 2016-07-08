@@ -53,11 +53,12 @@ import com.diffplug.gradle.JavaExecable;
 import com.diffplug.gradle.Lazyable;
 import com.diffplug.gradle.StateBuilder;
 import com.diffplug.gradle.eclipserunner.EclipseIni;
+import com.diffplug.gradle.p2.P2Declarative;
 import com.diffplug.gradle.p2.P2Model;
 import com.diffplug.gradle.pde.EclipseRelease;
 
 /** DSL for {@link OomphIdePlugin}. */
-public class OomphIdeExtension {
+public class OomphIdeExtension implements P2Declarative {
 	public static final String NAME = "oomphIde";
 
 	final Project project;
@@ -91,6 +92,7 @@ public class OomphIdeExtension {
 	}
 
 	/** Returns the P2 model so that users can add the features they'd like. */
+	@Override
 	public P2Model getP2() {
 		return p2;
 	}
