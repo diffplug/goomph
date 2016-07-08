@@ -15,6 +15,8 @@
  */
 package com.diffplug.gradle.p2;
 
+import com.diffplug.gradle.pde.EclipseRelease;
+
 /** A declarative-style wrapper around a {@link P2Model}, appropriate for use as a DSL mixin. */
 public interface P2Declarative {
 	/** The underlying model. */
@@ -26,6 +28,10 @@ public interface P2Declarative {
 
 	default void repoEclipse(String repo) {
 		getP2().addRepoEclipse(repo);
+	}
+
+	default void repoEclipseLatest() {
+		getP2().addRepoEclipse(EclipseRelease.LATEST);
 	}
 
 	default void metadataRepo(String repo) {

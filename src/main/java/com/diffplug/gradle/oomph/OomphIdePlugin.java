@@ -21,7 +21,6 @@ import org.gradle.api.Task;
 import com.diffplug.common.base.Errors;
 import com.diffplug.gradle.GoomphCacheLocations;
 import com.diffplug.gradle.ProjectPlugin;
-import com.diffplug.gradle.pde.EclipseRelease;
 
 /**
  * Downloads and sets up an Eclipse IDE.  Each IDE created by
@@ -37,6 +36,7 @@ import com.diffplug.gradle.pde.EclipseRelease;
  * ```groovy
  * apply plugin: 'com.diffplug.gradle.oomph.ide'
  * oomphIde {
+ *     repoEclipseLatest()
  *     jdt {}
  * }
  * ```
@@ -45,6 +45,7 @@ import com.diffplug.gradle.pde.EclipseRelease;
  * 
  * ```groovy
  * oomphIde {
+ *     repoEclipse '4.5.2'
  *     pde {
  *         targetplatform {
  *             installation 'target.maven/build'
@@ -61,6 +62,7 @@ import com.diffplug.gradle.pde.EclipseRelease;
  * oomphIde {
  *     icon   'images/icon.png'
  *     splash 'images/mascot.png'
+ *     repoEclipseLatest()
  *     jdt {}
  *     eclipseIni {
  *         vmargs('-Xmx2g')	// IDE can have up to 2 gigs of RAM
@@ -82,23 +84,6 @@ import com.diffplug.gradle.pde.EclipseRelease;
  *     iu   'org.eclipse.buildship'
  * }
  * ```
- * 
- * ## Which version of eclipse will it use?
- * 
- * If you specify a repository manually, it will use that version.
- * 
- * ```groovy
- * oomphIde {
- *     // Use Mars SR2
- *     p2.addRepoOfficial('4.5.2')
- *     // Use the latest Neon milestone
- *     repo 'http://download.eclipse.org/eclipse/updates/4.6milestones'
- *     jdt {}
- * }
- * ```
- * 
- * If you don't specify any repositories, then the latest and greatest
- * official eclipse release will automatically be used, currently {@link EclipseRelease#LATEST}.
  * 
  * ## What if I want to change my setup
  * 

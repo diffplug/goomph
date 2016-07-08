@@ -55,7 +55,6 @@ import com.diffplug.gradle.StateBuilder;
 import com.diffplug.gradle.eclipserunner.EclipseIni;
 import com.diffplug.gradle.p2.P2Declarative;
 import com.diffplug.gradle.p2.P2Model;
-import com.diffplug.gradle.pde.EclipseRelease;
 
 /** DSL for {@link OomphIdePlugin}. */
 public class OomphIdeExtension implements P2Declarative {
@@ -223,11 +222,9 @@ public class OomphIdeExtension implements P2Declarative {
 		if (!ideDir.isDirectory()) {
 			FileMisc.cleanDir(ideDir);
 		}
-		P2Model p2cached = p2.copy();
-		if (p2cached.getRepos().isEmpty()) {
-			p2cached.addRepo(EclipseRelease.latestOfficial().updateSite());
-		}
+		P2Model p2cached = new P2Model();
 		p2cached.addArtifactRepoBundlePool();
+		p2cached.copyFrom(p2);
 		P2Model.DirectorApp app = p2cached.directorApp(ideDir, "OomphIde");
 		app.consolelog();
 		// share the install for quickness
