@@ -58,11 +58,16 @@ public class P2Model implements Serializable {
 	/** Returns a deep copy of this model. */
 	public P2Model copy() {
 		P2Model copy = new P2Model();
-		copy.ius.addAll(ius);
-		copy.repos.addAll(repos);
-		copy.metadataRepos.addAll(metadataRepos);
-		copy.artifactRepos.addAll(artifactRepos);
+		copy.copyFrom(this);
 		return copy;
+	}
+
+	/** Copies everything from the other model into this one. */
+	public void copyFrom(P2Model other) {
+		ius.addAll(other.ius);
+		repos.addAll(other.repos);
+		metadataRepos.addAll(other.metadataRepos);
+		artifactRepos.addAll(other.artifactRepos);
 	}
 
 	private Set<String> ius = new LinkedHashSet<>();

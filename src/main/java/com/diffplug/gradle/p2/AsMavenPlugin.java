@@ -30,36 +30,61 @@ import com.diffplug.gradle.ProjectPlugin;
  * apply plugin: 'com.diffplug.gradle.p2.asmaven'
  * p2AsMaven {
  *     // the maven group they shall have
- *     mavenGroup 'p2asmaven'
- *     // the repositories and artifacts to download
- *     repo ECLIPSE_UPDATE_SITE
- *     iu   'org.eclipse.jdt.core'
- * 
- *     // copies all artifacts to the `p2runnable` folder in a "runnable" form
- *     // appropriate for target platforms and PDE build
- *     // e.g. org.eclipse.equinox.launcher will be extracted.
- *     repo2runnable()
+ *     group 'eclipse-deps', {
+ *         // the repositories and artifacts to download
+ *         repoEclipse '4.5.2'
+ *         iu          'org.eclipse.jdt.core'
+ *     }
  * }
  *
  * dependencies {
- *     compile 'eclipse:org.eclipse.jdt.core:+'
- *     compile 'eclipse:org.eclipse.text:+'
+ *     compile 'eclipse-deps:org.eclipse.jdt.core:+'
  * }
  * ```
- *
- * The `p2` property inside `p2AsMaven` is a {@link P2Model}.
- *
+ * 
+ * You can also specify multiple groups, as such
+ * 
+ * ```groovy
+ * def SUPPORTED_VERSIONS = ['4.4', '4.5', '4.6']
+ * p2AsMaven {
+ *     for (version in SUPPORTED_VERSIONS) {
+ *         group 'eclipse-deps-' + version, {
+ *             repoEclipse version
+ *             iu 'org.eclipse.swt'
+ *             // this will cause any OSGi jars which ask to be expanded into
+ *             // folders to be exploded, e.g. Eclipse-BundleShape: dir 
+ *             repo2runnable()
+ *         }
+ *     }
+ * }
+ * 
+ * // build folder will look like this:
+ * build/p2AsMaven/
+ *     maven/
+ *         eclipse-deps-4.4/
+ *         eclipse-deps-4.5/
+ *         eclipse-deps-4.6/
+ *     p2/
+ *         eclipse-deps-4.4/
+ *         eclipse-deps-4.5/
+ *         eclipse-deps-4.6/
+ *     p2runnable/
+ *         eclipse-deps-4.4/
+ *         eclipse-deps-4.5/
+ *         eclipse-deps-4.6/
+ * ```
+ * 
  * The maven repository does not contain any dependency information,
  * just the raw jars.  In the example above, when p2 downloads
  * `org.eclipse.jdt.core`, it also downloads all of its dependencies.
  * But none of these dependencies are added automatically - you have to
  * add them yourself.
- *
+ * 
  * See [spotless](https://github.com/diffplug/spotless) for a production
  * example.
- *
+ * 
  * ## Acknowledgements and comparisons to other options
- *
+ * 
  * Inspired by Andrey Hihlovskiy's [unpuzzle](https://github.com/akhikhl/unpuzzle).
  * Unpuzzle downloads a zipped-up copy of the eclipse IDE and stuffs its jars into a
  * maven repository.  Additionally, it parses out the `Require-Bundle` directives to
@@ -89,11 +114,13 @@ import com.diffplug.gradle.ProjectPlugin;
 public class AsMavenPlugin extends ProjectPlugin {
 	@Override
 	protected void applyOnce(Project project) {
-		AsMavenExtension extension = project.getExtensions().create(AsMavenExtension.NAME, AsMavenExtension.class, project);
+		AsMavenExtension extension = project.getExtensions().create(AsMavenExtension.NAME, AsMavenExtension.class);
 		project.afterEvaluate(proj -> {
-			Errors.rethrow().run(extension.mavenify::run);
+			// reload
+			Errors.rethrow().run(() -> extension.run(proj));
+			// set maven repo
 			project.getRepositories().maven(maven -> {
-				maven.setUrl(extension.mavenify.getDestinationMaven());
+				maven.setUrl(extension.mavenDir(proj));
 			});
 		});
 	}

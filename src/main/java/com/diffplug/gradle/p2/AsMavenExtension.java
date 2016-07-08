@@ -15,42 +15,71 @@
  */
 package com.diffplug.gradle.p2;
 
+import java.io.File;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Objects;
+import java.util.Set;
+
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 
+import com.diffplug.common.base.Errors;
+import com.diffplug.gradle.FileMisc;
+
 /** DSL for {@link AsMavenPlugin}. */
-public class AsMavenExtension implements P2Declarative {
+public class AsMavenExtension {
 	public static final String NAME = "p2AsMaven";
 
-	final AsMaven mavenify;
+	Object destination = "build/p2asmaven";
+	final LinkedHashMap<String, Action<AsMavenGroup>> groups = new LinkedHashMap<>();
 
-	public AsMavenExtension(Project project) {
-		this.mavenify = new AsMaven(project);
+	/** Sets the destination directory, defaults to `build/p2asmaven`. */
+	public void destination(Object destination) {
+		this.destination = Objects.requireNonNull(destination);
 	}
 
-	/** Sets the maven group which the artifacts will be installed into. */
-	public void mavenGroup(String mavenGroup) {
-		mavenify.mavenGroup(mavenGroup);
+	/** Creates a maven group which will be populated by the given action. */
+	public void group(String mavenGroup, Action<AsMavenGroup> action) {
+		Object previous = groups.put(mavenGroup, action);
+		if (previous != null) {
+			throw new IllegalArgumentException("Duplicate groups for " + mavenGroup);
+		}
 	}
 
-	/** The location of the repository.  Defaults to `build/p2asmaven`. */
-	public void destination(Object mavenGroup) {
-		mavenify.destination(mavenGroup);
+	void run(Project project) {
+		Set<File> files = new HashSet<>();
+		File p2asmaven = project.file(destination);
+		groups.forEach((group, action) -> {
+			// populate the def
+			AsMavenGroup def = new AsMavenGroup(group);
+			action.execute(def);
+			// run it
+			AsMavenGroupImpl impl = Errors.rethrow().get(() -> def.run(project, p2asmaven));
+			// keep track of what is clean
+			files.add(impl.dirP2());
+			files.add(impl.dirP2Runnable());
+			files.add(impl.dirMavenGroup());
+			files.add(impl.tokenFile());
+		});
+		// delete the other files
+		deleteStragglers(p2asmaven, files, AsMavenGroupImpl.SUBDIR_P2, AsMavenGroupImpl.SUBDIR_P2_RUNNABLE, AsMavenGroupImpl.SUBDIR_MAVEN);
 	}
 
-	/** P2 model (update site and IUs). */
-	@Override
-	public P2Model getP2() {
-		return mavenify.p2();
+	private void deleteStragglers(File root, Set<File> toKeep, String... dirs) {
+		for (String dir : dirs) {
+			File dirRoot = new File(root, dir);
+			for (File file : FileMisc.list(dirRoot)) {
+				if (!toKeep.contains(file)) {
+					Errors.log().run(() -> {
+						FileMisc.forceDelete(file);
+					});
+				}
+			}
+		}
 	}
 
-	/** Performs advanced actions by modifying the given {@link P2Model.MirrorApp}. */
-	public void p2ant(Action<P2Model.MirrorApp> argsBuilder) {
-		mavenify.modifyAntTask(argsBuilder);
-	}
-
-	/** Sets the maven group which the artifacts will be installed into. */
-	public void repo2runnable() {
-		mavenify.repo2runnable();
+	File mavenDir(Project project) {
+		return new File(project.file(destination), AsMavenGroupImpl.SUBDIR_MAVEN);
 	}
 }
