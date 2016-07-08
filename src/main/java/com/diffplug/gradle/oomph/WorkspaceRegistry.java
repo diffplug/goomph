@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.apache.commons.io.FileUtils;
 import org.gradle.api.Project;
 
 import com.diffplug.common.base.Errors;
@@ -129,10 +128,10 @@ public class WorkspaceRegistry {
 	/** Tries to delete folder.  If it fails, it prints a warning but keeps going.  No reason to break a build over spilled diskspace. */
 	private void deleteWorkspace(File workspace, String reason) {
 		try {
-			FileUtils.deleteDirectory(workspace);
+			FileMisc.forceDelete(workspace);
 			File token = new File(root, workspace.getName() + OWNER_PATH);
-			FileMisc.delete(token);
-		} catch (IOException e) {
+			FileMisc.forceDelete(token);
+		} catch (Exception e) {
 			System.err.println("Tried to delete workspace " + workspace.getAbsolutePath() + " because " + reason);
 			e.printStackTrace();
 		}

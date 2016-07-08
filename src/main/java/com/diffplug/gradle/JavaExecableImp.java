@@ -58,7 +58,7 @@ class JavaExecableImp {
 				throw Unhandled.classException(result);
 			}
 		} finally {
-			FileMisc.delete(tempFile); // delete the temp
+			FileMisc.forceDelete(tempFile); // delete the temp
 		}
 	}
 }

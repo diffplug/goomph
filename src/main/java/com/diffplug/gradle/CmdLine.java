@@ -73,13 +73,7 @@ public class CmdLine {
 	public void rm(File fileOrDir) {
 		run(() -> {
 			if (fileOrDir.exists()) {
-				if (fileOrDir.isDirectory()) {
-					// delete the directory
-					FileUtils.deleteDirectory(fileOrDir);
-				} else {
-					// delete the file
-					FileMisc.delete(fileOrDir);
-				}
+				FileMisc.forceDelete(fileOrDir);
 			}
 		});
 	}

@@ -88,7 +88,7 @@ public interface OsgiExecable extends Serializable, Runnable {
 			// get the result, and return it
 			return SerializableMisc.read(tempFile);
 		} finally {
-			FileMisc.delete(tempFile);
+			FileMisc.forceDelete(tempFile);
 		}
 	}
 

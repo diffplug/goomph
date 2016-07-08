@@ -61,7 +61,7 @@ public class JavaExecWinFriendly {
 				classpathJarBox.set(classpathJar);
 			});
 			// delete the jar after the task has finished
-			Errors.suppress().run(() -> FileMisc.delete(classpathJarBox.get()));
+			Errors.suppress().run(() -> FileMisc.forceDelete(classpathJarBox.get()));
 			return execResult;
 		} else {
 			return project.javaexec(spec);

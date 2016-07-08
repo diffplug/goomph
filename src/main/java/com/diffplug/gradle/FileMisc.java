@@ -73,10 +73,10 @@ public class FileMisc {
 		});
 	}
 
-	/** Calls {@link File#delete()} and throws an exception if it fails. */
-	public static void delete(File f) {
+	/** Calls {@link FileUtils#forceDelete()} and throws an exception if it fails. */
+	public static void forceDelete(File f) {
 		retry(f, file -> {
-			java.nio.file.Files.delete(file.toPath());
+			FileUtils.forceDelete(f);
 			return null;
 		});
 	}
@@ -143,6 +143,11 @@ public class FileMisc {
 		FileUtils.write(token, value, StandardCharsets.UTF_8);
 	}
 
+	/** Writes a token file containing the given value. */
+	public static void writeTokenFile(File tokenFile, String value) throws IOException {
+		writeToken(tokenFile.getParentFile(), tokenFile.getName(), value);
+	}
+
 	/** Returns the contents of a file with the given name, if it exists. */
 	public static Optional<String> readToken(File dir, String name) throws IOException {
 		File token = new File(dir, name);
@@ -166,6 +171,16 @@ public class FileMisc {
 	/** Returns true iff the given directory has a file with the given name containing the given content. */
 	public static boolean hasToken(File dir, String name, String content) throws IOException {
 		return readToken(dir, name).map(str -> content.equals(str)).orElse(false);
+	}
+
+	/** Returns true iff the given directory has a file with the given name. */
+	public static boolean hasTokenFile(File tokenFile) throws IOException {
+		return hasToken(tokenFile.getParentFile(), tokenFile.getName());
+	}
+
+	/** Returns true iff the given directory has a file with the given name containing the given content. */
+	public static boolean hasTokenFile(File tokenFile, String content) throws IOException {
+		return hasToken(tokenFile.getParentFile(), tokenFile.getName(), content);
 	}
 
 	////////////////////////////
@@ -209,7 +224,7 @@ public class FileMisc {
 	/** Deletes the given file or directory if it exists, then creates a fresh directory in its place. */
 	public static void cleanDir(File dirToRemove) throws IOException {
 		if (dirToRemove.isFile()) {
-			FileMisc.delete(dirToRemove);
+			FileMisc.forceDelete(dirToRemove);
 		} else if (dirToRemove.isDirectory()) {
 			try {
 				FileUtils.deleteDirectory(dirToRemove);
@@ -217,11 +232,7 @@ public class FileMisc {
 				// we couldn't delete the directory,
 				// but deleting everything inside is just as good
 				for (File file : FileMisc.list(dirToRemove)) {
-					if (file.isFile()) {
-						FileMisc.delete(file);
-					} else {
-						FileUtils.deleteDirectory(file);
-					}
+					FileMisc.forceDelete(file);
 				}
 			}
 		}
@@ -260,7 +271,7 @@ public class FileMisc {
 			}
 		}
 		// remove the directory which we're flattening away
-		FileMisc.delete(dirToRemove);
+		FileMisc.forceDelete(dirToRemove);
 	}
 
 	/** Concats the first files and writes them to the last file. */

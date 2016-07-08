@@ -213,7 +213,7 @@ public class EclipseApp {
 				args.add(tempFile.getAbsolutePath());
 				runner.run(args);
 			} finally {
-				FileMisc.delete(tempFile);
+				FileMisc.forceDelete(tempFile);
 			}
 		}
 

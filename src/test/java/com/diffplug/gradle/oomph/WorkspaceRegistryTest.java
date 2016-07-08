@@ -72,7 +72,7 @@ public class WorkspaceRegistryTest {
 		Assert.assertTrue(workspaceB.isDirectory());
 
 		// remove ideB and clean, its workspace should go away
-		FileMisc.delete(ideB);
+		FileMisc.forceDelete(ideB);
 		registry.clean();
 		assertFolderContents(registryFolder,
 				hashA + "/",
@@ -87,7 +87,7 @@ public class WorkspaceRegistryTest {
 				hashA + "-owner");
 
 		// remove ideA and clean
-		FileMisc.delete(ideA);
+		FileMisc.forceDelete(ideA);
 		registry.clean();
 		assertFolderContents(registryFolder);
 	}
