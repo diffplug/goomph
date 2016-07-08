@@ -69,11 +69,13 @@ public class AsMavenExtension {
 	private void deleteStragglers(File root, Set<File> toKeep, String... dirs) {
 		for (String dir : dirs) {
 			File dirRoot = new File(root, dir);
-			for (File file : FileMisc.list(dirRoot)) {
-				if (!toKeep.contains(file)) {
-					Errors.log().run(() -> {
-						FileMisc.forceDelete(file);
-					});
+			if (dirRoot.exists()) {
+				for (File file : FileMisc.list(dirRoot)) {
+					if (!toKeep.contains(file)) {
+						Errors.log().run(() -> {
+							FileMisc.forceDelete(file);
+						});
+					}
 				}
 			}
 		}

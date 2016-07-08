@@ -112,16 +112,25 @@ import com.diffplug.gradle.ProjectPlugin;
  * gradle and p2, we will only use public APIs in both products.
  */
 public class AsMavenPlugin extends ProjectPlugin {
+	AsMavenExtension extension;
+
 	@Override
 	protected void applyOnce(Project project) {
-		AsMavenExtension extension = project.getExtensions().create(AsMavenExtension.NAME, AsMavenExtension.class);
+		extension = project.getExtensions().create(AsMavenExtension.NAME, AsMavenExtension.class);
+		project.getLogger().lifecycle("APPLY");
 		project.afterEvaluate(proj -> {
+			proj.getLogger().lifecycle("LIFECYCLE:" + proj);
 			// reload
 			Errors.rethrow().run(() -> extension.run(proj));
 			// set maven repo
 			project.getRepositories().maven(maven -> {
+				proj.getLogger().lifecycle("MAVEN GROUP: " + maven);
 				maven.setUrl(extension.mavenDir(proj));
 			});
 		});
+	}
+
+	public AsMavenExtension extension() {
+		return extension;
 	}
 }

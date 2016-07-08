@@ -15,10 +15,17 @@
  */
 package com.diffplug.gradle.swt;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.gradle.api.Project;
 import org.gradle.api.plugins.JavaPlugin;
 
+import com.diffplug.common.collect.ImmutableList;
+import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.ProjectPlugin;
+import com.diffplug.gradle.p2.AsMavenPlugin;
+import com.diffplug.gradle.pde.EclipseRelease;
 
 /**
  * Adds the platform-specific SWT jars which are appropriate for the
@@ -26,29 +33,59 @@ import com.diffplug.gradle.ProjectPlugin;
  * 
  * ```groovy
  * apply plugin: 'com.diffplug.gradle.swt'
- * // (configuration block below is optional)
- * swtNativeDeps {
- *     version = '4.5.2' // currently supported: 4.4.2, 4.5.2, defaults to the latest available
- * }
  * ```
+ * 
+ * * Property `SWT_VERSION` sets the eclipse version from which to get SWT (e.g. `4.6.0`).
+ * * Property `SWT_P2_REPO` sets the p2 repository which is being used (ignores the SWT_VERSION property).
+ * * Property `SWT_P2_GROUP` sets the maven group name for the downloaded artifacts, (defaults to ).
  */
 public class NativeDepsPlugin extends ProjectPlugin {
+	static final String PROP_VERSION = "SWT_VERSION";
+	static final String PROP_REPO = "SWT_P2_REPO";
+	static final String PROP_GROUP = "SWT_P2_GROUP";
+
+	static final String DEFAULT_GROUP = "eclipse-swt-deps";
+
+	static String getGroup(Project project) {
+		String group = (String) project.getProperties().get(PROP_GROUP);
+		return Optional.ofNullable(group).orElse(DEFAULT_GROUP);
+	}
+
+	static String getRepo(Project project) {
+		String repo = (String) project.getProperties().get(PROP_REPO);
+		String version = (String) project.getProperties().get(PROP_VERSION);
+		if (repo != null) {
+			return repo;
+		} else if (version != null) {
+			return EclipseRelease.official(version).updateSite();
+		} else {
+			return EclipseRelease.latestOfficial().updateSite();
+		}
+	}
+
 	@Override
 	protected void applyOnce(Project project) {
-		ProjectPlugin.getPlugin(project, JavaPlugin.class);
+		String swtGroup = getGroup(project);
 
-		// create the NativeDepsExtension
-		NativeDepsExtension extension = project.getExtensions().create(NativeDepsExtension.NAME, NativeDepsExtension.class);
-		project.afterEvaluate(proj -> {
-			// add the update site as an ivy repository
-			proj.getRepositories().ivy(ivyConfig -> {
-				ivyConfig.artifactPattern(extension.updateSite() + "plugins/[artifact]_[revision].[ext]");
-			});
-
-			// add all of SWT's dependencies 
-			for (String dep : NativeDepsExtension.DEPS) {
-				proj.getDependencies().add("compile", extension.fullDep(dep));
-			}
+		// add the p2 repo and its dependencies
+		AsMavenPlugin asMavenPlugin = ProjectPlugin.getPlugin(project, AsMavenPlugin.class);
+		asMavenPlugin.extension().group(swtGroup, group -> {
+			group.repo(getRepo(project));
+			DEPS.forEach(group::iu);
 		});
+
+		// add all of SWT's dependencies 
+		ProjectPlugin.getPlugin(project, JavaPlugin.class);
+		for (String dep : DEPS) {
+			project.getDependencies().add("compile", swtGroup + ":" + dep + ":+");
+		}
+		project.getDependencies().add("compile", swtGroup + ":" + SWT + "." + SwtPlatform.getRunning() + ":+");
 	}
+
+	static final String SWT = "org.eclipse.swt";
+	static final String JFACE = "org.eclipse.jface";
+	static final String CORE_COMMANDS = "org.eclipse.core.commands";
+	static final String EQUINOX_COMMON = "org.eclipse.equinox.common";
+
+	static final List<String> DEPS = ImmutableList.of(SWT, JFACE, CORE_COMMANDS, EQUINOX_COMMON);
 }

@@ -27,11 +27,6 @@ public class NativeDepsPluginTest extends GradleIntegrationTest {
 		testCase("");
 	}
 
-	@Test
-	public void assertExtensionWorks() throws IOException {
-		testCase("swtNativeDeps { version '4.4.2' }");
-	}
-
 	private void testCase(String buildscriptAppend) throws IOException {
 		write("build.gradle",
 				"plugins {",
@@ -52,6 +47,6 @@ public class NativeDepsPluginTest extends GradleIntegrationTest {
 				"		Assert.assertEquals(\"org.eclipse.swt.widgets.Display\", org.eclipse.swt.widgets.Display.class.getName());",
 				"	}",
 				"}");
-		gradleRunner().withArguments("test", "--stacktrace").build();
+		gradleRunner().withArguments("test", "--stacktrace").forwardOutput().build();
 	}
 }
