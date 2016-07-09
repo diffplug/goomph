@@ -24,18 +24,14 @@ import com.diffplug.gradle.GradleIntegrationTest;
 public class NativeDepsPluginTest extends GradleIntegrationTest {
 	@Test
 	public void assertPluginWorks() throws IOException {
-		testCase("");
-	}
-
-	private void testCase(String buildscriptAppend) throws IOException {
 		write("build.gradle",
 				"plugins {",
 				"	id 'java'",
 				"	id 'com.diffplug.gradle.swt.nativedeps'",
 				"}",
 				"repositories { mavenCentral() }",
-				"dependencies { testCompile 'junit:junit:4.12' }",
-				buildscriptAppend);
+				"dependencies { testCompile 'junit:junit:4.12' }"
+				);
 		write("src/test/java/undertest/NeedsSwt.java",
 				"package undertest;",
 				"",
