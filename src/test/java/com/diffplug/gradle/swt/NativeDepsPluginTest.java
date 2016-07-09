@@ -30,8 +30,7 @@ public class NativeDepsPluginTest extends GradleIntegrationTest {
 				"	id 'com.diffplug.gradle.swt.nativedeps'",
 				"}",
 				"repositories { mavenCentral() }",
-				"dependencies { testCompile 'junit:junit:4.12' }"
-				);
+				"dependencies { testCompile 'junit:junit:4.12' }");
 		write("src/test/java/undertest/NeedsSwt.java",
 				"package undertest;",
 				"",
