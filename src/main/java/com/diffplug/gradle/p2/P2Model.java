@@ -392,6 +392,11 @@ public class P2Model implements Serializable {
 			addArg("profileProperties", FileMisc.noQuote(key) + "=" + FileMisc.noQuote(value));
 		}
 
+		/** Sets a profile property to ensure that features are installed. */
+		public void installFeatures() {
+			profileProperty("org.eclipse.update.install.features", "true");
+		}
+
 		/** Runs this application, downloading a small bootstrapper if necessary. */
 		public void runUsingBootstrapper() throws Exception {
 			runUsing(P2BootstrapInstallation.latest().outsideJvmRunner());
