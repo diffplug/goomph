@@ -117,14 +117,11 @@ public class AsMavenPlugin extends ProjectPlugin {
 	@Override
 	protected void applyOnce(Project project) {
 		extension = project.getExtensions().create(AsMavenExtension.NAME, AsMavenExtension.class);
-		project.getLogger().lifecycle("APPLY");
 		project.afterEvaluate(proj -> {
-			proj.getLogger().lifecycle("LIFECYCLE:" + proj);
 			// reload
 			Errors.rethrow().run(() -> extension.run(proj));
 			// set maven repo
 			project.getRepositories().maven(maven -> {
-				proj.getLogger().lifecycle("MAVEN GROUP: " + maven);
 				maven.setUrl(extension.mavenDir(proj));
 			});
 		});
