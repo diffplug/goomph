@@ -21,6 +21,8 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -75,6 +77,7 @@ import com.diffplug.gradle.ProjectPlugin;
  * Besides passing raw headers and bnd directives, this plugin also takes the following actions:
  * 
  * * Passes the project version to bnd if {@code Bundle-Version} hasn't been set explicitly.
+ * * Replaces `-SNAPSHOT` in the version with `.IyyyyMMddkkmm` (to-the-minute timestamp).
  * * Passes the {@code runtime} configuration's classpath to bnd for manifest calculation.
  * * Instructs bnd to respect the result of the {@code processResources} task.
  * 
@@ -161,18 +164,24 @@ public class BndManifestPlugin extends ProjectPlugin {
 				// set the version
 				if (builder.getBundleVersion() == null) {
 					try {
-						String version = project.getVersion().toString()
-								.replace("-SNAPSHOT", ".SNAPSHOT");
+						String version = project.getVersion().toString();
+						if (version.endsWith("-SNAPSHOT")) {
+							version = version.replace("-SNAPSHOT", ".I" + dateQualifier());
+						}
 						builder.setBundleVersion(version);
 					} catch (Exception e) {
 						project.getLogger().warn(e.getMessage() + "  Must be 'major.minor.micro.qualifier'");
 						builder.setBundleVersion("0.0.0.ERRORSETVERSION");
 					}
 				}
-
 				// take an action with the builder
 				onBuilder.accept(builder.build());
 			}
 		});
+	}
+
+	static String dateQualifier() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddkkmm");
+		return dateFormat.format(new Date());
 	}
 }
