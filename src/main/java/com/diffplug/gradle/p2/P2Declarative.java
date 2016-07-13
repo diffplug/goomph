@@ -15,6 +15,10 @@
  */
 package com.diffplug.gradle.p2;
 
+import java.io.File;
+
+import org.gradle.api.Action;
+
 import com.diffplug.gradle.pde.EclipseRelease;
 
 /** A declarative-style wrapper around a {@link P2Model}, appropriate for use as a DSL mixin. */
@@ -42,6 +46,18 @@ public interface P2Declarative {
 		getP2().addArtifactRepo(repo);
 	}
 
+	default void repo(File repo) {
+		getP2().addRepo(repo);
+	}
+
+	default void metadataRepo(File repo) {
+		getP2().addMetadataRepo(repo);
+	}
+
+	default void artifactRepo(File repo) {
+		getP2().addArtifactRepo(repo);
+	}
+
 	default void iu(String iu) {
 		getP2().addIU(iu);
 	}
@@ -56,5 +72,14 @@ public interface P2Declarative {
 
 	default void feature(String feature, String version) {
 		getP2().addFeature(feature, version);
+	}
+
+	public static void populate(P2Model model, Action<P2Declarative> action) {
+		action.execute(new P2Declarative() {
+			@Override
+			public P2Model getP2() {
+				return model;
+			}
+		});
 	}
 }
