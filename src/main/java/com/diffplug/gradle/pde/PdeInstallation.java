@@ -85,7 +85,12 @@ public class PdeInstallation implements EclipseRunner {
 		if (updateSite == null || id == null) {
 			throw new IllegalArgumentException(USAGE);
 		}
-		return new PdeInstallation(EclipseRelease.createWithIdVersionUpdatesite(id, version, updateSite));
+		return from(EclipseRelease.createWithIdVersionUpdatesite(id, version, updateSite));
+	}
+
+	/** Returns an EclipseRunner for running PDE build against the given release. */
+	public static PdeInstallation from(EclipseRelease release) {
+		return new PdeInstallation(release);
 	}
 
 	final EclipseRelease release;
