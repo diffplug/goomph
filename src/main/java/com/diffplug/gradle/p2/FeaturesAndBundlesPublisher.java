@@ -65,9 +65,19 @@ public class FeaturesAndBundlesPublisher extends EclipseApp {
 		addArg("compress");
 	}
 
+	/** Performs the publishing in-place - no need to specify {@link #metadataRepository(File)} or {@link #artifactRepository(File)}. */
+	public void inplace() {
+		addArg("inplace");
+	}
+
 	/** Signals that artifacts should be exported. */
 	public void publishArtifacts() {
 		addArg("publishArtifacts");
+	}
+
+	/** Marks that the destination repositories should be appended to. */
+	public void append() {
+		addArg("append");
 	}
 
 	/** Runs this application, downloading a small bootstrapper if necessary. */
