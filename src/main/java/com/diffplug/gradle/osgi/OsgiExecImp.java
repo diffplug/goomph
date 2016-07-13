@@ -51,7 +51,7 @@ class OsgiExecImp {
 			String name = url.getFile();
 			if (name != null) {
 				if (name.contains("/goomph")) {
-					return context.installBundle(FileMisc.PROTOCOL + name);
+					return context.installBundle(FileMisc.asUrl(new File(name)));
 				} else if (name.contains("/" + JavaExecWinFriendly.LONG_CLASSPATH_JAR_PREFIX)) {
 					// we're running with JavaExecWinFriendly, so we've gotta parse its classpath
 					String content = ZipMisc.read(new File(name), "META-INF/MANIFEST.MF");

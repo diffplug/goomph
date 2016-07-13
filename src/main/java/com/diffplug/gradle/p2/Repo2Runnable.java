@@ -30,12 +30,12 @@ public class Repo2Runnable extends EclipseApp {
 
 	/** Adds the given location as a source. */
 	public void source(File file) {
-		addArg("source", FileMisc.PROTOCOL + file.getAbsolutePath());
+		addArg("source", FileMisc.asUrl(file));
 	}
 
 	/** Adds the given location as a destination. */
 	public void destination(File file) {
-		addArg("destination", FileMisc.PROTOCOL + file.getAbsolutePath());
+		addArg("destination", FileMisc.asUrl(file));
 	}
 
 	/** Runs this application, downloading a small bootstrapper if necessary. */

@@ -143,7 +143,7 @@ public class P2Model implements Serializable {
 	}
 
 	public void addRepo(File repo) {
-		addRepo(FileMisc.PROTOCOL + repo.getAbsolutePath());
+		addRepo(FileMisc.asUrl(repo));
 	}
 
 	public void addMetadataRepo(String repo) {
@@ -151,7 +151,7 @@ public class P2Model implements Serializable {
 	}
 
 	public void addMetadataRepo(File repo) {
-		addMetadataRepo(FileMisc.PROTOCOL + repo.getAbsolutePath());
+		addMetadataRepo(FileMisc.asUrl(repo));
 	}
 
 	public void addArtifactRepo(String repo) {
@@ -159,7 +159,7 @@ public class P2Model implements Serializable {
 	}
 
 	public void addArtifactRepo(File repo) {
-		addArtifactRepo(FileMisc.PROTOCOL + repo.getAbsolutePath());
+		addArtifactRepo(FileMisc.asUrl(repo));
 	}
 
 	public void addArtifactRepoBundlePool() {
@@ -243,7 +243,7 @@ public class P2Model implements Serializable {
 			return P2AntRunner.create("p2.mirror", taskNode -> {
 				sourceNode(taskNode);
 				Node destination = new Node(taskNode, "destination");
-				destination.attributes().put("location", FileMisc.PROTOCOL + dstFolder.getAbsolutePath());
+				destination.attributes().put("location", FileMisc.asUrl(dstFolder));
 
 				for (String iu : ius) {
 					Node iuNode = new Node(taskNode, "iu");
@@ -294,7 +294,7 @@ public class P2Model implements Serializable {
 			artifactRepos.forEach(repo -> builder.addArg("artifactRepository", repo));
 			ius.forEach(iu -> builder.addArg("installIU", iu));
 			builder.addArg("profile", profile);
-			builder.addArg("destination", FileMisc.PROTOCOL + dstFolder.getAbsolutePath());
+			builder.addArg("destination", FileMisc.asUrl(dstFolder));
 			// deletes cached repository information, which will often include local paths
 			builder.doLast.add(() -> {
 				Path path = dstFolder.toPath().resolve("p2/org.eclipse.equinox.p2.engine/.settings");

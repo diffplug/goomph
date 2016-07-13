@@ -40,12 +40,12 @@ public class FeaturesAndBundlesPublisher extends EclipseApp {
 
 	/** Sets the given location to be the target for metadata. */
 	public void metadataRepository(File file) {
-		addArg("metadataRepository", FileMisc.PROTOCOL + file.getAbsolutePath());
+		addArg("metadataRepository", FileMisc.asUrl(file));
 	}
 
 	/** Adds the given location to be the target for artifacts. */
 	public void artifactRepository(File file) {
-		addArg("artifactRepository", FileMisc.PROTOCOL + file.getAbsolutePath());
+		addArg("artifactRepository", FileMisc.asUrl(file));
 	}
 
 	/** Adds the given location to be the target for artifacts. */

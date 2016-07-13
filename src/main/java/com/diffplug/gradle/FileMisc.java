@@ -359,6 +359,11 @@ public class FileMisc {
 	/** The `file://` protocol. */
 	public static final String PROTOCOL = "file://";
 
+	/** Prefixes `file://` to the file's absolute path. */
+	public static String asUrl(File file) {
+		return PROTOCOL + file.getAbsolutePath();
+	}
+
 	/** Returns ".app" on macOS, and empty string on all others. */
 	public static String macApp() {
 		return OS.getNative().winMacLinux("", ".app", "");
