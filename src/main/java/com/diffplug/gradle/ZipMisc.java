@@ -17,6 +17,7 @@ package com.diffplug.gradle;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -25,7 +26,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -36,10 +38,9 @@ import org.apache.commons.io.IOUtils;
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.StringPrinter;
 import com.diffplug.common.base.Throwing;
-import com.diffplug.common.collect.Maps;
 import com.diffplug.common.io.ByteSink;
 import com.diffplug.common.io.ByteSource;
-import com.diffplug.common.io.Files;
+import com.diffplug.common.io.ByteStreams;
 
 /** Utilities for mucking with zip files. */
 public class ZipMisc {
@@ -83,7 +84,7 @@ public class ZipMisc {
 	 * @param toOmit		a set of entries you'd like to leave out of the zip
 	 * @throws IOException
 	 */
-	public static void modify(ByteSource input, ByteSink output, Map<String, ByteSource> toModify, Set<String> toOmit) throws IOException {
+	public static void modify(ByteSource input, ByteSink output, Map<String, Function<byte[], byte[]>> toModify, Predicate<String> toOmit) throws IOException {
 		try (ZipInputStream zipInput = new ZipInputStream(input.openBufferedStream());
 				ZipOutputStream zipOutput = new ZipOutputStream(output.openBufferedStream())) {
 			while (true) {
@@ -93,10 +94,12 @@ public class ZipMisc {
 					break;
 				}
 
-				ByteSource replacement = toModify.get(entry.getName());
+				Function<byte[], byte[]> replacement = toModify.get(entry.getName());
 				if (replacement != null) {
+					byte[] clean = ByteStreams.toByteArray(zipInput);
+					byte[] modified = replacement.apply(clean);
 					// if it's the entry being modified, enter the modified stuff
-					try (InputStream replacementStream = replacement.openBufferedStream()) {
+					try (InputStream replacementStream = new ByteArrayInputStream(modified)) {
 						ZipEntry newEntry = new ZipEntry(entry.getName());
 						newEntry.setComment(entry.getComment());
 						newEntry.setExtra(entry.getExtra());
@@ -106,7 +109,7 @@ public class ZipMisc {
 						zipOutput.putNextEntry(newEntry);
 						copy(replacementStream, zipOutput);
 					}
-				} else if (!toOmit.contains(entry.getName())) {
+				} else if (!toOmit.test(entry.getName())) {
 					// if it isn't being modified, just copy the file stream straight-up
 					ZipEntry newEntry = new ZipEntry(entry);
 					newEntry.setCompressedSize(-1);
@@ -119,19 +122,6 @@ public class ZipMisc {
 				zipOutput.closeEntry();
 			}
 		}
-	}
-
-	/**
-	 * Modifies only the specified entries in a zip file. 
-	 *
-	 * @param input 		an input zip file
-	 * @param output		an output zip file
-	 * @param toModify		a map from path to File for the entries you'd like to change
-	 * @param toOmit		a set of entries you'd like to leave out of the zip
-	 * @throws IOException
-	 */
-	public static void modify(File input, File output, Map<String, File> toModify, Set<String> toOmit) throws IOException {
-		modify(Files.asByteSource(input), Files.asByteSink(output), Maps.transformValues(toModify, Files::asByteSource), toOmit);
 	}
 
 	/**
