@@ -46,11 +46,11 @@ class AsMavenGroupImpl {
 	static final String SUBDIR_P2_RUNNABLE = "p2runnable";
 	static final String SUBDIR_MAVEN = "maven";
 
-	private P2Model.MirrorApp getApp() {
+	private P2AntRunner getApp() {
 		P2Model cached = new P2Model();
 		cached.addArtifactRepoBundlePool();
 		cached.copyFrom(def.model);
-		P2Model.MirrorApp app = cached.mirrorApp(dirP2());
+		P2AntRunner app = cached.mirrorApp(dirP2());
 		def.antModifier.execute(app);
 		return app;
 	}

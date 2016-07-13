@@ -27,7 +27,7 @@ public class AsMavenGroup implements P2Declarative {
 	final String group;
 	final P2Model model = new P2Model();
 	boolean repo2runnable = false;
-	Action<P2Model.MirrorApp> antModifier = Actions.doNothing();
+	Action<P2AntRunner> antModifier = Actions.doNothing();
 
 	public AsMavenGroup(String group) {
 		this.group = Objects.requireNonNull(group);
@@ -44,7 +44,7 @@ public class AsMavenGroup implements P2Declarative {
 	}
 
 	/** Allows for fine-grained manipulation of the mirroring operation. */
-	public void p2ant(Action<P2Model.MirrorApp> antModifier) {
+	public void p2ant(Action<P2AntRunner> antModifier) {
 		this.antModifier = Objects.requireNonNull(antModifier);
 	}
 

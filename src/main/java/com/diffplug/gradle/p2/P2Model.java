@@ -235,51 +235,29 @@ public class P2Model implements Serializable {
 	 * Creates a p2.mirror ant task file which will mirror the
 	 * model's described IU's and repos into the given destination folder.
 	 * 
-	 * @see MirrorApp
+	 * @see P2AntRunner
 	 */
 	@SuppressWarnings("unchecked")
-	public MirrorApp mirrorApp(File dstFolder) {
+	public P2AntRunner mirrorApp(File dstFolder) {
 		return performWithoutNonExistentLocalRepos(() -> {
-			MirrorApp ant = new MirrorApp();
+			return P2AntRunner.create("p2.mirror", taskNode -> {
+				sourceNode(taskNode);
+				Node destination = new Node(taskNode, "destination");
+				destination.attributes().put("location", FileMisc.PROTOCOL + dstFolder.getAbsolutePath());
 
-			Node p2mirror = new Node(null, "p2.mirror");
-			sourceNode(p2mirror);
-			Node destination = new Node(p2mirror, "destination");
-			destination.attributes().put("location", FileMisc.PROTOCOL + dstFolder.getAbsolutePath());
+				for (String iu : ius) {
+					Node iuNode = new Node(taskNode, "iu");
 
-			for (String iu : ius) {
-				Node iuNode = new Node(p2mirror, "iu");
-
-				int slash = iu.indexOf('/');
-				if (slash == -1) {
-					iuNode.attributes().put("id", iu);
-				} else {
-					iuNode.attributes().put("id", iu.substring(0, slash));
-					iuNode.attributes().put("version", iu.substring(slash + 1));
+					int slash = iu.indexOf('/');
+					if (slash == -1) {
+						iuNode.attributes().put("id", iu);
+					} else {
+						iuNode.attributes().put("id", iu.substring(0, slash));
+						iuNode.attributes().put("version", iu.substring(slash + 1));
+					}
 				}
-			}
-			ant.setTask(p2mirror);
-			return ant;
+			});
 		});
-	}
-
-	/**
-	 * An extension of {@link EclipseApp.AntRunner} which is
-	 * pre-populated with an ant file appropriate for running
-	 * the p2.mirror ant task.
-	 *
-	 * Created using {@link P2Model#mirrorApp(File)}.
-	 */
-	public static class MirrorApp extends EclipseApp.AntRunner {
-		/** Runs this application, downloading a small bootstrapper if necessary. */
-		public void runUsingBootstrapper() throws Exception {
-			runUsing(P2BootstrapInstallation.latest().outsideJvmRunner());
-		}
-
-		/** Runs this application, downloading a small bootstrapper if necessary. */
-		public void runUsingBootstrapper(Project project) throws Exception {
-			runUsing(P2BootstrapInstallation.latest().outsideJvmRunner(project));
-		}
 	}
 
 	/** Creates an XML node representing all the repos in this model. */
