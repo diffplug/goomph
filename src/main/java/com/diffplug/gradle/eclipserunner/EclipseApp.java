@@ -217,7 +217,7 @@ public class EclipseApp {
 			}
 		}
 
-		String buildXml = "NOBODY CALLED EclipseArgsBuilder.Ant.setTask";
+		String buildXml = "NOBODY CALLED EclipseApp.AntRunner.setTask";
 
 		/** Sets the XML task node which will be called by this ant task. */
 		public void setTask(Node taskNode) {
