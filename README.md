@@ -27,30 +27,9 @@ output = [
 output = prefixDelimiterReplace(input, 'https://{{org}}.github.io/{{name}}/javadoc/', '/', 'snapshot');
 -->
 
-Note: **The docs below are currently for 3.0.0-SNAPSHOT**.  We'll be releasing 3.0.0 around 7/5.  To help us iterate on the snapshot, make sure you've got this at the top of your buildscript:
-
-```
-buildscript {
-	repositories {
-		// we're iterating with our early adopters on a snapshot right now
-		maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-		// the standard gradle plugin portal
-		maven { url 'https://plugins.gradle.org/m2/' }
-	}
-	// make sure we don't cache stale snapshot versions
-	configurations.all {
-		resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-	}
-	dependencies {
-		classpath "com.diffplug.gradle:goomph:3.0.0-SNAPSHOT"
-	}
-}
-```
-
 ## IDE-as-build-artifact.
 
-It is possible to have many installations of the Eclipse IDE share a common set of installed artifacts, called a "bundlepool".  This means it is fast and efficient to get a purpose-built IDE for every project, preconfigured with all
-the plugins and settings appropriate for the project at hand.
+It is possible to have many installations of the Eclipse IDE share a common set of installed artifacts, called a "bundlepool".  This means it is fast and efficient to get a purpose-built IDE for every project, preconfigured with all the plugins and settings appropriate for the project at hand.
 
 When you run `gradlew ide`, it builds and downloads an IDE into `build/oomphIde` with just the features you need.  Takes ~15 seconds and 1MB of disk space once all the common artifacts have been cached at `~/.goomph`.
 
@@ -95,6 +74,9 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 
 * [`asmaven`](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/p2/AsMavenPlugin.html) downloads dependencies from a p2 repository and makes them available in a local maven repository.
 * [`P2Model`](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/p2/P2Model.html) models a set of p2 repositories and IUs, and provides convenience methods for running p2-director or the p2.mirror ant task against these.
+* [`P2AntRunner`](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/p2/P2AntRunner.html) runs eclipse ant tasks.
+* [`FeaturesAndBundlesPublisher`](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/p2/FeaturesAndBundlesPublisher.html) models the FeaturesAndBundlesPublisher eclipse application.
+* [`Repo2Runnable`](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/p2/Repo2Runnable.html) models the Repo2Runnable eclipse application.
 
 **`com.diffplug.gradle.pde` Tasks for running Eclipse PDE using a downloaded eclipse instance.**
 
@@ -113,7 +95,7 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 
 **`com.diffplug.gradle.eclipserunner` Infrastructure for running headless eclipse applications.**
 
-Used to power the infrastructure above.
+* Used to power the infrastructure above.
 
 <!---freshmark /javadoc -->
 

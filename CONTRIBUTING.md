@@ -50,7 +50,7 @@ By contributing your code, you agree to license your contribution under the term
 All files are released with the Apache 2.0 license as such:
 
 ```
-Copyright 2015 DiffPlug
+Copyright 2016 DiffPlug
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

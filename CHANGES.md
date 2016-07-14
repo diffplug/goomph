@@ -1,8 +1,10 @@
 # Goomph releases
 
-### Version 3.0.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/)) ([snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
+### Version 3.1.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
-We added a ton of stuff 3.0.0.  Everything in the `p2` and `pde` packages has been revamped, but the `eclipse`
+### Version 3.0.0 - July 13th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.0.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.0/view))
+
+We added a ton of stuff in 3.0.0.  Everything in the `p2` and `pde` packages has been revamped, but the `eclipse`
 and `osgi` packages are unchanged.
 
 * BREAKING CHANGE: Everything in the `pde` package has been revamped.
