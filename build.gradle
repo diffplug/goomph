@@ -15,6 +15,11 @@ buildscript {
 	}
 }
 
+plugins {
+	// github pages
+	id "org.ajoberstar.github-pages" version "1.4.2"
+}
+
 repositories {
 	mavenCentral()
 	// Future versions can be found here: https://wiki.eclipse.org/Eclipse_Project_Update_Sites
@@ -152,6 +157,8 @@ def makeLink = { url, text -> "<a href=\"${url}\" style=\"text-transform: none;\
 def javadocInfo = '<h2>' + makeLink("https://github.com/${org}/${name}", "${group}:${name}:${version}") +
 ' by ' + makeLink('http://www.diffplug.com', 'DiffPlug') + '</h2>'
 
+def verSnapshot = { it.endsWith('-SNAPSHOT') ? 'snapshot' : it }
+
 apply plugin: 'ch.raffael.pegdown-doclet'
 javadoc {
 	// Where it's possible to name parameters and methods clearly enough
@@ -165,8 +172,8 @@ javadoc {
 	// setup links
 	options.linksOffline('https://docs.oracle.com/javase/8/docs/api/', 'gradle/javadoc/java8')
 	options.linksOffline("https://docs.gradle.org/${VER_GRADLE}/javadoc/", 'gradle/javadoc/gradle')
-	options.linksOffline("https://diffplug.github.io/durian/javadoc/${VER_DURIAN}/", 'gradle/javadoc/durian')
-	options.linksOffline("https://diffplug.github.io/durian-swt/javadoc/${VER_DURIAN_SWT}/", 'gradle/javadoc/durian-swt')
+	options.linksOffline("https://diffplug.github.io/durian/javadoc/${verSnapshot(VER_DURIAN)}/", 'gradle/javadoc/durian')
+	options.linksOffline("https://diffplug.github.io/durian-swt/javadoc/${verSnapshot(VER_DURIAN_SWT)}/", 'gradle/javadoc/durian-swt')
 	options.linksOffline("http://www.javadoc.io/doc/biz.aQute.bnd/biz.aQute.bndlib/${VER_BNDLIB}/", 'gradle/javadoc/bndlib')
 }
 
@@ -326,6 +333,23 @@ pluginBundle {
 if (isSnapshot) {
 	publishPlugins.enabled = false
 }
+
+//////////////////
+// GITHUB PAGES //
+//////////////////
+githubPages {
+	repoUri = "https://github.com/${project.org}/${project.name}"
+	deleteExistingFiles = false
+	pages {
+		from javadoc.destinationDir
+		into "javadoc/${verSnapshot(version)}"
+	}
+	credentials {
+		username = cred('gh_token')
+		password = ''
+	}
+}
+tasks.prepareGhPages.dependsOn(":javadoc")
 
 // helps external scripts detect version
 task printVersion << {

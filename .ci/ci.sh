@@ -7,5 +7,5 @@ if [ "$TRAVIS_REPO_SLUG" == "diffplug/goomph" ] && [ "$TRAVIS_PULL_REQUEST" == "
 	# Publish the artifacts
 	./gradlew publish publishPlugins -Dgradle.publish.key=$gradle_key -Dgradle.publish.secret=$gradle_secret || exit 1
 	# Push the javadoc
-	./.ci/push-javadoc.sh
+	./gradlew publishGhPages || exit 1
 fi
