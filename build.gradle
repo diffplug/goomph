@@ -302,6 +302,18 @@ pluginBundle {
 			description = "Fixes an intermittent problem where dependencies on other projects within the workspace aren't always resolved correctly within Eclipse."
 			tags = ['eclipse']
 		}
+		eclipseResourceFiltersPlugin {
+			id = 'com.diffplug.gradle.eclipse.resourcefilters'
+			displayName = 'Goomph eclipse.resourcefilters'
+			description = "Adds filters to an eclipse project which exclude or include specific resources."
+			tags = ['eclipse']
+		}
+		oomphIdePlugin {
+			id = 'com.diffplug.gradle.oomph.ide'
+			displayName = 'Goomph ooomph.ide'
+			description = "Downloads and sets up any Eclipse-based IDE."
+			tags = ['eclipse', 'ide', 'p2']
+		}
 		p2AsMavenPlugin {
 			id = 'com.diffplug.gradle.p2.asmaven'
 			displayName = 'Goomph p2.asmaven'
