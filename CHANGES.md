@@ -2,6 +2,10 @@
 
 ### Version 3.1.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
+### Version 3.0.2 - July 15th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.0.2/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.2/view))
+
+* Fixed `com.diffplug.gradle.eclipse.excludebuildfolder`.
+
 ### Version 3.0.1 - July 14th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.0.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.1/view))
 
 * Fixed plugin metadata so that all our plugins make it to the plugin portal.  The following were missing:
