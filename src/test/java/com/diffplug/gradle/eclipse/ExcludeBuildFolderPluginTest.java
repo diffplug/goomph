@@ -41,7 +41,7 @@ public class ExcludeBuildFolderPluginTest extends GradleIntegrationTest {
 				"			<type>10</type>",
 				"			<matcher>",
 				"				<id>org.eclipse.ui.ide.multiFilter</id>",
-				"				<arguments>1.0-projectRelativePath-matches-false-false-build/*</arguments>",
+				"				<arguments>1.0-name-matches-false-false-build</arguments>",
 				"			</matcher>",
 				"		</filter>",
 				"	</filteredResources>",

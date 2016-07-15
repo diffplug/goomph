@@ -36,8 +36,9 @@ import com.diffplug.gradle.ProjectPlugin;
  * ```groovy
  * apply plugin: 'com.diffplug.gradle.eclipse.resourcefilters'
  * eclipseResourceFilters {
- *     include().folders().projectRelativePath("main/src/*")
- *     exclude().files().name("*.class").recursive()
+ *     exclude().folders().name('build')
+ *     include().folders().projectRelativePath('main/src/*')
+ *     exclude().files().name('*.class').recursive()
  * }
  * ```
  * 

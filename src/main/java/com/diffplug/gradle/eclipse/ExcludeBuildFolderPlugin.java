@@ -39,6 +39,6 @@ public class ExcludeBuildFolderPlugin extends ProjectPlugin {
 	@Override
 	protected void applyOnce(Project project) {
 		ResourceFiltersPlugin resourceFilters = ProjectPlugin.getPlugin(project, ResourceFiltersPlugin.class);
-		resourceFilters.extension.filters.add(ResourceFilter.exclude().folders().projectRelativePath("build/*"));
+		resourceFilters.extension.filters.add(ResourceFilter.exclude().folders().name("build"));
 	}
 }
