@@ -56,15 +56,24 @@ class MavenRepoBuilder implements AutoCloseable {
 		String version;
 		boolean isSource;
 		try (JarFile jarFile = new JarFile(osgiJar)) {
-			Attributes attr = jarFile.getManifest().getMainAttributes();
-			symbolicName = beforeSemicolon(attr.getValue("Bundle-SymbolicName"));
-			version = attr.getValue("Bundle-Version");
-			String source = attr.getValue("Eclipse-SourceBundle");
-			if (source != null) {
-				isSource = true;
-				symbolicName = beforeSemicolon(source);
+			if (jarFile.getManifest() != null) {
+				Attributes attr = jarFile.getManifest().getMainAttributes();
+				symbolicName = beforeSemicolon(attr.getValue("Bundle-SymbolicName"));
+				version = attr.getValue("Bundle-Version");
+				String source = attr.getValue("Eclipse-SourceBundle");
+				if (source != null) {
+					isSource = true;
+					symbolicName = beforeSemicolon(source);
+				} else {
+					isSource = false;
+				}
 			} else {
+				String name = osgiJar.getName();
+				int lastUnderscore = name.lastIndexOf("_");
+				symbolicName = name.substring(0, lastUnderscore);
+				version = name.substring(lastUnderscore + 1);
 				isSource = false;
+				System.err.println(osgiJar.getAbsolutePath() + " has no manifest.  Guessing name=" + symbolicName + " and version=" + version);
 			}
 		} catch (Exception e) {
 			System.err.println("Error parsing manifest of " + osgiJar.getAbsolutePath() + ", unable to put this jar into maven.");
