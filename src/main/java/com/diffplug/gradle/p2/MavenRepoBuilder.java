@@ -75,7 +75,7 @@ class MavenRepoBuilder implements AutoCloseable {
 				isSource = false;
 				System.err.println(osgiJar.getAbsolutePath() + " has no manifest.  Guessing name=" + symbolicName + " and version=" + version);
 			}
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			System.err.println("Error parsing manifest of " + osgiJar.getAbsolutePath() + ", unable to put this jar into maven.");
 			return;
 		}
