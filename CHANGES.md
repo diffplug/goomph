@@ -2,6 +2,13 @@
 
 ### Version 3.1.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
+### Version 3.0.3 - July 29th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.0.3/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.3/view))
+
+* Fixed unnecessary errors for users who don't specify `org.gradle.java.home` manually.
+* Fixed NPE when using `p2asmaven` on jars with no manifest.
+	+ Failures on a single jar will no longer bring down the whole build.
+	+ Jars with no manifest have their name and version parsed from their filename.
+
 ### Version 3.0.2 - July 15th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.0.2/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.2/view))
 
 * Fixed `com.diffplug.gradle.eclipse.excludebuildfolder`.
