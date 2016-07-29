@@ -35,8 +35,10 @@ public class JdkConfig {
 
 	/** Creates a JDK using the project's `org.gradle.java.home` property. */
 	public JdkConfig(Project project) {
-		String javaHome = (String) project.property(KEY_JAVA);
-		if (javaHome == null) {
+		String javaHome;
+		if (project.hasProperty(KEY_JAVA)) {
+			javaHome = (String) project.property(KEY_JAVA);
+		} else {
 			javaHome = StandardSystemProperty.JAVA_HOME.value();
 		}
 		Objects.requireNonNull(javaHome, "Could not find JRE dir, set 'org.gradle.java.home' to fix.");
