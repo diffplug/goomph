@@ -66,6 +66,9 @@ class MavenRepoBuilder implements AutoCloseable {
 			} else {
 				isSource = false;
 			}
+		} catch (Exception e) {
+			System.err.println("Error parsing manifest of " + osgiJar.getAbsolutePath() + ", unable to put this jar into maven.");
+			return;
 		}
 		artifactMap.put(new Coordinate(group, symbolicName), new Artifact(Version.parseVersion(version), isSource, osgiJar));
 	}
