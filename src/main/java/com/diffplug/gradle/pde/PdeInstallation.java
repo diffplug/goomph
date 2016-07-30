@@ -165,7 +165,7 @@ public class PdeInstallation implements EclipseRunner {
 		directorApp.platform(SwtPlatform.getRunning());
 		directorApp.runUsingBootstrapper();
 		// parse out the pde.build version
-		File bundleInfo = new File(getRootFolder(), "configuration/org.eclipse.equinox.simpleconfigurator/bundles.info");
+		File bundleInfo = new File(getContentsEclipse(), "configuration/org.eclipse.equinox.simpleconfigurator/bundles.info");
 		Preconditions.checkArgument(bundleInfo.isFile(), "Needed to find the pde.build folder: %s", bundleInfo);
 		String pdeBuildLine = Files.readAllLines(bundleInfo.toPath()).stream().filter(line -> line.startsWith("org.eclipse.pde.build,")).findFirst().get();
 		String pdeBuildVersion = pdeBuildLine.split(",")[1];
@@ -173,6 +173,15 @@ public class PdeInstallation implements EclipseRunner {
 		pdeBuildFolder = new File(GoomphCacheLocations.bundlePool(), "plugins/org.eclipse.pde.build_" + pdeBuildVersion);
 		FileMisc.writeToken(getRootFolder(), TOKEN, pdeBuildFolder.getAbsolutePath());
 		System.out.println("Success.");
+	}
+
+	/** Returns the Contents/Eclipse folder on mac, or just the root folder on other OSes. */
+	private File getContentsEclipse() {
+		if (OS.getNative().isMac()) {
+			return new File(getRootFolder(), "Contents/Eclipse");
+		} else {
+			return getRootFolder();
+		}
 	}
 
 	/** Creates a model containing pde build and the native launder. */
