@@ -2,6 +2,10 @@
 
 ### Version 3.1.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
+### Version 3.0.4 - July 30th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.0.4/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.4/view))
+
+* Fixed a mac-specific bug which made it impossible to use any PDE tasks.
+
 ### Version 3.0.3 - July 29th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.0.3/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.3/view))
 
 * Fixed unnecessary errors for users who don't specify `org.gradle.java.home` manually.
