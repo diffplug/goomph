@@ -2,6 +2,12 @@
 
 ### Version 3.1.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
+### Version 3.0.5 - August 7th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.0.5/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.5/view))
+
+* Fixed behavior around creating the goomph bundle pool.
+	+ Old behavior was: if pool is listed as dependency but doesn't exist, just remove the dependency.
+	+ New behavior is: if pool is listed as dependency but doesn't exist, create the pool.
+
 ### Version 3.0.4 - July 30th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.0.4/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.4/view))
 
 * Fixed a mac-specific bug which made it impossible to use any PDE tasks.
