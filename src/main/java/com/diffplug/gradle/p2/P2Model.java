@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import org.apache.commons.io.FileUtils;
@@ -167,65 +166,60 @@ public class P2Model implements Serializable {
 	}
 
 	/**
-	 * Removes all missing local repositories (to fix "No repository found at" warnings).
-	 * 
-	 * Returns true iff any repos were removed.
-	 */
-	private boolean removeNonExistentLocal() {
-		// predicate which matches local repositories which don't exist
-		Predicate<String> nonExistentLocal = repo -> {
-			if (!repo.startsWith(FileMisc.PROTOCOL)) {
-				// it's not local
-				return false;
-			}
-			File file = new File(repo.substring(FileMisc.PROTOCOL.length()));
-			if (!file.isDirectory()) {
-				// it is local and there's no directory, we match
-				return true;
-			} else {
-				// if there's an artifacts.xml/jar or a content.xml/jar, then it's not a match
-				for (File child : FileMisc.list(file)) {
-					if (child.isFile()) {
-						if (child.getName().startsWith("artifacts.") || child.getName().startsWith("content.")) {
-							return false;
-						}
-					}
-				}
-				// else, it is a non-existent local
-				return true;
-			}
-		};
-		// remove unreachable local repositories
-		boolean anyRemoved = false;
-		anyRemoved |= repos.removeIf(nonExistentLocal);
-		anyRemoved |= metadataRepos.removeIf(nonExistentLocal);
-		anyRemoved |= artifactRepos.removeIf(nonExistentLocal);
-		return anyRemoved;
-	}
-
-	/**
-	 * So there are places where we add the local bundle pool
+	 * There are places where we add the local bundle pool
 	 * to act as an artifact cache.  But sometimes, that cache
 	 * doesn't exist yet.  To make sure we don't get an error
-	 * just because a cache doesn't exist, we take the following
-	 * action:
+	 * just because a cache doesn't exist, we create the bundle
+	 * pool if we need it
 	 * 
 	 * - Copy the current model.
-	 * - Remove all local repos which don't exist
+	 * - Remove the bundle pool if it doesn't exist.
 	 * - Call the supplier.
 	 * - If removed any repos, put them back.
 	 * - Return the result.
 	 */
-	private <T> T performWithoutNonExistentLocalRepos(Supplier<T> supplier) {
-		P2Model backup = copy();
-		boolean needToRestore = removeNonExistentLocal();
-		T result = supplier.get();
-		if (needToRestore) {
-			repos.addAll(backup.repos);
-			metadataRepos.addAll(backup.metadataRepos);
-			artifactRepos.addAll(backup.artifactRepos);
+	private <T> T performWithoutMissingBundlePool(Supplier<T> supplier) {
+		createBundlePoolIfNecessary();
+		return supplier.get();
+	}
+
+	/**
+	 * If the bundle pool is listed as a dependency and doesn't exist, then we'll make sure it's created.
+	 */
+	private void createBundlePoolIfNecessary() {
+		File cacheFile = GoomphCacheLocations.bundlePool();
+		String url = FileMisc.asUrl(cacheFile);
+		if (!repos.contains(url) && !metadataRepos.contains(url) && !artifactRepos.contains(url)) {
+			// if nobody wants the local cache, then we can bail
+			return;
 		}
-		return result;
+
+		// if the cache already exists and has an artifacts.jar/xml, then we're fine and there's nothing to do
+		if (cacheFile.isDirectory()) {
+			for (File child : FileMisc.list(cacheFile)) {
+				if (child.isFile()) {
+					if (child.getName().startsWith("artifacts.")) {
+						return;
+					}
+				}
+			}
+		}
+		// otherwise, we need to make an empty artifacts repo there
+		// http://stackoverflow.com/questions/11954898/eclipse-empty-testing-update-site
+		Errors.rethrow().run(() -> {
+			// clean the folder
+			FileMisc.cleanDir(cacheFile);
+			// create some token content
+			FileMisc.writeToken(cacheFile, "artifacts.xml", StringPrinter.buildStringFromLines(
+					"<?xml version='1.0' encoding='UTF-8'?>",
+					"<?artifactRepository version='1.1.0'?>",
+					"<repository name='${p2.artifact.repo.name}' type='org.eclipse.equinox.p2.artifact.repository.simpleRepository' version='1'>",
+					"  <properties size='2'>",
+					"    <property name='p2.timestamp' value='1305295295102'/>",
+					"    <property name='p2.compressed' value='true'/>",
+					"  </properties>",
+					"</repository>"));
+		});
 	}
 
 	///////////////////////
@@ -239,7 +233,7 @@ public class P2Model implements Serializable {
 	 */
 	@SuppressWarnings("unchecked")
 	public P2AntRunner mirrorApp(File dstFolder) {
-		return performWithoutNonExistentLocalRepos(() -> {
+		return performWithoutMissingBundlePool(() -> {
 			return P2AntRunner.create("p2.mirror", taskNode -> {
 				sourceNode(taskNode);
 				Node destination = new Node(taskNode, "destination");
@@ -285,7 +279,7 @@ public class P2Model implements Serializable {
 	 * to install the artifacts from the repos in this model into the given directory and profile.
 	 */
 	public DirectorApp directorApp(File dstFolder, String profile) {
-		return performWithoutNonExistentLocalRepos(() -> {
+		return performWithoutMissingBundlePool(() -> {
 			DirectorApp builder = new DirectorApp();
 			builder.clean();
 			builder.consolelog();
