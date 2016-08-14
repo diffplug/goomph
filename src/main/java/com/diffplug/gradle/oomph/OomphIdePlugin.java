@@ -145,16 +145,18 @@ public class OomphIdePlugin extends ProjectPlugin {
 		});
 
 		project.afterEvaluate(p -> {
-			// ideSetup -> eclipse
-			extension.addDependency(p);
-			// tie ide to ideSetupP2 iff setup is required
-			if (!extension.p2isClean()) {
-				ide.dependsOn(ideSetupP2);
-			}
-			// tie ide to ideSetupWorkspace if there's no workspace
-			if (!extension.workspaceExists()) {
-				ide.dependsOn(ideSetupWorkspace);
-			}
+			Errors.rethrow().run(() -> {
+				// ideSetup -> eclipse
+				extension.addDependency(p);
+				// tie ide to ideSetupP2 iff setup is required
+				if (!extension.p2isClean()) {
+					ide.dependsOn(ideSetupP2);
+				}
+				// tie ide to ideSetupWorkspace if there's no workspace
+				if (!extension.workspaceExists()) {
+					ide.dependsOn(ideSetupWorkspace);
+				}
+			});
 		});
 
 		// ideClean

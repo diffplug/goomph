@@ -208,8 +208,8 @@ public class OomphIdeExtension implements P2Declarative {
 	}
 
 	/** Returns true iff the installation is clean. */
-	boolean p2isClean() {
-		return Errors.rethrow().get(() -> FileMisc.hasToken(getIdeDir(), STALE_TOKEN, p2state()));
+	boolean p2isClean() throws IOException {
+		return FileMisc.hasToken(getIdeDir(), STALE_TOKEN, p2state());
 	}
 
 	/** Creates or updates the installed plugins in this model. */
