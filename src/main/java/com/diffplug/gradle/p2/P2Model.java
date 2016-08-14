@@ -216,8 +216,15 @@ public class P2Model implements Serializable {
 					"<repository name='${p2.artifact.repo.name}' type='org.eclipse.equinox.p2.artifact.repository.simpleRepository' version='1'>",
 					"  <properties size='2'>",
 					"    <property name='p2.timestamp' value='1305295295102'/>",
-					"    <property name='p2.compressed' value='true'/>",
+					"    <property name='p2.system' value='true'/>",
 					"  </properties>",
+					"  <mappings size='3'>",
+					"    <rule filter='(&amp; (classifier=osgi.bundle))' output='${repoUrl}/plugins/${id}_${version}.jar'/>",
+					"    <rule filter='(&amp; (classifier=binary))' output='${repoUrl}/binary/${id}_${version}'/>",
+					"    <rule filter='(&amp; (classifier=org.eclipse.update.feature))' output='${repoUrl}/features/${id}_${version}.jar'/>",
+					"  </mappings>",
+					"  <artifacts size='0'>",
+					"  </artifacts>",
 					"</repository>"));
 		});
 	}
