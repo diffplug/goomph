@@ -2,6 +2,13 @@
 
 ### Version 3.1.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
+### Version 3.0.6 - August 15th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.0.6/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.6/view))
+
+* More fixes to behavior around creating the goomph bundle pool.
+	+ Old behavior sometimes created a bundle pool which worked, but sometimes didn't.
+	+ New behavior is more reliable.
+* We were creating `file://` URLs on Windows, which should have been `file:///`.  This fix may cause some p2 repositories to become marked as dirty and redownload, even though they are really clean.  One-time fix.
+
 ### Version 3.0.5 - August 7th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.0.5/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.5/view))
 
 * Fixed behavior around creating the goomph bundle pool.
