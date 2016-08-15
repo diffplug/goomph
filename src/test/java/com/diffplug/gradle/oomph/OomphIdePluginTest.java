@@ -17,13 +17,26 @@ package com.diffplug.gradle.oomph;
 
 import java.io.IOException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.diffplug.gradle.GradleIntegrationTest;
 
 public class OomphIdePluginTest extends GradleIntegrationTest {
+	// This test fails because of how gradle's testkit
+	// constructs its classpath.  It uses a separate folder for
+	// class files and resource files, rather than the jar'ed result,
+	// which means that OSGi can't find the MANIFEST.
+	//
+	// You can work around this manually by changing the
+	// plugin-under-test-metadata.properties file, but it's
+	// a hassle to automate.
+	//
+	// Asked for a workaround / change from Gradle here, we'll see how it goes.
+	// https://discuss.gradle.org/t/how-to-make-gradle-testkit-depend-on-output-jar-rather-than-just-classes/18940
+	@Ignore
 	@Test
-	public void assertManifestContentDefaultLocation() throws IOException {
+	public void assertReadmeExampleWorks() throws IOException {
 		write("build.gradle",
 				"plugins {",
 				"    id 'com.diffplug.gradle.oomph.ide'",
@@ -40,6 +53,6 @@ public class OomphIdePluginTest extends GradleIntegrationTest {
 				"		niceText()      // with nice fonts and visible whitespace",
 				"	}",
 				"}");
-		gradleRunner().forwardOutput().withArguments("ide", "--stacktrace").build();
+		gradleRunner().forwardOutput().withArguments("ideSetupP2", "ideSetupWorkspace").build();
 	}
 }
