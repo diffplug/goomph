@@ -357,7 +357,7 @@ public class FileMisc {
 	}
 
 	/** The `file://` protocol. */
-	public static final String PROTOCOL = "file://";
+	public static final String PROTOCOL = "file://" + OS.getNative().winMacLinux("/", "", "");
 
 	/** Prefixes `file://` to the file's absolute path. */
 	public static String asUrl(File file) {
