@@ -28,16 +28,23 @@ import com.diffplug.gradle.p2.AsMavenPlugin;
 import com.diffplug.gradle.pde.EclipseRelease;
 
 /**
- * Adds the platform-specific SWT jars which are appropriate for the
- * native system to the compile classpath.
+ * Adds the platform-specific SWT and jface jars which are appropriate for the
+ * currently running platform (on the dev machine).
+ * 
+ * Adds the following jars:
+ * 
+ * * `org.eclipse.swt`
+ * * `org.eclipse.jface`
+ * * `org.eclipse.core.commands`
+ * * `org.eclipse.equinox.common`
  * 
  * ```groovy
- * apply plugin: 'com.diffplug.gradle.swt'
+ * apply plugin: 'com.diffplug.gradle.swt.nativedeps'
  * ```
  * 
  * * Property `SWT_VERSION` sets the eclipse version from which to get SWT (e.g. `4.6.0`).
  * * Property `SWT_P2_REPO` sets the p2 repository which is being used (ignores the SWT_VERSION property).
- * * Property `SWT_P2_GROUP` sets the maven group name for the downloaded artifacts, (defaults to ).
+ * * Property `SWT_P2_GROUP` sets the maven group name for the downloaded artifacts, (defaults to `eclipse-swt-deps`).
  */
 public class NativeDepsPlugin extends ProjectPlugin {
 	static final String PROP_VERSION = "SWT_VERSION";
