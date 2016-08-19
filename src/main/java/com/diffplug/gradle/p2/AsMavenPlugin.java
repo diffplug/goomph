@@ -80,8 +80,10 @@ import com.diffplug.gradle.ProjectPlugin;
  * But none of these dependencies are added automatically - you have to
  * add them yourself.
  * 
- * See [spotless](https://github.com/diffplug/spotless) for a production
- * example.
+ * ### Example projects
+ * 
+ * * [spotless](https://github.com/diffplug/spotless)
+ * * (send us yours in a [PR](https://github.com/diffplug/goomph)!)
  * 
  * ## Acknowledgements and comparisons to other options
  * 

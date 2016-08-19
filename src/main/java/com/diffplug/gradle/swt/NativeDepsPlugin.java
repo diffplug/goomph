@@ -45,6 +45,12 @@ import com.diffplug.gradle.pde.EclipseRelease;
  * * Property `SWT_VERSION` sets the eclipse version from which to get SWT (e.g. `4.6.0`).
  * * Property `SWT_P2_REPO` sets the p2 repository which is being used (ignores the SWT_VERSION property).
  * * Property `SWT_P2_GROUP` sets the maven group name for the downloaded artifacts, (defaults to `eclipse-swt-deps`).
+ *
+ * ### Example projects
+ * 
+ * * [durian-swt](https://github.com/diffplug/durian-swt)
+ * * (send us yours in a [PR](https://github.com/diffplug/goomph)!)
+ * 
  */
 public class NativeDepsPlugin extends ProjectPlugin {
 	static final String PROP_VERSION = "SWT_VERSION";
