@@ -50,7 +50,9 @@ oomphIde {
 See the [plugin's javadoc](https://diffplug.github.io/goomph/javadoc/3.0.6/com/diffplug/gradle/oomph/OomphIdePlugin.html) for more details.
 
 Examples (submit a PR with yours here!)
-- [Gradle and Eclipse RCP talk](https://github.com/diffplug/gradle_and_eclipse_rcp/blob/master/ide/build.gradle)
+
+- [Gradle and Eclipse RCP talk](https://github.com/diffplug/gradle_and_eclipse_rcp/blob/master/ide/build.gradle) (multi-project Eclipse RCP project)
+- [Spotless](https://github.com/diffplug/spotless/blob/master/build.gradle) (single-project Gradle plugin)
 
 ## Building OSGi bundles, Eclipse plugins, and RCP applications.
 
