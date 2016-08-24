@@ -1,6 +1,10 @@
 # Goomph releases
 
-### Version 3.1.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
+### Version 3.2.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
+
+### Version 3.1.0 - August 24th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.1.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.1.0/view))
+
+* Added `OomphIdeExtension.addProjectFolder()`.  You can now add projects to the eclipse IDE without having an eclipse project in the build.
 
 ### Version 3.0.6 - August 15th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.0.6/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.6/view))
 
