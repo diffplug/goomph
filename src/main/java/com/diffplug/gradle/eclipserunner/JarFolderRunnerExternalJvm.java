@@ -78,7 +78,11 @@ public class JarFolderRunnerExternalJvm implements EclipseRunner {
 		FileCollection classpath = execSpec.getClasspath();
 		execSpec.setClasspath(classpath.filter(file -> {
 			String name = file.getName();
-			return classpathToKeep.stream().anyMatch(toKeep -> name.startsWith(toKeep));
+			if (name.startsWith("org.eclipse") && !name.startsWith("org.eclipse.osgi")) {
+				return false;
+			} else {
+				return true;
+			}
 		}));
 	}
 
