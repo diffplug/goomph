@@ -152,6 +152,8 @@ public class OomphIdeExtension implements P2Declarative {
 		addDependency(project.evaluationDependsOn(projectPath));
 	}
 
+	private static final String DOT_PROJECT = ".project";
+
 	/** Adds the eclipse tasks from the given project as a dependency of our IDE setup task. */
 	void addDependency(Project eclipseProject) {
 		Task ideSetup = project.getTasks().getByName(OomphIdePlugin.IDE_SETUP_WORKSPACE);
@@ -161,10 +163,17 @@ public class OomphIdeExtension implements P2Declarative {
 			}
 			if (task instanceof GenerateEclipseProject) {
 				File projectFile = ((GenerateEclipseProject) task).getOutputFile();
-				Preconditions.checkArgument(projectFile.getName().equals(".project"), "Project file must be '.project', was %s", projectFile);
+				Preconditions.checkArgument(projectFile.getName().equals(DOT_PROJECT), "Project file must be '" + DOT_PROJECT + "', was %s", projectFile);
 				projectFiles.add(projectFile);
 			}
 		});
+	}
+
+	/** Adds the given folder as an eclipse project. */
+	public void addProjectFolder(Object folderObj) {
+		File folder = project.file(folderObj);
+		Preconditions.checkArgument(folder.isDirectory(), "Folder '%s' must be a directory containing a '" + DOT_PROJECT + "' file.");
+		projectFiles.add(new File(folder, DOT_PROJECT));
 	}
 
 	private File getIdeDir() {
