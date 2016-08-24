@@ -45,6 +45,10 @@ sourceCompatibility = VER_JAVA
 targetCompatibility = VER_JAVA
 
 dependencies {
+	// NOTE: if you change a dependency other than
+	// bumping a version, make sure to look at
+	// JarFolderRunnerExternalJvm.classpathToKeep
+
 	// Compile misc
 	compile "com.diffplug.durian:durian-core:${VER_DURIAN}"
 	compile "com.diffplug.durian:durian-collect:${VER_DURIAN}"

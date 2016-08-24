@@ -28,6 +28,7 @@ import org.gradle.process.JavaExecSpec;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import com.diffplug.common.base.Errors;
+import com.diffplug.common.collect.ImmutableList;
 import com.diffplug.gradle.JavaExecable;
 
 /**
@@ -76,10 +77,13 @@ public class JarFolderRunnerExternalJvm implements EclipseRunner {
 	private void modifyClassPath(JavaExecSpec execSpec) {
 		FileCollection classpath = execSpec.getClasspath();
 		execSpec.setClasspath(classpath.filter(file -> {
-			// we need org.eclipse.osgi, org.osgi.core will ruin everything
-			return !file.getName().startsWith("org.osgi.core");
+			String name = file.getName();
+			return classpathToKeep.stream().anyMatch(toKeep -> name.startsWith(toKeep));
 		}));
 	}
+
+	/** Jars on the classpath that should be used in the launcher. */
+	static final ImmutableList<String> classpathToKeep = ImmutableList.of("goomph", "durian-", "commons-io", "org.eclipse.osgi", "biz.aQute.bndlib");
 
 	/** Helper class for running outside this JVM. */
 	@SuppressWarnings("serial")
