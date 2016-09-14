@@ -21,6 +21,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.diffplug.common.base.StringPrinter;
+import com.diffplug.gradle.FileMisc;
 
 public class P2ModelTest {
 	private P2Model testData() {
@@ -46,7 +47,7 @@ public class P2ModelTest {
 				"-artifactRepository http://artifactrepo",
 				"-installIU com.diffplug.iu,com.diffplug.otheriu/1.0.0",
 				"-profile profile",
-				"-destination file://" + dest.getAbsolutePath());
+				"-destination " + FileMisc.asUrl(dest));
 		Assert.assertEquals(expected, actual);
 	}
 
@@ -66,7 +67,7 @@ public class P2ModelTest {
 				"      <repository kind=\"metadata\" location=\"http://metadatarepo\"/>",
 				"      <repository kind=\"artifact\" location=\"http://artifactrepo\"/>",
 				"    </source>",
-				"    <destination location=\"file://" + dest.getAbsolutePath() + "\"/>",
+				"    <destination location=\"" + FileMisc.asUrl(dest) + "\"/>",
 				"    <iu id=\"com.diffplug.iu\"/>",
 				"    <iu id=\"com.diffplug.otheriu\" version=\"1.0.0\"/>",
 				"  </p2.mirror>",
