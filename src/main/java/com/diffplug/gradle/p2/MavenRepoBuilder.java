@@ -63,14 +63,14 @@ class MavenRepoBuilder implements AutoCloseable {
 				String source = attr.getValue("Eclipse-SourceBundle");
 				if (source != null) {
 					isSource = true;
-					symbolicName = beforeSemicolon(source);
+					symbolicName = beforeSemicolon(source).trim();
 				} else {
 					isSource = false;
 				}
 			} else {
 				String name = osgiJar.getName();
 				int lastUnderscore = name.lastIndexOf("_");
-				symbolicName = name.substring(0, lastUnderscore);
+				symbolicName = name.substring(0, lastUnderscore).trim();
 				version = name.substring(lastUnderscore + 1);
 				isSource = false;
 				System.err.println(osgiJar.getAbsolutePath() + " has no manifest.  Guessing name=" + symbolicName + " and version=" + version);
