@@ -2,6 +2,10 @@
 
 ### Version 3.2.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
+### Version 3.1.2 - September 15th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.1.2/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.1.2/view))
+
+* Second attempt at fixing a bug where trailing whitespaces in bundle symbolic names would break `p2asmaven`.
+
 ### Version 3.1.1 - September 14th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.1.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.1.1/view))
 
 * Fixed a bug where trailing whitespaces in bundle symbolic names would break `p2asmaven`.
