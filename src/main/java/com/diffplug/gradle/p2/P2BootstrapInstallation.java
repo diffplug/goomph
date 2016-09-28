@@ -23,7 +23,6 @@ import java.util.Objects;
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.Project;
 
-import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.collect.ImmutableSet;
 import com.diffplug.gradle.FileMisc;
@@ -90,9 +89,6 @@ class P2BootstrapInstallation {
 		FileMisc.forceDelete(target);
 		FileMisc.writeToken(getRootFolder(), TOKEN);
 		System.out.print("Success.");
-		// it can take a little but for the installation we did here to be fully flushed to disk for other processes
-		// so we do this to make sure that the installation is visible
-		Errors.rethrow().run(() -> Thread.sleep(500));
 	}
 
 	/**

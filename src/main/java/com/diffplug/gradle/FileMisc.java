@@ -44,6 +44,7 @@ import com.diffplug.common.swt.os.OS;
 
 /** Miscellaneous utilties for copying files around. */
 public class FileMisc {
+
 	///////////////////////////////////////////////////////////////////
 	// Replacements for File.* which check exceptional return values //
 	///////////////////////////////////////////////////////////////////
@@ -102,6 +103,20 @@ public class FileMisc {
 			}
 		} while (System.currentTimeMillis() - start < MS_RETRY);
 		throw Errors.asRuntime(lastException);
+	}
+
+	/** Returns true if the given directory exists, and waits up to 500ms for the directory to exist. */
+	public static boolean dirExists(File dir) {
+		long start = System.currentTimeMillis();
+		while (System.currentTimeMillis() - start < MS_RETRY) {
+			File refreshed = Errors.rethrow().get(dir::getCanonicalFile);
+			if (refreshed.exists() && refreshed.isDirectory()) {
+				return true;
+			} else {
+				Errors.rethrow().run(() -> Thread.sleep(1));
+			}
+		}
+		return false;
 	}
 
 	//////////////////////////////

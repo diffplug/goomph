@@ -58,7 +58,7 @@ public class EquinoxLauncher {
 		this.installationRoot = Objects.requireNonNull(installationRoot);
 		// populate the plugins
 		File pluginsDir = new File(installationRoot, "plugins");
-		Preconditions.checkArgument(pluginsDir.isDirectory(), "Eclipse launcher must have a plugins directory: %s", installationRoot);
+		Preconditions.checkArgument(FileMisc.dirExists(pluginsDir), "Eclipse launcher must have a plugins directory: %s", installationRoot);
 		for (File file : FileMisc.list(pluginsDir)) {
 			if (file.isFile()) {
 				String fileName = file.getName();
