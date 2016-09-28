@@ -66,6 +66,12 @@ dependencies {
 	testCompile "junit:junit:${VER_JUNIT}"
 }
 
+test {
+	testLogging {
+		exceptionFormat = 'full'
+	}
+}
+
 apply plugin: 'eclipse'
 eclipse {
 	classpath {
