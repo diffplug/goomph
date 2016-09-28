@@ -60,7 +60,7 @@ public final class EclipseRelease {
 		}
 	}
 
-	public static final String LATEST = "4.6.0";
+	public static final String LATEST = "4.6.1";
 
 	public static EclipseRelease latestOfficial() {
 		return official(LATEST);
@@ -102,6 +102,7 @@ public final class EclipseRelease {
 			case "4.5.1": return root + "4.5/R-4.5.1-201509040015/";
 			case "4.5.2": return root + "4.5/R-4.5.2-201602121500/";
 			case "4.6.0": return root + "4.6/R-4.6-201606061100/";
+			case "4.6.1": return root + "4.6/R-4.6.1-201609071200/";
 			// less-specific versions
 			case "3.5": case "3.6": case "3.7": case "3.8":
 			case "4.2": case "4.3": case "4.4": case "4.5": case "4.6":
