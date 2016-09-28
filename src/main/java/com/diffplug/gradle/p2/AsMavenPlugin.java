@@ -118,10 +118,10 @@ public class AsMavenPlugin extends ProjectPlugin {
 
 	@Override
 	protected void applyOnce(Project project) {
-		extension = project.getExtensions().create(AsMavenExtension.NAME, AsMavenExtension.class);
+		extension = project.getExtensions().create(AsMavenExtension.NAME, AsMavenExtension.class, project);
 		project.afterEvaluate(proj -> {
 			// reload
-			Errors.rethrow().run(() -> extension.run(proj));
+			Errors.rethrow().run(extension::run);
 			// set maven repo
 			project.getRepositories().maven(maven -> {
 				maven.setUrl(extension.mavenDir(proj));

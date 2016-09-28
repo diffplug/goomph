@@ -31,8 +31,15 @@ import com.diffplug.gradle.FileMisc;
 public class AsMavenExtension {
 	public static final String NAME = "p2AsMaven";
 
-	Object destination = "build/p2asmaven";
+	private final Project project;
+
+	Object destination;
 	final LinkedHashMap<String, Action<AsMavenGroup>> groups = new LinkedHashMap<>();
+
+	public AsMavenExtension(Project project) {
+		this.project = Objects.requireNonNull(project);
+		this.destination = new File(project.getBuildDir(), "p2asmaven");
+	}
 
 	/** Sets the destination directory, defaults to `build/p2asmaven`. */
 	public void destination(Object destination) {
@@ -47,7 +54,7 @@ public class AsMavenExtension {
 		}
 	}
 
-	void run(Project project) {
+	void run() {
 		Set<File> files = new HashSet<>();
 		File p2asmaven = project.file(destination);
 		groups.forEach((group, action) -> {
