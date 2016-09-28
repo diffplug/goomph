@@ -92,7 +92,7 @@ class P2BootstrapInstallation {
 		System.out.print("Success.");
 		// it can take a little but for the installation we did here to be fully flushed to disk for other processes
 		// so we do this to make sure that the installation is visible
-		Errors.rethrow().run(() -> Thread.sleep(100));
+		Errors.rethrow().run(() -> Thread.sleep(500));
 	}
 
 	/**
