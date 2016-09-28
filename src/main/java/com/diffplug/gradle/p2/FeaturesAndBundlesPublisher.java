@@ -24,7 +24,9 @@ import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.eclipserunner.EclipseApp;
 
-/** Models the FeaturesAndBundlesPublisher application. */
+/**
+ * Models the FeaturesAndBundlesPublisher application ([eclipse docs](https://wiki.eclipse.org/Equinox/p2/Publisher#Features_And_Bundles_Publisher_Application)).
+ */
 public class FeaturesAndBundlesPublisher extends EclipseApp {
 	/** Creates a FeaturesAndBundlesPublisher. */
 	public FeaturesAndBundlesPublisher() {
