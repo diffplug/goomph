@@ -2,6 +2,10 @@
 
 ### Version 3.3.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
+### Version 3.2.1 - September 29th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.2.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.2.1/view))
+
+* IDE setup tasks could not upgrade or downgrade the IDE version, because of a p2 director limitation. Fixed.
+
 ### Version 3.2.0 - September 28th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.2.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.2.0/view))
 
 * `p2asmaven` now respects the buildDir variable ([#9](https://github.com/diffplug/goomph/issues/9)).
