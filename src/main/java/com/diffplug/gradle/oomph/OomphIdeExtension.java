@@ -227,10 +227,9 @@ public class OomphIdeExtension implements P2Declarative {
 			return;
 		}
 		File ideDir = getIdeDir();
-		// make sure the directory exists
-		if (!ideDir.isDirectory()) {
-			FileMisc.cleanDir(ideDir);
-		}
+		// clean the p2 folder, because p2director can't update anything
+		FileMisc.cleanDir(ideDir);
+
 		P2Model p2cached = new P2Model();
 		p2cached.addArtifactRepoBundlePool();
 		p2cached.copyFrom(p2);
