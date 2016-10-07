@@ -52,7 +52,9 @@ See the [plugin's javadoc](https://diffplug.github.io/goomph/javadoc/3.2.1/com/d
 Examples (submit a PR with yours here!)
 
 - [Gradle and Eclipse RCP talk](https://github.com/diffplug/gradle_and_eclipse_rcp/blob/master/ide/build.gradle) (multi-project Eclipse RCP project)
+- [ls-api](https://github.com/TypeFox/ls-api/blob/61a3089569acbe159f043534f282401452a34bc3/ide/build.gradle) (xtend IDE example)
 - [Spotless](https://github.com/diffplug/spotless/blob/master/build.gradle) (single-project Gradle plugin)
+- (your example here)
 
 ## Blog posts
 
@@ -62,6 +64,11 @@ Examples (submit a PR with yours here!)
 ## Building OSGi bundles, Eclipse plugins, and RCP applications.
 
 It turns out that the tooling required to implement "IDE-as-build-artifact" is the same tooling required to build Eclipse plugins and RCP applications in the first place.  That is Goomph's other side.  For a canonical example which demonstrates Goomph in use on a real project, see the [Gradle and Eclipse RCP talk](https://github.com/diffplug/gradle_and_eclipse_rcp).
+
+Real world Eclipse software built with Goomph:
+- [DiffPlug](https://www.diffplug.com/)
+- [Veriluma](http://veriluma.com/)
+- (your project here)
 
 Below is an index of Goomph's capabilities, along with links to the javadoc where you can find usage examples.
 
