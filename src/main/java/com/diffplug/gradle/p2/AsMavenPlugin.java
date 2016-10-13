@@ -80,10 +80,43 @@ import com.diffplug.gradle.ProjectPlugin;
  * But none of these dependencies are added automatically - you have to
  * add them yourself.
  * 
- * ### Example projects
+ * ## Example projects
  * 
  * * [spotless](https://github.com/diffplug/spotless)
  * * (send us yours in a [PR](https://github.com/diffplug/goomph)!)
+ * 
+ * ## Proxy support
+ * 
+ * If you need to pass through a proxy, you'll need to create a file 
+ * called `proxies.ini` with content like this:
+ * 
+ * ```ini
+ * org.eclipse.core.net/proxyData/HTTP/host=someproxy.ericsson.se
+ * org.eclipse.core.net/proxyData/HTTPS/host=someproxy.ericsson.se
+ * org.eclipse.core.net/proxyData/HTTPS/hasAuth=false
+ * org.eclipse.core.net/proxyData/HTTP/port=8080
+ * org.eclipse.core.net/proxyData/HTTPS/port=8080
+ * org.eclipse.core.net/org.eclipse.core.net.hasMigrated=true
+ * org.eclipse.core.net/nonProxiedHosts=*.ericsson.com|127.0.0.1
+ * org.eclipse.core.net/systemProxiesEnabled=false
+ * org.eclipse.core.net/proxyData/HTTP/hasAuth=false 
+ * ```
+ * 
+ * Once you've done this, add this to your `build.gradle`:
+ * 
+ * ```groovy
+ * p2AsMaven {
+ *     group 'myGroup', {
+ *         ...
+ *         p2ant {
+ *             addArg('plugincustomization', '<path to proxies.ini>')
+ *         }
+ *     }
+ * }
+ * ```
+ * 
+ * If you think this is too hard, vote for [this issue on GitHub](https://github.com/diffplug/goomph/issues/12)
+ * and [this bug on eclipse](https://bugs.eclipse.org/bugs/show_bug.cgi?id=382875) and we can make it easier.
  * 
  * ## Acknowledgements and comparisons to other options
  * 
