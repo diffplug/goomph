@@ -37,6 +37,7 @@ import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.specs.Spec;
 import org.gradle.api.specs.Specs;
+import org.gradle.internal.Actions;
 import org.gradle.plugins.ide.eclipse.GenerateEclipseProject;
 
 import com.diffplug.common.base.Errors;
@@ -55,6 +56,7 @@ import com.diffplug.gradle.StateBuilder;
 import com.diffplug.gradle.eclipserunner.EclipseIni;
 import com.diffplug.gradle.p2.P2Declarative;
 import com.diffplug.gradle.p2.P2Model;
+import com.diffplug.gradle.p2.P2Model.DirectorApp;
 
 /** DSL for {@link OomphIdePlugin}. */
 public class OomphIdeExtension implements P2Declarative {
@@ -73,6 +75,8 @@ public class OomphIdeExtension implements P2Declarative {
 	String perspective;
 	@Nonnull
 	Object ideDir = "build/oomph-ide" + FileMisc.macApp();
+	@Nonnull
+	Action<DirectorApp> directorModifier = Actions.doNothing();
 
 	Action<EclipseIni> eclipseIni;
 
@@ -94,6 +98,11 @@ public class OomphIdeExtension implements P2Declarative {
 	@Override
 	public P2Model getP2() {
 		return p2;
+	}
+
+	/** Allows for fine-grained manipulation of the mirroring operation. */
+	public void p2director(Action<DirectorApp> directorModifier) {
+		this.directorModifier = Objects.requireNonNull(directorModifier);
 	}
 
 	/** Sets the icon image - any size and format is okay, but something square is recommended. */
@@ -233,12 +242,15 @@ public class OomphIdeExtension implements P2Declarative {
 		P2Model p2cached = new P2Model();
 		p2cached.addArtifactRepoBundlePool();
 		p2cached.copyFrom(p2);
-		P2Model.DirectorApp app = p2cached.directorApp(ideDir, "OomphIde");
+		DirectorApp app = p2cached.directorApp(ideDir, "OomphIde");
 		app.consolelog();
 		// share the install for quickness
 		app.bundlepool(GoomphCacheLocations.bundlePool());
 		// create the native launcher
 		app.platform(SwtPlatform.getRunning());
+		// make any other modifications we'd like to make
+		directorModifier.execute(app);
+
 		// create it
 		app.runUsingBootstrapper(project);
 		// write out the branding product
