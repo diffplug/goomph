@@ -1,6 +1,8 @@
 # Goomph releases
 
-### Version 3.4.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
+### Version 3.5.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
+
+### Version 3.4.0 - November 22nd 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.4.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.4.0/view))
 
 * Added `FileMisc.deleteEmptyFolders().`
 * Fixed `com.diffplug.gradle.eclipse.bndmanifest` so that it doesn't create `Export-Package` entries for empty packages.
