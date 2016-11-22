@@ -48,12 +48,18 @@ public class FileMiscTest {
 		File b = folder.newFolder("b");
 		File b1 = new File(b, "1");
 		b1.mkdir();
+		File b2 = new File(b, "2");
+		b2.mkdir();
+		File b21 = new File(b2, "1");
+		b21.mkdir();
 
 		FileMisc.deleteEmptyFolders(folder.getRoot());
 		Assert.assertEquals(true, a.exists());
 		Assert.assertEquals(true, a1.exists());
 		Assert.assertEquals(false, b.exists());
 		Assert.assertEquals(false, b1.exists());
+		Assert.assertEquals(false, b2.exists());
+		Assert.assertEquals(false, b21.exists());
 	}
 
 	@Test

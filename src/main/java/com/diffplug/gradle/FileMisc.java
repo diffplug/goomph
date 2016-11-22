@@ -319,7 +319,7 @@ public class FileMisc {
 			for (File emptyDir : emptyDirs) {
 				File toDelete = emptyDir;
 				while (!toDelete.equals(root)) {
-					Preconditions.checkArgument(emptyDir.delete(), "Failed to delete %s", emptyDir);
+					Preconditions.checkArgument(toDelete.delete(), "Failed to delete %s", toDelete);
 					toDelete = toDelete.getParentFile();
 					if (toDelete.list().length > 0) {
 						break;
