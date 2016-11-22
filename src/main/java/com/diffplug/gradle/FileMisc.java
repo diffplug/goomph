@@ -41,6 +41,8 @@ import com.diffplug.common.base.Throwing;
 import com.diffplug.common.collect.Maps;
 import com.diffplug.common.io.Files;
 import com.diffplug.common.swt.os.OS;
+import com.diffplug.common.tree.TreeDef;
+import com.diffplug.common.tree.TreeStream;
 
 /** Miscellaneous utilties for copying files around. */
 public class FileMisc {
@@ -301,6 +303,31 @@ public class FileMisc {
 				}
 			}
 		}
+	}
+
+	/** Deletes all empty folders (recursively). */
+	public static void deleteEmptyFolders(File d) throws IOException {
+		retry(d, root -> {
+			// define the directory hierarchy
+			TreeDef<File> dirTree = file -> Arrays.stream(file.listFiles())
+					.filter(File::isDirectory)
+					.collect(Collectors.toList());
+			// find all the empty directories
+			List<File> emptyDirs = TreeStream.depthFirst(dirTree, root)
+					.filter(dir -> dir.list().length == 0)
+					.collect(Collectors.toList());
+			for (File emptyDir : emptyDirs) {
+				File toDelete = emptyDir;
+				while (!toDelete.equals(root)) {
+					Preconditions.checkArgument(emptyDir.delete(), "Failed to delete %s", emptyDir);
+					toDelete = toDelete.getParentFile();
+					if (toDelete.list().length > 0) {
+						break;
+					}
+				}
+			}
+			return null;
+		});
 	}
 
 	public static List<File> parseListFile(Project project, List<Object> inputs) {
