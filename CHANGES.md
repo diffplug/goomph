@@ -2,6 +2,11 @@
 
 ### Version 3.4.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
+* Added `FileMisc.deleteEmptyFolders().`
+* Fixed `com.diffplug.gradle.eclipse.bndmanifest` so that it doesn't create `Export-Package` entries for empty packages.
+	+ If bnd sees an empty folder in the classes directory, it will put that directory into the manifest.
+	+ To fix this, we now clean empty folders out of the classes directory before we run bndmanifest.
+
 ### Version 3.3.0 - October 13th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.3.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.3.0/view))
 
 * Added javadoc to [`AsMavenPlugin`](https://diffplug.github.io/goomph/javadoc/3.3.0/com/diffplug/gradle/p2/AsMavenPlugin.html) and [`OomphIdePlugin`](https://diffplug.github.io/goomph/javadoc/3.3.0/com/diffplug/gradle/oomph/OomphIdePlugin.html) which describes proxy support.

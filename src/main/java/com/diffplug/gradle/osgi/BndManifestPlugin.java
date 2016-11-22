@@ -18,6 +18,7 @@ package com.diffplug.gradle.osgi;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,6 +33,7 @@ import org.gradle.api.java.archives.Attributes;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.plugins.JavaPluginConvention;
 import org.gradle.api.tasks.SourceSet;
+import org.gradle.api.tasks.SourceSetOutput;
 import org.gradle.api.tasks.bundling.Jar;
 
 import aQute.bnd.osgi.Builder;
@@ -50,7 +52,7 @@ import com.diffplug.gradle.ProjectPlugin;
  * to tie bnd into both Eclipse PDE and Gradle. Which is what Goomph is for!
  * 
  * ```groovy
- * apply plugin: 'com.diffplug.gradle.eclipse.bndmanifest'
+ * apply plugin: 'com.diffplug.gradle.osgi.bndmanifest'
  * // Pass headers and bnd directives: http://www.aqute.biz/Bnd/Format
  * jar.manifest.attributes(
  *     '-exportcontents': 'com.diffplug.*',
@@ -158,8 +160,11 @@ public class BndManifestPlugin extends ProjectPlugin {
 
 				// put the class files and resources into the jar
 				JavaPluginConvention javaConvention = project.getConvention().getPlugin(JavaPluginConvention.class);
-				SourceSet main = javaConvention.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME);
-				builder.set(Constants.INCLUDERESOURCE, main.getOutput().getClassesDir() + "," + main.getOutput().getResourcesDir());
+				SourceSetOutput main = javaConvention.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME).getOutput();
+				// delete empty folders so that bnd doesn't make Export-Package entries for them
+				deleteEmptyFoldersIfExists(main.getClassesDir());
+				deleteEmptyFoldersIfExists(main.getResourcesDir());
+				builder.set(Constants.INCLUDERESOURCE, main.getClassesDir() + "," + main.getResourcesDir());
 
 				// set the version
 				if (builder.getBundleVersion() == null) {
@@ -178,6 +183,12 @@ public class BndManifestPlugin extends ProjectPlugin {
 				onBuilder.accept(builder.build());
 			}
 		});
+	}
+
+	static void deleteEmptyFoldersIfExists(File root) throws IOException {
+		if (root.exists()) {
+			FileMisc.deleteEmptyFolders(root);
+		}
 	}
 
 	static String dateQualifier() {
