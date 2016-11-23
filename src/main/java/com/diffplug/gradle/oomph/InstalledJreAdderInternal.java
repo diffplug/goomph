@@ -31,9 +31,9 @@ import org.eclipse.jdt.launching.environments.IExecutionEnvironment;
 
 import com.diffplug.gradle.oomph.SetupAction.Internal;
 
-public class JreAdderInternal extends Internal<JreAdder> {
+public class InstalledJreAdderInternal extends Internal<InstalledJreAdder> {
 
-	JreAdderInternal(JreAdder host) {
+	InstalledJreAdderInternal(InstalledJreAdder host) {
 		super(host);
 	}
 

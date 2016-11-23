@@ -24,14 +24,14 @@ import com.diffplug.gradle.OrderingConstraints;
 /**
  * Used for adding JRE/JDK installations to an Eclipse install
  */
-public class JreAdder
+public class InstalledJreAdder
 		extends SetupAction {
 
 	private static final long serialVersionUID = -7101059764345094433L;
 
 	List<InstalledJre> installedJres;
 
-	protected JreAdder(Collection<InstalledJre> jresToAdd) {
+	protected InstalledJreAdder(Collection<InstalledJre> jresToAdd) {
 		super("com.diffplug.gradle.oomph.JreAdderInternal");
 		installedJres = new ArrayList<>(jresToAdd);
 	}

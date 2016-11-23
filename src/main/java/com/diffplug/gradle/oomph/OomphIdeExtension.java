@@ -349,7 +349,7 @@ public class OomphIdeExtension implements P2Declarative {
 		List<SetupAction> list = setupActions.getResult();
 		// add installed jres
 		if (!installedJres.isEmpty())
-			list.add(new JreAdder(installedJres));
+			list.add(new InstalledJreAdder(installedJres));
 		// add the project importer
 		list.add(new ProjectImporter(projectFiles));
 		// order the actions
