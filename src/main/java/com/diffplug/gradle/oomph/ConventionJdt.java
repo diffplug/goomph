@@ -15,10 +15,19 @@
  */
 package com.diffplug.gradle.oomph;
 
+import org.gradle.api.Action;
+
 public class ConventionJdt extends OomphConvention {
 	ConventionJdt(OomphIdeExtension extension) {
 		super(extension);
 		requireIUs(IUs.IDE, IUs.JDT, IUs.ERROR_LOG);
 		setPerspectiveOver(Perspectives.JAVA, Perspectives.RESOURCES);
+	}
+
+	/** Adds an installed JRE with the given content. */
+	void installedJre(Action<InstalledJre> action) {
+		InstalledJre instance = new InstalledJre();
+		action.execute(instance);
+		extension.installedJres.add(instance);
 	}
 }
