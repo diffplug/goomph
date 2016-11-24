@@ -19,29 +19,14 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * Simple representation of a JRE
- */
-public class InstalledJre
-		implements Serializable {
-
+/** Simple representation of a JRE */
+public class InstalledJre implements Serializable {
 	private static final long serialVersionUID = 8530657374964977698L;
 
 	private String version;
 	private File installedLocation;
 	private boolean markDefault;
 	private List<String> executionEnvironments;
-
-	/**
-	 * 
-	 */
-	public InstalledJre() {}
-
-	protected InstalledJre(String name, File location) {
-		super();
-		this.version = name;
-		this.installedLocation = location;
-	}
 
 	public String getVersion() {
 		return version;
