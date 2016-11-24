@@ -20,12 +20,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.Supplier;
@@ -67,7 +65,6 @@ public class OomphIdeExtension implements P2Declarative {
 	final Project project;
 	final WorkspaceRegistry workspaceRegistry;
 	final SortedSet<File> projectFiles = new TreeSet<>();
-	final Set<InstalledJre> installedJres = new HashSet<>();
 	final Map<String, Supplier<byte[]>> workspaceToContent = new HashMap<>();
 	final P2Model p2 = new P2Model();
 	final Lazyable<List<SetupAction>> setupActions = Lazyable.ofList();
@@ -347,10 +344,6 @@ public class OomphIdeExtension implements P2Declarative {
 	private void internalSetup(File ideDir) throws IOException {
 		// get the user setup actions
 		List<SetupAction> list = setupActions.getResult();
-		// add installed jres
-		if (!installedJres.isEmpty()) {
-			list.add(new InstalledJreAdder(installedJres));
-		}
 		// add the project importer
 		list.add(new ProjectImporter(projectFiles));
 		// order the actions
@@ -386,19 +379,22 @@ public class OomphIdeExtension implements P2Declarative {
 	/////////////////
 	/** Convenience methods for setting the style. */
 	public void style(Action<ConventionStyle> action) {
-		ConventionStyle convention = new ConventionStyle(this);
-		action.execute(convention);
+		try (ConventionStyle convention = new ConventionStyle(this)) {
+			action.execute(convention);
+		}
 	}
 
 	/** Adds the java development tools. */
 	public void jdt(Action<ConventionJdt> action) {
-		ConventionJdt convention = new ConventionJdt(this);
-		action.execute(convention);
+		try (ConventionJdt convention = new ConventionJdt(this)) {
+			action.execute(convention);
+		}
 	}
 
 	/** Adds the plugin-development environment, @see ConventionPde. */
 	public void pde(Action<ConventionPde> action) {
-		ConventionPde convention = new ConventionPde(this);
-		action.execute(convention);
+		try (ConventionPde convention = new ConventionPde(this)) {
+			action.execute(convention);
+		}
 	}
 }

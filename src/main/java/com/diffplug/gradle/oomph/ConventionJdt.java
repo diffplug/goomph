@@ -15,6 +15,9 @@
  */
 package com.diffplug.gradle.oomph;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.gradle.api.Action;
 
 public class ConventionJdt extends OomphConvention {
@@ -24,10 +27,20 @@ public class ConventionJdt extends OomphConvention {
 		setPerspectiveOver(Perspectives.JAVA, Perspectives.RESOURCES);
 	}
 
+	final Set<InstalledJre> installedJres = new HashSet<>();
+
 	/** Adds an installed JRE with the given content. */
-	void installedJre(Action<InstalledJre> action) {
+	public void installedJre(Action<InstalledJre> action) {
 		InstalledJre instance = new InstalledJre();
 		action.execute(instance);
-		extension.installedJres.add(instance);
+		installedJres.add(instance);
+	}
+
+	@Override
+	public void close() {
+		// add installed jres
+		if (!installedJres.isEmpty()) {
+			extension.addSetupAction(new InstalledJreAdder(installedJres));
+		}
 	}
 }
