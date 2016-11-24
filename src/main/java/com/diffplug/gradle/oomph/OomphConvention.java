@@ -21,7 +21,7 @@ import java.util.Arrays;
  * Base class for implementing a DSL
  * around a specific part of the IDE.
  */
-public class OomphConvention {
+public class OomphConvention implements AutoCloseable {
 	protected final OomphIdeExtension extension;
 
 	OomphConvention(OomphIdeExtension extension) {
@@ -45,4 +45,14 @@ public class OomphConvention {
 			extension.perspective(toSet);
 		}
 	}
+
+	/**
+	 * This is called when the convention block ends.
+	 * 
+	 * Usually it can just be empty, but if you've been accumulating
+	 * values, this is your chance to smush them down into
+	 * a setup action (see {@link ConventionJdt}. 
+	 */
+	@Override
+	public void close() {}
 }

@@ -23,6 +23,27 @@ import org.gradle.api.Action;
 
 import com.diffplug.gradle.OrderingConstraints;
 
+/**
+ * Adding the PDE convention to your project
+ * adds the following features:
+ * 
+ * - `org.eclipse.platform.ide`
+ * - `org.eclipse.jdt`
+ * - `org.eclipse.pde`
+ * 
+ * You can set the targetplatform as follows:
+ * 
+ * ```gradle
+ * oomphIde {
+ *     pde {
+ *         targetplatform {
+ *             it.installation '../target.maven/build'
+ *             it.installation '../target.p2/build/p2asmaven/p2runnable/eclipse-deps'
+ *         }
+ *     }
+ * }
+ * ```
+ */
 public class ConventionPde extends OomphConvention {
 	ConventionPde(OomphIdeExtension extension) {
 		super(extension);

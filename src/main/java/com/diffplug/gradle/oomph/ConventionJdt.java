@@ -15,10 +15,55 @@
  */
 package com.diffplug.gradle.oomph;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.gradle.api.Action;
+
+/**
+ * Adding the JDT convention to your project
+ * adds the following features:
+ * 
+ * - `org.eclipse.platform.ide`
+ * - `org.eclipse.jdt`
+ * - `org.eclipse.ui.views.log`
+ * 
+ * You can set the installed JRE as follows:
+ * 
+ * ```gradle
+ * oomphIde {
+ *     jdt {
+ *         installedJre {
+ *             version = '1.6.0_45'
+ *             installedLocation = new File('C:/jdk1.6.0_45')
+ *             markDefault = true // or false
+ *             executionEnvironments = ['JavaSE-1.6'] // any execution environments can be specified here.
+ *         }
+ *     }
+ * }
+ * ```
+ */
 public class ConventionJdt extends OomphConvention {
 	ConventionJdt(OomphIdeExtension extension) {
 		super(extension);
 		requireIUs(IUs.IDE, IUs.JDT, IUs.ERROR_LOG);
 		setPerspectiveOver(Perspectives.JAVA, Perspectives.RESOURCES);
+	}
+
+	final Set<InstalledJre> installedJres = new HashSet<>();
+
+	/** Adds an installed JRE with the given content. */
+	public void installedJre(Action<InstalledJre> action) {
+		InstalledJre instance = new InstalledJre();
+		action.execute(instance);
+		installedJres.add(instance);
+	}
+
+	@Override
+	public void close() {
+		// add installed jres
+		if (!installedJres.isEmpty()) {
+			extension.addSetupAction(new InstalledJreAdder(installedJres));
+		}
 	}
 }

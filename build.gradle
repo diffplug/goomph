@@ -62,6 +62,8 @@ dependencies {
 	compileOnly 'p2:org.eclipse.equinox.common:3.7.0.v20150402-1709'
 	compileOnly 'p2:org.eclipse.ui.workbench:3.107.1.v20160120-2131'
 	compileOnly 'p2:org.eclipse.pde.core:3.10.102.v20160128-0556'
+	compileOnly 'p2:org.eclipse.jdt.launching:3.8.0.v20150527-0946'
+	compileOnly 'p2:org.eclipse.emf.ecore:2.11.2.v20160208-0816'
 	// testing
 	testCompile "junit:junit:${VER_JUNIT}"
 }

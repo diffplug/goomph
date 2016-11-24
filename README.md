@@ -47,14 +47,7 @@ oomphIde {
 }
 ```
 
-See the [plugin's javadoc](https://diffplug.github.io/goomph/javadoc/3.4.0/com/diffplug/gradle/oomph/OomphIdePlugin.html) for more details.
-
-Examples (submit a PR with yours here!)
-
-- [Gradle and Eclipse RCP talk](https://github.com/diffplug/gradle_and_eclipse_rcp/blob/master/ide/build.gradle) (multi-project Eclipse RCP project)
-- [ls-api](https://github.com/TypeFox/ls-api/blob/61a3089569acbe159f043534f282401452a34bc3/ide/build.gradle) (xtend IDE example)
-- [Spotless](https://github.com/diffplug/spotless/blob/master/build.gradle) (single-project Gradle plugin)
-- (your example here)
+See the [plugin's javadoc](https://diffplug.github.io/goomph/javadoc/3.4.0/com/diffplug/gradle/oomph/OomphIdePlugin.html) for a quickstart, and [HOW_TO_AUTOMATE_IDE.md](HOW_TO_AUTOMATE_IDE.md) for examples and more in-depth details.
 
 ## Blog posts
 
