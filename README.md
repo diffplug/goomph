@@ -36,15 +36,7 @@ When you run `gradlew ide`, it builds and downloads an IDE into `build/oomphIde`
 apply plugin: 'com.diffplug.gradle.oomph.ide'
 oomphIde {
 	repoEclipseLatest()
-	jdt {
-		//Some *optional* older (or newer) JRE/JDK
-		installedJre({ jre ->
-			jre.version = '1.6.0_45'
-			jre.installedLocation = new File('C:/jdk1.6.0_45')
-			jre.markDefault = true // or false
-			jre.executionEnvironments = ['JavaSE-1.6'] //any or as many execution environments can be specified here.
-		})
-	}
+	jdt {}
 	eclipseIni {
 		vmargs('-Xmx2g')    // IDE can have up to 2 gigs of RAM
 	}
@@ -55,14 +47,7 @@ oomphIde {
 }
 ```
 
-See the [plugin's javadoc](https://diffplug.github.io/goomph/javadoc/3.4.0/com/diffplug/gradle/oomph/OomphIdePlugin.html) for more details.
-
-Examples (submit a PR with yours here!)
-
-- [Gradle and Eclipse RCP talk](https://github.com/diffplug/gradle_and_eclipse_rcp/blob/master/ide/build.gradle) (multi-project Eclipse RCP project)
-- [ls-api](https://github.com/TypeFox/ls-api/blob/61a3089569acbe159f043534f282401452a34bc3/ide/build.gradle) (xtend IDE example)
-- [Spotless](https://github.com/diffplug/spotless/blob/master/build.gradle) (single-project Gradle plugin)
-- (your example here)
+See the [plugin's javadoc](https://diffplug.github.io/goomph/javadoc/3.4.0/com/diffplug/gradle/oomph/OomphIdePlugin.html) for a quickstart, and [HOW_TO_AUTOMATE_IDE.md](HOW_TO_AUTOMATE_IDE.md) for examples and more in-depth details.
 
 ## Blog posts
 

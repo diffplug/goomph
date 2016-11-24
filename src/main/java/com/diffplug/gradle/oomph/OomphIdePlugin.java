@@ -31,7 +31,7 @@ import com.diffplug.gradle.ProjectPlugin;
  *
  * - `gradlew ide` launches the IDE, after running any required setup tasks.
  *
- * To create an IDE for java projects:
+ * To create an IDE for java projects (see {@link ConventionJdt} for more JDT options).
  *
  * ```groovy
  * apply plugin: 'com.diffplug.gradle.oomph.ide'
@@ -41,17 +41,12 @@ import com.diffplug.gradle.ProjectPlugin;
  * }
  * ```
  *
- * For an Eclipse Plugin project with a target platform:
+ * For an Eclipse Plugin project (see {@link ConventionPde} for more JDT options).
  * 
  * ```groovy
  * oomphIde {
  *     repoEclipse '4.5.2'
- *     pde {
- *         targetplatform {
- *             installation 'target.maven/build'
- *             installation 'target.p2/build/p2asmaven/p2'
- *         }
- *     }
+ *     pde {}
  * }
  * ```
  * 

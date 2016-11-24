@@ -20,6 +20,29 @@ import java.util.Set;
 
 import org.gradle.api.Action;
 
+/**
+ * Adding the JDT convention to your project
+ * adds the following features:
+ * 
+ * - `org.eclipse.platform.ide`
+ * - `org.eclipse.jdt`
+ * - `org.eclipse.ui.views.log`
+ * 
+ * You can set the installed JRE as follows:
+ * 
+ * ```gradle
+ * oomphIde {
+ *     jdt {
+ *         installedJre {
+ *             version = '1.6.0_45'
+ *             installedLocation = new File('C:/jdk1.6.0_45')
+ *             markDefault = true // or false
+ *             executionEnvironments = ['JavaSE-1.6'] // any execution environments can be specified here.
+ *         }
+ *     }
+ * }
+ * ```
+ */
 public class ConventionJdt extends OomphConvention {
 	ConventionJdt(OomphIdeExtension extension) {
 		super(extension);
