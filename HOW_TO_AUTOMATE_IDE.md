@@ -11,7 +11,7 @@ So you want to automate your IDE configuration.  The first thing to do is look a
 - [Spotless](https://github.com/diffplug/spotless/blob/master/build.gradle) (single-project Gradle plugin)
 - (your example here)
 
-The next thing is to look at the [javadoc](https://diffplug.github.io/goomph/javadoc/3.4.0/com/diffplug/gradle/oomph/OomphIdePlugin.html) for `OomphIdePlugin`, which inclues a pretty in-depth look at how it works.
+The next thing is to look at the [javadoc](https://diffplug.github.io/goomph/javadoc/3.5.0/com/diffplug/gradle/oomph/OomphIdePlugin.html) for `OomphIdePlugin`, which inclues a pretty in-depth look at how it works.
 
 ## How do I automate ${MY_THING} which isn't in the examples or docs?
 
@@ -27,7 +27,7 @@ Depending on what you're trying to automate, you might need to touch all three.
 
 Manipulating project files is a [core part of gradle](https://docs.gradle.org/current/userguide/eclipse_plugin.html), so we won't cover that here.
 
-Manipulating plugin and feature jars has lots of coverage in the examples above.  The entire `oomphIdeBlock` extends [P2Declarative](https://diffplug.github.io/goomph/javadoc/3.4.0/com/diffplug/gradle/p2/P2Declarative.html).  So if you want to add any features, all you need to do is make sure you add all the necessary p2 repositories, and then specify the features or installable units that you need.
+Manipulating plugin and feature jars has lots of coverage in the examples above.  The entire `oomphIdeBlock` extends [P2Declarative](https://diffplug.github.io/goomph/javadoc/3.5.0/com/diffplug/gradle/p2/P2Declarative.html).  So if you want to add any features, all you need to do is make sure you add all the necessary p2 repositories, and then specify the features or installable units that you need.
 
 Manipulating the workspace is where it gets tricky.  We'll dig in below:
 
