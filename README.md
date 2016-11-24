@@ -36,7 +36,15 @@ When you run `gradlew ide`, it builds and downloads an IDE into `build/oomphIde`
 apply plugin: 'com.diffplug.gradle.oomph.ide'
 oomphIde {
 	repoEclipseLatest()
-	jdt {}
+	jdt {
+		//Some *optional* older (or newer) JRE/JDK
+		installedJre({ jre ->
+			jre.version = '1.6.0_45'
+			jre.installedLocation = new File('C:/jdk1.6.0_45')
+			jre.markDefault = true // or false
+			jre.executionEnvironments = ['JavaSE-1.6'] //any or as many execution environments can be specified here.
+		})
+	}
 	eclipseIni {
 		vmargs('-Xmx2g')    // IDE can have up to 2 gigs of RAM
 	}

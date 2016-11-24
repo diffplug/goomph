@@ -32,7 +32,7 @@ public class InstalledJreAdder
 	List<InstalledJre> installedJres;
 
 	protected InstalledJreAdder(Collection<InstalledJre> jresToAdd) {
-		super("com.diffplug.gradle.oomph.JreAdderInternal");
+		super("com.diffplug.gradle.oomph.InstalledJreAdderInternal");
 		installedJres = new ArrayList<>(jresToAdd);
 	}
 

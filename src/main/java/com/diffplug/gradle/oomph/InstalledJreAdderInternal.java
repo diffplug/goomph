@@ -43,28 +43,30 @@ public class InstalledJreAdderInternal extends Internal<InstalledJreAdder> {
 		for (IVMInstallType type : types) {
 			if ("org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType".equals(type.getId())) {
 				for (InstalledJre jreToAdd : host.installedJres) {
-					if (isNeeded(jreToAdd.getVersion(), jreToAdd.getInstalledLocation())) {
-						IVMInstall realVM = addInstalledJre(type, jreToAdd);
-						if (jreToAdd.isMarkDefault()) {
-							JavaRuntime.setDefaultVMInstall(realVM, new NullProgressMonitor());
-						}
-						linkWithExecutionEnvironments(realVM, jreToAdd);
+					IVMInstall realVM = addInstalledJre(type, jreToAdd);
+					if (jreToAdd.isMarkDefault()) {
+						JavaRuntime.setDefaultVMInstall(realVM, new NullProgressMonitor());
 					}
+					linkWithExecutionEnvironments(realVM, jreToAdd);
 				}
 			}
 		}
 	}
 
-	protected IVMInstall addInstalledJre(IVMInstallType type, InstalledJre jreToAdd) throws CoreException {
-		IStatus validationStatus = type.validateInstallLocation(jreToAdd.getInstalledLocation());
-		if (!validationStatus.isOK()) {
-			throw new CoreException(validationStatus);
+	protected IVMInstall addInstalledJre(IVMInstallType type, InstalledJre jreToAdd) throws Exception {
+		IVMInstall retVal = findJre(jreToAdd.getVersion(), jreToAdd.getInstalledLocation());
+		if (retVal == null) {
+			IStatus validationStatus = type.validateInstallLocation(jreToAdd.getInstalledLocation());
+			if (!validationStatus.isOK()) {
+				throw new CoreException(validationStatus);
+			}
+			VMStandin vmStandin = new VMStandin(type, EcoreUtil.generateUUID());
+			vmStandin.setInstallLocation(jreToAdd.getInstalledLocation());
+			vmStandin.setName("JRE for " + jreToAdd.getVersion());
+			IVMInstall realVM = vmStandin.convertToRealVM();
+			retVal = realVM;
 		}
-		VMStandin vmStandin = new VMStandin(type, EcoreUtil.generateUUID());
-		vmStandin.setInstallLocation(jreToAdd.getInstalledLocation());
-		vmStandin.setName("JRE for " + jreToAdd.getVersion());
-		IVMInstall realVM = vmStandin.convertToRealVM();
-		return realVM;
+		return retVal;
 	}
 
 	protected void linkWithExecutionEnvironments(IVMInstall installedVm, InstalledJre jreToAdd) {
@@ -82,16 +84,16 @@ public class InstalledJreAdderInternal extends Internal<InstalledJreAdder> {
 		}
 	}
 
-	private boolean isNeeded(String version, File location) throws Exception {
+	private IVMInstall findJre(String version, File location) throws Exception {
 		for (IVMInstallType vmInstallType : JavaRuntime.getVMInstallTypes()) {
 			for (IVMInstall vmInstall : vmInstallType.getVMInstalls()) {
 				File installLocation = vmInstall.getInstallLocation();
 				if (location.equals(installLocation)) {
-					return false;
+					return vmInstall;
 				}
 			}
 		}
 
-		return true;
+		return null;
 	}
 }
