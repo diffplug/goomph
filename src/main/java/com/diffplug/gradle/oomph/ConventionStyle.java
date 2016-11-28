@@ -37,12 +37,9 @@ public class ConventionStyle extends OomphConvention {
 			props.put("org.eclipse.jface.textfont", "1|" + font + "|" + fontSize + "|0|WINDOWS|1|-12|0|0|0|400|0|0|0|0|3|2|1|49|" + font);
 		});
 		// visible whitespace
-		extension.workspaceProp(".metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.editors.prefs", props -> {
-			props.put("eclipse.preferences.version", "1");
-			props.put("showCarriageReturn", "false");
-			props.put("showLineFeed", "false");
-			props.put("showWhitespaceCharacters", "true");
-		});
+		showWhiteSpace(true);
+		showLineEndings(false);
+
 		// show line numbers
 		lineNumbers(true);
 	}
@@ -60,6 +57,36 @@ public class ConventionStyle extends OomphConvention {
 		extension.workspaceProp(".metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.editors.prefs", props -> {
 			props.put("eclipse.preferences.version", "1");
 			props.put("lineNumberRuler", Boolean.toString(showLineNumbers));
+		});
+	}
+
+	/** Determines whether or not to show white space not including line endings. */
+	public void showWhiteSpace(boolean showWhiteSpace) {
+		extension.workspaceProp(".metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.editors.prefs", props -> {
+			props.put("eclipse.preferences.version", "1");
+			props.put("showWhitespaceCharacters", Boolean.toString(showWhiteSpace));
+		});
+	}
+
+	/** Determines whether or not to show line ending characters (carriage return/line feeds). */
+	public void showLineEndings(boolean showLineEndings) {
+		showLineFeed(showLineEndings);
+		showCarriageReturn(showLineEndings);
+	}
+
+	/** Determines whether or not to show line feeds. */
+	public void showLineFeed(boolean showLineFeed) {
+		extension.workspaceProp(".metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.editors.prefs", props -> {
+			props.put("eclipse.preferences.version", "1");
+			props.put("showLineFeed", Boolean.toString(showLineFeed));
+		});
+	}
+
+	/** Determines whether or not to show carriage returns. */
+	public void showCarriageReturn(boolean showCarriageReturn) {
+		extension.workspaceProp(".metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.editors.prefs", props -> {
+			props.put("eclipse.preferences.version", "1");
+			props.put("showCarriageReturn", Boolean.toString(showCarriageReturn));
 		});
 	}
 }
