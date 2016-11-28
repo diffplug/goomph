@@ -20,13 +20,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
@@ -65,7 +65,7 @@ public class OomphIdeExtension implements P2Declarative {
 	final Project project;
 	final WorkspaceRegistry workspaceRegistry;
 	final SortedSet<File> projectFiles = new TreeSet<>();
-	final Map<String, Supplier<byte[]>> workspaceToContent = new HashMap<>();
+	final Map<String, Map<String, String>> workspaceToContent = new HashMap<>();
 	final P2Model p2 = new P2Model();
 	final Lazyable<List<SetupAction>> setupActions = Lazyable.ofList();
 
@@ -195,7 +195,16 @@ public class OomphIdeExtension implements P2Declarative {
 
 	/** Sets the given path within the workspace directory to be a property file. */
 	public void workspaceProp(String file, Action<Map<String, String>> configSupplier) {
-		workspaceToContent.put(file, ConfigMisc.props(configSupplier));
+		Map<String, String> map = new LinkedHashMap<>();
+		configSupplier.execute(map);
+		workspaceToContent.merge(file, map, (oldValue, newValue) -> {
+			if (oldValue != null) {
+				oldValue.putAll(newValue);
+				return oldValue;
+			} else {
+				return newValue;
+			}
+		});
 	}
 
 	/** Adds an action which will be run inside our running application. */
@@ -334,7 +343,7 @@ public class OomphIdeExtension implements P2Declarative {
 		workspaceToContent.forEach((path, content) -> {
 			File target = new File(workspaceDir, path);
 			FileMisc.mkdirs(target.getParentFile());
-			Errors.rethrow().run(() -> Files.write(content.get(), target));
+			Errors.rethrow().run(() -> Files.write(ConfigMisc.props(content), target));
 		});
 		// perform internal setup
 		internalSetup(getIdeDir());
