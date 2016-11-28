@@ -56,6 +56,8 @@ import com.diffplug.gradle.eclipserunner.EclipseIni;
 import com.diffplug.gradle.p2.P2Declarative;
 import com.diffplug.gradle.p2.P2Model;
 import com.diffplug.gradle.p2.P2Model.DirectorApp;
+import com.diffplug.gradle.pde.EclipseRelease;
+import com.diffplug.gradle.pde.PdeInstallation;
 
 /** DSL for {@link OomphIdePlugin}. */
 public class OomphIdeExtension implements P2Declarative {
@@ -76,6 +78,8 @@ public class OomphIdeExtension implements P2Declarative {
 	Object ideDir = "build/oomph-ide" + FileMisc.macApp();
 	@Nonnull
 	Action<DirectorApp> directorModifier = Actions.doNothing();
+	@Nonnull
+	Action<DirectorApp> runP2Using;
 
 	Action<EclipseIni> eclipseIni;
 
@@ -86,6 +90,7 @@ public class OomphIdeExtension implements P2Declarative {
 		this.workspaceRegistry = WorkspaceRegistry.instance();
 		this.name = project.getRootProject().getName();
 		this.perspective = Perspectives.RESOURCES;
+		this.runP2Using = app -> Errors.rethrow().run(() -> app.runUsingBootstrapper(project));
 	}
 
 	/** Returns the underlying project. */
@@ -252,13 +257,30 @@ public class OomphIdeExtension implements P2Declarative {
 		directorModifier.execute(app);
 
 		// create it
-		app.runUsingBootstrapper(project);
+		runP2Using.execute(app);
 		// write out the branding product
 		writeBrandingPlugin(ideDir);
 		// setup the eclipse.ini file
 		setupEclipseIni(ideDir);
 		// write out a staleness token
 		FileMisc.writeToken(ideDir, STALE_TOKEN, p2state());
+	}
+
+	/** Defaults to {@link DirectorApp#runUsingBootstrapper()} - this allows you to override that behavior. */
+	public void runP2Using(Action<DirectorApp> runUsing) {
+		this.runP2Using = runUsing;
+	}
+
+	/** Provisions using the given version of the full Eclipse PDE. */
+	public void runP2UsingPDE(String version) {
+		runP2Using(directorApp -> Errors.rethrow().run(() -> {
+			directorApp.runUsing(PdeInstallation.from(EclipseRelease.official(version)));
+		}));
+	}
+
+	/** Provisions using the latest available version of the full Eclipse PDE. */
+	public void runP2UsingPDE() {
+		runP2UsingPDE(EclipseRelease.LATEST);
 	}
 
 	private BufferedImage loadImg(Object obj) throws IOException {
