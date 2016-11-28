@@ -28,7 +28,7 @@ public class ConventionStyle extends OomphConvention {
 		niceText(OS.getNative().winMacLinux("9.0", "11.0", "10.0"));
 	}
 
-	/** Sets nice font and whitespace settings. */
+	/** Sets nice font, visible whitespace, and line numbers. */
 	public void niceText(String fontSize) {
 		// improved fonts
 		String font = OS.getNative().winMacLinux("Consolas", "Monaco", "Monospace");
@@ -43,6 +43,8 @@ public class ConventionStyle extends OomphConvention {
 			props.put("showLineFeed", "false");
 			props.put("showWhitespaceCharacters", "true");
 		});
+		// show line numbers
+		lineNumbers(true);
 	}
 
 	/** Sets the theme to be the classic eclipse look. */
@@ -50,6 +52,14 @@ public class ConventionStyle extends OomphConvention {
 		extension.workspaceProp(".metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.e4.ui.css.swt.theme.prefs", props -> {
 			props.put("eclipse.preferences.version", "1");
 			props.put("themeid", "org.eclipse.e4.ui.css.theme.e4_classic");
+		});
+	}
+
+	/** Determines whether or not to show line numbers. */
+	public void lineNumbers(boolean showLineNumbers) {
+		extension.workspaceProp(".metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.editors.prefs", props -> {
+			props.put("eclipse.preferences.version", "1");
+			props.put("lineNumberRuler", Boolean.toString(showLineNumbers));
 		});
 	}
 }
