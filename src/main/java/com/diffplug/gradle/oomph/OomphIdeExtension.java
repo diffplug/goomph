@@ -16,10 +16,14 @@
 package com.diffplug.gradle.oomph;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -32,8 +36,10 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.Action;
+import org.gradle.api.GradleException;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
+import org.gradle.api.XmlProvider;
 import org.gradle.api.specs.Spec;
 import org.gradle.api.specs.Specs;
 import org.gradle.internal.Actions;
@@ -42,7 +48,6 @@ import org.gradle.plugins.ide.eclipse.GenerateEclipseProject;
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.base.Unhandled;
-import com.diffplug.common.io.Files;
 import com.diffplug.common.primitives.Booleans;
 import com.diffplug.common.swt.os.OS;
 import com.diffplug.common.swt.os.SwtPlatform;
@@ -66,7 +71,9 @@ public class OomphIdeExtension implements P2Declarative {
 	final Project project;
 	final WorkspaceRegistry workspaceRegistry;
 	final SortedSet<File> projectFiles = new TreeSet<>();
+	final Map<String, Object> workspaceFiles = new HashMap<>();
 	final Map<String, Action<Map<String, String>>> workspaceProps = new HashMap<>();
+	final Map<String, Action<XmlProvider>> workspaceXmls = new HashMap<>();
 	final P2Model p2 = new P2Model();
 	final Lazyable<List<SetupAction>> setupActions = Lazyable.ofList();
 
@@ -197,10 +204,31 @@ public class OomphIdeExtension implements P2Declarative {
 		return workspaceRegistry.workspaceDir(project, getIdeDir());
 	}
 
-	/** Sets the given path within the workspace directory to be a property file. */
+	/** Sets the given path within the workspace directory to be a copy of the file located at fileSrc. */
+	public void workspaceFile(String destination, Object fileSrc) {
+		Object previousValue = workspaceFiles.put(destination, fileSrc);
+		if (previousValue != null) {
+			project.getLogger().warn("workspaceFile('" + destination + "', ...), was called more than once, previous value was discarded");
+		}
+	}
+
+	/**
+	 * Sets the given path within the workspace directory to be a property file.  If a property file was already
+	 * written by a previous call to {@link #workspaceFile(String, Object)} or {@link #workspaceProp(String, Action)},
+	 * then it can be modified by this action.
+	 */
 	@SuppressWarnings("unchecked")
-	public void workspaceProp(String file, Action<Map<String, String>> configSupplier) {
-		workspaceProps.merge(file, configSupplier, (before, after) -> Actions.composite(before, after));
+	public void workspaceProp(String destination, Action<Map<String, String>> configSupplier) {
+		workspaceProps.merge(destination, configSupplier, (before, after) -> Actions.composite(before, after));
+	}
+
+	/**
+	 * Modifies the xml that was written in a previous call to {@link #workspaceFile(String, Object)} or
+	 * {@link #workspaceXml(String, Action)}. However, 
+	 */
+	@SuppressWarnings("unchecked")
+	public void workspaceXml(String destination, Action<XmlProvider> xmlSupplier) {
+		workspaceXmls.merge(destination, xmlSupplier, (before, after) -> Actions.composite(before, after));
 	}
 
 	/** Adds an action which will be run inside our running application. */
@@ -362,11 +390,44 @@ public class OomphIdeExtension implements P2Declarative {
 		File workspaceDir = getWorkspaceDir();
 		// else we've gotta set it up
 		FileMisc.cleanDir(workspaceDir);
-		// setup any config files
-		workspaceProps.forEach((path, content) -> {
+		// write the workspace files
+		workspaceFiles.forEach((path, src) -> {
 			File target = new File(workspaceDir, path);
-			FileMisc.mkdirs(target.getParentFile());
-			Errors.rethrow().run(() -> Files.write(ConfigMisc.props(content).get(), target));
+			File srcFile = project.file(src);
+			try {
+				FileUtils.copyFile(srcFile, target);
+			} catch (IOException e) {
+				throw new GradleException("error for workspaceFile('" + path + "', '" + srcFile + "'), maybe the source file does not exist?", e);
+			}
+		});
+		// for each prop, load the existing map, if any, and pass it to the actions
+		workspaceProps.forEach((path, propAction) -> {
+			File target = new File(workspaceDir, path);
+			Map<String, String> initial;
+			try {
+				if (target.exists()) {
+					initial = ConfigMisc.loadProps(target);
+				} else {
+					initial = new LinkedHashMap<>();
+					FileMisc.mkdirs(target.getParentFile());
+				}
+				propAction.execute(initial);
+				ConfigMisc.writeProps(initial, target);
+			} catch (IOException e) {
+				throw new GradleException("error when writing workspaceProp '" + path + "'", e);
+			}
+		});
+		// for each prop, load the existing file, which must exist, and then pass it to the actions
+		workspaceXmls.forEach((path, xmlAction) -> {
+			File target = new File(workspaceDir, path);
+			if (!target.exists()) {
+				throw new GradleException("workspaceXml('" + path + "', ... must be initialized by a call to workspaceFile('" + path + "', ...");
+			}
+			try (OutputStream output = new BufferedOutputStream(new FileOutputStream(target))) {
+				ConfigMisc.modifyXmlInPlace(target, xmlAction);
+			} catch (IOException e) {
+				throw new GradleException("error when writing workspaceXml '" + path + "'", e);
+			}
 		});
 		// perform internal setup
 		internalSetup(getIdeDir());
