@@ -15,8 +15,6 @@
  */
 package com.diffplug.gradle.oomph;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -25,6 +23,8 @@ import java.util.Set;
 
 import org.gradle.api.Action;
 import org.gradle.api.JavaVersion;
+
+import com.diffplug.common.collect.ImmutableList;
 
 /**
  * Adding the JDT convention to your project
@@ -54,7 +54,7 @@ import org.gradle.api.JavaVersion;
  */
 public class ConventionJdt extends OomphConvention {
 	final static String JDT_CORE_PREFS = ".metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.jdt.core.prefs";
-	final static List<String> JDT_COMPLIANCE_PROPS = Collections.unmodifiableList(Arrays.asList("org.eclipse.jdt.core.compiler.codegen.targetPlatform", "org.eclipse.jdt.core.compiler.compliance", "org.eclipse.jdt.core.compiler.source"));
+	final static List<String> JDT_COMPLIANCE_PROPS = ImmutableList.of("org.eclipse.jdt.core.compiler.codegen.targetPlatform", "org.eclipse.jdt.core.compiler.compliance", "org.eclipse.jdt.core.compiler.source");
 	final static String JDT_CLASSPATH_VAR_FMT = "org.eclipse.jdt.core.classpathVariable.%s";
 
 	ConventionJdt(OomphIdeExtension extension) {
