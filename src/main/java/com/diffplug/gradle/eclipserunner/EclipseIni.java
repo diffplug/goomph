@@ -26,6 +26,8 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -180,6 +182,11 @@ public class EclipseIni {
 
 	/** Sets the vmargs arguments, such as `-Xmx2g` to set the maximum heap size. */
 	public void vmargs(String... vmargs) {
+		vmargs(Arrays.asList(vmargs));
+	}
+
+	/** Sets the vmargs arguments, such as `-Xmx2g` to set the maximum heap size. */
+	public void vmargs(Collection<String> vmargs) {
 		int idx = lines.indexOf(VM_ARGS);
 		if (idx != -1) {
 			lines = lines.subList(0, idx);
