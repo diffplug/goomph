@@ -26,6 +26,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -188,6 +189,12 @@ public class EclipseIni {
 		for (String vmarg : vmargs) {
 			lines.add(Line.parse(vmarg));
 		}
+	}
+
+	public void vmargs(Collection<String> vmargs) {
+		String[] vmargsArray = new String[vmargs.size()];
+		vmargs.toArray(vmargsArray);
+		vmargs(vmargsArray);
 	}
 
 	private static final Line VM_ARGS = new Line(Dash.SINGLE, "vmargs");
