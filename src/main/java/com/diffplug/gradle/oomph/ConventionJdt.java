@@ -54,8 +54,6 @@ import com.diffplug.common.collect.ImmutableList;
  */
 public class ConventionJdt extends OomphConvention {
 	final static String JDT_CORE_PREFS = ".metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.jdt.core.prefs";
-	final static List<String> JDT_COMPLIANCE_PROPS = ImmutableList.of("org.eclipse.jdt.core.compiler.codegen.targetPlatform", "org.eclipse.jdt.core.compiler.compliance", "org.eclipse.jdt.core.compiler.source");
-	final static String JDT_CLASSPATH_VAR_FMT = "org.eclipse.jdt.core.classpathVariable.%s";
 
 	ConventionJdt(OomphIdeExtension extension) {
 		super(extension);
@@ -64,8 +62,6 @@ public class ConventionJdt extends OomphConvention {
 	}
 
 	final Set<InstalledJre> installedJres = new HashSet<>();
-	final Map<String, String> classpathVariables = new LinkedHashMap<>();
-	private JavaVersion compilerComplianceLevel;
 
 	/** Adds an installed JRE with the given content. */
 	public void installedJre(Action<InstalledJre> action) {
@@ -76,12 +72,25 @@ public class ConventionJdt extends OomphConvention {
 
 	/** Sets default compliance level */
 	public void compilerComplianceLevel(String compilerComplianceLevel) {
-		this.compilerComplianceLevel = JavaVersion.toVersion(compilerComplianceLevel);
+		List<String> JDT_COMPLIANCE_PROPS = ImmutableList.of(
+				"org.eclipse.jdt.core.compiler.codegen.targetPlatform",
+				"org.eclipse.jdt.core.compiler.compliance",
+				"org.eclipse.jdt.core.compiler.source");
+		extension.workspaceProp(JDT_CORE_PREFS, props -> {
+			JDT_COMPLIANCE_PROPS.forEach(p -> props.put(p, compilerComplianceLevel.toString()));
+			//Use default compliance settings.
+			props.put("org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode", "enabled");
+			props.put("org.eclipse.jdt.core.compiler.problem.assertIdentifier", "error");
+			props.put("org.eclipse.jdt.core.compiler.problem.enumIdentifier", "error");
+		});
 	}
 
 	/** Adds a compiler class path variable. */
 	public void classpathVariable(String name, String value) {
-		classpathVariables.put(name, value);
+		String JDT_CLASSPATH_VAR_FMT = "org.eclipse.jdt.core.classpathVariable.%s";
+		extension.workspaceProp(JDT_CORE_PREFS, props -> {
+			props.put(String.format(JDT_CLASSPATH_VAR_FMT, name), value);
+		});
 	}
 
 	@Override
@@ -89,44 +98,6 @@ public class ConventionJdt extends OomphConvention {
 		// add installed jres
 		if (!installedJres.isEmpty()) {
 			extension.addSetupAction(new InstalledJreAdder(installedJres));
-		}
-		if (!classpathVariables.isEmpty()) {
-			extension.workspaceProp(JDT_CORE_PREFS, new JavaClasspathVariableAction(classpathVariables));
-		}
-		if (compilerComplianceLevel != null) {
-			extension.workspaceProp(JDT_CORE_PREFS, new JavaComplianceAction(compilerComplianceLevel));
-		}
-	}
-
-	static class JavaComplianceAction implements Action<Map<String, String>> {
-		private final JavaVersion complianceLevel;
-
-		public JavaComplianceAction(JavaVersion complianceLevel) {
-			super();
-			this.complianceLevel = complianceLevel;
-		}
-
-		@Override
-		public void execute(Map<String, String> props) {
-			JDT_COMPLIANCE_PROPS.forEach(p -> props.put(p, complianceLevel.toString()));
-			//Use default compliance settings.
-			props.put("org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode", "enabled");
-			props.put("org.eclipse.jdt.core.compiler.problem.assertIdentifier", "error");
-			props.put("org.eclipse.jdt.core.compiler.problem.enumIdentifier", "error");
-		}
-	}
-
-	static class JavaClasspathVariableAction implements Action<Map<String, String>> {
-		private final Map<String, String> classpathVariables;
-
-		public JavaClasspathVariableAction(Map<String, String> classpathVariables) {
-			super();
-			this.classpathVariables = classpathVariables;
-		}
-
-		@Override
-		public void execute(Map<String, String> props) {
-			classpathVariables.forEach((key, value) -> props.put(String.format(JDT_CLASSPATH_VAR_FMT, key), value));
 		}
 	}
 }
