@@ -81,7 +81,7 @@ class P2BootstrapInstallation {
 		FileMisc.cleanDir(getRootFolder());
 		// download the URL
 		File target = new File(getRootFolder(), DOWNLOAD_FILE);
-		URL url = new URL(DOWNLOAD_ROOT + release.version() + DOWNLOAD_FILE);
+		URL url = new URL(GoomphCacheLocations.p2bootstrapUrl().orElse(DOWNLOAD_ROOT) + release.version() + DOWNLOAD_FILE);
 		FileUtils.copyURLToFile(url, target);
 		// unzip it
 		ZipMisc.unzip(target, target.getParentFile());

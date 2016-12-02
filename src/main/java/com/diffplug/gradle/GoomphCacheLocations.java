@@ -60,6 +60,29 @@ public class GoomphCacheLocations {
 	public static File override_workspaces = null;
 
 	/**
+	 * Location where the p2-bootstrap application should be downloaded from.
+	 *
+	 * Goomph's p2 tasks rely on the eclipse [p2 director application](http://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Fguide%2Fp2_director.html&cp=2_0_20_2).
+	 * It is distributed within the Eclipse SDK.  But rather
+	 * than requiring the entire SDK, we have packaged just
+	 * the jars required for p2 director into a ~7MB download
+	 * available on bintray as [goomph-p2-bootstrap](https://bintray.com/diffplug/opensource/goomph-p2-bootstrap/view).
+	 *
+	 * This only gets downloaded if you use {@link P2Model}.
+	 * 
+	 * Defaults to `https://dl.bintray.com/diffplug/opensource/com/diffplug/gradle/goomph-p2-bootstrap/`.  If you override, it still
+	 * needs to follow the correct versioning scheme.  e.g. if you want to relocate to `http://intranet/goomph-p2-boostrap`, then
+	 * the artifact will need to be available at `http://intranet/goomph-p2-boostrap/4.5.2/goomph-p2-bootstrap.zip`
+	 *
+	 * As new versions of p2bootstrap come out, you will have to update your internal URL cache, but these releases are infrequent.
+	 */
+	public static Optional<String> p2bootstrapUrl() {
+		return Optional.ofNullable(override_p2bootstrapUrl);
+	}
+
+	public static String override_p2bootstrapUrl = null;
+
+	/**
 	 * Location where the p2-bootstrap application
 	 * is cached: `~/.goomph/p2-bootstrap`.
 	 *
