@@ -2,9 +2,16 @@
 
 ### Version 3.6.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
+* Added `workspaceFile('pathInWorkspace', 'srcFile')` for copying files into the workspace directly.
+* Improved `workspaceProp('pathInWorkspace', { map -> map.put('key', 'value')}` so it can now be called multiple times to modify earlier results, including modifying a file set by `workspaceFile`.  It can still create a file from scratch, as before.
+* Added `workspaceXml('pathInWorkspace', { xmlProvider -> xmlProvider.asNode() ...})` which can modify an XML file which was initially created by `workpaceFile`.  It *cannot* create an xml file from scratch, however.
+* `style { niceText() }` now sets line numbers, and there are methods which give more fine-grained control (#20, thanks @scottresnik).
+* Added the ability to change how the oomphIde p2 action is carried out, using `runUsingPDE()` (#19).
+* Improvements to the JDT config and the ability to link resources (#23, thanks to @scottresnik).
+
 ### Version 3.5.0 - November 24th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.5.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.5.0/view))
 
-* Added the ability to set the installed JRE, thanks to @scottresnik.
+* Added the ability to set the installed JRE, thanks to @scottresnik (#16).
 	+ See [javadoc](http://diffplug.github.io/goomph/javadoc/3.5.0/com/diffplug/gradle/oomph/ConventionJdt.html) for details.
 
 ### Version 3.4.0 - November 22nd 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.4.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.4.0/view))
