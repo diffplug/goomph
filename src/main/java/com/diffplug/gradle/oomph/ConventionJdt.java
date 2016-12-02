@@ -16,9 +16,7 @@
 package com.diffplug.gradle.oomph;
 
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.gradle.api.Action;
@@ -77,7 +75,7 @@ public class ConventionJdt extends OomphConvention {
 				"org.eclipse.jdt.core.compiler.compliance",
 				"org.eclipse.jdt.core.compiler.source");
 		extension.workspaceProp(JDT_CORE_PREFS, props -> {
-			JDT_COMPLIANCE_PROPS.forEach(p -> props.put(p, compilerComplianceLevel.toString()));
+			JDT_COMPLIANCE_PROPS.forEach(p -> props.put(p, JavaVersion.toVersion(compilerComplianceLevel).toString()));
 			//Use default compliance settings.
 			props.put("org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode", "enabled");
 			props.put("org.eclipse.jdt.core.compiler.problem.assertIdentifier", "error");
