@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -32,6 +33,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.Action;
+import org.gradle.api.GradleException;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.specs.Spec;
@@ -66,6 +68,7 @@ public class OomphIdeExtension implements P2Declarative {
 	final Project project;
 	final WorkspaceRegistry workspaceRegistry;
 	final SortedSet<File> projectFiles = new TreeSet<>();
+	final Map<String, Object> workspaceFiles = new HashMap<>();
 	final Map<String, Action<Map<String, String>>> workspaceProps = new HashMap<>();
 	final P2Model p2 = new P2Model();
 	final Lazyable<List<SetupAction>> setupActions = Lazyable.ofList();
@@ -197,10 +200,15 @@ public class OomphIdeExtension implements P2Declarative {
 		return workspaceRegistry.workspaceDir(project, getIdeDir());
 	}
 
+	/** Sets the given path within the workspace directory to be a copy of the file located at fileSrc. */
+	public void workspaceFile(String destination, Object fileSrc) {
+		workspaceFiles.put(destination, fileSrc);
+	}
+
 	/** Sets the given path within the workspace directory to be a property file. */
 	@SuppressWarnings("unchecked")
-	public void workspaceProp(String file, Action<Map<String, String>> configSupplier) {
-		workspaceProps.merge(file, configSupplier, (before, after) -> Actions.composite(before, after));
+	public void workspaceProp(String destination, Action<Map<String, String>> configSupplier) {
+		workspaceProps.merge(destination, configSupplier, (before, after) -> Actions.composite(before, after));
 	}
 
 	/** Adds an action which will be run inside our running application. */
@@ -362,11 +370,32 @@ public class OomphIdeExtension implements P2Declarative {
 		File workspaceDir = getWorkspaceDir();
 		// else we've gotta set it up
 		FileMisc.cleanDir(workspaceDir);
-		// setup any config files
+		// write the workspace files
+		workspaceFiles.forEach((path, src) -> {
+			File target = new File(workspaceDir, path);
+			File srcFile = project.file(src);
+			try {
+				FileUtils.copyFile(srcFile, target);
+			} catch (IOException e) {
+				throw new GradleException("error for workspaceFile('" + path + "', '" + srcFile + "'), maybe the source file does not exist?", e);
+			}
+		});
+		// for each prop, load the existing map, if any, and pass it to the actions
 		workspaceProps.forEach((path, content) -> {
 			File target = new File(workspaceDir, path);
-			FileMisc.mkdirs(target.getParentFile());
-			Errors.rethrow().run(() -> Files.write(ConfigMisc.props(content).get(), target));
+			Map<String, String> initial;
+			if (target.exists()) {
+				initial = ConfigMisc.loadPropertiesFile(target);
+			} else {
+				initial = new LinkedHashMap<>();
+				FileMisc.mkdirs(target.getParentFile());
+			}
+			try {
+				content.execute(initial);
+				Files.write(ConfigMisc.props(initial), target);
+			} catch (IOException e) {
+				throw new GradleException("error when writing workspaceProp '" + path + "'", e);
+			}
 		});
 		// perform internal setup
 		internalSetup(getIdeDir());

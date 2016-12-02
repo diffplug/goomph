@@ -15,15 +15,17 @@
  */
 package com.diffplug.gradle;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Supplier;
-
-import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.gradle.api.Action;
 
 import groovy.util.Node;
 import groovy.xml.XmlUtil;
@@ -41,15 +43,6 @@ public class ConfigMisc {
 	}
 
 	/** Creates an XML string from a groovy.util.Node. */
-	public static Supplier<byte[]> props(Action<Map<String, String>> mapPopulate) {
-		return () -> {
-			Map<String, String> map = new LinkedHashMap<>();
-			mapPopulate.execute(map);
-			return props(map);
-		};
-	}
-
-	/** Creates an XML string from a groovy.util.Node. */
 	public static byte[] props(Map<String, String> map) {
 		Properties properties = new Properties();
 		map.forEach((key, value) -> properties.put(key, value));
@@ -59,5 +52,20 @@ public class ConfigMisc {
 		} catch (IOException e) {
 			throw Errors.asRuntime(e);
 		}
+	}
+
+	/** Loads a properties file and puts it into a `Map<String, String>`. */
+	public static Map<String, String> loadPropertiesFile(File file) {
+		Map<String, String> initial = new LinkedHashMap<>();
+		Properties props = new Properties();
+		try (InputStream input = new BufferedInputStream(new FileInputStream(file))) {
+			props.load(input);
+		} catch (IOException e) {
+			throw Errors.asRuntime(e);
+		}
+		for (String key : props.stringPropertyNames()) {
+			initial.put(key, props.getProperty(key));
+		}
+		return initial;
 	}
 }
