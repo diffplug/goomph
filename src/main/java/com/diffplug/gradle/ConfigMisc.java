@@ -15,57 +15,53 @@
  */
 package com.diffplug.gradle;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.function.Supplier;
 
-import groovy.util.Node;
-import groovy.xml.XmlUtil;
+import org.gradle.api.Action;
+import org.gradle.api.XmlProvider;
+import org.gradle.internal.xml.XmlTransformer;
 
-import com.diffplug.common.base.Errors;
+import com.diffplug.common.io.Files;
 
 /** Utilities for creating configuration content. */
 public class ConfigMisc {
 	/** Creates an XML string from a groovy.util.Node. */
-	public static Supplier<byte[]> xml(Supplier<Node> node) {
-		return () -> {
-			Node root = node.get();
-			return XmlUtil.serialize(root).getBytes(StandardCharsets.UTF_8);
-		};
+	public static void modifyXmlInPlace(File file, Action<XmlProvider> action) throws IOException {
+		String original = Files.toString(file, StandardCharsets.UTF_8);
+
+		XmlTransformer transformer = new XmlTransformer();
+		transformer.addAction(action);
+		try (OutputStream output = Files.asByteSink(file).openBufferedStream()) {
+			transformer.transform(original, output);
+		}
 	}
 
 	/** Creates an XML string from a groovy.util.Node. */
-	public static byte[] props(Map<String, String> map) {
+	public static void writeProps(Map<String, String> map, File dest) throws IOException {
 		Properties properties = new Properties();
 		map.forEach((key, value) -> properties.put(key, value));
-		try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
-			Errors.rethrow().run(() -> properties.store(output, ""));
-			return output.toByteArray();
-		} catch (IOException e) {
-			throw Errors.asRuntime(e);
+		try (OutputStream output = Files.asByteSink(dest).openBufferedStream()) {
+			properties.store(output, "");
 		}
 	}
 
 	/** Loads a properties file and puts it into a `Map<String, String>`. */
-	public static Map<String, String> loadPropertiesFile(File file) {
-		Map<String, String> initial = new LinkedHashMap<>();
+	public static Map<String, String> loadProps(File file) throws IOException {
 		Properties props = new Properties();
-		try (InputStream input = new BufferedInputStream(new FileInputStream(file))) {
+		try (InputStream input = Files.asByteSource(file).openBufferedStream()) {
 			props.load(input);
-		} catch (IOException e) {
-			throw Errors.asRuntime(e);
 		}
+		Map<String, String> map = new LinkedHashMap<>(props.size());
 		for (String key : props.stringPropertyNames()) {
-			initial.put(key, props.getProperty(key));
+			map.put(key, props.getProperty(key));
 		}
-		return initial;
+		return map;
 	}
 }

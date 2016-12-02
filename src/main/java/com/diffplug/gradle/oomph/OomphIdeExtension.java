@@ -22,7 +22,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -44,13 +43,11 @@ import org.gradle.api.XmlProvider;
 import org.gradle.api.specs.Spec;
 import org.gradle.api.specs.Specs;
 import org.gradle.internal.Actions;
-import org.gradle.internal.xml.XmlTransformer;
 import org.gradle.plugins.ide.eclipse.GenerateEclipseProject;
 
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.base.Unhandled;
-import com.diffplug.common.io.Files;
 import com.diffplug.common.primitives.Booleans;
 import com.diffplug.common.swt.os.OS;
 import com.diffplug.common.swt.os.SwtPlatform;
@@ -407,15 +404,15 @@ public class OomphIdeExtension implements P2Declarative {
 		workspaceProps.forEach((path, propAction) -> {
 			File target = new File(workspaceDir, path);
 			Map<String, String> initial;
-			if (target.exists()) {
-				initial = ConfigMisc.loadPropertiesFile(target);
-			} else {
-				initial = new LinkedHashMap<>();
-				FileMisc.mkdirs(target.getParentFile());
-			}
 			try {
+				if (target.exists()) {
+					initial = ConfigMisc.loadProps(target);
+				} else {
+					initial = new LinkedHashMap<>();
+					FileMisc.mkdirs(target.getParentFile());
+				}
 				propAction.execute(initial);
-				Files.write(ConfigMisc.props(initial), target);
+				ConfigMisc.writeProps(initial, target);
 			} catch (IOException e) {
 				throw new GradleException("error when writing workspaceProp '" + path + "'", e);
 			}
@@ -426,12 +423,8 @@ public class OomphIdeExtension implements P2Declarative {
 			if (!target.exists()) {
 				throw new GradleException("workspaceXml('" + path + "', ... must be initialized by a call to workspaceFile('" + path + "', ...");
 			}
-			String original = Errors.rethrow().get(() -> Files.toString(target, StandardCharsets.UTF_8));
-
-			XmlTransformer transformer = new XmlTransformer();
-			transformer.addAction(xmlAction);
 			try (OutputStream output = new BufferedOutputStream(new FileOutputStream(target))) {
-				transformer.transform(original, output);
+				ConfigMisc.modifyXmlInPlace(target, xmlAction);
 			} catch (IOException e) {
 				throw new GradleException("error when writing workspaceXml '" + path + "'", e);
 			}
