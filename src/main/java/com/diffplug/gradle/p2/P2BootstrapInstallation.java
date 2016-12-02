@@ -16,6 +16,7 @@
 package com.diffplug.gradle.p2;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
@@ -37,6 +38,7 @@ import com.diffplug.gradle.pde.EclipseRelease;
 class P2BootstrapInstallation {
 	static final String DOWNLOAD_ROOT = "https://dl.bintray.com/diffplug/opensource/com/diffplug/gradle/goomph-p2-bootstrap/";
 	static final String DOWNLOAD_FILE = "/goomph-p2-bootstrap.zip";
+	static final String VERSIONED_DOWNLOAD_FILE = "/goomph-p2-bootstrap-%s.zip";
 
 	/** List of versions for which we have deployed a bootstrap to bintray. */
 	static final ImmutableSet<EclipseRelease> SUPPORTED = ImmutableSet.of(
@@ -81,14 +83,23 @@ class P2BootstrapInstallation {
 		FileMisc.cleanDir(getRootFolder());
 		// download the URL
 		File target = new File(getRootFolder(), DOWNLOAD_FILE);
-		URL url = new URL(GoomphCacheLocations.p2bootstrapUrl().orElse(DOWNLOAD_ROOT) + release.version() + DOWNLOAD_FILE);
-		FileUtils.copyURLToFile(url, target);
+		try {
+			obtainBootstrap(GoomphCacheLocations.p2bootstrapUrl().orElse(DOWNLOAD_ROOT) + release.version() + DOWNLOAD_FILE, target);
+		} catch (FileNotFoundException ex) {
+			//try versioned artifact - Common when boostrap is on a maven type(sonatype nexus, etc.) repository.
+			obtainBootstrap(GoomphCacheLocations.p2bootstrapUrl().orElse(DOWNLOAD_ROOT) + release.version() + String.format(VERSIONED_DOWNLOAD_FILE, release.version()), target);
+		}
 		// unzip it
 		ZipMisc.unzip(target, target.getParentFile());
 		// delete the zip
 		FileMisc.forceDelete(target);
 		FileMisc.writeToken(getRootFolder(), TOKEN);
 		System.out.print("Success.");
+	}
+
+	private void obtainBootstrap(String bootstrapUrl, File target) throws IOException {
+		URL url = new URL(bootstrapUrl);
+		FileUtils.copyURLToFile(url, target);
 	}
 
 	/**
