@@ -213,28 +213,14 @@ public class OomphIdeExtension implements P2Declarative {
 		setupActions.addLazyAction(lazyInternalSetupAction);
 	}
 
-	final static String CORE_RES_PREFS_FILE = ".metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.core.resources.prefs";
-	final static String WS_PATHVAR_FMT = "pathvariable.%s";
-
-	public void linkedResource(String linkName, File linkTarget) {
-		workspaceProp(CORE_RES_PREFS_FILE, new LinkedResourceAction(linkName, linkTarget));
-	}
-
-	static class LinkedResourceAction implements Action<Map<String, String>> {
-		private String linkName;
-		private File linkTarget;
-
-		public LinkedResourceAction(String linkName, File linkTarget) {
-			super();
-			this.linkName = linkName;
-			this.linkTarget = linkTarget;
-		}
-
-		@Override
-		public void execute(Map<String, String> props) {
+	/** Links the given target into the workspace with the given name, see [eclipse manual](http://help.eclipse.org/neon/index.jsp?topic=%2Forg.eclipse.platform.doc.user%2Fconcepts%2Fconcepts-13.htm). */
+	public void linkedResource(String linkName, Object linkTarget) {
+		final String CORE_RES_PREFS_FILE = ".metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.core.resources.prefs";
+		final String WS_PATHVAR_FMT = "pathvariable.%s";
+		workspaceProp(CORE_RES_PREFS_FILE, props -> {
 			//Eclipse cannot handle backslashes in this value.  It expects path separators to be '/'
-			props.put(String.format(WS_PATHVAR_FMT, linkName), linkTarget.getAbsolutePath().replace("\\", "/"));
-		}
+			props.put(String.format(WS_PATHVAR_FMT, linkName), project.file(linkTarget).getAbsolutePath().replace("\\", "/"));
+		});
 	}
 
 	////////////////
