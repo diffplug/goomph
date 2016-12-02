@@ -8,6 +8,7 @@
 * `style { niceText() }` now sets line numbers, and there are methods which give more fine-grained control (#20, thanks @scottresnik).
 * Added the ability to change how the oomphIde p2 action is carried out, using `runUsingPDE()` (#19).
 * Improvements to the JDT config and the ability to link resources (#23, thanks to @scottresnik).
+* The p2bootstrap url can now be overridden (#25).
 
 ### Version 3.5.0 - November 24th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.5.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.5.0/view))
 
