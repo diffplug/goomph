@@ -16,9 +16,13 @@
 package com.diffplug.gradle.oomph;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -36,9 +40,11 @@ import org.gradle.api.Action;
 import org.gradle.api.GradleException;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
+import org.gradle.api.XmlProvider;
 import org.gradle.api.specs.Spec;
 import org.gradle.api.specs.Specs;
 import org.gradle.internal.Actions;
+import org.gradle.internal.xml.XmlTransformer;
 import org.gradle.plugins.ide.eclipse.GenerateEclipseProject;
 
 import com.diffplug.common.base.Errors;
@@ -70,6 +76,7 @@ public class OomphIdeExtension implements P2Declarative {
 	final SortedSet<File> projectFiles = new TreeSet<>();
 	final Map<String, Object> workspaceFiles = new HashMap<>();
 	final Map<String, Action<Map<String, String>>> workspaceProps = new HashMap<>();
+	final Map<String, Action<XmlProvider>> workspaceXmls = new HashMap<>();
 	final P2Model p2 = new P2Model();
 	final Lazyable<List<SetupAction>> setupActions = Lazyable.ofList();
 
@@ -202,13 +209,29 @@ public class OomphIdeExtension implements P2Declarative {
 
 	/** Sets the given path within the workspace directory to be a copy of the file located at fileSrc. */
 	public void workspaceFile(String destination, Object fileSrc) {
-		workspaceFiles.put(destination, fileSrc);
+		Object previousValue = workspaceFiles.put(destination, fileSrc);
+		if (previousValue != null) {
+			project.getLogger().warn("workspaceFile('" + destination + "', ...), was called more than once, previous value was discarded");
+		}
 	}
 
-	/** Sets the given path within the workspace directory to be a property file. */
+	/**
+	 * Sets the given path within the workspace directory to be a property file.  If a property file was already
+	 * written by a previous call to {@link #workspaceFile(String, Object)} or {@link #workspaceProp(String, Action)},
+	 * then it can be modified by this action.
+	 */
 	@SuppressWarnings("unchecked")
 	public void workspaceProp(String destination, Action<Map<String, String>> configSupplier) {
 		workspaceProps.merge(destination, configSupplier, (before, after) -> Actions.composite(before, after));
+	}
+
+	/**
+	 * Modifies the xml that was written in a previous call to {@link #workspaceFile(String, Object)} or
+	 * {@link #workspaceXml(String, Action)}. However, 
+	 */
+	@SuppressWarnings("unchecked")
+	public void workspaceXml(String destination, Action<XmlProvider> xmlSupplier) {
+		workspaceXmls.merge(destination, xmlSupplier, (before, after) -> Actions.composite(before, after));
 	}
 
 	/** Adds an action which will be run inside our running application. */
@@ -381,7 +404,7 @@ public class OomphIdeExtension implements P2Declarative {
 			}
 		});
 		// for each prop, load the existing map, if any, and pass it to the actions
-		workspaceProps.forEach((path, content) -> {
+		workspaceProps.forEach((path, propAction) -> {
 			File target = new File(workspaceDir, path);
 			Map<String, String> initial;
 			if (target.exists()) {
@@ -391,10 +414,26 @@ public class OomphIdeExtension implements P2Declarative {
 				FileMisc.mkdirs(target.getParentFile());
 			}
 			try {
-				content.execute(initial);
+				propAction.execute(initial);
 				Files.write(ConfigMisc.props(initial), target);
 			} catch (IOException e) {
 				throw new GradleException("error when writing workspaceProp '" + path + "'", e);
+			}
+		});
+		// for each prop, load the existing file, which must exist, and then pass it to the actions
+		workspaceXmls.forEach((path, xmlAction) -> {
+			File target = new File(workspaceDir, path);
+			if (!target.exists()) {
+				throw new GradleException("workspaceXml('" + path + "', ... must be initialized by a call to workspaceFile('" + path + "', ...");
+			}
+			String original = Errors.rethrow().get(() -> Files.toString(target, StandardCharsets.UTF_8));
+
+			XmlTransformer transformer = new XmlTransformer();
+			transformer.addAction(xmlAction);
+			try (OutputStream output = new BufferedOutputStream(new FileOutputStream(target))) {
+				transformer.transform(original, output);
+			} catch (IOException e) {
+				throw new GradleException("error when writing workspaceXml '" + path + "'", e);
 			}
 		});
 		// perform internal setup
