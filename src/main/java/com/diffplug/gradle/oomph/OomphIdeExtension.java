@@ -213,6 +213,16 @@ public class OomphIdeExtension implements P2Declarative {
 		setupActions.addLazyAction(lazyInternalSetupAction);
 	}
 
+	/** Links the given target into the workspace with the given name, see [eclipse manual](http://help.eclipse.org/neon/index.jsp?topic=%2Forg.eclipse.platform.doc.user%2Fconcepts%2Fconcepts-13.htm). */
+	public void linkedResource(String linkName, Object linkTarget) {
+		final String CORE_RES_PREFS_FILE = ".metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.core.resources.prefs";
+		final String WS_PATHVAR_FMT = "pathvariable.%s";
+		workspaceProp(CORE_RES_PREFS_FILE, props -> {
+			//Eclipse cannot handle backslashes in this value.  It expects path separators to be '/'
+			props.put(String.format(WS_PATHVAR_FMT, linkName), project.file(linkTarget).getAbsolutePath().replace("\\", "/"));
+		});
+	}
+
 	////////////////
 	// ideSetupP2 //
 	////////////////
