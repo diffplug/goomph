@@ -104,13 +104,14 @@ class BrandingProductPlugin {
 	 * The map is used to modify the template files.
 	 */
 	@SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
-	public static void create(File root, BufferedImage splash, BufferedImage icon, String name, String perspective) throws IOException {
+	public static void create(File root, BufferedImage splash, BufferedImage icon, String name, String perspective, String description) throws IOException {
 		String startupMessageRect = rect(MESSAGE_MARGIN, splash.getHeight() - MESSAGE_VOFFSET, splash.getWidth() - 2 * MESSAGE_MARGIN, MESSAGE_HEIGHT);
 		String startupProgressRect = rect(PROGRESS_MARGIN, splash.getHeight() - PROGRESS_MARGIN - PROGRESS_HEIGHT, splash.getWidth() - 2 * PROGRESS_MARGIN, PROGRESS_HEIGHT);
 		ImmutableMap<String, Function<String, String>> map = ImmutableMap.of(
 				"plugin.xml", str -> str.replace("%name%", name)
 						.replace("%startupMessageRect%", startupMessageRect)
-						.replace("%startupProgressRect%", startupProgressRect),
+						.replace("%startupProgressRect%", startupProgressRect)
+						.replace("%productBlurb%", description),
 				"plugin_customization.ini", str -> str.replace("org.eclipse.jdt.ui.JavaPerspective", perspective));
 
 		FileMisc.cleanDir(root);

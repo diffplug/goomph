@@ -80,6 +80,8 @@ public class OomphIdeExtension implements P2Declarative {
 	@Nonnull
 	String name;
 	@Nonnull
+	String description;
+	@Nonnull
 	String perspective;
 	@Nonnull
 	Object ideDir = "build/oomph-ide" + FileMisc.macApp();
@@ -96,6 +98,7 @@ public class OomphIdeExtension implements P2Declarative {
 		this.project = Objects.requireNonNull(project);
 		this.workspaceRegistry = WorkspaceRegistry.instance();
 		this.name = project.getRootProject().getName();
+		this.description = this.name;
 		this.perspective = Perspectives.RESOURCES;
 		this.runP2Using = app -> Errors.rethrow().run(() -> app.runUsingBootstrapper(project));
 	}
@@ -129,6 +132,11 @@ public class OomphIdeExtension implements P2Declarative {
 	/** Sets the name of the generated IDE.  Defaults to the name of the root project. */
 	public void name(String name) {
 		this.name = Objects.requireNonNull(name);
+	}
+
+	/** Sets the description of the generated IDE.  Defaults to name. */
+	public void description(String description) {
+		this.description = Objects.requireNonNull(description);
 	}
 
 	/** Sets the starting perspective (window layout), see {@link Perspectives} for common perspectives. */
@@ -348,7 +356,7 @@ public class OomphIdeExtension implements P2Declarative {
 		}
 
 		File branding = new File(ideDir, FileMisc.macContentsEclipse() + "dropins/com.diffplug.goomph.branding");
-		BrandingProductPlugin.create(branding, splashImg, iconImg, name, perspective);
+		BrandingProductPlugin.create(branding, splashImg, iconImg, name, perspective, description);
 		File bundlesInfo = new File(ideDir, FileMisc.macContentsEclipse() + "configuration/org.eclipse.equinox.simpleconfigurator/bundles.info");
 		FileMisc.modifyFile(bundlesInfo, content -> {
 			return content + "com.diffplug.goomph.branding,1.0.0,dropins/com.diffplug.goomph.branding/,4,true" + System.lineSeparator();

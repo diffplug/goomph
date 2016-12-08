@@ -2,11 +2,11 @@
 <?eclipse version="3.0"?>
 <plugin>
 	<extension id="product" point="org.eclipse.core.runtime.products"> 
-		<product name="%name%" application="org.eclipse.ui.ide.workbench" description="%productBlurb"> 
+		<product name="%name%" application="org.eclipse.ui.ide.workbench" description="%productBlurb%"> 
 			<!-- For documentation on updating icons, see http://wiki.eclipse.org/Platform-releng/Updating_Branding -->
 			<property name="windowImages" value="eclipse16.png,eclipse32.png,eclipse48.png,eclipse64.png,eclipse128.png,eclipse256.png"/> 
 			<property name="aboutImage" value="eclipse128.png"/> 
-			<property name="aboutText" value="%productBlurb"/> 
+			<property name="aboutText" value="%productBlurb%"/> 
 			<property name="appName" value="%name%"/> 
 			<property name="preferenceCustomization" value="plugin_customization.ini"/> 
 			<property name="applicationXMI" value="org.eclipse.platform/LegacyIDE.e4xmi"/>
