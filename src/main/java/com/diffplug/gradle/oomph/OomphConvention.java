@@ -27,7 +27,7 @@ import org.gradle.api.Action;
 public class OomphConvention implements AutoCloseable {
 	protected final OomphIdeExtension extension;
 
-	OomphConvention(OomphIdeExtension extension) {
+	protected OomphConvention(OomphIdeExtension extension) {
 		this.extension = extension;
 	}
 
@@ -60,7 +60,7 @@ public class OomphConvention implements AutoCloseable {
 	public void close() {}
 
 	/** Convenience method for configuring the IDE. */
-	static <T extends OomphConvention> void configure(Function<OomphIdeExtension, T> constructor, OomphIdeExtension extension, Action<T> action) {
+	public static <T extends OomphConvention> void configure(Function<OomphIdeExtension, T> constructor, OomphIdeExtension extension, Action<T> action) {
 		try (T convention = constructor.apply(extension)) {
 			action.execute(convention);
 		}

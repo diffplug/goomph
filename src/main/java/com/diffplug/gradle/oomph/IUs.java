@@ -25,14 +25,16 @@ import com.diffplug.gradle.p2.P2Model;
 public class IUs {
 	private IUs() {}
 
-	private static final String FEATURE_GROUP = ".feature.group";
+	public static String featureGroup(String input) {
+		return input + ".feature.group";
+	}
 
 	/** Required IU for every IDE, contained within {@link P2Model#addRepoEclipse(String)}. */
 	public static final String IDE = "org.eclipse.platform.ide";
 	/** Required IU for every IDE, contained within {@link P2Model#addRepoEclipse(String)}. */
-	public static final String JDT = "org.eclipse.jdt" + FEATURE_GROUP;
+	public static final String JDT = featureGroup("org.eclipse.jdt");
 	/** Required IU for every IDE, contained within {@link P2Model#addRepoEclipse(String)}. */
-	public static final String PDE = "org.eclipse.pde" + FEATURE_GROUP;
+	public static final String PDE = featureGroup("org.eclipse.pde");
 	/** The error log view.  Included in the PDE, but helpful in lots of other places too. */
 	public static final String ERROR_LOG = "org.eclipse.ui.views.log";
 }

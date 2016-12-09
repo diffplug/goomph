@@ -58,6 +58,7 @@ import com.diffplug.gradle.JavaExecable;
 import com.diffplug.gradle.Lazyable;
 import com.diffplug.gradle.StateBuilder;
 import com.diffplug.gradle.eclipserunner.EclipseIni;
+import com.diffplug.gradle.oomph.thirdparty.ConventionThirdParty;
 import com.diffplug.gradle.p2.P2Declarative;
 import com.diffplug.gradle.p2.P2Model;
 import com.diffplug.gradle.p2.P2Model.DirectorApp;
@@ -478,12 +479,12 @@ public class OomphIdeExtension implements P2Declarative {
 	/////////////////
 	// Conventions //
 	/////////////////
-	/** Convenience methods for setting the style. */
+	/** Convenience methods for setting the style, @see ConventionStyle. */
 	public void style(Action<ConventionStyle> action) {
 		OomphConvention.configure(ConventionStyle::new, this, action);
 	}
 
-	/** Adds the java development tools. */
+	/** Adds the java development tools, @see ConventionJdt. */
 	public void jdt(Action<ConventionJdt> action) {
 		OomphConvention.configure(ConventionJdt::new, this, action);
 	}
@@ -491,5 +492,10 @@ public class OomphIdeExtension implements P2Declarative {
 	/** Adds the plugin-development environment, @see ConventionPde. */
 	public void pde(Action<ConventionPde> action) {
 		OomphConvention.configure(ConventionPde::new, this, action);
+	}
+
+	/** Adds third-party tools, @see ConventionThirdParty. */
+	public void thirdParty(Action<ConventionThirdParty> action) {
+		OomphConvention.configure(ConventionThirdParty::new, this, action);
 	}
 }
