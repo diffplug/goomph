@@ -42,6 +42,12 @@ public class JdkConfig {
 			javaHome = StandardSystemProperty.JAVA_HOME.value();
 		}
 		Objects.requireNonNull(javaHome, "Could not find JRE dir, set 'org.gradle.java.home' to fix.");
+		// it might point to the root of the JDK folder, or to the JRE itself
+		// this handles the case that it is the JRE itself
+		File jreSubdir = new File(javaHome + "/jre");
+		if (!jreSubdir.exists()) {
+			javaHome = jreSubdir.getParentFile().getParentFile().getAbsolutePath();
+		}
 		this.rootFolder = new File(javaHome);
 	}
 
