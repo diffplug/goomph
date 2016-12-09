@@ -480,22 +480,16 @@ public class OomphIdeExtension implements P2Declarative {
 	/////////////////
 	/** Convenience methods for setting the style. */
 	public void style(Action<ConventionStyle> action) {
-		try (ConventionStyle convention = new ConventionStyle(this)) {
-			action.execute(convention);
-		}
+		OomphConvention.configure(ConventionStyle::new, this, action);
 	}
 
 	/** Adds the java development tools. */
 	public void jdt(Action<ConventionJdt> action) {
-		try (ConventionJdt convention = new ConventionJdt(this)) {
-			action.execute(convention);
-		}
+		OomphConvention.configure(ConventionJdt::new, this, action);
 	}
 
 	/** Adds the plugin-development environment, @see ConventionPde. */
 	public void pde(Action<ConventionPde> action) {
-		try (ConventionPde convention = new ConventionPde(this)) {
-			action.execute(convention);
-		}
+		OomphConvention.configure(ConventionPde::new, this, action);
 	}
 }

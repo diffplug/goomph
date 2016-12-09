@@ -16,6 +16,9 @@
 package com.diffplug.gradle.oomph;
 
 import java.util.Arrays;
+import java.util.function.Function;
+
+import org.gradle.api.Action;
 
 /**
  * Base class for implementing a DSL
@@ -55,4 +58,11 @@ public class OomphConvention implements AutoCloseable {
 	 */
 	@Override
 	public void close() {}
+
+	/** Convenience method for configuring the IDE. */
+	static <T extends OomphConvention> void configure(Function<OomphIdeExtension, T> constructor, OomphIdeExtension extension, Action<T> action) {
+		try (T convention = constructor.apply(extension)) {
+			action.execute(convention);
+		}
+	}
 }
