@@ -15,27 +15,23 @@
  */
 package com.diffplug.gradle.oomph.thirdparty;
 
-import org.gradle.api.Action;
-
+import com.diffplug.gradle.oomph.IUs;
 import com.diffplug.gradle.oomph.OomphConvention;
 import com.diffplug.gradle.oomph.OomphIdeExtension;
 
 /**
- * This is a place for third-party modules to add their own
- * configuration logic.  It's a bit wild-west.
+ * Adds the [minimalist gradle editor](https://github.com/Nodeclipse/nodeclipse-1/tree/master/org.nodeclipse.enide.editors.gradle).
+ * 
+ * - repo: `http://www.nodeclipse.org/updates/gradle-ide-pack/`
+ * - feature: `org.nodeclipse.enide.editors.gradle.feature`
  */
-public class ConventionThirdParty extends OomphConvention {
-	public ConventionThirdParty(OomphIdeExtension extension) {
+public class ConventionMinimalistGradleEditor extends OomphConvention {
+	private static final String REPO = "http://www.nodeclipse.org/updates/gradle-ide-pack/";
+	private static final String IU = IUs.featureGroup("org.nodeclipse.enide.editors.gradle.feature");
+
+	ConventionMinimalistGradleEditor(OomphIdeExtension extension) {
 		super(extension);
-	}
-
-	/** Adds an in-eclipse terminal, @see ConventionTmTerminal. */
-	public void tmTerminal(Action<ConventionTmTerminal> action) {
-		OomphConvention.configure(ConventionTmTerminal::new, extension, action);
-	}
-
-	/** Adds syntax highlighting for gradle scripts, @see ConventionMinimalistGradleEditor. */
-	public void minimalistGradleEditor(Action<ConventionMinimalistGradleEditor> action) {
-		OomphConvention.configure(ConventionMinimalistGradleEditor::new, extension, action);
+		extension.getP2().addRepo(REPO);
+		requireIUs(IU);
 	}
 }
