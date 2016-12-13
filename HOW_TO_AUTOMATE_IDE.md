@@ -27,7 +27,8 @@ Depending on what you're trying to automate, you might need to touch all three.
 
 Manipulating project files is a [core part of gradle](https://docs.gradle.org/current/userguide/eclipse_plugin.html), so we won't cover that here.
 
-Manipulating plugin and feature jars has lots of coverage in the examples above.  The entire `oomphIdeBlock` extends [P2Declarative](https://diffplug.github.io/goomph/javadoc/3.6.0/com/diffplug/gradle/p2/P2Declarative.html).  So if you want to add any features, all you need to do is make sure you add all the necessary p2 repositories, and then specify the features or installable units that you need.
+Manipulating plugin and feature jars has lots of coverage in the examples above.  The entire `oomphIdeBlock` extends [P2Declarative](https://diffplug.github.io/goomph/javadoc/3.6.0/com/diffplug/gradle/p2/P2Declarative.html).
+So if you want to add any features, you just add the required p2 repositories, and then specify the features or installable units that you need.
 
 Manipulating the workspace is where it gets tricky.  We'll dig in below:
 
@@ -45,7 +46,7 @@ The general formula for setting a particular setting is this:
 
 This will let you know which property file you need to set, and what you need to set it to.  Once you know what you need to do, this is how you can actually do it:
 
-### Set a workspace property file
+### Set a workspace property or xml file
 
 Most eclipse settings are set in property files.  You can set them manually like this:
 
@@ -58,9 +59,23 @@ oomphIde {
 }
 ```
 
+You can also set xml files.  In order to set an xml file, you must first provide a template, and then you can modify the xml using [`XmlProvider`](https://docs.gradle.org/current/javadoc/org/gradle/api/XmlProvider.html).
+
+```gradle
+oomphIde {
+	...
+	workspaceFile('destination', 'source')
+	workspaceXml('destination', { xmlProvider -> ...}) // modify your xml here
+}
+```
+
 ### Run programmatically
 
 You can also use Eclipse's internal APIs to programatically set properties.  This is pretty advanced.  You'll want to look at Goomph's code very carefully, and examine the subclasses of `SetupAction`.
+
+## How do I add a DSL for a plugin?
+
+If you have an Eclipse plugin that you'd like to add to to Goomph, we'd love to have it!  Take a look at [ConventionThirdParty](https://github.com/diffplug/goomph/blob/master/src/main/java/com/diffplug/gradle/oomph/thirdparty/ConventionThirdParty.java), and add a block for your plugin there.  If you look at all subclasses of `OomphConvention`, you can see how you can make a configuration DSL for your users, if you'd like.  But even just a simple "add the repo, add the feature" is helpful.
 
 ##  Contribute back!
 
