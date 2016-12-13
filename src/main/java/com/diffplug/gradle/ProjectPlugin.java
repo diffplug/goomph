@@ -29,7 +29,7 @@ public abstract class ProjectPlugin implements Plugin<Project> {
 		if (project.getPlugins().hasPlugin(this.getClass())) {
 			return;
 		}
-		GoomphCacheLocations.initFromProject(project);
+		project.afterEvaluate(GoomphCacheLocations::initFromProject);
 		// apply the plugin once
 		applyOnce(project);
 	}
