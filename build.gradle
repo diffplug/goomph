@@ -83,6 +83,8 @@ eclipse {
 }
 // always create fresh projects
 tasks.eclipse.dependsOn(cleanEclipse)
+// with up-to-date test deps
+tasks.eclipse.dependsOn(pluginUnderTestMetadata)
 
 ///////////////////
 // OSGi metadata //
