@@ -16,11 +16,15 @@
 package com.diffplug.gradle;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.Optional;
 
+import org.gradle.api.Project;
+
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.StandardSystemProperty;
 import com.diffplug.gradle.p2.P2Model;
 
@@ -35,10 +39,27 @@ import com.diffplug.gradle.p2.P2Model;
  * - {@link #bundlePool()}
  * - {@link #workspaces()}
  *
+ * All these values can be overridden either by setting the
+ * value of the `public static override_whatever` variable.
+ * 
+ * If your gradle build is split across multiple files using
+ * `apply from:`, then these static variables will get wiped
+ * out.  You can fix this by setting a project property
+ * as such: `project.ext.goomph_override_whatever=something`
  */
 @SuppressFBWarnings("MS_SHOULD_BE_FINAL")
 public class GoomphCacheLocations {
 	private static final String ROOT = ".goomph";
+
+	/** Initializes overrides based on project properties named "goomph_override_whatever" */
+	public static void initFromProject(Project project) {
+		for (Field field : GoomphCacheLocations.class.getFields()) {
+			Object value = project.getProperties().get("goomph_" + field.getName());
+			if (value != null) {
+				Errors.rethrow().run(() -> field.set(null, value));
+			}
+		}
+	}
 
 	/**
 	 * When Goomph creates an IDE for you, it must
