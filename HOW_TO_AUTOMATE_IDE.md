@@ -69,9 +69,9 @@ oomphIde {
 }
 ```
 
-### Run programmatically
+### Modify a setting programmatically
 
-You can also use Eclipse's internal APIs to programatically set properties.  This is pretty advanced.  You'll want to look at Goomph's code very carefully, and examine the subclasses of `SetupAction`.
+You can also use Eclipse's internal APIs to programatically set properties.  This is pretty advanced.  You'll want to look at Goomph's code, and examine the subclasses of `SetupAction`.
 
 ## How do I add a DSL for a plugin?
 
