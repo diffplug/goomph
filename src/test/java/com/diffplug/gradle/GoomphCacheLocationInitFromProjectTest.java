@@ -32,7 +32,7 @@ public class GoomphCacheLocationInitFromProjectTest extends GradleIntegrationTes
 				"}",
 				"ext.goomph_override_p2bootstrapUrl='somewhere'",
 				"com.diffplug.gradle.GoomphCacheLocations.initFromProject(project)",
-				"System.out.println(GoomphCacheLocations.p2bootstrapUrl())");
+				"System.out.println(com.diffplug.gradle.GoomphCacheLocations.p2bootstrapUrl())");
 		StringBuilder buffer = new StringBuilder();
 		StringPrinter printer = new StringPrinter(buffer::append);
 		try (Writer writer = printer.toPrintWriter()) {
