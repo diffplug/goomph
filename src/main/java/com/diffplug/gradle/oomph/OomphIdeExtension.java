@@ -192,8 +192,12 @@ public class OomphIdeExtension implements P2Declarative {
 			}
 			if (task instanceof GenerateEclipseProject) {
 				File projectFile = ((GenerateEclipseProject) task).getOutputFile();
-				Preconditions.checkArgument(projectFile.getName().equals(DOT_PROJECT), "Project file must be '" + DOT_PROJECT + "', was %s", projectFile);
-				projectFiles.add(projectFile);
+				if (projectFile == null) {
+					project.getLogger().warn("eclipse task " + task + " has no project file");
+				} else {
+					Preconditions.checkArgument(projectFile.getName().equals(DOT_PROJECT), "Project file must be '" + DOT_PROJECT + "', was %s", projectFile);
+					projectFiles.add(projectFile);
+				}
 			}
 		});
 	}
