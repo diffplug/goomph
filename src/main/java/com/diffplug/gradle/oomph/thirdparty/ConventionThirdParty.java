@@ -38,4 +38,9 @@ public class ConventionThirdParty extends OomphConvention {
 	public void minimalistGradleEditor(Action<ConventionMinimalistGradleEditor> action) {
 		OomphConvention.configure(ConventionMinimalistGradleEditor::new, extension, action);
 	}
+
+	/** Adds gradle integration, @see ConventionBuildship. */
+	public void buildship(Action<ConventionBuildship> action) {
+		OomphConvention.configure(ConventionBuildship::new, extension, action);
+	}
 }
