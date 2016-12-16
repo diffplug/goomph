@@ -16,22 +16,17 @@
 package com.diffplug.gradle.oomph.thirdparty;
 
 import com.diffplug.gradle.oomph.IUs;
-import com.diffplug.gradle.oomph.OomphConvention;
 import com.diffplug.gradle.oomph.OomphIdeExtension;
 
 /**
  * Adds the [minimalist gradle editor](https://github.com/Nodeclipse/nodeclipse-1/tree/master/org.nodeclipse.enide.editors.gradle).
- * 
- * - repo: `http://www.nodeclipse.org/updates/gradle-ide-pack/`
- * - feature: `org.nodeclipse.enide.editors.gradle.feature`
  */
-public class ConventionMinimalistGradleEditor extends OomphConvention {
-	private static final String REPO = "http://www.nodeclipse.org/updates/gradle-ide-pack/";
-	private static final String IU = IUs.featureGroup("org.nodeclipse.enide.editors.gradle.feature");
+public class ConventionMinimalistGradleEditor extends WithRepoConvention {
+	public static final String REPO = "http://www.nodeclipse.org/updates/gradle-ide-pack/";
+	public static final String FEATURE = "org.nodeclipse.enide.editors.gradle.feature";
 
 	ConventionMinimalistGradleEditor(OomphIdeExtension extension) {
-		super(extension);
-		extension.getP2().addRepo(REPO);
-		requireIUs(IU);
+		super(extension, REPO);
+		requireIUs(IUs.featureGroup(FEATURE));
 	}
 }

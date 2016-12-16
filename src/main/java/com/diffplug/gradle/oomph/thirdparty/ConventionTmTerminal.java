@@ -16,22 +16,17 @@
 package com.diffplug.gradle.oomph.thirdparty;
 
 import com.diffplug.gradle.oomph.IUs;
-import com.diffplug.gradle.oomph.OomphConvention;
 import com.diffplug.gradle.oomph.OomphIdeExtension;
 
 /**
  * Adds [TmTerminal](http://marketplace.eclipse.org/content/tcf-terminals).
- * 
- * - repo: `http://download.eclipse.org/tm/terminal/marketplace/`
- * - feature: `org.eclipse.tm.terminal.feature`
  */
-public class ConventionTmTerminal extends OomphConvention {
-	private static final String REPO = "http://download.eclipse.org/tm/terminal/marketplace/";
-	private static final String IU = IUs.featureGroup("org.eclipse.tm.terminal.feature");
+public class ConventionTmTerminal extends WithRepoConvention {
+	public static final String REPO = "http://download.eclipse.org/tm/terminal/marketplace/20160312/terminal_4.1_20160312";
+	public static final String FEATURE = "org.eclipse.tm.terminal.feature";
 
 	ConventionTmTerminal(OomphIdeExtension extension) {
-		super(extension);
-		extension.getP2().addRepo(REPO);
-		requireIUs(IU);
+		super(extension, REPO);
+		requireIUs(IUs.featureGroup(FEATURE));
 	}
 }
