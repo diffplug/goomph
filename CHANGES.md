@@ -2,6 +2,26 @@
 
 ### Version 3.7.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
+* Updated `EclipseResult.latestOfficial()` to `Neon.2`.
+* It is now possible to set the description in the startup dialog and about dialog. [commit](https://github.com/diffplug/goomph/commit/f24ac1ba8d00731ba754f1ede70bd93d232f0b67)
+* Fixed JDK detection on mac. [commit](https://github.com/diffplug/goomph/commit/d0555c8a483f29f9b8b39c05578a7ea9cc45253f)
+* Goomph constants (such as p2 bootstrap url) can now be overridden using Gradle extension properties:
+	+ e.g. `ext.goomph_override_p2bootstrapUrl='http://intranet/goomph-p2-boostrap'`
+	+ Required when splitting buildscripts across files, because of Gradle classpath separation.
+	+ See [issue #25](https://github.com/diffplug/goomph/issues/25) for more details.
+* Fixed bug which prevented buildship import. [issue](https://github.com/diffplug/gradle-and-eclipse-rcp/issues/7)
+* Added a mechanism for integrating third-party plugins into Goomph, e.g.
+
+```gradle
+oomphIde {
+	thirdParty {
+		tmTerminal {}
+		minimalistGradleEditor {}
+		buildship {}
+	}
+}
+```
+
 ### Version 3.6.0 - December 5th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.6.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.6.0/view))
 
 * Added `workspaceFile('pathInWorkspace', 'srcFile')` for copying files into the workspace directly.
