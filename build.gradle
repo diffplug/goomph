@@ -209,7 +209,7 @@ def cred = {
 
 model { publishing {
 	publications {
-		mavenJava(MavenPublication) {
+		pluginMaven {
 			artifact sourcesJar
 			artifact javadocJar
 			pom.withXml {
