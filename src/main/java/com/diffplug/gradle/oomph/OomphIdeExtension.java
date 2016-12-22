@@ -375,6 +375,8 @@ public class OomphIdeExtension implements P2Declarative {
 		ini.set("-data", getWorkspaceDir());
 		ini.set("-product", "com.diffplug.goomph.branding.product");
 		ini.set("-showsplash", "dropins/com.diffplug.goomph.branding/splash.bmp");
+		// wipe out defaults, because they mess up mac icons (and other stuff)
+		ini.vmargs("-Xmx1g");
 		// p2 director makes an invalid mac install out of the box.  Blech.
 		if (OS.getNative().isMac()) {
 			ini.set("-install", new File(ideDir, "Contents/MacOS"));
