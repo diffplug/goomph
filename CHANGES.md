@@ -1,6 +1,8 @@
 # Goomph releases
 
-### Version 3.7.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
+### Version 3.8.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
+
+### Version 3.7.0 - December 22nd 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.7.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.7.0/view))
 
 * Updated `EclipseResult.latestOfficial()` to `Neon.2`.
 * It is now possible to set the description in the startup dialog and about dialog. [commit](https://github.com/diffplug/goomph/commit/f24ac1ba8d00731ba754f1ede70bd93d232f0b67)
