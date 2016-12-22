@@ -22,7 +22,7 @@ import com.diffplug.gradle.oomph.OomphIdeExtension;
  * Adds [TmTerminal](http://marketplace.eclipse.org/content/tcf-terminals).
  */
 public class ConventionTmTerminal extends WithRepoConvention {
-	public static final String REPO = "http://download.eclipse.org/tm/terminal/marketplace/20160312/terminal_4.1_20160312";
+	public static final String REPO = "http://download.eclipse.org/tm/terminal/marketplace/";
 	public static final String FEATURE = "org.eclipse.tm.terminal.feature";
 
 	ConventionTmTerminal(OomphIdeExtension extension) {
