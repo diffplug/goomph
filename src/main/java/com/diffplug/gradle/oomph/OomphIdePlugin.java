@@ -152,6 +152,15 @@ import com.diffplug.gradle.ProjectPlugin;
  * 
  */
 public class OomphIdePlugin extends ProjectPlugin {
+	static final String IDE = "ide";
+	static final String IDE_SETUP_WORKSPACE = "ideSetupWorkspace";
+	static final String IDE_SETUP_P2 = "ideSetupP2";
+	static final String IDE_CLEAN = "ideClean";
+
+	private static final String TASK_GROUP = "IDE";
+	private static final String IDE_DESC = "Launches a preconfigured IDE, downloading if necessary.";
+	private static final String IDE_CLEAN_DESC = "Cleans the preconfigured IDE, so that the next call to " + IDE + " will provision a fresh IDE.";
+
 	@Override
 	protected void applyOnce(Project project) {
 		OomphIdeExtension extension = project.getExtensions().create(OomphIdeExtension.NAME, OomphIdeExtension.class, project);
@@ -171,6 +180,8 @@ public class OomphIdePlugin extends ProjectPlugin {
 		ide.doFirst(unused -> {
 			Errors.rethrow().run(extension::ide);
 		});
+		ide.setGroup(TASK_GROUP);
+		ide.setDescription(IDE_DESC);
 
 		project.afterEvaluate(p -> {
 			Errors.rethrow().run(() -> {
@@ -192,12 +203,9 @@ public class OomphIdePlugin extends ProjectPlugin {
 		ideClean.doFirst(unused -> {
 			extension.ideClean();
 		});
+		ide.setGroup(TASK_GROUP);
+		ide.setDescription(IDE_CLEAN_DESC);
 		ideSetupP2.mustRunAfter(ideClean);
 		ideSetupWorkspace.mustRunAfter(ideClean);
 	}
-
-	static final String IDE = "ide";
-	static final String IDE_SETUP_WORKSPACE = "ideSetupWorkspace";
-	static final String IDE_SETUP_P2 = "ideSetupP2";
-	static final String IDE_CLEAN = "ideClean";
 }
