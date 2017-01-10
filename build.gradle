@@ -7,7 +7,7 @@ buildscript {
 		// markdown javadoc
 		classpath "ch.raffael.pegdown-doclet:pegdown-doclet:${VER_PEGDOWN_DOCLET}"
 		// code formatting
-		classpath "com.diffplug.gradle.spotless:spotless:${VER_SPOTLESS}"
+		classpath "com.diffplug.spotless:spotless-plugin-gradle:${VER_SPOTLESS}"
 		// bintray uploading
 		classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:${VER_BINTRAY}"
 		// gradle plugin portal
@@ -110,20 +110,16 @@ spotless {
 		importOrderFile		'gradle/spotless.importorder'		// An import ordering file, exported from Eclipse
 		eclipseFormatFile	'gradle/spotless.eclipseformat.xml'	// XML file dumped out by the Eclipse formatter
 	}
-	format 'groovy', {
-		target '**/*.groovy'
-		licenseHeaderFile('spotless.license.java', 'package ')
-		indentWithTabs()
-		trimTrailingWhitespace()
-		endWithNewline()
-	}
 	format 'misc', {
-		target '**/.gitignore', '**/*.gradle', '**/*.md', '**/*.sh'
+		target '.gitignore', '*.gradle', '*.md', '.ci/*.sh'
 		indentWithTabs()
 		trimTrailingWhitespace()
 		endWithNewline()
 	}
-	freshmark {}
+	freshmark {
+		target '*.md'
+		propertiesFile('gradle.properties')
+	}
 }
 
 //////////////
