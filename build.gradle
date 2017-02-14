@@ -80,6 +80,16 @@ eclipse {
 		downloadSources true
 		downloadJavadoc true
 	}
+	project.file.withXml { provider ->
+		Node filteredResources = provider.asNode().appendNode('filteredResources')
+		Node filter = filteredResources.appendNode('filter')
+		filter.appendNode('id', '1093830624')
+		filter.appendNode('name', '')
+		filter.appendNode('type', '10')
+		Node matcher = filter.appendNode('matcher')
+		matcher.appendNode('id', 'org.eclipse.ui.ide.multiFilter')
+		matcher.appendNode('arguments', '1.0-name-matches-false-false-build')
+	}
 }
 // always create fresh projects
 tasks.eclipse.dependsOn(cleanEclipse)
