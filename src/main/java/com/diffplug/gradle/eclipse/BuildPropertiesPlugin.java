@@ -88,7 +88,7 @@ public class BuildPropertiesPlugin extends ProjectPlugin {
 			}
 			// handle the eclipse built-ins (properties files embedded in the src directory)
 			task.from("src", GroovyCompat.<CopySpec> closureFrom(task, spec -> {
-				return spec.include("**/*.properties").exclude("**/*.java");
+				return spec.include("**").exclude("**/*.java");
 			}));
 		});
 	}
