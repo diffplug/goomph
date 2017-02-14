@@ -2,6 +2,10 @@
 
 ### Version 3.8.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
+### Version 3.7.1 - February 14th 2017 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.7.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.7.1/view))
+
+* `com.diffplug.gradle.eclipse.buildproperties` now includes all non-java files in the `src` folder as resources, instead of only `*.properties` files.
+
 ### Version 3.7.0 - December 22nd 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.7.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.7.0/view))
 
 * Updated `EclipseResult.latestOfficial()` to `Neon.2`.
