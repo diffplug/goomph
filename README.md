@@ -61,6 +61,7 @@ It turns out that the tooling required to implement "IDE-as-build-artifact" is t
 Real world Eclipse software built with Goomph:
 - [DiffPlug](https://www.diffplug.com/)
 - [Veriluma](http://veriluma.com/)
+- [GenStar](https://github.com/ANRGenstar/genstar)
 - (your project here)
 
 Below is an index of Goomph's capabilities, along with links to the javadoc where you can find usage examples.
