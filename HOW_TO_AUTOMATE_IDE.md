@@ -7,9 +7,9 @@ output = prefixDelimiterReplace(input, 'https://{{org}}.github.io/{{name}}/javad
 So you want to automate your IDE configuration.  The first thing to do is look at a few examples.
 
 - [Gradle and Eclipse RCP talk](https://github.com/diffplug/gradle_and_eclipse_rcp/blob/master/ide/build.gradle) (multi-project Eclipse RCP project)
-- [ls-api](https://github.com/TypeFox/ls-api/blob/61a3089569acbe159f043534f282401452a34bc3/ide/build.gradle) (xtend IDE example)
-- [swt-chromium](https://github.com/diffplug/swt-chromium) (C++ example)
-- [Spotless](https://github.com/diffplug/spotless/blob/master/build.gradle) (single-project Gradle plugin)
+- [lsp4j](https://github.com/eclipse/lsp4j/blob/master/ide/build.gradle) (xtend IDE example)
+- [swt-chromium](https://github.com/diffplug/swt-chromium/blob/master/ide/build.gradle) (C++ example)
+- [Spotless](https://github.com/diffplug/spotless/blob/master/ide/build.gradle) (single-project Gradle plugin)
 - (your example here)
 
 The next thing is to look at the [javadoc](https://diffplug.github.io/goomph/javadoc/3.7.1/com/diffplug/gradle/oomph/OomphIdePlugin.html) for `OomphIdePlugin`, which inclues a pretty in-depth look at how it works.
