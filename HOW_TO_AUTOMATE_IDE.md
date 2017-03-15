@@ -8,6 +8,7 @@ So you want to automate your IDE configuration.  The first thing to do is look a
 
 - [Gradle and Eclipse RCP talk](https://github.com/diffplug/gradle_and_eclipse_rcp/blob/master/ide/build.gradle) (multi-project Eclipse RCP project)
 - [ls-api](https://github.com/TypeFox/ls-api/blob/61a3089569acbe159f043534f282401452a34bc3/ide/build.gradle) (xtend IDE example)
+- [swt-chromium](https://github.com/diffplug/swt-chromium) (C++ example)
 - [Spotless](https://github.com/diffplug/spotless/blob/master/build.gradle) (single-project Gradle plugin)
 - (your example here)
 
