@@ -205,7 +205,7 @@ public class OomphIdeExtension implements P2Declarative {
 	/** Adds the given folder as an eclipse project. */
 	public void addProjectFolder(Object folderObj) {
 		File folder = project.file(folderObj);
-		Preconditions.checkArgument(folder.isDirectory(), "Folder '%s' must be a directory containing a '" + DOT_PROJECT + "' file.");
+		Preconditions.checkArgument(folder.isDirectory(), "Folder '%s' must be a directory containing a '%s' file.", folder, DOT_PROJECT);
 		projectFiles.add(new File(folder, DOT_PROJECT));
 	}
 
