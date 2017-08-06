@@ -123,6 +123,7 @@ public class CopyJarsUsingProductFile extends DefaultTask {
 			return;
 		}
 		Set<Version> versions = catalog.getVersionsFor(plugin);
+		Preconditions.checkNotNull(versions, "No versions available for %s", plugin);
 		for (Version version : versions) {
 			File source = catalog.getFile(plugin, version);
 			File dest = new File(destination, source.getName());

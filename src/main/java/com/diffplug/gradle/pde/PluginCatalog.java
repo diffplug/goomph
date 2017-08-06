@@ -23,6 +23,8 @@ import java.util.Set;
 import java.util.jar.Manifest;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
+
 import org.osgi.framework.Version;
 
 import aQute.lib.filter.Filter;
@@ -121,6 +123,7 @@ class PluginCatalog {
 	}
 
 	/** Returns the version for the given plugin. */
+	@Nullable
 	Set<Version> getVersionsFor(String plugin) {
 		return versionPolicy.useVersions(plugin, availableVersions.get(plugin));
 	}
