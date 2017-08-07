@@ -101,6 +101,7 @@ public class ExplicitVersionPolicy {
 				throw new IllegalArgumentException("Conflicting versions for '" + plugin + "'!  Had " + present + ", call resolve(name, existingVersions).with(versionsToKeep)");
 			} else {
 				if (mapping.accepts.equals(present)) {
+					Preconditions.checkNotNull(mapping.takes, "You forgot to call 'withFirst()' or some other resolution on %s", mapping.takes);
 					return mapping.takes;
 				} else {
 					throw new IllegalArgumentException("Conflicts don't match for '" + plugin + "'!  Suggested resolution was " + mapping.accepts + ", but available was " + present);
