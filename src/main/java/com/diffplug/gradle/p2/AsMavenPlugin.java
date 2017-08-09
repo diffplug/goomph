@@ -109,7 +109,7 @@ import com.diffplug.gradle.ProjectPlugin;
  *     group 'myGroup', {
  *         ...
  *         p2ant {
- *             addArg('plugincustomization', '<path to proxies.ini>')
+ *             it.addArg('plugincustomization', '<path to proxies.ini>')
  *         }
  *     }
  * }
