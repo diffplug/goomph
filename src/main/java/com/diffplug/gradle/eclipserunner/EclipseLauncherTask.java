@@ -124,7 +124,7 @@ public class EclipseLauncherTask extends DefaultTask {
 
 		//JarFolderRunnerExternalJvm toRun = new JarFolderRunnerExternalJvm(output, getProject());
 		JarFolderRunnerExternalJvm toRun = new JarFolderRunnerExternalJvm(output, getProject());
-		toRun.run(Arrays.asList());
+		toRun.run(args);
 	}
 
 	private static final Logger logger = Logger.getLogger(EclipseLauncherTask.class.getName());
