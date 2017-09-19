@@ -1,10 +1,8 @@
 package com.diffplug.gradle.eclipserunner;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -12,15 +10,15 @@ import java.util.logging.Logger;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
-import org.gradle.api.artifacts.Dependency;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
-import org.gradle.internal.impldep.com.google.common.base.Preconditions;
 
+import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.io.Files;
 import com.diffplug.gradle.FileMisc;
+import com.diffplug.gradle.p2.ParsedJar;
 
 public class EclipseLauncherTask extends DefaultTask {
 	@Input
@@ -109,7 +107,9 @@ public class EclipseLauncherTask extends DefaultTask {
 		pluginsDir.mkdirs();
 
 		for (File plugin : plugins) {
-			Files.copy(plugin, new File(pluginsDir, plugin.getName()));
+			ParsedJar parsed = new ParsedJar(plugin);
+			String name = parsed.getSymbolicName() + "_" + parsed.getVersion() + ".jar";
+			Files.copy(plugin, new File(pluginsDir, name));
 		}
 
 		JarFolderRunnerExternalJvm toRun = new JarFolderRunnerExternalJvm(output, getProject());
