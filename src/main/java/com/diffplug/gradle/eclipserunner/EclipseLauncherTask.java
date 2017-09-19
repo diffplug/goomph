@@ -14,6 +14,7 @@ import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.tasks.bundling.Jar;
 
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.io.Files;
@@ -99,8 +100,15 @@ public class EclipseLauncherTask extends DefaultTask {
 		Preconditions.checkArgument(mavenCoords.isEmpty());
 		Preconditions.checkArgument(projects.size() == 1);
 		Project project = projects.iterator().next();
+
 		Configuration config = project.getConfigurations().getByName(JavaPlugin.RUNTIME_CONFIGURATION_NAME);
-		Set<File> plugins = config.resolve();
+		Set<File> deps = config.resolve();
+
+		Jar jarTask = (Jar) project.getTasks().getByName(JavaPlugin.JAR_TASK_NAME);
+
+		List<File> plugins = new ArrayList<>(deps.size() + 1);
+		plugins.addAll(deps);
+		plugins.add(jarTask.getArchivePath());
 
 		FileMisc.cleanDir(output);
 		File pluginsDir = new File(output, "plugins");
@@ -112,6 +120,9 @@ public class EclipseLauncherTask extends DefaultTask {
 			Files.copy(plugin, new File(pluginsDir, name));
 		}
 
+		
+
+		//JarFolderRunnerExternalJvm toRun = new JarFolderRunnerExternalJvm(output, getProject());
 		JarFolderRunnerExternalJvm toRun = new JarFolderRunnerExternalJvm(output, getProject());
 		toRun.run(Arrays.asList());
 	}
