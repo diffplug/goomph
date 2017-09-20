@@ -38,6 +38,8 @@ import com.diffplug.gradle.JavaExecable;
 public class JarFolderRunnerExternalJvm implements EclipseRunner {
 	final File rootDirectory;
 	@Nullable
+	final File workingDirectory;
+	@Nullable
 	final Project project;
 
 	/**
@@ -57,7 +59,16 @@ public class JarFolderRunnerExternalJvm implements EclipseRunner {
 	 * @param project used to calculate the classpath of the newly launched JVM
 	 */
 	public JarFolderRunnerExternalJvm(File rootDirectory, @Nullable Project project) {
+		this(rootDirectory, null, project);
+	}
+
+	/**
+	 * @param rootDirectory a directory which contains a `plugins` folder containing the OSGi jars needed to run applications.
+	 * @param project used to calculate the classpath of the newly launched JVM
+	 */
+	public JarFolderRunnerExternalJvm(File rootDirectory, @Nullable File workingDirectory, @Nullable Project project) {
 		this.rootDirectory = Objects.requireNonNull(rootDirectory);
+		this.workingDirectory = workingDirectory;
 		this.project = project;
 	}
 
@@ -75,6 +86,9 @@ public class JarFolderRunnerExternalJvm implements EclipseRunner {
 
 	@SuppressFBWarnings(value = "RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT", justification = "FindBugs thinks that setClasspath() doesn't have a side effect, but it actually does.")
 	private void modifyClassPath(JavaExecSpec execSpec) {
+		if (workingDirectory != null) {
+			execSpec.setWorkingDir(workingDirectory);
+		}
 		FileCollection classpath = execSpec.getClasspath();
 		execSpec.setClasspath(classpath.filter(file -> {
 			String name = file.getName();
