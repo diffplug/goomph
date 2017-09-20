@@ -379,6 +379,7 @@ githubPages {
 tasks.prepareGhPages.dependsOn(":javadoc")
 
 // helps external scripts detect version
-task printVersion << {
+task printVersion
+printVersion.doLast {
 	println version
 }
