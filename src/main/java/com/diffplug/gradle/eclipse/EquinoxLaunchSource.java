@@ -26,7 +26,9 @@ import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.Dependency;
 import org.gradle.api.plugins.JavaPlugin;
+import org.gradle.api.tasks.bundling.Jar;
 
+import com.diffplug.common.base.Unhandled;
 import com.diffplug.spotless.FileSignature;
 import com.diffplug.spotless.LazyForwardingEquality;
 
@@ -34,49 +36,63 @@ import com.diffplug.spotless.LazyForwardingEquality;
 public class EquinoxLaunchSource extends LazyForwardingEquality<FileSignature> {
 	private static final long serialVersionUID = 3644633962761683264L;
 
-	public EquinoxLaunchSource(Project anchorProject) {
-		this.anchorProject = anchorProject;
+	EquinoxLaunchSource(EquinoxLaunchSetupTask setupTask) {
+		this.setupTask = setupTask;
 	}
 
 	/** Used to resolve extraDeps. */
-	transient final Project anchorProject;
-	transient List<Configuration> configurations = new ArrayList<>();
-	transient List<String> extraDeps = new ArrayList<>();
+	transient final EquinoxLaunchSetupTask setupTask;
+	transient List<Object> projConfigMaven = new ArrayList<>();
 
 	/** Adds the runtime and generated archives for this project. */
 	public void addThisProject() {
-		addProject(anchorProject);
+		addProject(setupTask.getProject());
 	}
 
-	/** Adds the runtime and generated archives for the given project. */
+	/** Adds the runtime and jar archive for the given project. */
 	public void addProject(Project project) {
-		addConfiguration(project.getConfigurations().getByName(JavaPlugin.RUNTIME_CONFIGURATION_NAME));
-		addConfiguration(project.getConfigurations().getByName(Dependency.ARCHIVES_CONFIGURATION));
+		Jar jar = taskFor(project);
+		setupTask.dependsOn(jar);
+		projConfigMaven.add(project);
 	}
 
 	/** Adds the given configuration. */
 	public void addConfiguration(Configuration config) {
-		configurations.add(config);
+		projConfigMaven.add(config);
 	}
 
 	/** Adds a lone maven artifact, without any of its transitives. */
 	public void addMaven(String mavenCoord) {
-		extraDeps.add(mavenCoord);
+		projConfigMaven.add(mavenCoord);
+	}
+
+	private static Jar taskFor(Project project) {
+		return (Jar) project.getTasks().getByName(JavaPlugin.JAR_TASK_NAME);
 	}
 
 	@Override
 	protected FileSignature calculateState() throws Exception {
 		Set<File> files = new LinkedHashSet<>();
-		for (Configuration configuration : configurations) {
-			files.addAll(configuration.resolve());
-		}
-		for (String extraDep : extraDeps) {
-			Dependency dep = anchorProject.getDependencies().create(extraDep);
-			files.addAll(anchorProject.getConfigurations()
-					.detachedConfiguration(dep)
-					.setDescription(extraDep)
-					.setTransitive(false)
-					.resolve());
+		for (Object o : projConfigMaven) {
+			if (o instanceof Project) {
+				Project project = (Project) o;
+				Jar jar = taskFor(project);
+				files.add(jar.getArchivePath());
+				files.addAll(project.getConfigurations().getByName(JavaPlugin.RUNTIME_CONFIGURATION_NAME).resolve());
+			} else if (o instanceof Configuration) {
+				Configuration config = (Configuration) o;
+				files.addAll(config.resolve());
+			} else if (o instanceof String) {
+				String mavenCoord = (String) o;
+				Dependency dep = setupTask.getProject().getDependencies().create(mavenCoord);
+				files.addAll(setupTask.getProject().getConfigurations()
+						.detachedConfiguration(dep)
+						.setDescription(mavenCoord)
+						.setTransitive(false)
+						.resolve());
+			} else {
+				throw Unhandled.classException(o);
+			}
 		}
 		return FileSignature.signAsList(files);
 	}

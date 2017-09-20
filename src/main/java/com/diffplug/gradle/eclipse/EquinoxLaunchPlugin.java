@@ -15,7 +15,8 @@
  */
 package com.diffplug.gradle.eclipse;
 
-import org.gradle.api.NamedDomainObjectContainer;
+import java.io.File;
+
 import org.gradle.api.NamedDomainObjectFactory;
 import org.gradle.api.Project;
 
@@ -24,28 +25,56 @@ import com.diffplug.gradle.ProjectPlugin;
 /**
  * Plugin for launching an equinox runtime.
  * 
- * 
- * Quick example (from 
+ * Here is a simple example:
  * 
  * ```groovy
  * apply plugin: 'com.diffplug.gradle.equinoxlaunch'
  * equinoxLaunch {
- *     myEquinox {
+ *     // creates an EquinoxLaunchSetupTask named 'headlessAppSetup'
+ *     headlessAppSetup {
+ *         source.addThisProject()
+ *         source.addMaven('com.google.guava:guava:17.0')
+ *         source.addMaven('com.google.guava:guava:18.0')
+ *         // creates an EquinoxLaunchTask named 'headlessApp' which depends on 'headlessAppSetup'
+ *         launchTask 'headlessApp', {
+ *             it.args = ['-consoleLog', '-application', 'com.diffplug.rcpdemo.headlessapp', 'file', 'test']
+ *         }
+ *     }
+ * }
+ * ```
+ * 
+ * And a more complex example:
+ * 
+ * ```groovy
+ * apply plugin: 'com.diffplug.gradle.equinoxlaunch'
+ * equinoxLaunch {
+ *     // creates an EquinoxLaunchSetupTask named 'equinoxSetup'
+ *     equinoxSetup {
  *         // adds the given project and all its runtime deps to the runtime
- *         src.addProject(project(':myproject'))
+ *         source.addProject(project(':myproject'))
  *         // adds a specific configuration to the runtime
- *         src.addConfiguration(configurations.runtime)
+ *         source.addConfiguration(configurations.runtime)
  *         // adds a lone maven artifact, without any of its transitives
- *         src.addMaven('com.google.guava:guava:17.0')
- *         src.addMaven('com.google.guava:guava:18.0')
+ *         source.addMaven('com.google.guava:guava:17.0')
+ *         source.addMaven('com.google.guava:guava:18.0')
  *
- *         // optional argument, default is below 
- *         installDir = 'build/equinoxLaunchMyEquinox
+ *         // optional argument, default is "build/<setupTaskName>" 
+ *         installDir = 'build/equinoxSetup'
  *
- *         launch 'myApp', {
+ *         // creates an EquinoxLaunchTask named 'launchApp' which depends on 'equinoxSetup'
+ *         launchTask 'launchApp', {
  *             // optional argument, default is project directory
  *             workingDir = file('myWorkingDir')
+ *             // -consoleLog is strongly recommended for debugging
  *             args = ['-consoleLog', '-application', 'com.myapp']
+ *         }
+
+ *         // creates an EquinoxLaunchTask named 'launchApp2' which depends on 'equinoxSetup'
+ *         launchTask 'launchApp2', {
+ *             // optional argument, default is project directory
+ *             workingDir = file('myWorkingDir')
+ *             // -consoleLog is strongly recommended for debugging
+ *             args = ['-consoleLog', '-application', 'com.myotherapp', 'other', 'args']
  *         }
  *     }
  * }
@@ -55,16 +84,13 @@ public class EquinoxLaunchPlugin extends ProjectPlugin {
 
 	@Override
 	protected void applyOnce(Project project) {
-		NamedDomainObjectContainer<EquinoxLaunchConfig> container = project.container(EquinoxLaunchConfig.class, new NamedDomainObjectFactory<EquinoxLaunchConfig>() {
+		project.getExtensions().add(NAME, project.container(EquinoxLaunchSetupTask.class, new NamedDomainObjectFactory<EquinoxLaunchSetupTask>() {
 			@Override
-			public EquinoxLaunchConfig create(String name) {
-				return new EquinoxLaunchConfig(project, name);
+			public EquinoxLaunchSetupTask create(String name) {
+				EquinoxLaunchSetupTask setupTask = project.getTasks().create(name, EquinoxLaunchSetupTask.class);
+				setupTask.setInstallDir(new File(project.getBuildDir(), name));
+				return setupTask;
 			}
-		});
-		project.getExtensions().add(NAME, container);
-
-		project.afterEvaluate(unused -> {
-			container.all(EquinoxLaunchConfig::createTasks);
-		});
+		}));
 	}
 }
