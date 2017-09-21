@@ -44,7 +44,7 @@ public class EquinoxLaunchSetupTask extends DefaultTask {
 	public void copyFiles() throws IOException {
 		FileMisc.cleanDir(installDir);
 		File pluginsDir = new File(installDir, "plugins");
-		pluginsDir.mkdirs();
+		FileMisc.mkdirs(pluginsDir);
 
 		for (File plugin : source.resolvedFiles()) {
 			ParsedJar parsed = new ParsedJar(plugin);
