@@ -3,17 +3,16 @@
 ### Version 3.8.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
 * Added the [`com.diffplug.gradle.equinoxlaunch`](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/eclipserunner/EquinoxLaunchPlugin.html) can configure and run equinox applications as part of the build, such as a code generator.
-* CopyJarsUsingProductFile now gives better error messages when a plugin is missing.
-* Bump bndlib from `3.2.0` to `3.4.0`.
-* Updated `EclipseRelease.latestOfficial()` to `Oxygen.1`.
+- CopyJarsUsingProductFile now gives better error messages when a plugin is missing.
+- Bump bndlib from `3.2.0` to `3.4.0`.
 
 ### Version 3.7.3 - July 4th 2017 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.7.3/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.7.3/view))
 
-* Updated `EclipseRelease.latestOfficial()` to `Oxygen`.
+* Updated `EclipseResult.latestOfficial()` to `Oxygen`.
 
 ### Version 3.7.2 - April 13th 2017 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.7.2/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.7.2/view))
 
-* Updated `EclipseRelease.latestOfficial()` to `Neon.3`.
+* Updated `EclipseResult.latestOfficial()` to `Neon.3`.
 * Fixed a confusing error message ([#30](https://github.com/diffplug/goomph/issues/30)).
 
 ### Version 3.7.1 - February 14th 2017 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.7.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.7.1/view))
@@ -22,7 +21,7 @@
 
 ### Version 3.7.0 - December 22nd 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.7.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.7.0/view))
 
-* Updated `EclipseRelease.latestOfficial()` to `Neon.2`.
+* Updated `EclipseResult.latestOfficial()` to `Neon.2`.
 * It is now possible to set the description in the startup dialog and about dialog. [commit](https://github.com/diffplug/goomph/commit/f24ac1ba8d00731ba754f1ede70bd93d232f0b67)
 * Fixed JDK detection on mac. [commit](https://github.com/diffplug/goomph/commit/d0555c8a483f29f9b8b39c05578a7ea9cc45253f)
 * Goomph constants (such as p2 bootstrap url) can now be overridden using Gradle extension properties:
