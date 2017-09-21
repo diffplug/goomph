@@ -47,7 +47,7 @@ public class EquinoxLaunchSetupTask extends DefaultTask {
 		FileMisc.mkdirs(pluginsDir);
 
 		for (File plugin : source.resolvedFiles()) {
-			ParsedJar parsed = new ParsedJar(plugin);
+			ParsedJar parsed = ParsedJar.parse(plugin);
 			String name = parsed.getSymbolicName() + "_" + parsed.getVersion() + ".jar";
 			Files.copy(plugin, new File(pluginsDir, name));
 		}

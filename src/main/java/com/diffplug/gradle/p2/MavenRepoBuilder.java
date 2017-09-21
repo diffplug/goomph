@@ -50,7 +50,7 @@ class MavenRepoBuilder implements AutoCloseable {
 	 * from Bundle-Version, and the source for Eclipse-SourceBundle.
 	 */
 	public void install(String group, File osgiJar) throws Exception {
-		ParsedJar parsed = new ParsedJar(osgiJar);
+		ParsedJar parsed = ParsedJar.parse(osgiJar);
 		artifactMap.put(new Coordinate(group, parsed.getSymbolicName()),
 				new Artifact(Version.parseVersion(parsed.getVersion()), parsed.isSource(), osgiJar));
 	}

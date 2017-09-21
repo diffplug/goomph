@@ -44,7 +44,22 @@ public class ParsedJar {
 		return isSource;
 	}
 
-	public ParsedJar(File osgiJar) throws IOException {
+	public static ParsedJar parse(File file) {
+		try {
+			return new ParsedJar(file);
+		} catch (Exception e) {
+			logger.info("Unabled to parse jar " + file, e);
+			return new ParsedJar(file.getName());
+		}
+	}
+
+	private ParsedJar(String name) {
+		this.symbolicName = name;
+		this.version = "0.0.0";
+		this.isSource = false;
+	}
+
+	private ParsedJar(File osgiJar) throws IOException {
 		try (JarFile jarFile = new JarFile(osgiJar)) {
 			if (jarFile.getManifest() != null) {
 				Attributes attr = jarFile.getManifest().getMainAttributes();
@@ -76,6 +91,11 @@ public class ParsedJar {
 		} else {
 			return input.substring(0, firstSemiColon).trim();
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "name=" + symbolicName + " version=" + version + " isSource=" + isSource;
 	}
 
 	private static Logger logger = LoggerFactory.getLogger(ParsedJar.class);
