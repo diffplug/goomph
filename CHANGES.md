@@ -3,6 +3,8 @@
 ### Version 3.8.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
 * Added the [`com.diffplug.gradle.equinoxlaunch`](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/eclipserunner/EquinoxLaunchPlugin.html) can configure and run equinox applications as part of the build, such as a code generator.
+- CopyJarsUsingProductFile now gives better error messages when a plugin is missing.
+- Bump bndlib from `3.2.0` to `3.4.0`.
 
 ### Version 3.7.3 - July 4th 2017 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.7.3/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.7.3/view))
 
