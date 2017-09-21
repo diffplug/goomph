@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import org.gradle.api.Action;
 import org.gradle.api.DefaultTask;
+import org.gradle.api.Project;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
@@ -53,14 +54,19 @@ public class EquinoxLaunchSetupTask extends DefaultTask {
 		}
 	}
 
-	/** Creates a launch task which depends on this SetupTask. */
-	public EquinoxLaunchTask launchTask(String name) {
-		EquinoxLaunchTask launchTask = getProject().getTasks().create(name, EquinoxLaunchTask.class);
+	/** Creates a launch task in a specific project which depends on this SetupTask. */
+	public EquinoxLaunchTask launchTask(Project project, String name) {
+		EquinoxLaunchTask launchTask = project.getTasks().create(name, EquinoxLaunchTask.class);
 		launchTask.dependsOn(this);
 		launchTask.setInstallDir(installDir);
 		launchTask.setWorkingDir(getProject().getProjectDir());
 		launchTask.setArgs(new ArrayList<>());
 		return launchTask;
+	}
+
+	/** Creates a launch task which depends on this SetupTask. */
+	public EquinoxLaunchTask launchTask(String name) {
+		return launchTask(getProject(), name);
 	}
 
 	/** Creates a launch task which depends on this SetupTask. */
