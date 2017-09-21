@@ -78,6 +78,7 @@ import com.diffplug.gradle.ProjectPlugin;
  *         }
  *     }
  * }
+ * ```
  */
 public class EquinoxLaunchPlugin extends ProjectPlugin {
 	public static final String NAME = "equinoxLaunch";
