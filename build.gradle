@@ -51,6 +51,7 @@ dependencies {
 	compile "com.diffplug.durian:durian-io:${VER_DURIAN}"
 	compile "com.diffplug.durian:durian-swt:${VER_DURIAN_SWT}"
 	compile "commons-io:commons-io:${VER_COMMONS_IO}"
+	compile "com.diffplug.spotless:spotless-lib:${VER_SPOTLESS_LIB}"
 	// OSGi
 	compile "biz.aQute.bnd:biz.aQute.bndlib:${VER_BNDLIB}"
 	// p2
@@ -323,6 +324,12 @@ pluginBundle {
 			description = "Adds filters to an eclipse project which exclude or include specific resources."
 			tags = ['eclipse']
 		}
+		equinoxLaunch {
+			id = 'com.diffplug.gradle.equinoxlaunch'
+			displayName = 'Goomph launch an equinox application'
+			description = "Launches an equinox application with whatever set of plugins the user specifies"
+			tags = ['eclipse', 'osgi']
+		}
 		oomphIdePlugin {
 			id = 'com.diffplug.gradle.oomph.ide'
 			displayName = 'Goomph ooomph.ide'
@@ -379,6 +386,7 @@ githubPages {
 tasks.prepareGhPages.dependsOn(":javadoc")
 
 // helps external scripts detect version
-task printVersion << {
+task printVersion
+printVersion.doLast {
 	println version
 }

@@ -23,8 +23,6 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.jar.Attributes;
-import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 
 import org.osgi.framework.Version;
@@ -52,44 +50,9 @@ class MavenRepoBuilder implements AutoCloseable {
 	 * from Bundle-Version, and the source for Eclipse-SourceBundle.
 	 */
 	public void install(String group, File osgiJar) throws Exception {
-		String symbolicName;
-		String version;
-		boolean isSource;
-		try (JarFile jarFile = new JarFile(osgiJar)) {
-			if (jarFile.getManifest() != null) {
-				Attributes attr = jarFile.getManifest().getMainAttributes();
-				symbolicName = beforeSemicolon(attr.getValue("Bundle-SymbolicName"));
-				version = attr.getValue("Bundle-Version");
-				String source = attr.getValue("Eclipse-SourceBundle");
-				if (source != null) {
-					isSource = true;
-					symbolicName = beforeSemicolon(source);
-				} else {
-					isSource = false;
-				}
-			} else {
-				String name = osgiJar.getName();
-				int lastUnderscore = name.lastIndexOf("_");
-				symbolicName = name.substring(0, lastUnderscore);
-				version = name.substring(lastUnderscore + 1);
-				isSource = false;
-				System.err.println(osgiJar.getAbsolutePath() + " has no manifest.  Guessing name=" + symbolicName + " and version=" + version);
-			}
-		} catch (RuntimeException e) {
-			System.err.println("Error parsing manifest of " + osgiJar.getAbsolutePath() + ", unable to put this jar into maven.");
-			return;
-		}
-		artifactMap.put(new Coordinate(group, symbolicName), new Artifact(Version.parseVersion(version), isSource, osgiJar));
-	}
-
-	/** Parses out a name from an OSGi manifest header. */
-	private static String beforeSemicolon(String input) {
-		int firstSemiColon = input.indexOf(';');
-		if (firstSemiColon == -1) {
-			return input.trim();
-		} else {
-			return input.substring(0, firstSemiColon).trim();
-		}
+		ParsedJar parsed = new ParsedJar(osgiJar);
+		artifactMap.put(new Coordinate(group, parsed.getSymbolicName()),
+				new Artifact(Version.parseVersion(parsed.getVersion()), parsed.isSource(), osgiJar));
 	}
 
 	@Override

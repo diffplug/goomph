@@ -103,6 +103,8 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 
 **`com.diffplug.gradle.eclipserunner` Infrastructure for running headless eclipse applications.**
 
+* [`com.diffplug.gradle.equinoxlaunch`](https://diffplug.github.io/goomph/javadoc/3.7.3/com/diffplug/gradle/eclipserunner/EquinoxLaunchPlugin.html) can configure and run equinox applications as part of the build, such as a code generator.
+
 * Used to power the infrastructure above.
 
 <!---freshmark /javadoc -->
