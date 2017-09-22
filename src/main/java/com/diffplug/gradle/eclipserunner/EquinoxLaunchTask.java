@@ -22,6 +22,10 @@ import java.util.Objects;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
 
+/**
+ * Launches an equinox application based on a plugin setup
+ * established by {@link EquinoxLaunchSetupTask}.
+ */
 public class EquinoxLaunchTask extends DefaultTask {
 	private File installDir;
 	private File workingDir;

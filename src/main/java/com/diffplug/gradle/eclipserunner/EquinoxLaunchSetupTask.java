@@ -30,6 +30,10 @@ import com.diffplug.common.io.Files;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.p2.ParsedJar;
 
+/**
+ * Copies a bunch of OSGi plugins into a directory so that they can
+ * be launched as an equinox application. 
+ */
 public class EquinoxLaunchSetupTask extends DefaultTask {
 	@Input
 	final EquinoxLaunchSource source;
