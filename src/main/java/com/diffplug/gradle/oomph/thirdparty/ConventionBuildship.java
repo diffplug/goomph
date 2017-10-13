@@ -22,7 +22,7 @@ import com.diffplug.gradle.oomph.OomphIdeExtension;
  * Adds [Buildship](http://projects.eclipse.org/projects/tools.buildship).
  */
 public class ConventionBuildship extends WithRepoConvention {
-	public static final String REPO = "http://download.eclipse.org/buildship/updates/e46/releases/1.0/1.0.21.v20161010-1640/";
+	public static final String REPO = "http://download.eclipse.org/buildship/updates/e47/releases/2.x/2.1.2.v20170807-1324/";
 	public static final String FEATURE = "org.eclipse.buildship";
 
 	ConventionBuildship(OomphIdeExtension extension) {
