@@ -209,6 +209,20 @@ public class OomphIdeExtension implements P2Declarative {
 		projectFiles.add(new File(folder, DOT_PROJECT));
 	}
 
+	/**
+	 * Adds the buildSrc folder as an eclipse project.
+	 * 
+	 * It's recommended that you add this snippet to your buildSrc, to ensure that your eclipse project stays up-to-date.
+	 * 
+	 * ```gradle
+	 * apply plugin: 'eclipse'
+	 * build.dependsOn(tasks.getByName('eclipse'))
+	 * ```
+	 */
+	public void addBuildSrc() {
+		addProjectFolder(project.getRootProject().file("buildSrc"));
+	}
+
 	private File getIdeDir() {
 		return project.file(ideDir);
 	}
