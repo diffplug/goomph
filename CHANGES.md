@@ -2,20 +2,25 @@
 
 ### Version 3.9.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
+### Version 3.8.1 - October 13th 2017 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.8.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.8.1/view))
+
+- Updated `EclipseRelease` to `4.7.1a`, and also added `4.7.1`.
+- Updated default buildship release from `e46/releases/1.0` to `e47/releases/2.x`.
+
 ### Version 3.8.0 - September 21st 2017 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.8.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.8.0/view))
 
-* Added the [`com.diffplug.gradle.equinoxlaunch`](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/eclipserunner/EquinoxLaunchPlugin.html) can configure and run equinox applications as part of the build, such as a code generator.
+- Added the [`com.diffplug.gradle.equinoxlaunch`](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/eclipserunner/EquinoxLaunchPlugin.html) can configure and run equinox applications as part of the build, such as a code generator.
 - CopyJarsUsingProductFile now gives better error messages when a plugin is missing.
 - Bump bndlib from `3.2.0` to `3.4.0`.
 
 ### Version 3.7.3 - July 4th 2017 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.7.3/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.7.3/view))
 
-* Updated `EclipseResult.latestOfficial()` to `Oxygen`.
+- Updated `EclipseRelease.latestOfficial()` to `Oxygen`.
 
 ### Version 3.7.2 - April 13th 2017 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.7.2/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.7.2/view))
 
-* Updated `EclipseResult.latestOfficial()` to `Neon.3`.
-* Fixed a confusing error message ([#30](https://github.com/diffplug/goomph/issues/30)).
+- Updated `EclipseRelease.latestOfficial()` to `Neon.3`.
+- Fixed a confusing error message ([#30](https://github.com/diffplug/goomph/issues/30)).
 
 ### Version 3.7.1 - February 14th 2017 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.7.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.7.1/view))
 
