@@ -111,8 +111,7 @@ public class BuildPropertiesPlugin extends ProjectPlugin {
 		// parse build.properties and put it into binIncludes
 		File buildProperties = project.file("build.properties");
 		if (!buildProperties.exists()) {
-			project.getLogger().warn("Couldn't find build.properties");
-			return Collections.emptyList();
+			throw new IllegalArgumentException("There is no 'build.properties' file - do not apply 'com.diffplug.gradle.eclipse.buildproperties' to this project");
 		}
 
 		Properties parsedProperties = new Properties();
