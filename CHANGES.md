@@ -3,6 +3,7 @@
 ### Version 3.9.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
 - Added `addBuildSrc()` method to Oomph configuration.
+- Bump bndlib from `3.4.0` to `3.5.0`.
 
 ### Version 3.8.1 - October 13th 2017 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.8.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.8.1/view))
 
