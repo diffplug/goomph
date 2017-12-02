@@ -74,6 +74,10 @@ public interface P2Declarative {
 		getP2().addFeature(feature, version);
 	}
 
+	default void slicingOption(String option, String value) {
+		getP2().addSlicingOption(option, value);
+	}
+
 	public static void populate(P2Model model, Action<P2Declarative> action) {
 		action.execute(new P2Declarative() {
 			@Override
