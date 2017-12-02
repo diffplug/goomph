@@ -18,12 +18,7 @@ package com.diffplug.gradle.p2;
 import java.io.File;
 import java.io.Serializable;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -67,12 +62,14 @@ public class P2Model implements Serializable {
 		repos.addAll(other.repos);
 		metadataRepos.addAll(other.metadataRepos);
 		artifactRepos.addAll(other.artifactRepos);
+		slicingOptions.putAll(other.slicingOptions);
 	}
 
 	private Set<String> ius = new LinkedHashSet<>();
 	private Set<String> repos = new LinkedHashSet<>();
 	private Set<String> metadataRepos = new LinkedHashSet<>();
 	private Set<String> artifactRepos = new LinkedHashSet<>();
+	private Map<String, String> slicingOptions = new HashMap<>();
 
 	/** Combines all fields for easy implementation of equals and hashCode. */
 	private final List<Object> content = Arrays.asList(ius, repos, metadataRepos, artifactRepos);
@@ -163,6 +160,10 @@ public class P2Model implements Serializable {
 
 	public void addArtifactRepoBundlePool() {
 		addArtifactRepo(GoomphCacheLocations.bundlePool());
+	}
+
+	public void addSlicingOption(String option, String value) {
+		slicingOptions.put(option, value);
 	}
 
 	/**
@@ -257,6 +258,8 @@ public class P2Model implements Serializable {
 						iuNode.attributes().put("version", iu.substring(slash + 1));
 					}
 				}
+
+				slicingOptionsNode(taskNode);
 			});
 		});
 	}
@@ -276,6 +279,16 @@ public class P2Model implements Serializable {
 		addRepos.accept(metadataRepos, repoAttr -> repoAttr.put("kind", "metadata"));
 		addRepos.accept(artifactRepos, repoAttr -> repoAttr.put("kind", "artifact"));
 		return source;
+	}
+
+	/** Creates an XML node for slicingOptions. */
+	private Node slicingOptionsNode(Node parent) {
+
+		Node slicingOptionsNode = new Node(parent, "slicingOptions");
+		for (Map.Entry<String, String> option : slicingOptions.entrySet()) {
+			slicingOptionsNode.attributes().put(option.getKey(), option.getValue());
+		}
+		return slicingOptionsNode;
 	}
 
 	////////////////

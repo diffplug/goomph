@@ -74,4 +74,33 @@ public class P2ModelTest {
 				"</project>");
 		Assert.assertEquals(expected, actual);
 	}
+
+	@Test
+	public void testMirrorAntFileWithSlicingOptions() {
+		File dest = new File("dest");
+		P2Model p2 = testData();
+		p2.addSlicingOption("latestVersionOnly", "true");
+		p2.addSlicingOption("platformfilter", "win32,win32,x86");
+		p2.addSlicingOption("filter", "key=value");
+		String actual = p2.mirrorApp(dest).completeState();
+		String expected = StringPrinter.buildStringFromLines(
+				"### ARGS ###",
+				"-application org.eclipse.ant.core.antRunner",
+				"",
+				"### BUILD.XML ###",
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><project>",
+				"  <p2.mirror>",
+				"    <source>",
+				"      <repository location=\"http://p2repo\"/>",
+				"      <repository kind=\"metadata\" location=\"http://metadatarepo\"/>",
+				"      <repository kind=\"artifact\" location=\"http://artifactrepo\"/>",
+				"    </source>",
+				"    <destination location=\"" + FileMisc.asUrl(dest) + "\"/>",
+				"    <iu id=\"com.diffplug.iu\"/>",
+				"    <iu id=\"com.diffplug.otheriu\" version=\"1.0.0\"/>",
+				"    <slicingOptions filter=\"key=value\" latestVersionOnly=\"true\" platformfilter=\"win32,win32,x86\"/>",
+				"  </p2.mirror>",
+				"</project>");
+		Assert.assertEquals(expected, actual);
+	}
 }
