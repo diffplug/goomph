@@ -259,7 +259,9 @@ public class P2Model implements Serializable {
 					}
 				}
 
-				slicingOptionsNode(taskNode);
+				if(slicingOptions.size() > 0) {
+					slicingOptionsNode(taskNode);
+				}
 			});
 		});
 	}
@@ -283,7 +285,6 @@ public class P2Model implements Serializable {
 
 	/** Creates an XML node for slicingOptions. */
 	private Node slicingOptionsNode(Node parent) {
-
 		Node slicingOptionsNode = new Node(parent, "slicingOptions");
 		for (Map.Entry<String, String> option : slicingOptions.entrySet()) {
 			slicingOptionsNode.attributes().put(option.getKey(), option.getValue());
