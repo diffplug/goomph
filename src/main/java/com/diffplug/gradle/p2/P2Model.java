@@ -259,7 +259,7 @@ public class P2Model implements Serializable {
 					}
 				}
 
-				if(slicingOptions.size() > 0) {
+				if (slicingOptions.size() > 0) {
 					slicingOptionsNode(taskNode);
 				}
 			});
