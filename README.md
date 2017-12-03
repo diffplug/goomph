@@ -117,6 +117,7 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 * Thanks to Stefan Oehme for his feedback on Goomph's design.
 * Thanks to Neil Fraser of Google for [diff-match-patch](https://code.google.com/p/google-diff-match-patch/) which is very helpful for testing.
 * Thanks to Thipor Kong for his [handy windows cmdline length workaround for the classpath](https://discuss.gradle.org/t/javaexec-fails-for-long-classpaths-on-windows/15266).
+* Thanks to [hacki11](https://github.com/hacki11) for [slicingOptions in p2asmaven](https://github.com/diffplug/goomph/pull/41).
 * Formatted by [spotless](https://github.com/diffplug/spotless).
 * Bugs found by [findbugs](http://findbugs.sourceforge.net/).
 * Built by [gradle](http://gradle.org/).

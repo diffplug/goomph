@@ -162,6 +162,7 @@ public class P2Model implements Serializable {
 		addArtifactRepo(GoomphCacheLocations.bundlePool());
 	}
 
+	/** https://wiki.eclipse.org/Equinox/p2/Ant_Tasks#SlicingOptions */
 	public void addSlicingOption(String option, String value) {
 		slicingOptions.put(option, value);
 	}

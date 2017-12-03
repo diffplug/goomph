@@ -117,7 +117,22 @@ import com.diffplug.gradle.ProjectPlugin;
  * 
  * If you think this is too hard, vote for [this issue on GitHub](https://github.com/diffplug/goomph/issues/12)
  * and [this bug on eclipse](https://bugs.eclipse.org/bugs/show_bug.cgi?id=382875) and we can make it easier.
+ *
+ * ## Slicing options
+ *
+ * You can control how the iu's are resolved using
+ *
+ * ```groovy
+ * p2AsMaven {
+ *   group 'eclipse-deps', {
+ *     ...
+ *     slicingOption 'latestVersionOnly', 'true'
+ *   }
+ * }
+ * ```
  * 
+ * You can see all the available slicing options [here](https://wiki.eclipse.org/Equinox/p2/Ant_Tasks#SlicingOptions).
+ *
  * ## Acknowledgements and comparisons to other options
  * 
  * Inspired by Andrey Hihlovskiy's [unpuzzle](https://github.com/akhikhl/unpuzzle).
