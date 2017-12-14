@@ -170,6 +170,7 @@ public class P2Model implements Serializable {
 		slicingOptions.put(option, value);
 	}
 
+	/** https://help.eclipse.org/neon/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Fguide%2Fp2_repositorytasks.htm **/
 	public void setAppend(boolean append) {
 		this.append = append;
 	}
