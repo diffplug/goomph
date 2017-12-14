@@ -67,7 +67,7 @@ public class P2ModelTest {
 				"      <repository kind=\"metadata\" location=\"http://metadatarepo\"/>",
 				"      <repository kind=\"artifact\" location=\"http://artifactrepo\"/>",
 				"    </source>",
-				"    <destination location=\"" + FileMisc.asUrl(dest) + "\"/>",
+				"    <repository location=\"" + FileMisc.asUrl(dest) + "\" append=\"false\"/>",
 				"    <iu id=\"com.diffplug.iu\"/>",
 				"    <iu id=\"com.diffplug.otheriu\" version=\"1.0.0\"/>",
 				"  </p2.mirror>",
@@ -95,10 +95,61 @@ public class P2ModelTest {
 				"      <repository kind=\"metadata\" location=\"http://metadatarepo\"/>",
 				"      <repository kind=\"artifact\" location=\"http://artifactrepo\"/>",
 				"    </source>",
-				"    <destination location=\"" + FileMisc.asUrl(dest) + "\"/>",
+				"    <repository location=\"" + FileMisc.asUrl(dest) + "\" append=\"false\"/>",
 				"    <iu id=\"com.diffplug.iu\"/>",
 				"    <iu id=\"com.diffplug.otheriu\" version=\"1.0.0\"/>",
 				"    <slicingOptions filter=\"key=value\" latestVersionOnly=\"true\" platformfilter=\"win32,win32,x86\"/>",
+				"  </p2.mirror>",
+				"</project>");
+		Assert.assertEquals(expected, actual);
+	}
+
+	@Test
+	public void testMirrorAntFileWithAppend() {
+		File dest = new File("dest");
+		P2Model p2 = testData();
+		p2.setAppend(true);
+		String actual = p2.mirrorApp(dest).completeState();
+		String expected = StringPrinter.buildStringFromLines(
+				"### ARGS ###",
+				"-application org.eclipse.ant.core.antRunner",
+				"",
+				"### BUILD.XML ###",
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><project>",
+				"  <p2.mirror>",
+				"    <source>",
+				"      <repository location=\"http://p2repo\"/>",
+				"      <repository kind=\"metadata\" location=\"http://metadatarepo\"/>",
+				"      <repository kind=\"artifact\" location=\"http://artifactrepo\"/>",
+				"    </source>",
+				"    <repository location=\"" + FileMisc.asUrl(dest) + "\" append=\"true\"/>",
+				"    <iu id=\"com.diffplug.iu\"/>",
+				"    <iu id=\"com.diffplug.otheriu\" version=\"1.0.0\"/>",
+				"  </p2.mirror>",
+				"</project>");
+		Assert.assertEquals(expected, actual);
+	}
+
+	@Test
+	public void testMirrorAntFileWithAppendDefault() {
+		File dest = new File("dest");
+		P2Model p2 = testData();
+		String actual = p2.mirrorApp(dest).completeState();
+		String expected = StringPrinter.buildStringFromLines(
+				"### ARGS ###",
+				"-application org.eclipse.ant.core.antRunner",
+				"",
+				"### BUILD.XML ###",
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><project>",
+				"  <p2.mirror>",
+				"    <source>",
+				"      <repository location=\"http://p2repo\"/>",
+				"      <repository kind=\"metadata\" location=\"http://metadatarepo\"/>",
+				"      <repository kind=\"artifact\" location=\"http://artifactrepo\"/>",
+				"    </source>",
+				"    <repository location=\"" + FileMisc.asUrl(dest) + "\" append=\"false\"/>",
+				"    <iu id=\"com.diffplug.iu\"/>",
+				"    <iu id=\"com.diffplug.otheriu\" version=\"1.0.0\"/>",
 				"  </p2.mirror>",
 				"</project>");
 		Assert.assertEquals(expected, actual);
