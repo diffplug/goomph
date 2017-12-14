@@ -3,6 +3,8 @@
 ### Version 3.9.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
 - Added `addBuildSrc()` method to Oomph configuration.
+- Revert bndlib from `3.4.0` to `3.2.0`, to fix [#40](https://github.com/diffplug/goomph/issues/40).
+- `p2asmaven` now supports [slicing options](https://wiki.eclipse.org/Equinox/p2/Ant_Tasks#SlicingOptions) thanks to [@hacki11](https://github.com/hacki11). ([#41](https://github.com/diffplug/goomph/pull/41))
 
 ### Version 3.8.1 - October 13th 2017 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.8.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.8.1/view))
 
