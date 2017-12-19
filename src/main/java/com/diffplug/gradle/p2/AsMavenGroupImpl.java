@@ -68,7 +68,6 @@ class AsMavenGroupImpl {
 			project.getLogger().lifecycle("p2AsMaven " + def.group + " is dirty.");
 		}
 		// else, we'll need to run our own little thing
-		FileMisc.cleanDir(dirP2());
 		FileMisc.cleanDir(dirP2Runnable());
 		FileMisc.cleanDir(dirMavenGroup());
 

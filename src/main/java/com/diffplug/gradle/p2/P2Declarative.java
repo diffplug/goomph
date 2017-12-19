@@ -78,6 +78,10 @@ public interface P2Declarative {
 		getP2().addSlicingOption(option, value);
 	}
 
+	default void append(boolean append) {
+		getP2().setAppend(append);
+	}
+
 	public static void populate(P2Model model, Action<P2Declarative> action) {
 		action.execute(new P2Declarative() {
 			@Override

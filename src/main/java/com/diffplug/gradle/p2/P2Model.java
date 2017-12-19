@@ -63,8 +63,10 @@ public class P2Model implements Serializable {
 		metadataRepos.addAll(other.metadataRepos);
 		artifactRepos.addAll(other.artifactRepos);
 		slicingOptions.putAll(other.slicingOptions);
+		append = other.append;
 	}
 
+	private boolean append = false;
 	private Set<String> ius = new LinkedHashSet<>();
 	private Set<String> repos = new LinkedHashSet<>();
 	private Set<String> metadataRepos = new LinkedHashSet<>();
@@ -105,6 +107,7 @@ public class P2Model implements Serializable {
 			add.accept("metadataRepo", metadataRepos);
 			add.accept("artifactRepo", artifactRepos);
 			add.accept("ius", ius);
+			printer.print("append: " + append);
 		});
 	}
 
@@ -165,6 +168,11 @@ public class P2Model implements Serializable {
 	/** https://wiki.eclipse.org/Equinox/p2/Ant_Tasks#SlicingOptions */
 	public void addSlicingOption(String option, String value) {
 		slicingOptions.put(option, value);
+	}
+
+	/** https://help.eclipse.org/neon/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Fguide%2Fp2_repositorytasks.htm **/
+	public void setAppend(boolean append) {
+		this.append = append;
 	}
 
 	/**
@@ -247,6 +255,7 @@ public class P2Model implements Serializable {
 				sourceNode(taskNode);
 				Node destination = new Node(taskNode, "destination");
 				destination.attributes().put("location", FileMisc.asUrl(dstFolder));
+				destination.attributes().put("append", append);
 
 				for (String iu : ius) {
 					Node iuNode = new Node(taskNode, "iu");
