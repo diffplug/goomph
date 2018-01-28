@@ -31,8 +31,8 @@ public class EclipseAppTest {
 		app.addArg("prop", "a");
 		app.addArg("prop", "b");
 		app.addArg("flag");
-		Assert.assertEquals("-application diffplug -prop a,b -flag", Joiner.on(" ").join(app.toArgList()));
-		Assert.assertEquals("-application diffplug\n-prop a,b\n-flag\n", app.toString());
+		Assert.assertEquals("--launcher.suppressErrors -application diffplug -prop a,b -flag", Joiner.on(" ").join(app.toArgList()));
+		Assert.assertEquals("--launcher.suppressErrors\n-application diffplug\n-prop a,b\n-flag\n", app.toString());
 	}
 
 	@Test
@@ -41,7 +41,7 @@ public class EclipseAppTest {
 		app.addArg("flag");
 		app.addArg("flag");
 		app.addArg("flag");
-		Assert.assertEquals("-application diffplug -flag", Joiner.on(" ").join(app.toArgList()));
+		Assert.assertEquals("--launcher.suppressErrors -application diffplug -flag", Joiner.on(" ").join(app.toArgList()));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -53,13 +53,14 @@ public class EclipseAppTest {
 		task.attributes().put("prop", "propvalue");
 		ant.setTask(task);
 
-		Assert.assertEquals("-application org.eclipse.ant.core.antRunner -Dkey=value", Joiner.on(" ").join(ant.toArgList()));
+		Assert.assertEquals("--launcher.suppressErrors -application org.eclipse.ant.core.antRunner -Dkey=value", Joiner.on(" ").join(ant.toArgList()));
 		Assert.assertEquals(StringPrinter.buildStringFromLines(
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><project>",
 				"  <anttask prop=\"propvalue\"/>",
 				"</project>"), ant.buildXml());
 		Assert.assertEquals(StringPrinter.buildStringFromLines(
 				"### ARGS ###",
+				"--launcher.suppressErrors",
 				"-application org.eclipse.ant.core.antRunner",
 				"-Dkey=value",
 				"",

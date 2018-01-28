@@ -15,6 +15,8 @@
  */
 package com.diffplug.gradle.eclipserunner;
 
+import static java.util.stream.Collectors.toList;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +24,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.SortedSet;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.adaptor.EclipseStarter;
 import org.osgi.framework.BundleContext;
@@ -107,7 +110,12 @@ public class EquinoxLauncher {
 
 	/** Sets the application arguments which will be passed to the runtime. */
 	public EquinoxLauncher setArgs(List<String> args) {
-		this.args = ImmutableList.copyOf(args);
+		// Filter arguments that where meant for the original launcher (eclipsec.exe)
+		List<String> filteredArgs = args.stream()
+				.filter(Objects::nonNull)
+				.filter(arg -> !arg.startsWith("--launcher"))
+				.collect(toList());
+		this.args = ImmutableList.copyOf(filteredArgs);
 		return this;
 	}
 
