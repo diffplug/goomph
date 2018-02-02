@@ -15,13 +15,12 @@
  */
 package com.diffplug.gradle;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.management.RuntimeErrorException;
 
 import org.apache.commons.io.FileUtils;
 
@@ -143,42 +142,32 @@ public class CmdLine {
 		Process process = builder.start();
 
 		// wrap the process' input and output
-		try (
-				BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream(), Charset.defaultCharset()));
-				BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream(), Charset.defaultCharset()));) {
-
+		try {
 			if (echoCmd) {
 				System.out.println("cmd>" + cmd);
 			}
 
-			// dump the output
-			ImmutableList.Builder<String> output = ImmutableList.builder();
-			ImmutableList.Builder<String> error = ImmutableList.builder();
-
-			String line = null;
-			while ((line = stdInput.readLine()) != null) {
-				output.add(line);
-				if (echoOutput) {
-					System.out.println(line);
-				}
-			}
-
-			// dump the input
-			while ((line = stdError.readLine()) != null) {
-				error.add(line);
-				if (echoOutput) {
-					System.err.println(line);
-				}
-			}
+			InputStreamCollector stdInputThread = new InputStreamCollector(process.getInputStream(), echoOutput ? System.out : null, null);
+			stdInputThread.start();
+			InputStreamCollector stdErrorThread = new InputStreamCollector(process.getErrorStream(), echoOutput ? System.err : null, null);
+			stdErrorThread.start();
 
 			// check that the process exited correctly
 			int exitValue = process.waitFor();
-			if (exitValue != EXIT_VALUE_SUCCESS) {
+			// then wait for threads collecting the output of thread
+			stdInputThread.join();
+			stdErrorThread.join();
+
+			if (stdInputThread.getException() != null) {
+				throw new RuntimeException(stdInputThread.getException());
+			} else if (stdErrorThread.getException() != null) {
+				throw new RuntimeException(stdErrorThread.getException());
+			} else if (exitValue != EXIT_VALUE_SUCCESS) {
 				throw new RuntimeException("'" + cmd + "' exited with " + exitValue);
 			}
 
 			// returns the result of this successful execution
-			return new Result(directory, cmd, output.build(), error.build());
+			return new Result(directory, cmd, stdInputThread.getOutput(), stdErrorThread.getOutput());
 		} catch (InterruptedException e) {
 			// this isn't expected, but it's possible
 			throw new RuntimeException(e);
