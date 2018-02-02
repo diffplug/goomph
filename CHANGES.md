@@ -2,6 +2,11 @@
 
 ### Version 3.10.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
+### Version 3.9.1 - February 2nd 2018 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.9.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.9.1/view))
+
+- Added `--launcher.suppressErrors` to all `EclipseApp` invocations so that build errors won't open a blocking dialog on build servers [(#49)](https://github.com/diffplug/goomph/pull/49), thanks to @ralfgrossklaus.
+- Fixed a bug where a console app's execution might block because of an overfilled stderr. [(#50)](https://github.com/diffplug/goomph/pull/50), thanks to @ralfgrossklaus.
+
 ### Version 3.9.0 - December 21st 2017 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.9.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.9.0/view))
 
 - Added `addBuildSrc()` method to Oomph configuration.
