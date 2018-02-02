@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.management.RuntimeErrorException;
+
 import org.apache.commons.io.FileUtils;
 
 import com.diffplug.common.base.Throwing;
@@ -157,9 +159,9 @@ public class CmdLine {
 			stdErrorThread.join();
 
 			if (stdInputThread.getException() != null) {
-				throw stdInputThread.getException();
+				throw new RuntimeException(stdInputThread.getException());
 			} else if (stdErrorThread.getException() != null) {
-				throw stdErrorThread.getException();
+				throw new RuntimeException(stdErrorThread.getException());
 			} else if (exitValue != EXIT_VALUE_SUCCESS) {
 				throw new RuntimeException("'" + cmd + "' exited with " + exitValue);
 			}

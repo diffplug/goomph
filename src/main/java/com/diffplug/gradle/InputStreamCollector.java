@@ -40,7 +40,7 @@ public class InputStreamCollector extends Thread {
 
 	private volatile IOException exception;
 
-	public InputStreamCollector(@Nonnull InputStream is, @Nullable PrintStream ps, @Nullable Charset cs) {
+	public InputStreamCollector(InputStream is, @Nullable PrintStream ps, @Nullable Charset cs) {
 		this.iStream = Objects.requireNonNull(is);
 		this.pStream = ps;
 		this.charset = cs != null ? cs : Charset.defaultCharset();
