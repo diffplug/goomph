@@ -92,6 +92,7 @@ public class EclipseApp {
 	 * such as `org.eclipse.ant.core.antRunner` or `org.eclipse.equinox.p2.director`
 	 */
 	public EclipseApp(String application) {
+		addArg("-launcher.suppressErrors");
 		addArg("application", application);
 	}
 

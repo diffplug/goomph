@@ -39,6 +39,7 @@ public class P2ModelTest {
 		File dest = new File("dest");
 		String actual = testData().directorApp(dest, "profile").completeState();
 		String expected = StringPrinter.buildStringFromLines(
+				"--launcher.suppressErrors",
 				"-application org.eclipse.equinox.p2.director",
 				"-clean",
 				"-consolelog",
@@ -57,6 +58,7 @@ public class P2ModelTest {
 		String actual = testData().mirrorApp(dest).completeState();
 		String expected = StringPrinter.buildStringFromLines(
 				"### ARGS ###",
+				"--launcher.suppressErrors",
 				"-application org.eclipse.ant.core.antRunner",
 				"",
 				"### BUILD.XML ###",
@@ -85,6 +87,7 @@ public class P2ModelTest {
 		String actual = p2.mirrorApp(dest).completeState();
 		String expected = StringPrinter.buildStringFromLines(
 				"### ARGS ###",
+				"--launcher.suppressErrors",
 				"-application org.eclipse.ant.core.antRunner",
 				"",
 				"### BUILD.XML ###",
@@ -112,6 +115,7 @@ public class P2ModelTest {
 		String actual = p2.mirrorApp(dest).completeState();
 		String expected = StringPrinter.buildStringFromLines(
 				"### ARGS ###",
+				"--launcher.suppressErrors",
 				"-application org.eclipse.ant.core.antRunner",
 				"",
 				"### BUILD.XML ###",
@@ -137,6 +141,7 @@ public class P2ModelTest {
 		String actual = p2.mirrorApp(dest).completeState();
 		String expected = StringPrinter.buildStringFromLines(
 				"### ARGS ###",
+				"--launcher.suppressErrors",
 				"-application org.eclipse.ant.core.antRunner",
 				"",
 				"### BUILD.XML ###",
