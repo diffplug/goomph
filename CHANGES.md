@@ -4,15 +4,15 @@
 
 ### Version 3.9.1 - February 2nd 2018 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.9.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.9.1/view))
 
-- Added `--launcher.suppressErrors` to all `EclipseApp` invocations so that build errors won't open a blocking dialog on build servers [(#49)](https://github.com/diffplug/goomph/pull/49), thanks to @ralfgrossklaus.
-- Fixed a bug where a console app's execution might block because of an overfilled stderr. [(#50)](https://github.com/diffplug/goomph/pull/50), thanks to @ralfgrossklaus.
+- Added `--launcher.suppressErrors` to all `EclipseApp` invocations so that build errors won't open a blocking dialog on build servers. [(#49)](https://github.com/diffplug/goomph/pull/49)
+- Fixed a bug where a console app's execution might block because of an overfilled stderr. [(#50)](https://github.com/diffplug/goomph/pull/50)
 
 ### Version 3.9.0 - December 21st 2017 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.9.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.9.0/view))
 
 - Added `addBuildSrc()` method to Oomph configuration.
 - Upgrade bndlib from `3.4.0` to `3.5.0`.
-- `p2asmaven` now supports [slicing options](https://wiki.eclipse.org/Equinox/p2/Ant_Tasks#SlicingOptions) thanks to [@hacki11](https://github.com/hacki11). ([#41](https://github.com/diffplug/goomph/pull/41))
-- `p2asmaven` now supports appending - a huge performance improvement for incrementally adding p2 deps, thanks also to [@hacki11](https://github.com/hacki11). ([#44](https://github.com/diffplug/goomph/pull/44))
+- `p2asmaven` now supports [slicing options](https://wiki.eclipse.org/Equinox/p2/Ant_Tasks#SlicingOptions). ([#41](https://github.com/diffplug/goomph/pull/41))
+- `p2asmaven` now supports appending - a huge performance improvement for incrementally adding p2 deps. ([#44](https://github.com/diffplug/goomph/pull/44))
 - Updated `EclipseRelease` to `4.7.2`.
 
 ### Version 3.8.1 - October 13th 2017 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.8.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.8.1/view))
@@ -66,14 +66,14 @@ oomphIde {
 * Added `workspaceFile('pathInWorkspace', 'srcFile')` for copying files into the workspace directly.
 * Improved `workspaceProp('pathInWorkspace', { map -> map.put('key', 'value')}` so it can now be called multiple times to modify earlier results, including modifying a file set by `workspaceFile`.  It can still create a file from scratch, as before.
 * Added `workspaceXml('pathInWorkspace', { xmlProvider -> xmlProvider.asNode() ...})` which can modify an XML file which was initially created by `workpaceFile`.  It *cannot* create an xml file from scratch, however.
-* `style { niceText() }` now sets line numbers, and there are methods which give more fine-grained control ([#20](https://github.com/diffplug/goomph/pull/20), thanks @scottresnik).
+* `style { niceText() }` now sets line numbers, and there are methods which give more fine-grained control ([#20](https://github.com/diffplug/goomph/pull/20)).
 * Added the ability to change how the oomphIde p2 action is carried out, using `runUsingPDE()` ([#19](https://github.com/diffplug/goomph/issues/19)).
-* Improvements to the JDT config and the ability to link resources ([#23](https://github.com/diffplug/goomph/pull/23), thanks to @scottresnik).
+* Improvements to the JDT config and the ability to link resources ([#23](https://github.com/diffplug/goomph/pull/23)).
 * The p2bootstrap url can now be overridden ([#25](https://github.com/diffplug/goomph/issues/25)).
 
 ### Version 3.5.0 - November 24th 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.5.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.5.0/view))
 
-* Added the ability to set the installed JRE, thanks to @scottresnik (#16).
+* Added the ability to set the installed JRE (#16).
 	+ See [javadoc](http://diffplug.github.io/goomph/javadoc/3.5.0/com/diffplug/gradle/oomph/ConventionJdt.html) for details.
 
 ### Version 3.4.0 - November 22nd 2016 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.4.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.4.0/view))
