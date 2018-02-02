@@ -22,7 +22,6 @@ import org.junit.Test;
 import groovy.util.Node;
 
 import com.diffplug.common.base.StringPrinter;
-import com.diffplug.gradle.eclipserunner.EclipseApp;
 
 public class EclipseAppTest {
 	@Test

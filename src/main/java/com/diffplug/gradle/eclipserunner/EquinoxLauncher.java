@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.SortedSet;
 import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.adaptor.EclipseStarter;
 import org.osgi.framework.BundleContext;

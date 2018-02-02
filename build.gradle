@@ -120,6 +120,7 @@ spotless {
 		licenseHeaderFile	'gradle/spotless.license.java'		// License header file
 		importOrderFile		'gradle/spotless.importorder'		// An import ordering file, exported from Eclipse
 		eclipseFormatFile	'gradle/spotless.eclipseformat.xml'	// XML file dumped out by the Eclipse formatter
+		removeUnusedImports()
 	}
 	format 'misc', {
 		target '.gitignore', '*.gradle', '*.md', '.ci/*.sh'
