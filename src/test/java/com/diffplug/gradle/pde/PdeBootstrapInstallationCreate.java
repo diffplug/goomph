@@ -15,13 +15,12 @@
  */
 package com.diffplug.gradle.pde;
 
-import com.diffplug.gradle.FileMisc;
-import com.diffplug.gradle.p2.P2Model;
-import com.diffplug.gradle.pde.EclipseRelease;
-import com.diffplug.gradle.pde.PdeInstallation;
+import java.io.File;
+
 import org.gradle.internal.impldep.com.google.common.base.StandardSystemProperty;
 
-import java.io.File;
+import com.diffplug.gradle.FileMisc;
+import com.diffplug.gradle.p2.P2Model;
 
 /** Creates a new folder for goomph-pde-bootstrap. */
 public class PdeBootstrapInstallationCreate {

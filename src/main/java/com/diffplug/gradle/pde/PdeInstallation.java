@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import com.diffplug.gradle.ZipMisc;
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.Project;
 import org.osgi.framework.Version;
@@ -37,6 +36,7 @@ import com.diffplug.common.swt.os.OS;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
+import com.diffplug.gradle.ZipMisc;
 import com.diffplug.gradle.eclipserunner.EclipseApp;
 import com.diffplug.gradle.eclipserunner.EclipseRunner;
 import com.diffplug.gradle.eclipserunner.NativeRunner;
@@ -165,24 +165,24 @@ public class PdeInstallation implements EclipseRunner {
 	/** Installs the bootstrap installation. */
 	private void install() throws Exception {
 
-		if(GoomphCacheLocations.pdeBootstrapUrl().isPresent()) {
+		if (GoomphCacheLocations.pdeBootstrapUrl().isPresent()) {
 			String url = GoomphCacheLocations.pdeBootstrapUrl().get();
 			System.out.print("Installing pde " + release + " from " + url + "... ");
-            File target = new File(getRootFolder(), DOWNLOAD_FILE);
+			File target = new File(getRootFolder(), DOWNLOAD_FILE);
 			try {
 				obtainBootstrap(url + release.version() + DOWNLOAD_FILE, target);
 			} catch (FileNotFoundException ex) {
 				//try versioned artifact - Common when bootstrap is on a maven type(sonatype nexus, etc.) repository.
 				obtainBootstrap(url + release.version() + String.format(VERSIONED_DOWNLOAD_FILE, release.version()), target);
 			}
-            // unzip it
-            ZipMisc.unzip(target, target.getParentFile());
-            // delete the zip
-            FileMisc.forceDelete(target);
-        } else {
+			// unzip it
+			ZipMisc.unzip(target, target.getParentFile());
+			// delete the zip
+			FileMisc.forceDelete(target);
+		} else {
 			System.out.print("Installing pde " + release + "... ");
-		    obtainBootstrap(release);
-        }
+			obtainBootstrap(release);
+		}
 
 		// parse out the pde.build version
 		File bundleInfo = new File(getContentsEclipse(), "configuration/org.eclipse.equinox.simpleconfigurator/bundles.info");
@@ -196,20 +196,20 @@ public class PdeInstallation implements EclipseRunner {
 	}
 
 	/** Obtain PDE Installation from custom file or url */
-    private void obtainBootstrap(String bootstrapUrl, File target) throws IOException {
-        URL url = new URL(bootstrapUrl);
-        FileUtils.copyURLToFile(url, target);
-    }
+	private void obtainBootstrap(String bootstrapUrl, File target) throws IOException {
+		URL url = new URL(bootstrapUrl);
+		FileUtils.copyURLToFile(url, target);
+	}
 
-    /** Obtain PDE Installation from remote p2 repository */
+	/** Obtain PDE Installation from remote p2 repository */
 	private void obtainBootstrap(EclipseRelease release) throws Exception {
-        P2Model.DirectorApp directorApp = p2model().directorApp(getRootFolder(), "goomph-pde-bootstrap-" + release);
-        // share the install for quickness
-        directorApp.bundlepool(GoomphCacheLocations.bundlePool());
-        // create a native launcher
-        directorApp.platform(SwtPlatform.getRunning());
-        directorApp.runUsingBootstrapper();
-    }
+		P2Model.DirectorApp directorApp = p2model().directorApp(getRootFolder(), "goomph-pde-bootstrap-" + release);
+		// share the install for quickness
+		directorApp.bundlepool(GoomphCacheLocations.bundlePool());
+		// create a native launcher
+		directorApp.platform(SwtPlatform.getRunning());
+		directorApp.runUsingBootstrapper();
+	}
 
 	/** Returns the Contents/Eclipse folder on mac, or just the root folder on other OSes. */
 	private File getContentsEclipse() {
