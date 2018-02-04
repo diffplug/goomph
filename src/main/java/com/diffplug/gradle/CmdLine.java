@@ -18,13 +18,19 @@ package com.diffplug.gradle;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+
+import javax.annotation.Nullable;
 
 import org.apache.commons.io.FileUtils;
 
+import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Throwing;
 import com.diffplug.common.collect.ImmutableList;
 import com.diffplug.common.collect.Lists;
@@ -143,45 +149,33 @@ public class CmdLine {
 		Process process = builder.start();
 
 		// wrap the process' input and output
-		try (
-				BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream(), Charset.defaultCharset()));
-				BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream(), Charset.defaultCharset()));) {
-
+		try {
 			if (echoCmd) {
 				System.out.println("cmd>" + cmd);
 			}
 
-			// dump the output
-			ImmutableList.Builder<String> output = ImmutableList.builder();
-			ImmutableList.Builder<String> error = ImmutableList.builder();
-
-			String line = null;
-			while ((line = stdInput.readLine()) != null) {
-				output.add(line);
-				if (echoOutput) {
-					System.out.println(line);
-				}
-			}
-
-			// dump the input
-			while ((line = stdError.readLine()) != null) {
-				error.add(line);
-				if (echoOutput) {
-					System.err.println(line);
-				}
-			}
+			InputStreamCollector stdInputThread = new InputStreamCollector(process.getInputStream(), echoOutput ? System.out : null);
+			InputStreamCollector stdErrorThread = new InputStreamCollector(process.getErrorStream(), echoOutput ? System.err : null);
 
 			// check that the process exited correctly
 			int exitValue = process.waitFor();
-			if (exitValue != EXIT_VALUE_SUCCESS) {
+			// then wait for threads collecting the output of thread
+			stdInputThread.join();
+			stdErrorThread.join();
+
+			if (stdInputThread.getException() != null) {
+				throw Errors.asRuntime(stdInputThread.getException());
+			} else if (stdErrorThread.getException() != null) {
+				throw Errors.asRuntime(stdErrorThread.getException());
+			} else if (exitValue != EXIT_VALUE_SUCCESS) {
 				throw new RuntimeException("'" + cmd + "' exited with " + exitValue);
 			}
 
 			// returns the result of this successful execution
-			return new Result(directory, cmd, output.build(), error.build());
+			return new Result(directory, cmd, stdInputThread.getOutput(), stdErrorThread.getOutput());
 		} catch (InterruptedException e) {
 			// this isn't expected, but it's possible
-			throw new RuntimeException(e);
+			throw Errors.asRuntime(e);
 		}
 	}
 
@@ -209,6 +203,46 @@ public class CmdLine {
 			return Arrays.asList("cmd", "/c", cmd);
 		} else {
 			return Arrays.asList("/bin/sh", "-c", cmd);
+		}
+	}
+
+	static class InputStreamCollector extends Thread {
+		private final InputStream iStream;
+		@Nullable
+		private final PrintStream pStream;
+
+		private final ImmutableList.Builder<String> output;
+
+		private IOException exception;
+
+		public InputStreamCollector(InputStream is, @Nullable PrintStream ps) {
+			this.iStream = Objects.requireNonNull(is);
+			this.pStream = ps;
+			this.output = ImmutableList.builder();
+			start();
+		}
+
+		@Override
+		public synchronized void run() {
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(iStream, Charset.defaultCharset()))) {
+				String line;
+				while ((line = reader.readLine()) != null) {
+					output.add(line);
+					if (pStream != null) {
+						pStream.println(line);
+					}
+				}
+			} catch (IOException ex) {
+				this.exception = ex;
+			}
+		}
+
+		public synchronized ImmutableList<String> getOutput() {
+			return output.build();
+		}
+
+		public synchronized IOException getException() {
+			return exception;
 		}
 	}
 }

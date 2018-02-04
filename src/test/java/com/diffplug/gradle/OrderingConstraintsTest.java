@@ -26,7 +26,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.diffplug.common.base.StringPrinter;
-import com.diffplug.gradle.OrderingConstraints;
 
 public class OrderingConstraintsTest {
 	@Test

@@ -20,8 +20,6 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.diffplug.gradle.pde.PdeBuildProperties;
-
 public class PdeProductBuildPropertiesTest {
 	/** Tests that we can read the raw template file. */
 	@Test
