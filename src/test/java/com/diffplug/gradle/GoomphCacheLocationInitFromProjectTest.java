@@ -40,7 +40,7 @@ public class GoomphCacheLocationInitFromProjectTest extends GradleIntegrationTes
 		try (Writer writer = printer.toPrintWriter()) {
 			gradleRunner().forwardStdOutput(writer).build();
 		}
-		String firstLine = buffer.toString().split("\n")[0];
+		String firstLine = buffer.toString().split(System.getProperty("line.separator"))[0];
 		Assert.assertEquals("Optional[somewhere]", firstLine);
 	}
 }
