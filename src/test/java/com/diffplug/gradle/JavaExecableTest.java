@@ -18,8 +18,6 @@ package com.diffplug.gradle;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.diffplug.gradle.JavaExecable;
-
 public class JavaExecableTest {
 	static class Incrementer implements JavaExecable {
 		private static final long serialVersionUID = -5728572785844814830L;

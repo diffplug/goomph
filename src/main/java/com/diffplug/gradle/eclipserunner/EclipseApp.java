@@ -92,6 +92,10 @@ public class EclipseApp {
 	 * such as `org.eclipse.ant.core.antRunner` or `org.eclipse.equinox.p2.director`
 	 */
 	public EclipseApp(String application) {
+		// if an error is encountered, eclipse will display a message box and block
+		// this flag disables that behavior, so that it can be used on headless build servers
+		// https://wiki.eclipse.org/Equinox_Launcher
+		addArg("-launcher.suppressErrors");
 		addArg("application", application);
 	}
 
