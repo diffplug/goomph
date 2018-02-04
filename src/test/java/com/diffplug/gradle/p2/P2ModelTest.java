@@ -40,6 +40,7 @@ public class P2ModelTest {
 		String actual = testData().directorApp(dest, "profile").completeState();
 		String expected = StringPrinter.buildStringFromLines(
 				"--launcher.suppressErrors",
+				"-nosplash",
 				"-application org.eclipse.equinox.p2.director",
 				"-clean",
 				"-consolelog",
@@ -59,6 +60,7 @@ public class P2ModelTest {
 		String expected = StringPrinter.buildStringFromLines(
 				"### ARGS ###",
 				"--launcher.suppressErrors",
+				"-nosplash",
 				"-application org.eclipse.ant.core.antRunner",
 				"",
 				"### BUILD.XML ###",
@@ -88,6 +90,7 @@ public class P2ModelTest {
 		String expected = StringPrinter.buildStringFromLines(
 				"### ARGS ###",
 				"--launcher.suppressErrors",
+				"-nosplash",
 				"-application org.eclipse.ant.core.antRunner",
 				"",
 				"### BUILD.XML ###",
@@ -116,6 +119,7 @@ public class P2ModelTest {
 		String expected = StringPrinter.buildStringFromLines(
 				"### ARGS ###",
 				"--launcher.suppressErrors",
+				"-nosplash",
 				"-application org.eclipse.ant.core.antRunner",
 				"",
 				"### BUILD.XML ###",
@@ -142,6 +146,7 @@ public class P2ModelTest {
 		String expected = StringPrinter.buildStringFromLines(
 				"### ARGS ###",
 				"--launcher.suppressErrors",
+				"-nosplash",
 				"-application org.eclipse.ant.core.antRunner",
 				"",
 				"### BUILD.XML ###",

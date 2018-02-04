@@ -110,9 +110,11 @@ public class EquinoxLauncher {
 	/** Sets the application arguments which will be passed to the runtime. */
 	public EquinoxLauncher setArgs(List<String> args) {
 		// Filter --launcher.suppressErrors
+		// Filter --nosplash
 		List<String> filteredArgs = args.stream()
 				.filter(Objects::nonNull)
 				.filter(arg -> !arg.equals("--launcher.suppressErrors"))
+				.filter(arg -> !arg.equals("-nosplash"))
 				.collect(toList());
 		this.args = ImmutableList.copyOf(filteredArgs);
 		return this;

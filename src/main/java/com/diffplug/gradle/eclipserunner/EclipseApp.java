@@ -96,6 +96,8 @@ public class EclipseApp {
 		// this flag disables that behavior, so that it can be used on headless build servers
 		// https://wiki.eclipse.org/Equinox_Launcher
 		addArg("-launcher.suppressErrors");
+		// suppress eclipse splash screen
+		addArg("nosplash");
 		addArg("application", application);
 	}
 
