@@ -51,7 +51,7 @@ public class PdeInstallationPropertiesTest {
 		ExtraPropertiesExtension props = project.getExtensions().getExtraProperties();
 
 		props.set("GOOMPH_PDE_VER", "1.0.0");
-		props.set("GOOMPH_PDE_UPDATE_SITE", expectedSite);
+		props.set("GOOMPH_PDE_UDPATE_SITE", expectedSite);
 		props.set("GOOMPH_PDE_ID", expectedId);
 
 		PdeInstallation install = PdeInstallation.fromProject(project);

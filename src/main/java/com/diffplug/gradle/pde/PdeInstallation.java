@@ -57,9 +57,16 @@ public class PdeInstallation implements EclipseRunner {
 	 */
 	public static PdeInstallation fromProject(Project project) {
 		String version = (String) project.getProperties().get("GOOMPH_PDE_VER");
+
+		String deprecatedUpdateSite = (String) project.getProperties().get("GOOMPH_PDE_UDPATE_SITE");
+		if (deprecatedUpdateSite != null) {
+			project.getLogger().warn("Property GOOMPH_PDE_UDPATE_SITE is deprecated, please use GOOMPH_PDE_UPDATE_SITE instead.");
+		}
+
 		String updateSite = Optional
 				.ofNullable((String) project.getProperties().get("GOOMPH_PDE_UPDATE_SITE"))
-				.orElse((String) project.getProperties().get("GOOMPH_PDE_UDPATE_SITE"));
+				.orElse(deprecatedUpdateSite);
+
 		String id = (String) project.getProperties().get("GOOMPH_PDE_ID");
 
 		// to use a default PDE build, use
