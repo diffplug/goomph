@@ -57,7 +57,9 @@ public class PdeInstallation implements EclipseRunner {
 	 */
 	public static PdeInstallation fromProject(Project project) {
 		String version = (String) project.getProperties().get("GOOMPH_PDE_VER");
-		String updateSite = (String) project.getProperties().get("GOOMPH_PDE_UPDATE_SITE");
+		String updateSite = Optional
+				.ofNullable((String) project.getProperties().get("GOOMPH_PDE_UPDATE_SITE"))
+				.orElse((String) project.getProperties().get("GOOMPH_PDE_UDPATE_SITE"));
 		String id = (String) project.getProperties().get("GOOMPH_PDE_ID");
 
 		// to use a default PDE build, use
