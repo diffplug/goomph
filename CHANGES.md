@@ -1,6 +1,8 @@
 # Goomph releases
 
-### Version 3.10.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
+### Version 3.11.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
+
+### Version 3.10.0 - February 5th 2018 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.10.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.10.0/view))
 
 - Added nosplash argument to EclipseApp in order to prevent splash screens during gradle tasks. [(#53)](https://github.com/diffplug/goomph/pull/53)
 - Added a feature to provide a custom goomph-pde-bootstrap installation. [(#52)](https://github.com/diffplug/goomph/pull/52)
