@@ -36,6 +36,7 @@ import com.diffplug.gradle.p2.P2Model;
  *
  * - {@link #p2bootstrap()}
  * - {@link #pdeBootstrap()}
+ * - {@link #pdeBootstrapUrl()}
  * - {@link #bundlePool()}
  * - {@link #workspaces()}
  *
@@ -120,6 +121,26 @@ public class GoomphCacheLocations {
 	}
 
 	public static File override_p2bootstrap = null;
+
+	/**
+	 * Location where the pde-bootstrap application should be downloaded from.
+	 *
+	 * Goomph's pde tasks rely on the eclipse [p2 director application](http://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Fguide%2Fp2_director.html&cp=2_0_20_2).
+	 * It is distributed within the Eclipse SDK.  The Package is
+	 * downloaded and installed during configuration from official eclipse
+	 * repository.
+	 *
+	 * Defaults to official update site of the selected Eclipse Release.  If you override, it still
+	 * needs to follow the correct versioning scheme.  e.g. if you want to relocate to `http://intranet/goomph-pde-boostrap`, then
+	 * the artifact will need to be available at `http://intranet/goomph-pde-boostrap/4.5.2/goomph-pde-bootstrap.zip`
+	 *
+	 * As new versions of pdeBootstrap come out, you will have to update your internal URL cache, but these releases are infrequent.
+	 */
+	public static Optional<String> pdeBootstrapUrl() {
+		return Optional.ofNullable(override_pdeBootstrapUrl);
+	}
+
+	public static String override_pdeBootstrapUrl = null;
 
 	/**
 	 * Location where eclipse instances with PDE build
