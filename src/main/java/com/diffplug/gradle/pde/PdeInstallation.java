@@ -49,7 +49,7 @@ public class PdeInstallation implements EclipseRunner {
 	 *     + `GOOMPH_PDE_VER`=4.5.2 (or any official release)
 	 * - Option #2: To use any release (e.g. milestone, nightly, etc)
 	 *     + `GOOMPH_PDE_VER`=<any version>
-	 *     + `GOOMPH_PDE_UDPATE_SITE`=<url to update site>
+	 *     + `GOOMPH_PDE_UPDATE_SITE`=<url to update site>
 	 *     + `GOOMPH_PDE_ID`=<the ID used for caching, cannot be a version listed in Option #1)
 	 * 
 	 * You must do one or the other, specify only `VER` for Option #1,
@@ -57,7 +57,16 @@ public class PdeInstallation implements EclipseRunner {
 	 */
 	public static PdeInstallation fromProject(Project project) {
 		String version = (String) project.getProperties().get("GOOMPH_PDE_VER");
-		String updateSite = (String) project.getProperties().get("GOOMPH_PDE_UDPATE_SITE");
+
+		String deprecatedUpdateSite = (String) project.getProperties().get("GOOMPH_PDE_UDPATE_SITE");
+		if (deprecatedUpdateSite != null) {
+			project.getLogger().warn("Property GOOMPH_PDE_UDPATE_SITE is deprecated, please use GOOMPH_PDE_UPDATE_SITE instead.");
+		}
+
+		String updateSite = Optional
+				.ofNullable((String) project.getProperties().get("GOOMPH_PDE_UPDATE_SITE"))
+				.orElse(deprecatedUpdateSite);
+
 		String id = (String) project.getProperties().get("GOOMPH_PDE_ID");
 
 		// to use a default PDE build, use
@@ -67,7 +76,7 @@ public class PdeInstallation implements EclipseRunner {
 				"GOOMPH_PDE_VER=4.5.2 (or any of " + EclipseRelease.supportedRange() + ")",
 				"Option #2: To use any release (e.g. milestone, nightly, etc)",
 				"GOOMPH_PDE_VER=<any version>",
-				"GOOMPH_PDE_UDPATE_SITE=<url to update site>",
+				"GOOMPH_PDE_UPDATE_SITE=<url to update site>",
 				"GOOMPH_PDE_ID=<the ID used for caching, cannot be a version listed in Option #1)",
 				"",
 				"You must do one or the other, specify only VER for Option #1,",
