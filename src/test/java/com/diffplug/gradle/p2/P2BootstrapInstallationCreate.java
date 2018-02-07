@@ -25,7 +25,7 @@ import com.diffplug.gradle.pde.EclipseRelease;
 /** Creates a new folder for uploading to [goomph-p2-bootstrap](https://bintray.com/diffplug/opensource/goomph-p2-bootstrap). */
 public class P2BootstrapInstallationCreate {
 	/** The release to install. */
-	static final EclipseRelease RELEASE = EclipseRelease.official("4.5.2");
+	static final EclipseRelease RELEASE = EclipseRelease.official("4.7.2");
 	/** The place to install the release to. */
 	static final File INSTALL_TO = new File(StandardSystemProperty.USER_HOME.value() + "/Desktop/bootstrap");
 
