@@ -26,11 +26,13 @@ import java.util.Objects;
 import org.gradle.api.Action;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
+import org.gradle.internal.Actions;
 
 import com.diffplug.common.collect.Maps;
 import com.diffplug.common.io.Files;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.FileMisc;
+import com.diffplug.gradle.eclipserunner.EclipseApp;
 
 /**
  * Runs PDE build to make an RCP application or a p2 repository.
@@ -66,7 +68,11 @@ import com.diffplug.gradle.FileMisc;
  *     props['skipDirector'] =    'true'
  *     props['runPackager'] = 'false'
  *     props['groupConfigurations'] = 'true'
- * 
+ *
+ *     app {
+ *         it.consolelog()
+ *         it.addArgs('-debug')
+ *     }
  *     // p2.compress doesn't work, so we'll do it manually
  *     doLast {
  *         def compressXml = { name ->
@@ -88,6 +94,8 @@ public class PdeBuildTask extends DefaultTask {
 	public void destination(Object buildDir) {
 		this.destination = buildDir;
 	}
+
+	private Action<EclipseApp> appModifier = Actions.doNothing();
 
 	private Object base;
 
@@ -136,6 +144,11 @@ public class PdeBuildTask extends DefaultTask {
 
 	private Action<PdeProductBuildConfig> productConfig;
 
+	/** Allows for fine-grained manipulation of the pde operation. */
+	public void app(Action<EclipseApp> antModifier) {
+		this.appModifier = Objects.requireNonNull(antModifier);
+	}
+
 	/** Copies the product and imgs from the given directory to the given path within the build directory. */
 	public void product(Action<PdeProductBuildConfig> productConfig) {
 		this.productConfig = productConfig;
@@ -182,6 +195,8 @@ public class PdeBuildTask extends DefaultTask {
 
 		// generate and execute the PDE build command
 		PdeInstallation installation = PdeInstallation.fromProject(getProject());
-		installation.productBuildCmd(destination).runUsing(installation);
+		EclipseApp app = installation.productBuildCmd(destination);
+		appModifier.execute(app);
+		app.runUsing(installation);
 	}
 }
