@@ -3,6 +3,7 @@
 ### Version 3.11.0 - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
 - Bump pde-bootstrap from `4.5.2` to `4.7.2`.
+- Allow fine grained configuration of EclipseApp in PdeBuildTask [(#55)](https://github.com/diffplug/goomph/pull/55)
 
 ### Version 3.10.0 - February 5th 2018 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.10.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.10.0/view))
 
