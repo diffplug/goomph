@@ -63,6 +63,20 @@ public class GoomphCacheLocations {
 	}
 
 	/**
+	 * {@link MavenCentralMap} needs to look at p2 metadata
+	 * to know what the version numbers are for the specific
+	 * bundles of a given eclipse release are.
+	 * 
+	 * Rather than downloading this metadata over and over, we only
+	 * download it once, and cache the results here.
+	 */
+	public static File eclipseReleaseMetadata() {
+		return defOverride(ROOT + "/eclipse-release-metadata", override_eclipseReleaseMetadata);
+	}
+
+	public static File override_eclipseReleaseMetadata = null;
+
+	/**
 	 * When Goomph creates an IDE for you, it must
 	 * also create an eclipse workspace.  Unfortunately,
 	 * that workspace cannot be a subdirectory of the 
