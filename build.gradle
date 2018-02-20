@@ -66,7 +66,8 @@ dependencies {
 	compileOnly 'p2:org.eclipse.jdt.launching:3.8.0.v20150527-0946'
 	compileOnly 'p2:org.eclipse.emf.ecore:2.11.2.v20160208-0816'
 	// testing
-	testCompile "junit:junit:${VER_JUNIT}"
+	testCompile "junit:junit:4.12"
+	testCompile "org.assertj:assertj-core:3.9.0"
 }
 
 test {
