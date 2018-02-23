@@ -2,6 +2,8 @@
 
 ### Version 3.12.0-SNAPSHOT - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
+### Version 3.11.1 - February 22nd 2018 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.11.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.11.1/view))
+
 - Bump OSGi version to fix `NoClassDefFoundError: org/eclipse/osgi/framework/util/CaseInsensitiveDictionaryMap` [(#57)](https://github.com/diffplug/goomph/pull/57)
 
 ### Version 3.11.0 - February 18th 2018 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.11.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.11.0/view))
