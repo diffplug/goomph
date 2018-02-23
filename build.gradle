@@ -54,8 +54,8 @@ dependencies {
 	compile "com.diffplug.spotless:spotless-lib:${VER_SPOTLESS_LIB}"
 	// OSGi
 	compile "biz.aQute.bnd:biz.aQute.bndlib:${VER_BNDLIB}"
-	// p2
-	compile "org.eclipse.tycho:org.eclipse.osgi:${VER_ECLIPSE_OSGI}"
+	// p2 (osgi used in 4.7.2 to match p2-bootstrap)
+	compile "org.eclipse.platform:org.eclipse.osgi:3.12.50"
 	// goomph, compileOnly for project setup (need to figure out how to bootstrap goomph)
 	compileOnly 'p2:org.eclipse.core.jobs:3.7.0.v20150330-2103'
 	compileOnly 'p2:org.eclipse.core.runtime:3.11.1.v20150903-1804'
