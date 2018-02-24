@@ -45,6 +45,7 @@ public class PdeProductBuildConfig {
 	Object productPluginDir;
 	String productFileWithinPlugin;
 	String version;
+	private String[] productFileLines;
 	final Lazyable<ExplicitVersionPolicy> explicitVersionPolicy = ExplicitVersionPolicy.createLazyable();
 
 	public void id(String id) {
@@ -89,8 +90,11 @@ public class PdeProductBuildConfig {
 
 		// now create the sanitized product file
 		File productFile = productPluginDir.toPath().resolve(productFileWithinPlugin).toFile();
+		productFileLines = ProductFileUtil.readLines(productFile);
+		ProductFileUtil.extractProperties(productFileLines).forEach((key, value) -> props.setProp(key.toString(), value.toString()));
+
 		File tempProductFile = tempProductDir.toPath().resolve(productFileWithinPlugin).toFile();
-		transformProductFile(productFile, tempProductFile, catalog, version);
+		transformProductFile(tempProductFile, catalog, version);
 
 		// finally setup the PdeBuildProperties to our temp product stuff
 		props.setProp("topLevelElementType", "product");
@@ -110,11 +114,9 @@ public class PdeProductBuildConfig {
 
 	static final ImmutableList<String> POSSIBLE_ICON_SUFFIXES = ImmutableList.of(".xpm", ".icns", ".ico");
 
-	static void transformProductFile(File input, File output, PluginCatalog catalog, String version) throws IOException {
-		String inputStr = new String(Files.readAllBytes(input.toPath()), StandardCharsets.UTF_8);
+	void transformProductFile(File output, PluginCatalog catalog, String version) throws IOException {
 		String result = StringPrinter.buildString(printer -> {
-			String[] lines = FileMisc.toUnixNewline(inputStr).split("\n");
-			for (String line : lines) {
+			for (String line : productFileLines) {
 				ProductFileUtil.transformProductFile(printer, line, catalog, version);
 			}
 		});

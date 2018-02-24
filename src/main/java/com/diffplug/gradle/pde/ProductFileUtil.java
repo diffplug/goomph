@@ -15,10 +15,16 @@
  */
 package com.diffplug.gradle.pde;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.diffplug.gradle.FileMisc;
 import org.osgi.framework.Version;
 
 import com.diffplug.common.base.StringPrinter;
@@ -33,6 +39,7 @@ public class ProductFileUtil {
 	private static final Pattern PLUGIN_REGEX = Pattern.compile(GROUP + PLUGIN_PREFIX + NO_QUOTE_GROUP + PLUGIN_MIDDLE + GROUP + PLUGIN_SUFFIX);
 
 	private static final Pattern PRODUCT_VERSION_REGEX = Pattern.compile("<product (?:.*) version=\"([^\"]*)\"(?:.*)>");
+	private static final Pattern INCLUDE_LAUNCHER_REGEX = Pattern.compile("<product (?:.*) includeLaunchers=\"([^\"]*)\"(?:.*)>");
 	private static final String VERSION_EQ = "version=";
 
 	static void transformProductFile(StringPrinter printer, String line, PluginCatalog catalog, String version) {
@@ -87,5 +94,21 @@ public class ProductFileUtil {
 		} else {
 			return Optional.empty();
 		}
+	}
+
+	static Properties extractProperties(String[] lines) {
+		Properties props = new Properties();
+		for (String line : lines) {
+			Matcher includeLauncherMatcher = INCLUDE_LAUNCHER_REGEX.matcher(line);
+			if(includeLauncherMatcher.matches()) {
+				props.put("includeLaunchers", includeLauncherMatcher.group(1));
+			}
+		}
+		return props;
+	}
+
+	static String[] readLines(File productFile) throws IOException {
+		String inputStr = new String(Files.readAllBytes(productFile.toPath()), StandardCharsets.UTF_8);
+		return FileMisc.toUnixNewline(inputStr).split("\n");
 	}
 }
