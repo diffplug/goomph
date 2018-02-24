@@ -30,7 +30,6 @@ import org.gradle.api.Project;
 import com.diffplug.common.base.StringPrinter;
 import com.diffplug.common.collect.ImmutableList;
 import com.diffplug.common.swt.os.SwtPlatform;
-import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.Lazyable;
 
 /** Models the "product" part of {@link PdeBuildTask}. */

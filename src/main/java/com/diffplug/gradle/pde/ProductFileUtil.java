@@ -24,10 +24,10 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.diffplug.gradle.FileMisc;
 import org.osgi.framework.Version;
 
 import com.diffplug.common.base.StringPrinter;
+import com.diffplug.gradle.FileMisc;
 
 public class ProductFileUtil {
 	private static final String PLUGIN_PREFIX = "<plugin id=\"";
@@ -100,7 +100,7 @@ public class ProductFileUtil {
 		Properties props = new Properties();
 		for (String line : lines) {
 			Matcher includeLauncherMatcher = INCLUDE_LAUNCHER_REGEX.matcher(line);
-			if(includeLauncherMatcher.matches()) {
+			if (includeLauncherMatcher.matches()) {
 				props.put("includeLaunchers", includeLauncherMatcher.group(1));
 			}
 		}
