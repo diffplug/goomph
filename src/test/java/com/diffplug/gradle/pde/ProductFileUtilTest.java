@@ -25,7 +25,7 @@ public class ProductFileUtilTest {
 
 		String launcherTrue = "<product uid=\"com.diffplug.gradle.pde.product\" id=\"com.diffplug.gradle.pde.productId\" application=\"org.eclipse.ui.ide.workbench\" version=\"1.0.0\" useFeatures=\"false\" includeLaunchers=\"true\">";
 
-		String property = ProductFileUtil.extractProperties(new String[]{launcherTrue}).getProperty("includeLaunchers");
+		String property = ProductFileUtil.extractProperties(new String[]{launcherTrue}).get("includeLaunchers");
 
 		Assert.assertEquals("true", property);
 	}
@@ -35,7 +35,7 @@ public class ProductFileUtilTest {
 
 		String launcherFalse = "<product uid=\"com.diffplug.gradle.pde.product\" id=\"com.diffplug.gradle.pde.productId\" application=\"org.eclipse.ui.ide.workbench\" version=\"1.0.0\" useFeatures=\"false\" includeLaunchers=\"false\">";
 
-		String property = ProductFileUtil.extractProperties(new String[]{launcherFalse}).getProperty("includeLaunchers");
+		String property = ProductFileUtil.extractProperties(new String[]{launcherFalse}).get("includeLaunchers");
 
 		Assert.assertEquals("false", property);
 	}
@@ -45,7 +45,7 @@ public class ProductFileUtilTest {
 
 		String launcherEmpty = "<product uid=\"com.diffplug.gradle.pde.product\" id=\"com.diffplug.gradle.pde.productId\" application=\"org.eclipse.ui.ide.workbench\" version=\"1.0.0\" useFeatures=\"false\" >";
 
-		String property = ProductFileUtil.extractProperties(new String[]{launcherEmpty}).getProperty("includeLaunchers");
+		String property = ProductFileUtil.extractProperties(new String[]{launcherEmpty}).get("includeLaunchers");
 
 		Assert.assertNull(property);
 	}

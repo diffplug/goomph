@@ -19,8 +19,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -96,8 +97,8 @@ public class ProductFileUtil {
 		}
 	}
 
-	static Properties extractProperties(String[] lines) {
-		Properties props = new Properties();
+	static Map<String, String> extractProperties(String[] lines) {
+		Map<String, String> props = new LinkedHashMap<>();
 		for (String line : lines) {
 			Matcher includeLauncherMatcher = INCLUDE_LAUNCHER_REGEX.matcher(line);
 			if (includeLauncherMatcher.matches()) {

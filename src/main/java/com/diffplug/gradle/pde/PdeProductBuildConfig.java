@@ -90,7 +90,7 @@ public class PdeProductBuildConfig {
 		// now create the sanitized product file
 		File productFile = productPluginDir.toPath().resolve(productFileWithinPlugin).toFile();
 		productFileLines = ProductFileUtil.readLines(productFile);
-		ProductFileUtil.extractProperties(productFileLines).forEach((key, value) -> props.setProp(key.toString(), value.toString()));
+		ProductFileUtil.extractProperties(productFileLines).forEach(props::setProp);
 
 		File tempProductFile = tempProductDir.toPath().resolve(productFileWithinPlugin).toFile();
 		transformProductFile(tempProductFile, catalog, version);
