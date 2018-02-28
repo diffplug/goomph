@@ -15,6 +15,7 @@
  */
 package com.diffplug.gradle.pde;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import org.gradle.api.tasks.TaskAction;
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.eclipserunner.EclipseApp;
+import com.diffplug.gradle.oomph.WorkspaceRegistry;
 
 /**
  * Runs PDE build on an ant file.
@@ -43,6 +45,17 @@ import com.diffplug.gradle.eclipserunner.EclipseApp;
  * ```
  */
 public class PdeAntBuildTask extends DefaultTask {
+	WorkspaceRegistry registry;
+
+	public PdeAntBuildTask() {
+		try {
+			this.registry = WorkspaceRegistry.instance();
+		} catch (IOException e) {
+			getLogger().warn("WorkspaceRegistry could not be instantiated! Using default workspace.", e);
+			this.registry = null;
+		}
+	}
+
 	private Object antFile;
 
 	/** The directory from which plugins will be pulled, besides the delta pack. */
@@ -70,6 +83,10 @@ public class PdeAntBuildTask extends DefaultTask {
 		buildProperties.forEach((key, value) -> {
 			antRunner.addArg("D" + key + "=" + FileMisc.quote(value));
 		});
-		antRunner.runUsing(PdeInstallation.fromProject(getProject()));
+		final PdeInstallation installation = PdeInstallation.fromProject(getProject());
+		if (registry != null) {
+			installation.setWorkspaceProvider(i -> registry.workspaceDir(getProject(), this));
+		}
+		antRunner.runUsing(installation);
 	}
 }

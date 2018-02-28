@@ -24,6 +24,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.gradle.api.Project;
+import org.gradle.api.Task;
 
 import com.diffplug.common.base.Errors;
 import com.diffplug.gradle.FileMisc;
@@ -97,6 +98,13 @@ public class WorkspaceRegistry {
 	/** Returns the workspace directory appropriate for the given project and ide folder. */
 	public File workspaceDir(Project project, File ideDir) {
 		return workspaceDir(project.getRootProject().getName(), ideDir);
+	}
+
+	/** Returns the workspace directory appropriate for the  */
+	public File workspaceDir(Project project, Task task) {
+		File rootDir = project.getRootDir();
+		String taskName = task.getName();
+		return workspaceDir(taskName, rootDir);
 	}
 
 	/** Returns the workspace directory appropriate for the given name and file. */

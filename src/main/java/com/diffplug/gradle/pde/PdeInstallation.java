@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.Project;
@@ -111,6 +112,8 @@ public class PdeInstallation implements EclipseRunner {
 
 	final EclipseRelease release;
 
+	private Function<PdeInstallation, File> workspaceProvider = PdeInstallation::getDefaultWorkspace;
+
 	public PdeInstallation(EclipseRelease release) {
 		this.release = Objects.requireNonNull(release);
 		// warn if mac and pre-Mars
@@ -119,6 +122,11 @@ public class PdeInstallation implements EclipseRunner {
 				throw new IllegalArgumentException("On mac, must be 4.5.0 (Mars) or later, because of folder layout problems.");
 			}
 		}
+	}
+
+	/** Allows to set a different workspace provider for custom workspace usage. */
+	public void setWorkspaceProvider(Function<PdeInstallation, File> workspaceProvider) {
+		this.workspaceProvider = workspaceProvider;
 	}
 
 	/** The root of this installation. */
@@ -251,13 +259,18 @@ public class PdeInstallation implements EclipseRunner {
 				"eclipse");
 	}
 
+	private static File getDefaultWorkspace(PdeInstallation installation) {
+		// Use default...
+		return new File(installation.getRootFolder(), FileMisc.macContentsEclipse() + "workspace");
+	}
+
 	@Override
 	public void run(List<String> args) throws Exception {
 		ensureInstalled();
 		// set a clean workspace
 		List<String> actualArgs = new ArrayList<>();
 		actualArgs.add("-data");
-		File workspace = new File(getRootFolder(), FileMisc.macContentsEclipse() + "workspace");
+		File workspace = workspaceProvider.apply(this);
 		actualArgs.add(workspace.getAbsolutePath());
 		// add the user's args
 		actualArgs.addAll(args);

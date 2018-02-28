@@ -16,6 +16,7 @@
 package com.diffplug.gradle.pde;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,6 +34,7 @@ import com.diffplug.common.io.Files;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.eclipserunner.EclipseApp;
+import com.diffplug.gradle.oomph.WorkspaceRegistry;
 
 /**
  * Runs PDE build to make an RCP application or a p2 repository.
@@ -88,6 +90,17 @@ import com.diffplug.gradle.eclipserunner.EclipseApp;
  * ```
  */
 public class PdeBuildTask extends DefaultTask {
+	private WorkspaceRegistry registry;
+
+	public PdeBuildTask() {
+		try {
+			this.registry = WorkspaceRegistry.instance();
+		} catch (IOException e) {
+			getLogger().warn("WorkspaceRegistry could not be instantiated! Using default workspace.", e);
+			this.registry = null;
+		}
+	}
+
 	private Object destination;
 
 	/** Sets the target directory. */
@@ -195,6 +208,9 @@ public class PdeBuildTask extends DefaultTask {
 
 		// generate and execute the PDE build command
 		PdeInstallation installation = PdeInstallation.fromProject(getProject());
+		if (registry != null) {
+			installation.setWorkspaceProvider(i -> registry.workspaceDir(getProject(), this));
+		}
 		EclipseApp app = installation.productBuildCmd(destination);
 		appModifier.execute(app);
 		app.runUsing(installation);
