@@ -2,6 +2,8 @@
 
 ### Version 3.13.0-SNAPSHOT - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
+- Changed `PdeBuildTask` and `PdeAntBuildTask` to use `WorkspaceRegistry` allowing parallel (multi threaded) executions of PDE [(#60)](https://github.com/diffplug/goomph/pull/60)
+
 ### Version 3.12.0 - February 26th 2018 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.12.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.12.0/view))
 
 - Added support for `includeLaunchers` property from product files [(#58)](https://github.com/diffplug/goomph/pull/58)
