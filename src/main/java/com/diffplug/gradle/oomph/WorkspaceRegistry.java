@@ -102,9 +102,7 @@ public class WorkspaceRegistry {
 
 	/** Returns the workspace directory appropriate for the  */
 	public File workspaceDir(Project project, Task task) {
-		File rootDir = project.getRootDir();
-		String taskName = task.getName();
-		return workspaceDir(taskName, rootDir);
+		return workspaceDir(task.getName(), project.getRootDir());
 	}
 
 	/** Returns the workspace directory appropriate for the given name and file. */
