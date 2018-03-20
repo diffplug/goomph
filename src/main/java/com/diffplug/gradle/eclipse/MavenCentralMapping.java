@@ -88,7 +88,7 @@ public class MavenCentralMapping {
 			System.err.println(FIRST_ON_CENTRAL.version() + " was the first eclipse release that was published on MavenCentral.");
 		}
 		File versionFolder = new File(GoomphCacheLocations.eclipseReleaseMetadata(), release.version().toString());
-		versionFolder.mkdirs();
+		FileMisc.mkdirs(versionFolder);
 		File artifactsJar = new File(versionFolder, ARTIFACTS_JAR);
 		if (artifactsJar.exists() && artifactsJar.length() > 0) {
 			try {
