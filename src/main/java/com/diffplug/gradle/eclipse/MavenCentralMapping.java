@@ -82,7 +82,7 @@ public class MavenCentralMapping {
 	private static final String ARTIFACTS_JAR = "artifacts.jar";
 
 	/** Returns a map from every bundle-id to its corresponding 3-part version (the qualifier is dropped). */
-	public static Map<String, String> bundleToVersion(EclipseRelease release) throws IOException {
+	public static Map<String, String> bundleToVersion(EclipseRelease release) {
 		//  warn if the user is asking for a too-old version of eclipse, but go ahead and try anyway just in case
 		if (release.version().compareTo(FIRST_ON_CENTRAL.version()) < 0) {
 			System.err.println(FIRST_ON_CENTRAL.version() + " was the first eclipse release that was published on MavenCentral.");
@@ -99,10 +99,11 @@ public class MavenCentralMapping {
 				FileMisc.forceDelete(artifactsJar);
 			}
 		}
-
-		byte[] content = Resources.toByteArray(new URL(release.updateSite() + "artifacts.jar"));
-		Files.write(content, artifactsJar);
-		return parseFromFile(artifactsJar);
+		return Errors.rethrow().get(() -> {
+			byte[] content = Resources.toByteArray(new URL(release.updateSite() + "artifacts.jar"));
+			Files.write(content, artifactsJar);
+			return parseFromFile(artifactsJar);
+		});
 	}
 
 	private static Map<String, String> parseFromFile(File artifactsJar) throws IOException {

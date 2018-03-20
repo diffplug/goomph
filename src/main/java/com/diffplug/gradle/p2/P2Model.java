@@ -297,7 +297,9 @@ public class P2Model implements Serializable {
 	private Node slicingOptionsNode(Node parent) {
 		Node slicingOptionsNode = new Node(parent, "slicingOptions");
 		for (Map.Entry<String, String> option : slicingOptions.entrySet()) {
-			slicingOptionsNode.attributes().put(option.getKey(), option.getValue());
+			@SuppressWarnings("unchecked")
+			Map<String, String> attributes = slicingOptionsNode.attributes();
+			attributes.put(option.getKey(), option.getValue());
 		}
 		return slicingOptionsNode;
 	}

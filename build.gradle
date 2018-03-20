@@ -314,6 +314,12 @@ pluginBundle {
 			description = "Excludes the gradle build folder from Eclipse's resource indexing."
 			tags = ['eclipse']
 		}
+		eclipseMavenCentralPlugin {
+			id = 'com.diffplug.gradle.eclipse.mavencentral'
+			displayName = 'Goomph eclipse.mavencentral'
+			description = 'Maps eclipse releases and bundle ids to their MavenCentral coordinates.'
+			tags = ['eclipse', 'mavenCentral']
+		}
 		eclipseProjectDepsPlugin {
 			id = 'com.diffplug.gradle.eclipse.projectdeps'
 			displayName = 'Goomph eclipse.projectdeps'
