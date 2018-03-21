@@ -33,6 +33,7 @@ import com.diffplug.gradle.ProjectPlugin;
  * Here is the fix:
  * 
  * ```
+ * apply plugin: 'com.diffplug.gradle.eclipse.mavencentral'
  * eclipseMavenCentral {
  *     release '4.7.0', {
  *         compile 'org.eclipse.jdt'
