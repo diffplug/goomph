@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Enumeration;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -56,6 +57,17 @@ public class ZipMisc {
 				ZipFile file = new ZipFile(input);
 				InputStream stream = file.getInputStream(file.getEntry(toRead));) {
 			reader.accept(stream);
+		} catch (NullPointerException e) {
+			if (e.getMessage().equals("entry")) {
+				System.err.println("No such entry: " + toRead);
+				try (ZipFile file = new ZipFile(input)) {
+					Enumeration<? extends ZipEntry> entries = file.entries();
+					while (entries.hasMoreElements()) {
+						ZipEntry entry = entries.nextElement();
+						System.err.println("  available: " + entry.getName());
+					}
+				}
+			}
 		}
 	}
 
