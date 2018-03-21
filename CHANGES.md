@@ -1,6 +1,8 @@
 # Goomph releases
 
-### Version 3.13.0-SNAPSHOT - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
+### Version 3.14.0-SNAPSHOT - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
+
+### Version 3.13.0 - March 20th 2018 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.13.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.13.0/view))
 
 - Added support for translating eclipse releases to maven central coordinates. [(#61)](https://github.com/diffplug/goomph/pull/61)
 - Added support for eclipse 4.7.3. [(#62)](https://github.com/diffplug/goomph/pull/62)
