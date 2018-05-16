@@ -190,17 +190,17 @@ public class EquinoxLauncher {
 		/** Runs an eclipse application, as specified by the `-application` argument. */
 		private void run() throws Exception {
 			EclipseStarter.run(null);
-			
+
 			// request now, after shutdown the bundleContext cannot be queried
 			BundleContext bundleContext = EclipseStarter.getSystemBundleContext();
-			
+
 			// wait for the termination of the application
 			// this needed if the application does not do all its work in the IApplication#start
 			// and sets the exit code asynchronously
 			EclipseStarter.shutdown();
 
 			String result = bundleContext.getProperty(EclipseStarter.PROP_EXITCODE);
-			
+
 			Preconditions.checkState("0".equals(result), "Unexpected return=0, was: %s", result);
 		}
 
