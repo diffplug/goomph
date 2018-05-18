@@ -1,7 +1,8 @@
 # Goomph releases
 
+### Version 3.15.0-SNAPSHOT - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
-### Version 3.14.0-SNAPSHOT - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
+### Version 3.14.0 - May 18th 2018 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.14.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.14.0/view))
 
 - EquinoxLaunch handles applications with async exist code (EXIT_ASYNC_RESULT) [(#66)](https://github.com/diffplug/goomph/pull/66)
 - Added `useNativesForRunningPlatform()` to `eclipseMavenCentral`.
