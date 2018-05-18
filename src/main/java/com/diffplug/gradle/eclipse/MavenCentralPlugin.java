@@ -36,17 +36,27 @@ import com.diffplug.gradle.ProjectPlugin;
  * apply plugin: 'com.diffplug.gradle.eclipse.mavencentral'
  * eclipseMavenCentral {
  *     release '4.7.0', {
+ *         // supports the standard java configurations
  *         compile 'org.eclipse.jdt'
  *         testCompile 'org.eclipse.jdt'
+ *         // and custom ones too
  *         dep 'compile', 'org.eclipse.jdt'
+ *         // specify this to add the native jars for this platform
+ *         useNativesForRunningPlatform()
  *     }
  * }
  * ```
  * 
  * ## Platform-native jars
  * 
- * If you want to add a specific jar to match the native
- * system, there is a special `sourceSetNative` method,
+ * When an eclipse jar needs a platform-specific dependency,
+ * such as SWT, the platform-specific part of the name is specified
+ * in the POM as `${osgi.platform}`.  useNativesForRunningPlatform()
+ * will replace `${osgi.platform}` with whatever is appropriate for
+ * your platform, such as `org.eclipse.swt.win32.win32.x86_64`.
+ * 
+ * That's normally all you need, but if you want more specific
+ * control, there is a special `sourceSetNative` method,
  * along with builtins like `testRuntimeNative` for each
  * of the builtin java configurations.
  * 
@@ -64,7 +74,6 @@ import com.diffplug.gradle.ProjectPlugin;
  * dependency if you're running on a 64-bit JVM on Windows, or some
  * whichever platform-specific jar is appropriate.  This
  * works only for the SWT naming convention, `windowing.os.arch`.
- * 
  * 
  * ## Compatibility
  * 

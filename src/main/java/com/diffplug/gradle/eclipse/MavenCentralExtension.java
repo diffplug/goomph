@@ -21,6 +21,7 @@ import java.util.Objects;
 
 import org.gradle.api.Action;
 import org.gradle.api.Project;
+import org.gradle.api.artifacts.ModuleVersionSelector;
 import org.gradle.api.plugins.JavaPlugin;
 
 import com.diffplug.common.swt.os.SwtPlatform;
@@ -79,6 +80,20 @@ public class MavenCentralExtension {
 		public void dep(String configName, String bundleId) {
 			String groupIdArtifactId = MavenCentralMapping.groupIdArtifactId(bundleId);
 			project.getDependencies().add(configName, groupIdArtifactId + ":" + bundleToVersion.get(bundleId));
+		}
+
+		private static final String $_OSGI_PLATFORM = "${osgi.platform}";
+
+		public void useNativesForRunningPlatform() {
+			project.getConfigurations().all(config -> {
+				config.getResolutionStrategy().eachDependency(details -> {
+					ModuleVersionSelector req = details.getRequested();
+					if (req.getName().contains($_OSGI_PLATFORM)) {
+						String running = SwtPlatform.getRunning().toString();
+						details.useTarget(req.getGroup() + ":" + req.getName().replace($_OSGI_PLATFORM, running) + ":" + req.getVersion());
+					}
+				});
+			});
 		}
 
 		/////////////
