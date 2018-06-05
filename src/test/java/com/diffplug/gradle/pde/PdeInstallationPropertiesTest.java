@@ -67,6 +67,6 @@ public class PdeInstallationPropertiesTest {
 
 		props.set("GOOMPH_PDE_UPDATE_SITE", null);
 
-		PdeInstallation install = PdeInstallation.fromProject(project);
+		PdeInstallation.fromProject(project);
 	}
 }
