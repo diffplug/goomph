@@ -30,6 +30,7 @@ public class EquinoxLaunchTask extends DefaultTask {
 	private File installDir;
 	private File workingDir;
 	private List<String> args;
+	private List<String> vmArgs;
 
 	@TaskAction
 	public void launch() throws Exception {
@@ -37,6 +38,7 @@ public class EquinoxLaunchTask extends DefaultTask {
 		// workingDir can be null
 		Objects.requireNonNull(args, "args");
 		JarFolderRunnerExternalJvm jvm = new JarFolderRunnerExternalJvm(installDir, workingDir, getProject());
+		jvm.setVmArgs(vmArgs);
 		jvm.run(args);
 	}
 
@@ -65,5 +67,13 @@ public class EquinoxLaunchTask extends DefaultTask {
 
 	public void setArgs(List<String> args) {
 		this.args = args;
+	}
+
+	public List<String> getVmArgs() {
+		return vmArgs;
+	}
+
+	public void setVmArgs(List<String> vmArgs) {
+		this.vmArgs = vmArgs;
 	}
 }

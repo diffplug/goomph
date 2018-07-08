@@ -41,6 +41,8 @@ public class JarFolderRunnerExternalJvm implements EclipseRunner {
 	final File workingDirectory;
 	@Nullable
 	final Project project;
+	@Nullable
+	List<String> vmArgs;
 
 	/**
 	 * If you have a gradle {@link Project} object handy, use
@@ -72,6 +74,10 @@ public class JarFolderRunnerExternalJvm implements EclipseRunner {
 		this.project = project;
 	}
 
+	public void setVmArgs(@Nullable List<String> vmArgs) {
+		this.vmArgs = vmArgs;
+	}
+
 	@Override
 	public void run(List<String> args) throws Exception {
 		RunOutside outside = new RunOutside(rootDirectory, args);
@@ -98,6 +104,9 @@ public class JarFolderRunnerExternalJvm implements EclipseRunner {
 				return true;
 			}
 		}));
+		if (vmArgs != null) {
+			execSpec.jvmArgs(vmArgs);
+		}
 	}
 
 	/** Jars on the classpath that should be used in the launcher. */
