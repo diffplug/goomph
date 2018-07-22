@@ -17,7 +17,9 @@ buildscript {
 
 plugins {
 	// github pages
-	id "org.ajoberstar.github-pages" version "1.4.2"
+	id 'org.ajoberstar.github-pages' version '1.4.2'
+	// https://github.com/ben-manes/gradle-versions-plugin
+	id 'com.github.ben-manes.versions' version '0.20.0' // dependencyUpdates
 }
 
 repositories {
@@ -67,7 +69,7 @@ dependencies {
 	compileOnly 'p2:org.eclipse.emf.ecore:2.11.2.v20160208-0816'
 	// testing
 	testCompile "junit:junit:4.12"
-	testCompile "org.assertj:assertj-core:3.9.0"
+	testCompile "org.assertj:assertj-core:3.10.0"
 }
 
 test {
@@ -157,8 +159,8 @@ tasks.withType(FindBugs) {
 }
 // we'll want the findbugs annotations (they don't have a 3.0.1 version)
 dependencies {
-	compile 'com.google.code.findbugs:annotations:3.0.0'
-	compile 'com.google.code.findbugs:jsr305:3.0.0'
+	compile 'com.google.code.findbugs:annotations:3.0.1'
+	compile 'com.google.code.findbugs:jsr305:3.0.2'
 }
 
 ///////////
