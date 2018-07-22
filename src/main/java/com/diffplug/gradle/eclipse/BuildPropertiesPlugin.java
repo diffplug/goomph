@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 import org.gradle.api.Project;
 import org.gradle.api.file.CopySpec;
 import org.gradle.api.plugins.JavaPlugin;
+import org.gradle.api.plugins.UnknownPluginException;
 import org.gradle.language.jvm.tasks.ProcessResources;
 
 import groovy.util.Node;
@@ -95,8 +96,10 @@ public class BuildPropertiesPlugin extends ProjectPlugin {
 
 	/** Returns the bin.incldes for this project. */
 	public static List<String> getBinIncludes(Project project) {
-		BuildPropertiesPlugin plugin = project.getPlugins().getAt(BuildPropertiesPlugin.class);
-		if (plugin == null) {
+		BuildPropertiesPlugin plugin;
+		try {
+			plugin = project.getPlugins().getAt(BuildPropertiesPlugin.class);
+		} catch (UnknownPluginException e) {
 			plugin = project.getPlugins().apply(BuildPropertiesPlugin.class);
 		}
 		return plugin.getBinIncludes();
