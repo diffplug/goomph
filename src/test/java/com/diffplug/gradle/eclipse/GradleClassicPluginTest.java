@@ -31,42 +31,40 @@ public class GradleClassicPluginTest extends GradleIntegrationTest {
 	public void assertClasspathChanged() throws IOException {
 		// write the normal eclipse file
 		String plainEclipse = testCase("eclipse", false);
-		Assert.assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-						"<classpath>\n" +
-						"	<classpathentry path=\"bin/default\" kind=\"output\"/>\n" +
-						"	<classpathentry output=\"bin/main\" kind=\"src\" path=\"src/main/java\">\n" +
-						"		<attributes>\n" +
-						"			<attribute name=\"gradle_scope\" value=\"main\"/>\n" +
-						"			<attribute name=\"gradle_used_by_scope\" value=\"main,test\"/>\n" +
-						"		</attributes>\n" +
-						"	</classpathentry>\n" +
-						"	<classpathentry output=\"bin/main\" kind=\"src\" path=\"src/main/resources\">\n" +
-						"		<attributes>\n" +
-						"			<attribute name=\"gradle_scope\" value=\"main\"/>\n" +
-						"			<attribute name=\"gradle_used_by_scope\" value=\"main,test\"/>\n" +
-						"		</attributes>\n" +
-						"	</classpathentry>\n" +
-						"	<classpathentry output=\"bin/test\" kind=\"src\" path=\"src/test/java\">\n" +
-						"		<attributes>\n" +
-						"			<attribute name=\"gradle_scope\" value=\"test\"/>\n" +
-						"			<attribute name=\"gradle_used_by_scope\" value=\"test\"/>\n" +
-						"		</attributes>\n" +
-						"	</classpathentry>\n" +
-						"	<classpathentry kind=\"con\" path=\"org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/\"/>\n" +
-						"</classpath>\n",
+		Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+				"<classpath>\n" +
+				"	<classpathentry path=\"bin/default\" kind=\"output\"/>\n" +
+				"	<classpathentry output=\"bin/main\" kind=\"src\" path=\"src/main/java\">\n" +
+				"		<attributes>\n" +
+				"			<attribute name=\"gradle_scope\" value=\"main\"/>\n" +
+				"			<attribute name=\"gradle_used_by_scope\" value=\"main,test\"/>\n" +
+				"		</attributes>\n" +
+				"	</classpathentry>\n" +
+				"	<classpathentry output=\"bin/main\" kind=\"src\" path=\"src/main/resources\">\n" +
+				"		<attributes>\n" +
+				"			<attribute name=\"gradle_scope\" value=\"main\"/>\n" +
+				"			<attribute name=\"gradle_used_by_scope\" value=\"main,test\"/>\n" +
+				"		</attributes>\n" +
+				"	</classpathentry>\n" +
+				"	<classpathentry output=\"bin/test\" kind=\"src\" path=\"src/test/java\">\n" +
+				"		<attributes>\n" +
+				"			<attribute name=\"gradle_scope\" value=\"test\"/>\n" +
+				"			<attribute name=\"gradle_used_by_scope\" value=\"test\"/>\n" +
+				"		</attributes>\n" +
+				"	</classpathentry>\n" +
+				"	<classpathentry kind=\"con\" path=\"org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/\"/>\n" +
+				"</classpath>\n",
 				plainEclipse);
 		// write the excluded build folder file
 		String underTestEclipse = testCase("com.diffplug.gradle.eclipse.classic", true);
-		Assert.assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-						"<classpath>\n" +
-						"	<classpathentry kind=\"output\" path=\"bin\"/>\n" +
-						"	<classpathentry kind=\"src\" path=\"src/main/java\"/>\n" +
-						"	<classpathentry kind=\"src\" path=\"src/main/resources\"/>\n" +
-						"	<classpathentry kind=\"src\" path=\"src/test/java\"/>\n" +
-						"	<classpathentry kind=\"con\" path=\"org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/\"/>\n" +
-						"</classpath>",
+		Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+				"<classpath>\n" +
+				"	<classpathentry path=\"bin\" kind=\"output\"/>\n" +
+				"	<classpathentry kind=\"src\" path=\"src/main/java\"/>\n" +
+				"	<classpathentry kind=\"src\" path=\"src/main/resources\"/>\n" +
+				"	<classpathentry kind=\"src\" path=\"src/test/java\"/>\n" +
+				"	<classpathentry kind=\"con\" path=\"org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/\"/>\n" +
+				"</classpath>",
 				underTestEclipse);
 	}
 

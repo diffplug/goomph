@@ -92,16 +92,27 @@ public class ProjectDepsPluginTest extends GradleIntegrationTest {
 		String result = resultRaw
 				// replace the system-specific paths
 				.replaceAll("\"(?:.*)/(.*?)\"", "$1");
-		Assert.assertEquals(StringPrinter.buildStringFromLines(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
-				"<classpath>",
-				"\t<classpathentry path=\"bin\" kind=\"output\"/>",
-				"\t<classpathentry kind=/>",
-				"\t<classpathentry sourcepath=durian-collect-1.0.0.jar/>",
-				"\t<classpathentry sourcepath=animal-sniffer-annotations-1.14.jar/>",
-				"\t<classpathentry sourcepath=j2objc-annotations-0.1.jar/>",
-				"\t<classpathentry exported=durian-core kind=\"src\" combineaccessrules=\"true\"/>",
-				"</classpath>"), result);
+		Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+				"<classpath>\n" +
+				"	<classpathentry path=default kind=\"output\"/>\n" +
+				"	<classpathentry kind=/>\n" +
+				"	<classpathentry sourcepath=durian-collect-1.0.0.jar>\n" +
+				"		<attributes>\n" +
+				"			<attribute name=\"gradle_used_by_scope\" value=\"main,test\"/>\n" +
+				"		</attributes>\n" +
+				"	</classpathentry>\n" +
+				"	<classpathentry sourcepath=animal-sniffer-annotations-1.14.jar>\n" +
+				"		<attributes>\n" +
+				"			<attribute name=\"gradle_used_by_scope\" value=\"main,test\"/>\n" +
+				"		</attributes>\n" +
+				"	</classpathentry>\n" +
+				"	<classpathentry sourcepath=j2objc-annotations-0.1.jar>\n" +
+				"		<attributes>\n" +
+				"			<attribute name=\"gradle_used_by_scope\" value=\"main,test\"/>\n" +
+				"		</attributes>\n" +
+				"	</classpathentry>\n" +
+				"	<classpathentry exported=durian-core kind=\"src\" combineaccessrules=\"true\"/>\n" +
+				"</classpath>\n", result);
 	}
 
 	@Test
