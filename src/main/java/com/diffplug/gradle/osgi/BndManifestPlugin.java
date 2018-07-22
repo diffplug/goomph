@@ -15,17 +15,11 @@
  */
 package com.diffplug.gradle.osgi;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import org.gradle.api.Project;
@@ -39,7 +33,6 @@ import org.gradle.api.tasks.bundling.Jar;
 import aQute.bnd.osgi.Builder;
 import aQute.bnd.osgi.Constants;
 
-import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Throwing;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.ProjectPlugin;
@@ -91,98 +84,68 @@ import com.diffplug.gradle.ProjectPlugin;
 public class BndManifestPlugin extends ProjectPlugin {
 	@Override
 	protected void applyOnce(Project proj) {
+		ProjectPlugin.getPlugin(proj, JavaPlugin.class);
 		BndManifestExtension extension = proj.getExtensions().create(BndManifestExtension.NAME, BndManifestExtension.class);
+		Jar jarTask = (Jar) proj.getTasks().getByName(JavaPlugin.JAR_TASK_NAME);
+
+		// replace the manifest with our manifest
+		LimitedManifest limited = new LimitedManifest(jarTask, extension);
+		jarTask.setManifest(limited);
+
 		proj.afterEvaluate(project -> {
 			// find the file that the user would like us to copy to (if any)
-			Optional<File> copyTo = Optional.ofNullable(extension.copyTo).map(proj::file);
-
-			ProjectPlugin.getPlugin(project, JavaPlugin.class);
-			Jar jarTask = (Jar) project.getTasks().getByName(JavaPlugin.JAR_TASK_NAME);
-			jarTask.deleteAllActions();
-			jarTask.getInputs().properties(jarTask.getManifest().getEffectiveManifest().getAttributes());
-			jarTask.getOutputs().file(jarTask.getArchivePath());
-			copyTo.ifPresent(jarTask.getOutputs()::file);
-			jarTask.doLast(Errors.rethrow().wrap(unused -> {
-				// find the location of the manifest in the output resources directory
-				JavaPluginConvention javaConvention = project.getConvention().getPlugin(JavaPluginConvention.class);
-				SourceSet main = javaConvention.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME);
-				Path outputManifest = main.getOutput().getResourcesDir().toPath().resolve("META-INF/MANIFEST.MF");
-				// if we don't want to merge, then delete the existing manifest so that bnd doesn't merge with it
-				if (!extension.mergeWithExisting) {
-					Files.deleteIfExists(outputManifest);
-				}
-				// take the bnd action 
-				takeBndAction(project, jar -> {
-					// write out the jar file
-					createParents(jarTask.getArchivePath());
-					jar.write(jarTask.getArchivePath());
-					// write out the manifest to the resources output directory for the test task (and others)
-					writeFile(outputManifest.toFile(), jar::writeManifest);
-					// write the manifest to copyTo, if we're supposed to
-					if (copyTo.isPresent()) {
-						writeFile(copyTo.get(), jar::writeManifest);
-					}
+			if (extension.copyTo != null) {
+				jarTask.getOutputs().file(extension.copyTo);
+				jarTask.doLast(unused -> {
+					jarTask.getManifest().writeTo(extension.copyTo);
 				});
-			})::accept);
+			}
 		});
-	}
-
-	/** Writes to the given file. */
-	private static void writeFile(File file, Throwing.Consumer<OutputStream> writer) throws Throwable {
-		createParents(file);
-		try (OutputStream output = new BufferedOutputStream(new FileOutputStream(file))) {
-			writer.accept(output);
-		}
-	}
-
-	/** Creates all parent files for the given file. */
-	private static void createParents(File file) {
-		FileMisc.mkdirs(file.getParentFile());
 	}
 
 	/** Takes an action on a Bnd jar. */
-	private static void takeBndAction(Project project, Throwing.Consumer<aQute.bnd.osgi.Jar> onBuilder) {
-		ProjectPlugin.getPlugin(project, JavaPlugin.class);
-		Jar jarTask = (Jar) project.getTasks().getByName(JavaPlugin.JAR_TASK_NAME);
-		Errors.rethrow().run(() -> {
-			try (Builder builder = new Builder()) {
-				// set the base folder
-				builder.setBase(project.getProjectDir());
-				// copy all properties from jar.manifest.attributes into the bnd Builder
-				Attributes attr = jarTask.getManifest().getEffectiveManifest().getAttributes();
-				for (Map.Entry<String, Object> entry : attr.entrySet()) {
-					builder.set(entry.getKey(), entry.getValue().toString());
-				}
-
-				// set the classpath for manifest calculation
-				Set<File> runtimeConfig = project.getConfigurations().getByName(JavaPlugin.RUNTIME_CONFIGURATION_NAME).getFiles();
-				builder.addClasspath(runtimeConfig);
-
-				// put the class files and resources into the jar
-				JavaPluginConvention javaConvention = project.getConvention().getPlugin(JavaPluginConvention.class);
-				SourceSetOutput main = javaConvention.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME).getOutput();
-				// delete empty folders so that bnd doesn't make Export-Package entries for them
-				deleteEmptyFoldersIfExists(main.getClassesDir());
-				deleteEmptyFoldersIfExists(main.getResourcesDir());
-				builder.set(Constants.INCLUDERESOURCE, main.getClassesDir() + "," + main.getResourcesDir());
-
-				// set the version
-				if (builder.getBundleVersion() == null) {
-					try {
-						String version = project.getVersion().toString();
-						if (version.endsWith("-SNAPSHOT")) {
-							version = version.replace("-SNAPSHOT", ".I" + dateQualifier());
-						}
-						builder.setBundleVersion(version);
-					} catch (Exception e) {
-						project.getLogger().warn(e.getMessage() + "  Must be 'major.minor.micro.qualifier'");
-						builder.setBundleVersion("0.0.0.ERRORSETVERSION");
-					}
-				}
-				// take an action with the builder
-				onBuilder.accept(builder.build());
+	static String takeBndAction(Project project, Jar jarTask, Throwing.Function<aQute.bnd.osgi.Jar, String> onBuilder) throws Exception, Throwable {
+		try (Builder builder = new Builder()) {
+			// set the base folder
+			builder.setBase(project.getProjectDir());
+			// copy all properties from jar.manifest.attributes into the bnd Builder
+			Attributes attr = jarTask.getManifest().getEffectiveManifest().getAttributes();
+			for (Map.Entry<String, Object> entry : attr.entrySet()) {
+				builder.set(entry.getKey(), entry.getValue().toString());
 			}
-		});
+
+			// set the classpath for manifest calculation
+			Set<File> runtimeConfig = project.getConfigurations().getByName(JavaPlugin.RUNTIME_CONFIGURATION_NAME).getFiles();
+			builder.addClasspath(runtimeConfig);
+
+			// put the class files and resources into the jar
+			JavaPluginConvention javaConvention = project.getConvention().getPlugin(JavaPluginConvention.class);
+			SourceSetOutput main = javaConvention.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME).getOutput();
+			// delete empty folders so that bnd doesn't make Export-Package entries for them
+			deleteEmptyFoldersIfExists(main.getClassesDir());
+			deleteEmptyFoldersIfExists(main.getResourcesDir());
+			builder.set(Constants.INCLUDERESOURCE, fix(main.getClassesDir()) + "," + fix(main.getResourcesDir()));
+
+			// set the version
+			if (builder.getBundleVersion() == null) {
+				try {
+					String version = project.getVersion().toString();
+					if (version.endsWith("-SNAPSHOT")) {
+						version = version.replace("-SNAPSHOT", ".I" + dateQualifier());
+					}
+					builder.setBundleVersion(version);
+				} catch (Exception e) {
+					project.getLogger().warn(e.getMessage() + "  Must be 'major.minor.micro.qualifier'");
+					builder.setBundleVersion("0.0.0.ERRORSETVERSION");
+				}
+			}
+			// take an action with the builder
+			return onBuilder.apply(builder.build());
+		}
+	}
+
+	private static String fix(File file) {
+		return file.getAbsolutePath().replace('\\', '/');
 	}
 
 	static void deleteEmptyFoldersIfExists(File root) throws IOException {
