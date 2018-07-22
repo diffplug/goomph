@@ -7,6 +7,7 @@
 - Update minimum gradle version to `4.0`
 	+ `eclipseMavenCentral` now supports the new configurations: `api`, `implementation`, `runtimeOnly`, `testRuntimeOnly`.
 	+ `osgiBndManifest` no longer uses deprecated methods.
+- Added [`com.diffplug.gradle.eclipse.classic` plugin](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/eclipse/GradleClassicPlugin.html) which reverts eclipse projects back to their gradle <= `4.3` behavior.
 
 ### Version 3.15.0 - July 6th 2018 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.15.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.15.0/view))
 
