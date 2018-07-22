@@ -3,6 +3,10 @@
 ### Version 3.16.0-SNAPSHOT - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
 - Added ability to set vmArgs for EquinoxLaunchTask.
+- Add `4.7.3.a` as an EclipseRelease.
+- Update minimum gradle version to `4.0`
+	+ `eclipseMavenCentral` now supports the new configurations: `api`, `implementation`, `runtimeOnly`, `testRuntimeOnly`.
+	+ `osgiBndManifest` no longer uses deprecated methods.
 
 ### Version 3.15.0 - July 6th 2018 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.15.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.15.0/view))
 
