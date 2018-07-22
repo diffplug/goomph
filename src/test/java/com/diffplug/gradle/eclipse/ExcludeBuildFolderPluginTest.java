@@ -33,8 +33,10 @@ public class ExcludeBuildFolderPluginTest extends GradleIntegrationTest {
 		String underTestEclipse = testCase("com.diffplug.gradle.eclipse.excludebuildfolder");
 		// assert the expected thing was added to the .project file
 		Assert.assertEquals(StringPrinter.buildStringFromLines(
+				"DELETE",
+				"/",
 				"INSERT",
-				"	<filteredResources>",
+				">",
 				"		<filter>",
 				"			<id>somenumber</id>",
 				"			<name></name>",
@@ -44,8 +46,7 @@ public class ExcludeBuildFolderPluginTest extends GradleIntegrationTest {
 				"				<arguments>1.0-name-matches-false-false-build</arguments>",
 				"			</matcher>",
 				"		</filter>",
-				"	</filteredResources>",
-				""), Diff.computeDiff(plainEclipse, underTestEclipse));
+				"	</filteredResources"), Diff.computeDiff(plainEclipse, underTestEclipse));
 	}
 
 	private String testCase(String pluginId) throws IOException {

@@ -88,17 +88,18 @@ public class ProjectDepsPluginTest extends GradleIntegrationTest {
 				"    replaceWithProject('durian-core')",
 				"}");
 		gradleRunner().withArguments("eclipse").build();
-		String result = read(".classpath")
+		String resultRaw = read(".classpath");
+		String result = resultRaw
 				// replace the system-specific paths
 				.replaceAll("\"(?:.*)/(.*?)\"", "$1");
 		Assert.assertEquals(StringPrinter.buildStringFromLines(
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
 				"<classpath>",
 				"\t<classpathentry path=\"bin\" kind=\"output\"/>",
-				"\t<classpathentry path= kind=\"con\"/>",
-				"\t<classpathentry path=durian-collect-1.0.0-sources.jar/>",
-				"\t<classpathentry path=animal-sniffer-annotations-1.14-sources.jar/>",
-				"\t<classpathentry path=j2objc-annotations-0.1-sources.jar/>",
+				"\t<classpathentry kind=/>",
+				"\t<classpathentry sourcepath=durian-collect-1.0.0.jar/>",
+				"\t<classpathentry sourcepath=animal-sniffer-annotations-1.14.jar/>",
+				"\t<classpathentry sourcepath=j2objc-annotations-0.1.jar/>",
 				"\t<classpathentry exported=durian-core kind=\"src\" combineaccessrules=\"true\"/>",
 				"</classpath>"), result);
 	}
