@@ -115,16 +115,22 @@ public class BndManifestPlugin extends ProjectPlugin {
 			}
 
 			// set the classpath for manifest calculation
-			Set<File> runtimeConfig = project.getConfigurations().getByName(JavaPlugin.RUNTIME_CONFIGURATION_NAME).getFiles();
+			Set<File> runtimeConfig = project.getConfigurations().getByName(JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME).getFiles();
 			builder.addClasspath(runtimeConfig);
 
 			// put the class files and resources into the jar
 			JavaPluginConvention javaConvention = project.getConvention().getPlugin(JavaPluginConvention.class);
 			SourceSetOutput main = javaConvention.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME).getOutput();
 			// delete empty folders so that bnd doesn't make Export-Package entries for them
-			deleteEmptyFoldersIfExists(main.getClassesDir());
+			StringBuilder includeresource = new StringBuilder();
 			deleteEmptyFoldersIfExists(main.getResourcesDir());
-			builder.set(Constants.INCLUDERESOURCE, fix(main.getClassesDir()) + "," + fix(main.getResourcesDir()));
+			includeresource.append(fix(main.getResourcesDir()));
+			for (File file : main.getClassesDirs()) {
+				deleteEmptyFoldersIfExists(file);
+				includeresource.append(",");
+				includeresource.append(fix(file));
+			}
+			builder.set(Constants.INCLUDERESOURCE, includeresource.toString());
 
 			// set the version
 			if (builder.getBundleVersion() == null) {

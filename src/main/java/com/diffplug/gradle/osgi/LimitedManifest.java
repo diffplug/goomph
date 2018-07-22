@@ -16,10 +16,7 @@
 package com.diffplug.gradle.osgi;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Writer;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.Map;
@@ -50,47 +47,39 @@ class LimitedManifest implements Manifest, ManifestInternal {
 		this.extension = extension;
 	}
 
-	String getContent() throws Throwable {
-		// find the location of the manifest in the output resources directory
-		JavaPluginConvention javaConvention = jarTask.getProject().getConvention().getPlugin(JavaPluginConvention.class);
-		SourceSet main = javaConvention.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME);
-		Path outputManifest = main.getOutput().getResourcesDir().toPath().resolve("META-INF/MANIFEST.MF");
-		// if we don't want to merge, then delete the existing manifest so that bnd doesn't merge with it
-		if (!extension.mergeWithExisting) {
-			java.nio.file.Files.deleteIfExists(outputManifest);
-		}
-		// take the bnd action 
-		String content = BndManifestPlugin.takeBndAction(jarTask.getProject(), jarTask, jar -> {
-			Preconditions.checkState(jarTask.getManifest() == this, "Never call jar.setManifest() with osgiBndManifest");
-			return StringPrinter.buildString(printer -> {
-				try (OutputStream output = printer.toOutputStream(StandardCharsets.UTF_8)) {
-					aQute.bnd.osgi.Jar.writeManifest(jar.getManifest(), printer.toOutputStream(StandardCharsets.UTF_8));
-				} catch (Exception e) {
-					throw Errors.asRuntime(e);
-				}
-			});
-		});
-		System.out.println("------------------");
-		System.out.println(content);
-		return content;
-	}
+	String content;
 
-	@Override
-	public Manifest writeTo(Writer writer) {
-		try {
-			writer.write(getContent());
-		} catch (Throwable e) {
-			throw Errors.asRuntime(e);
+	String getContent() throws Throwable {
+		if (content == null) {
+			// find the location of the manifest in the output resources directory
+			JavaPluginConvention javaConvention = jarTask.getProject().getConvention().getPlugin(JavaPluginConvention.class);
+			SourceSet main = javaConvention.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME);
+			Path outputManifest = main.getOutput().getResourcesDir().toPath().resolve("META-INF/MANIFEST.MF");
+			// if we don't want to merge, then delete the existing manifest so that bnd doesn't merge with it
+			if (!extension.mergeWithExisting) {
+				java.nio.file.Files.deleteIfExists(outputManifest);
+			}
+			// take the bnd action 
+			content = BndManifestPlugin.takeBndAction(jarTask.getProject(), jarTask, jar -> {
+				Preconditions.checkState(jarTask.getManifest() == this, "Never call jar.setManifest() with osgiBndManifest");
+				return StringPrinter.buildString(printer -> {
+					try (OutputStream output = printer.toOutputStream(StandardCharsets.UTF_8)) {
+						aQute.bnd.osgi.Jar.writeManifest(jar.getManifest(), printer.toOutputStream(StandardCharsets.UTF_8));
+					} catch (Exception e) {
+						throw Errors.asRuntime(e);
+					}
+				});
+			});
 		}
-		return this;
+		return content;
 	}
 
 	@Override
 	public Manifest writeTo(Object path) {
 		File file = jarTask.getProject().file(path);
-		try (Writer writer = Files.asByteSink(file).asCharSink(Charset.forName(charset)).openBufferedStream()) {
-			writeTo(writer);
-		} catch (IOException e) {
+		try {
+			Files.write(getContent(), file, StandardCharsets.UTF_8);
+		} catch (Throwable e) {
 			throw Errors.asRuntime(e);
 		}
 		return this;

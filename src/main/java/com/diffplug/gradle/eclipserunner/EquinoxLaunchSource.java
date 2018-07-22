@@ -78,7 +78,7 @@ public class EquinoxLaunchSource extends LazyForwardingEquality<FileSignature> {
 				Project project = (Project) o;
 				Jar jar = taskFor(project);
 				files.add(jar.getArchivePath());
-				files.addAll(project.getConfigurations().getByName(JavaPlugin.RUNTIME_CONFIGURATION_NAME).resolve());
+				files.addAll(project.getConfigurations().getByName(JavaPlugin.RUNTIME_ELEMENTS_CONFIGURATION_NAME).resolve());
 			} else if (o instanceof Configuration) {
 				Configuration config = (Configuration) o;
 				files.addAll(config.resolve());
