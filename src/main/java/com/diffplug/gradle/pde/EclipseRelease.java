@@ -110,6 +110,7 @@ public final class EclipseRelease {
 			case "4.7.1.a": return root + "4.7/R-4.7.1a-201710090410/";
 			case "4.7.2": return root + "4.7/R-4.7.2-201711300510/";
 			case "4.7.3": return root + "4.7/R-4.7.3-201803010715/";
+			case "4.7.3.a": return root + "4.7/R-4.7.3a-201803300640/";
 			case "4.8.0": return root + "4.8/R-4.8-201806110500/";
 			// less-specific versions
 			case "3.5": case "3.6": case "3.7": case "3.8":
