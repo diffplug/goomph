@@ -40,8 +40,10 @@ import org.gradle.api.GradleException;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.XmlProvider;
+import org.gradle.api.initialization.IncludedBuild;
 import org.gradle.api.specs.Spec;
 import org.gradle.api.specs.Specs;
+import org.gradle.api.tasks.TaskReference;
 import org.gradle.internal.Actions;
 import org.gradle.plugins.ide.eclipse.GenerateEclipseProject;
 
@@ -176,6 +178,59 @@ public class OomphIdeExtension implements P2Declarative {
 		});
 	}
 
+	/**
+	 * @see OomphIdeExtension#findProjectsInIncludedBuilds(), passes include
+	 */
+	public void findProjectsInIncludedBuilds(Spec<String> spec) {
+		for (IncludedBuild included : project.getGradle().getIncludedBuilds()) {
+			addProjectIfExists(included, included.getProjectDir(), spec);
+			for (File sub : FileMisc.list(included.getProjectDir())) {
+				if (sub.isDirectory()) {
+					addProjectIfExists(included, sub, spec);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Finds projects in the included builds.  You have to run `gradlew eclipse` before running `gradle ide` for this to work, because
+	 * it relies on pre-existing `.project` files to determine the paths to subprojects.
+	 * 
+	 * Supports root projects and subprojects, but not subsubprojects.
+	 */
+	public void findProjectsInIncludedBuilds() {
+		findProjectsInIncludedBuilds(Specs.satisfyAll());
+	}
+
+	/** Returns true if it was added. */
+	private boolean addProjectIfExists(IncludedBuild included, File dir, Spec<String> spec) {
+		File dotProject = new File(dir, DOT_PROJECT);
+		String root = included.getProjectDir().getAbsolutePath();
+		String sub = dir.getAbsolutePath();
+		if (dotProject.isFile()) {
+			Preconditions.checkArgument(sub.startsWith(root));
+			String relative = sub.substring(root.length()).replace('/', ':').replace('\\', ':');
+			if (spec.isSatisfiedBy(relative)) {
+				try {
+					TaskReference task = included.task(relative + ":eclipse");
+					ideSetup().dependsOn(task);
+					addProjectFolder(dir);
+					return true;
+				} catch (org.gradle.api.UnknownTaskException e) {
+					// no action required
+				}
+			}
+		}
+		return false;
+	}
+
+	/** Adds an eclipse project from the given included build. */
+	public void addIncludedProject(String includedBuild, String projectPath) {
+		IncludedBuild included = project.getGradle().includedBuild(includedBuild);
+		File projectDir = new File(included.getProjectDir(), projectPath.substring(1).replace(':', '/'));
+		Preconditions.checkArgument(addProjectIfExists(included, projectDir, Specs.satisfyAll()));
+	}
+
 	/** Adds the eclipse project from the given project path. */
 	public void addProject(String projectPath) {
 		addDependency(project.evaluationDependsOn(projectPath));
@@ -183,12 +238,15 @@ public class OomphIdeExtension implements P2Declarative {
 
 	private static final String DOT_PROJECT = ".project";
 
+	private Task ideSetup() {
+		return project.getTasks().getByName(OomphIdePlugin.IDE_SETUP_WORKSPACE);
+	}
+
 	/** Adds the eclipse tasks from the given project as a dependency of our IDE setup task. */
 	void addDependency(Project eclipseProject) {
-		Task ideSetup = project.getTasks().getByName(OomphIdePlugin.IDE_SETUP_WORKSPACE);
 		eclipseProject.getTasks().all(task -> {
 			if ("eclipse".equals(task.getName())) {
-				ideSetup.dependsOn(task);
+				ideSetup().dependsOn(task);
 			}
 			if (task instanceof GenerateEclipseProject) {
 				File projectFile = ((GenerateEclipseProject) task).getOutputFile();
