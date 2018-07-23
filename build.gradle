@@ -24,13 +24,6 @@ plugins {
 
 repositories {
 	mavenCentral()
-	// Future versions can be found here: https://wiki.eclipse.org/Eclipse_Project_Update_Sites
-	ivy {
-		url "http://download.eclipse.org/eclipse/updates/4.5/R-4.5.2-201602121500/"
-		layout "pattern", {
-			artifact "plugins/[artifact]_[revision].[ext]"
-		}
-	}
 	// SNAPSHOT versions are free to rely on other SNAPSHOT libraries
 	if (project.version.endsWith('-SNAPSHOT')) {
 		maven {
@@ -58,18 +51,22 @@ dependencies {
 	compile "biz.aQute.bnd:biz.aQute.bndlib:${VER_BNDLIB}"
 	// p2 (osgi used in 4.7.2 to match p2-bootstrap)
 	compile "org.eclipse.platform:org.eclipse.osgi:3.12.50"
-	// goomph, compileOnly for project setup (need to figure out how to bootstrap goomph)
-	compileOnly 'p2:org.eclipse.core.jobs:3.7.0.v20150330-2103'
-	compileOnly 'p2:org.eclipse.core.runtime:3.11.1.v20150903-1804'
-	compileOnly 'p2:org.eclipse.core.resources:3.10.1.v20150725-1910'
-	compileOnly 'p2:org.eclipse.equinox.common:3.7.0.v20150402-1709'
-	compileOnly 'p2:org.eclipse.ui.workbench:3.107.1.v20160120-2131'
-	compileOnly 'p2:org.eclipse.pde.core:3.10.102.v20160128-0556'
-	compileOnly 'p2:org.eclipse.jdt.launching:3.8.0.v20150527-0946'
-	compileOnly 'p2:org.eclipse.emf.ecore:2.11.2.v20160208-0816'
+	// eclipse 4.7.2
+	compileOnly 'org.eclipse.platform:org.eclipse.core.jobs:3.9.2'
+	compileOnly 'org.eclipse.platform:org.eclipse.core.runtime:3.13.0'
+	compileOnly 'org.eclipse.platform:org.eclipse.core.resources:3.12.0'
+	compileOnly 'org.eclipse.platform:org.eclipse.equinox.common:3.9.0'
+	compileOnly 'org.eclipse.platform:org.eclipse.ui.workbench:3.110.1'
+	compileOnly 'org.eclipse.pde:org.eclipse.pde.core:3.11.100'
+	compileOnly 'org.eclipse.jdt:org.eclipse.jdt.launching:3.9.51'
+	// from 4.6.3 cuz that's the latest one
+	compileOnly 'org.eclipse.emf:org.eclipse.emf.ecore:2.12.0'
 	// testing
 	testCompile "junit:junit:4.12"
 	testCompile "org.assertj:assertj-core:3.10.0"
+}
+configurations.all {
+	exclude group: 'org.eclipse.platform', module: 'org.eclipse.swt.${osgi.platform}'
 }
 
 test {
