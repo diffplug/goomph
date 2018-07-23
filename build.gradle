@@ -51,7 +51,7 @@ dependencies {
 	compile "com.diffplug.durian:durian-core:${VER_DURIAN}"
 	compile "com.diffplug.durian:durian-collect:${VER_DURIAN}"
 	compile "com.diffplug.durian:durian-io:${VER_DURIAN}"
-	compile "com.diffplug.durian:durian-swt:${VER_DURIAN_SWT}"
+	compile "com.diffplug.durian:durian-swt.os:${VER_DURIAN_SWT}"
 	compile "commons-io:commons-io:${VER_COMMONS_IO}"
 	compile "com.diffplug.spotless:spotless-lib:${VER_SPOTLESS_LIB}"
 	// OSGi
