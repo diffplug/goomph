@@ -17,10 +17,14 @@ package com.diffplug.gradle.osgi;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 import org.gradle.api.Project;
 import org.gradle.api.java.archives.Attributes;
@@ -33,9 +37,15 @@ import org.gradle.api.tasks.bundling.Jar;
 import aQute.bnd.osgi.Builder;
 import aQute.bnd.osgi.Constants;
 
+import com.diffplug.common.base.Errors;
+import com.diffplug.common.base.Predicates;
+import com.diffplug.common.base.StringPrinter;
 import com.diffplug.common.base.Throwing;
+import com.diffplug.common.collect.ImmutableMap;
+import com.diffplug.common.io.Files;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.ProjectPlugin;
+import com.diffplug.gradle.ZipMisc;
 
 /**
  * Generates a manifest using purely bnd, and outputs it for IDE consumption.
@@ -87,24 +97,49 @@ public class BndManifestPlugin extends ProjectPlugin {
 		ProjectPlugin.getPlugin(proj, JavaPlugin.class);
 		BndManifestExtension extension = proj.getExtensions().create(BndManifestExtension.NAME, BndManifestExtension.class);
 		Jar jarTask = (Jar) proj.getTasks().getByName(JavaPlugin.JAR_TASK_NAME);
-
-		// replace the manifest with our manifest
-		LimitedManifest limited = new LimitedManifest(jarTask, extension);
-		jarTask.setManifest(limited);
+		// at the end of the jar, modify the manifest, and possibly write it to `osgiBndManifest { bndManifestcopyTo }`.
+		jarTask.doLast(unused -> {
+			Errors.rethrow().run(() -> {
+				byte[] manifest = getManifestContent(jarTask, extension).getBytes(StandardCharsets.UTF_8);
+				Map<String, Function<byte[], byte[]>> toModify = ImmutableMap.of("META-INF/MANIFEST.MF", in -> manifest);
+				ZipMisc.modify(jarTask.getArchivePath(), toModify, Predicates.alwaysFalse());
+				if (extension.copyTo != null) {
+					Files.asByteSink(jarTask.getProject().file(extension.copyTo)).write(manifest);
+				}
+			});
+		});
 
 		proj.afterEvaluate(project -> {
 			// find the file that the user would like us to copy to (if any)
 			if (extension.copyTo != null) {
 				jarTask.getOutputs().file(extension.copyTo);
-				jarTask.doLast(unused -> {
-					jarTask.getManifest().writeTo(extension.copyTo);
-				});
 			}
 		});
 	}
 
+	private static String getManifestContent(Jar jarTask, BndManifestExtension extension) throws Throwable {
+		// find the location of the manifest in the output resources directory
+		JavaPluginConvention javaConvention = jarTask.getProject().getConvention().getPlugin(JavaPluginConvention.class);
+		SourceSet main = javaConvention.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME);
+		Path outputManifest = main.getOutput().getResourcesDir().toPath().resolve("META-INF/MANIFEST.MF");
+		// if we don't want to merge, then delete the existing manifest so that bnd doesn't merge with it
+		if (!extension.mergeWithExisting) {
+			java.nio.file.Files.deleteIfExists(outputManifest);
+		}
+		// take the bnd action 
+		return BndManifestPlugin.takeBndAction(jarTask.getProject(), jarTask, jar -> {
+			return StringPrinter.buildString(printer -> {
+				try (OutputStream output = printer.toOutputStream(StandardCharsets.UTF_8)) {
+					aQute.bnd.osgi.Jar.writeManifest(jar.getManifest(), printer.toOutputStream(StandardCharsets.UTF_8));
+				} catch (Exception e) {
+					throw Errors.asRuntime(e);
+				}
+			});
+		});
+	}
+
 	/** Takes an action on a Bnd jar. */
-	static String takeBndAction(Project project, Jar jarTask, Throwing.Function<aQute.bnd.osgi.Jar, String> onBuilder) throws Exception, Throwable {
+	private static String takeBndAction(Project project, Jar jarTask, Throwing.Function<aQute.bnd.osgi.Jar, String> onBuilder) throws Exception, Throwable {
 		try (Builder builder = new Builder()) {
 			// set the base folder
 			builder.setBase(project.getProjectDir());
@@ -154,13 +189,13 @@ public class BndManifestPlugin extends ProjectPlugin {
 		return file.getAbsolutePath().replace('\\', '/');
 	}
 
-	static void deleteEmptyFoldersIfExists(File root) throws IOException {
+	private static void deleteEmptyFoldersIfExists(File root) throws IOException {
 		if (root.exists()) {
 			FileMisc.deleteEmptyFolders(root);
 		}
 	}
 
-	static String dateQualifier() {
+	private static String dateQualifier() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddkkmm");
 		return dateFormat.format(new Date());
 	}

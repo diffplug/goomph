@@ -42,6 +42,7 @@ import com.diffplug.common.base.Throwing;
 import com.diffplug.common.io.ByteSink;
 import com.diffplug.common.io.ByteSource;
 import com.diffplug.common.io.ByteStreams;
+import com.diffplug.common.io.Files;
 
 /** Utilities for mucking with zip files. */
 public class ZipMisc {
@@ -134,6 +135,14 @@ public class ZipMisc {
 				zipOutput.closeEntry();
 			}
 		}
+	}
+
+	/** Modifies a file in-place. */
+	public static void modify(File file, Map<String, Function<byte[], byte[]>> toModify, Predicate<String> toOmit) throws IOException {
+		byte[] allContent = Files.asByteSource(file).read();
+		ByteSource source = ByteSource.wrap(allContent);
+		ByteSink sink = Files.asByteSink(file);
+		modify(source, sink, toModify, toOmit);
 	}
 
 	/**
