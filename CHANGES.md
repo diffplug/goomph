@@ -8,7 +8,8 @@
 	+ `eclipseMavenCentral` now supports the new configurations: `api`, `implementation`, `runtimeOnly`, `testRuntimeOnly`.
 	+ `osgiBndManifest` no longer uses deprecated methods.
 - Updated `bndlib` to `4.0`.
-- Replaced dependency on `com.diffplug.durian:durian-swt` with `durian-swt.io`. This removes the dependency on `org.eclipse.swt`.
+- Replaced dependency on `com.diffplug.durian:durian-swt` with `durian-swt.os`. This removes the dependency on `org.eclipse.swt`.
+- Set the `oomphIde` splash location with an absolute path to fix warnings on mac. ([#74](https://github.com/diffplug/goomph/issues/74))
 
 ### Version 3.15.0 - July 6th 2018 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.15.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.15.0/view))
 

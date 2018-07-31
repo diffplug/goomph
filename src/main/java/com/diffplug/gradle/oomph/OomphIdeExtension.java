@@ -446,7 +446,8 @@ public class OomphIdeExtension implements P2Declarative {
 		EclipseIni ini = EclipseIni.parseFrom(iniFile);
 		ini.set("-data", getWorkspaceDir());
 		ini.set("-product", "com.diffplug.goomph.branding.product");
-		ini.set("-showsplash", "dropins/com.diffplug.goomph.branding/splash.bmp");
+		File splashFile = new File(ideDir, FileMisc.macContentsEclipse() + "dropins/com.diffplug.goomph.branding/splash.bmp");
+		ini.set("-showsplash", splashFile);
 		// wipe out defaults, because they mess up mac icons (and other stuff)
 		ini.vmargs("-Xmx1g");
 		// p2 director makes an invalid mac install out of the box.  Blech.
