@@ -25,7 +25,6 @@ import java.util.function.Consumer;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.file.FileCollection;
-import org.gradle.api.internal.file.collections.SimpleFileCollection;
 import org.gradle.api.tasks.JavaExec;
 import org.gradle.process.ExecResult;
 import org.gradle.process.JavaExecSpec;
@@ -69,7 +68,7 @@ class JavaExecableImp {
 		}
 	}
 
-	static FileCollection fromLocalClassloader() {
+	static Set<File> fromLocalClassloader() {
 		Set<File> files = new LinkedHashSet<>();
 		Consumer<Class<?>> addPeerClasses = clazz -> {
 			URLClassLoader urlClassloader = (URLClassLoader) clazz.getClassLoader();
@@ -84,7 +83,6 @@ class JavaExecableImp {
 		addPeerClasses.accept(JavaExecable.class);
 		// add the gradle API
 		addPeerClasses.accept(JavaExec.class);
-
-		return new SimpleFileCollection(files);
+		return files;
 	}
 }

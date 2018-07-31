@@ -19,13 +19,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.file.FileCollection;
-import org.gradle.api.internal.file.UnionFileCollection;
 import org.gradle.process.JavaExecSpec;
+import org.gradle.testfixtures.ProjectBuilder;
 
 import com.diffplug.common.base.Throwing;
 import com.diffplug.common.tree.TreeStream;
@@ -102,10 +103,9 @@ public interface JavaExecable extends Serializable, Throwing.Runnable {
 		// add the gradleApi, workaround from https://discuss.gradle.org/t/gradle-doesnt-add-the-same-dependencies-to-classpath-when-applying-plugins/9759/6?u=ned_twigg
 		classpaths.add(project.getConfigurations().detachedConfiguration(project.getDependencies().gradleApi()));
 		// add stuff from the local classloader too, to fix testkit's classpath
-		classpaths.add(JavaExecableImp.fromLocalClassloader());
+		classpaths.add(project.files(JavaExecableImp.fromLocalClassloader()));
 		// run it
-		FileCollection classpath = new UnionFileCollection(classpaths);
-		return JavaExecableImp.execInternal(input, classpath, settings, execSpec -> JavaExecWinFriendly.javaExec(project, execSpec));
+		return JavaExecableImp.execInternal(input, project.files(classpaths), settings, execSpec -> JavaExecWinFriendly.javaExec(project, execSpec));
 	}
 
 	/** @see #exec(Project, JavaExecable, Action) */
@@ -115,8 +115,9 @@ public interface JavaExecable extends Serializable, Throwing.Runnable {
 
 	/** @see #exec(Project, JavaExecable, Action) */
 	public static <T extends JavaExecable> T execWithoutGradle(T input, Action<JavaExecSpec> settings) throws Throwable {
-		FileCollection classpath = JavaExecableImp.fromLocalClassloader();
-		return JavaExecableImp.execInternal(input, classpath, settings, execSpec -> JavaExecWinFriendly.javaExecWithoutGradle(execSpec));
+		Set<File> classpath = JavaExecableImp.fromLocalClassloader();
+		Project project = ProjectBuilder.builder().build();
+		return JavaExecableImp.execInternal(input, project.files(classpath), settings, execSpec -> JavaExecWinFriendly.javaExec(project, execSpec));
 	}
 
 	/** @see #exec(Project, JavaExecable, Action) */
