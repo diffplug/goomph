@@ -17,8 +17,7 @@ package com.diffplug.gradle.pde;
 
 import java.io.File;
 
-import org.gradle.internal.impldep.com.google.common.base.StandardSystemProperty;
-
+import com.diffplug.common.base.StandardSystemProperty;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.p2.P2Model;
 

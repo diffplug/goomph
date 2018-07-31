@@ -15,12 +15,12 @@
  */
 package com.diffplug.gradle.eclipserunner;
 
-import org.gradle.internal.impldep.com.google.common.base.Joiner;
 import org.junit.Assert;
 import org.junit.Test;
 
 import groovy.util.Node;
 
+import com.diffplug.common.base.Joiner;
 import com.diffplug.common.base.StringPrinter;
 
 public class EclipseAppTest {

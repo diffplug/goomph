@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 
-import org.gradle.internal.impldep.org.junit.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.diffplug.common.io.Files;
