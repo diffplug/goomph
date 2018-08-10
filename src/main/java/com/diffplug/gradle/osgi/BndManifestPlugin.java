@@ -19,8 +19,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
@@ -42,7 +44,6 @@ import com.diffplug.common.base.Predicates;
 import com.diffplug.common.base.StringPrinter;
 import com.diffplug.common.base.Throwing;
 import com.diffplug.common.collect.ImmutableMap;
-import com.diffplug.common.io.Files;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.ProjectPlugin;
 import com.diffplug.gradle.ZipMisc;
@@ -101,10 +102,23 @@ public class BndManifestPlugin extends ProjectPlugin {
 		jarTask.doLast(unused -> {
 			Errors.rethrow().run(() -> {
 				byte[] manifest = getManifestContent(jarTask, extension).getBytes(StandardCharsets.UTF_8);
+				// modify the jar
 				Map<String, Function<byte[], byte[]>> toModify = ImmutableMap.of("META-INF/MANIFEST.MF", in -> manifest);
 				ZipMisc.modify(jarTask.getArchivePath(), toModify, Predicates.alwaysFalse());
+				// write manifest to the output resources directory
+				Throwing.Consumer<Path> writeManifest = path -> {
+					if (Files.exists(path)) {
+						if (Arrays.equals(Files.readAllBytes(path), manifest)) {
+							return;
+						}
+					}
+					Files.createDirectories(path.getParent());
+					Files.write(path, manifest);
+				};
+				writeManifest.accept(outputManifest(jarTask));
+				// and the jarTask, maybe
 				if (extension.copyTo != null) {
-					Files.asByteSink(jarTask.getProject().file(extension.copyTo)).write(manifest);
+					writeManifest.accept(jarTask.getProject().file(extension.copyTo).toPath());
 				}
 			});
 		});
@@ -117,14 +131,16 @@ public class BndManifestPlugin extends ProjectPlugin {
 		});
 	}
 
-	private static String getManifestContent(Jar jarTask, BndManifestExtension extension) throws Throwable {
-		// find the location of the manifest in the output resources directory
+	private static Path outputManifest(Jar jarTask) {
 		JavaPluginConvention javaConvention = jarTask.getProject().getConvention().getPlugin(JavaPluginConvention.class);
 		SourceSet main = javaConvention.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME);
-		Path outputManifest = main.getOutput().getResourcesDir().toPath().resolve("META-INF/MANIFEST.MF");
+		return main.getOutput().getResourcesDir().toPath().resolve("META-INF/MANIFEST.MF");
+	}
+
+	private static String getManifestContent(Jar jarTask, BndManifestExtension extension) throws Throwable {
 		// if we don't want to merge, then delete the existing manifest so that bnd doesn't merge with it
 		if (!extension.mergeWithExisting) {
-			java.nio.file.Files.deleteIfExists(outputManifest);
+			Files.deleteIfExists(outputManifest(jarTask));
 		}
 		// take the bnd action 
 		return BndManifestPlugin.takeBndAction(jarTask.getProject(), jarTask, jar -> {

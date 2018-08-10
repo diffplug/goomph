@@ -1,6 +1,10 @@
 # Goomph releases
 
-### Version 3.16.0-SNAPSHOT - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
+### Version 3.17.0-SNAPSHOT - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
+
+- Generated manifest is now put into the output resources directory, to make sure that it's available at runtime for development.
+
+### Version 3.16.0 - August 1st 2018 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.16.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.16.0/view))
 
 - Added ability to set vmArgs for EquinoxLaunchTask.
 - Add `4.7.3.a` as an EclipseRelease.
