@@ -22,10 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 
 import org.gradle.api.Project;
@@ -34,6 +31,7 @@ import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.plugins.JavaPluginConvention;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetOutput;
+import org.gradle.api.tasks.TaskCollection;
 import org.gradle.api.tasks.bundling.Jar;
 
 import aQute.bnd.osgi.Builder;
@@ -97,36 +95,41 @@ public class BndManifestPlugin extends ProjectPlugin {
 	protected void applyOnce(Project proj) {
 		ProjectPlugin.getPlugin(proj, JavaPlugin.class);
 		BndManifestExtension extension = proj.getExtensions().create(BndManifestExtension.NAME, BndManifestExtension.class);
-		Jar jarTask = (Jar) proj.getTasks().getByName(JavaPlugin.JAR_TASK_NAME);
-		// at the end of the jar, modify the manifest, and possibly write it to `osgiBndManifest { bndManifestcopyTo }`.
-		jarTask.doLast(unused -> {
-			Errors.rethrow().run(() -> {
-				byte[] manifest = getManifestContent(jarTask, extension).getBytes(StandardCharsets.UTF_8);
-				// modify the jar
-				Map<String, Function<byte[], byte[]>> toModify = ImmutableMap.of("META-INF/MANIFEST.MF", in -> manifest);
-				ZipMisc.modify(jarTask.getArchivePath(), toModify, Predicates.alwaysFalse());
-				// write manifest to the output resources directory
-				Throwing.Consumer<Path> writeManifest = path -> {
-					if (Files.exists(path)) {
-						if (Arrays.equals(Files.readAllBytes(path), manifest)) {
-							return;
+
+		proj.getGradle().getTaskGraph().whenReady( taskGraph ->  {
+
+			// use all tasks which extends Jar
+			TaskCollection<Jar> jarTasks = proj.getTasks().withType(Jar.class);
+			// at the end of the jar, modify the manifest, and possibly write it to `osgiBndManifest { bndManifestcopyTo }`.
+			jarTasks.forEach(jarTask -> jarTask.doLast(unused -> {
+				Errors.rethrow().run(() -> {
+					byte[] manifest = getManifestContent(jarTask, extension).getBytes(StandardCharsets.UTF_8);
+					// modify the jar
+					Map<String, Function<byte[], byte[]>> toModify = ImmutableMap.of("META-INF/MANIFEST.MF", in -> manifest);
+					ZipMisc.modify(jarTask.getArchivePath(), toModify, Predicates.alwaysFalse());
+					// write manifest to the output resources directory
+					Throwing.Consumer<Path> writeManifest = path -> {
+						if (Files.exists(path)) {
+							if (Arrays.equals(Files.readAllBytes(path), manifest)) {
+								return;
+							}
 						}
+						Files.createDirectories(path.getParent());
+						Files.write(path, manifest);
+					};
+					writeManifest.accept(outputManifest(jarTask));
+					// and the jarTask, maybe
+					if (extension.copyTo != null) {
+						writeManifest.accept(jarTask.getProject().file(extension.copyTo).toPath());
 					}
-					Files.createDirectories(path.getParent());
-					Files.write(path, manifest);
-				};
-				writeManifest.accept(outputManifest(jarTask));
-				// and the jarTask, maybe
-				if (extension.copyTo != null) {
-					writeManifest.accept(jarTask.getProject().file(extension.copyTo).toPath());
-				}
-			});
+				});
+			}));
 		});
 
 		proj.afterEvaluate(project -> {
 			// find the file that the user would like us to copy to (if any)
 			if (extension.copyTo != null) {
-				jarTask.getOutputs().file(extension.copyTo);
+				proj.getTasks().withType(Jar.class).forEach(jarTask -> jarTask.getOutputs().file(extension.copyTo));
 			}
 		});
 	}
@@ -173,15 +176,14 @@ public class BndManifestPlugin extends ProjectPlugin {
 			JavaPluginConvention javaConvention = project.getConvention().getPlugin(JavaPluginConvention.class);
 			SourceSetOutput main = javaConvention.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME).getOutput();
 			// delete empty folders so that bnd doesn't make Export-Package entries for them
-			StringBuilder includeresource = new StringBuilder();
+			Set<String> includeresource = new HashSet<>();
 			deleteEmptyFoldersIfExists(main.getResourcesDir());
-			includeresource.append(fix(main.getResourcesDir()));
+			includeresource.add(fix(main.getResourcesDir()));
 			for (File file : main.getClassesDirs()) {
 				deleteEmptyFoldersIfExists(file);
-				includeresource.append(",");
-				includeresource.append(fix(file));
+				includeresource.add(fix(file));
 			}
-			builder.set(Constants.INCLUDERESOURCE, includeresource.toString());
+			builder.set(Constants.INCLUDERESOURCE, String.join(",", includeresource));
 
 			// set the version
 			if (builder.getBundleVersion() == null) {
