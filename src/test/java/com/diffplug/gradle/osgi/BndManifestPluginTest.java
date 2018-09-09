@@ -74,27 +74,27 @@ public class BndManifestPluginTest extends GradleIntegrationTest {
 		testCase("osgiBndManifest { mergeWithExisting true }", expectedMerge);
 	}
 
-    @Test
-    public void assertCustomJarTasks() throws IOException {
-        write("src/main/resources/META-INF/MANIFEST.MF",
-                "Manifest-Version: 1.0",
-                "Bundle-ManifestVersion: 2",
-                "Bundle-Name: Mock",
-                "Bundle-SymbolicName: org.eclipse.e4.demo.e4photo.flickr.mock; singleton:=true",
-                "Bundle-Version: 1.0.0.qualifier",
-                "Bundle-ActivationPolicy: lazy",
-                "Require-Bundle: org.eclipse.core.runtime");
-        String expectedMerge = StringPrinter.buildStringFromLines(
-                "Manifest-Version: 1.0",
-                "Bundle-ActivationPolicy: lazy",
-                "Bundle-ManifestVersion: 2",
-                "Bundle-SymbolicName: test",
-                "Bundle-Version: 0.0.0.ERRORSETVERSION",
-                "Export-Package: test;uses:=\"com.diffplug.common.base\";version=\"0.0.0\"",
-                "Import-Package: com.diffplug.common.base;version=\"[3.4,4)\"",
-                "Require-Bundle: org.eclipse.core.runtime",
-                "Require-Capability: osgi.ee;filter:=\"(&(osgi.ee=JavaSE)(version=1.8))\"");
-        String buildScript = StringPrinter.buildStringFromLines(
+	@Test
+	public void assertCustomJarTasks() throws IOException {
+		write("src/main/resources/META-INF/MANIFEST.MF",
+				"Manifest-Version: 1.0",
+				"Bundle-ManifestVersion: 2",
+				"Bundle-Name: Mock",
+				"Bundle-SymbolicName: org.eclipse.e4.demo.e4photo.flickr.mock; singleton:=true",
+				"Bundle-Version: 1.0.0.qualifier",
+				"Bundle-ActivationPolicy: lazy",
+				"Require-Bundle: org.eclipse.core.runtime");
+		String expectedMerge = StringPrinter.buildStringFromLines(
+				"Manifest-Version: 1.0",
+				"Bundle-ActivationPolicy: lazy",
+				"Bundle-ManifestVersion: 2",
+				"Bundle-SymbolicName: test",
+				"Bundle-Version: 0.0.0.ERRORSETVERSION",
+				"Export-Package: test;uses:=\"com.diffplug.common.base\";version=\"0.0.0\"",
+				"Import-Package: com.diffplug.common.base;version=\"[3.4,4)\"",
+				"Require-Bundle: org.eclipse.core.runtime",
+				"Require-Capability: osgi.ee;filter:=\"(&(osgi.ee=JavaSE)(version=1.8))\"");
+		String buildScript = StringPrinter.buildStringFromLines(
 				"task customJar(type: Jar) {",
 				"  with jar",
 				"  manifest.attributes(",
@@ -104,11 +104,10 @@ public class BndManifestPluginTest extends GradleIntegrationTest {
 				"  )",
 				"	classifier 'custom'",
 				"}",
-				"osgiBndManifest { mergeWithExisting true }"
-		);
+				"osgiBndManifest { mergeWithExisting true }");
 
-        testCase(buildScript, expectedMerge, "customJar");
-    }
+		testCase(buildScript, expectedMerge, "customJar");
+	}
 
 	private void testCase(String buildscriptAddendum, String expectedManifest) throws IOException {
 		testCase(buildscriptAddendum, expectedManifest, "jar");

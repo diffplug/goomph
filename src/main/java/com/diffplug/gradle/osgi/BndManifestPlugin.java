@@ -96,7 +96,7 @@ public class BndManifestPlugin extends ProjectPlugin {
 		ProjectPlugin.getPlugin(proj, JavaPlugin.class);
 		BndManifestExtension extension = proj.getExtensions().create(BndManifestExtension.NAME, BndManifestExtension.class);
 
-		proj.getGradle().getTaskGraph().whenReady( taskGraph ->  {
+		proj.getGradle().getTaskGraph().whenReady(taskGraph -> {
 
 			// use all tasks which extends Jar
 			TaskCollection<Jar> jarTasks = proj.getTasks().withType(Jar.class);
