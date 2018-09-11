@@ -16,10 +16,14 @@
 package com.diffplug.gradle.eclipse;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.gradle.api.Project;
 import org.gradle.api.Task;
@@ -112,18 +116,19 @@ public class ProjectDepsPlugin extends ProjectPlugin {
 		eclipseModel.getProject().getReferencedProjects().forEach(addProject);
 
 		// map from referenced project to jar filename (for those which have been mapped)
+		List<String> toReplace = new ArrayList<>(extension.jarsToReplace);
+		// sort from longest to shortest
+		Collections.sort(toReplace, Comparator.comparing(String::length).reversed().thenComparing(Function.identity()));
 		for (String jarToReplace : extension.jarsToReplace) {
 			// find the longest jar which matches the project
-			String matching = "";
-			for (String jarDep : jarDeps) {
-				if (jarDep.length() > matching.length() && jarDep.startsWith(jarToReplace)) {
-					matching = jarDep;
-				}
-			}
+			Optional<String> matching = jarDeps.stream()
+					.filter(dep -> dep.startsWith(jarToReplace))
+					.max(Comparator.comparing(String::length));
 			// if we found one
-			if (!matching.isEmpty()) {
+			if (matching.isPresent()) {
 				// remove the jar from the classpath
-				String jar = "/" + matching + ".jar";
+				jarDeps.remove(matching.get());
+				String jar = "/" + matching.get() + ".jar";
 				classpathEntries = classpathNode.children().iterator();
 				while (classpathEntries.hasNext()) {
 					Node entry = classpathEntries.next();

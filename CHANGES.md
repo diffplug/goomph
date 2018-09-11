@@ -3,6 +3,8 @@
 ### Version 3.17.0-SNAPSHOT - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
 - Generated manifest is now put into the output resources directory, to make sure that it's available at runtime for development.
+- Fixed a bug in ProjectDepsPlugin where similarly-named jars might not replace all of the desired projects.
+	+ e.g. if you want to replace `durian-swt`, `durian-swt.os`, and `durian-swt.cocoa.macosx.x86_64`, in the old version `durian-swt` would not get replaced.  Now fixed. ([#80](https://github.com/diffplug/goomph/pull/80))
 
 ### Version 3.16.0 - August 1st 2018 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.16.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.16.0/view))
 
