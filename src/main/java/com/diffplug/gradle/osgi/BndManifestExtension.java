@@ -15,8 +15,18 @@
  */
 package com.diffplug.gradle.osgi;
 
+import org.gradle.api.plugins.JavaPlugin;
+import org.gradle.util.GUtil;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
 /** Determines where the manifest is written out by {@link BndManifestPlugin}. */
 public class BndManifestExtension {
+	public String copyFromTask = JavaPlugin.JAR_TASK_NAME;
+
+	public void copyFromTask(String copyFromTask) { this.copyFromTask = copyFromTask; }
+
 	public Object copyTo = null;
 
 	public void copyTo(Object copyTo) {
@@ -27,6 +37,25 @@ public class BndManifestExtension {
 
 	public void mergeWithExisting(boolean mergeWithExisting) {
 		this.mergeWithExisting = mergeWithExisting;
+	}
+
+	public Set<Object> includeTasks = new HashSet<>(Collections.singletonList(JavaPlugin.JAR_TASK_NAME));
+
+	public void includeTask(Object task) {
+		includeTasks.add(task);
+	}
+
+	public void includeTasks(Object... tasks) {
+		Collections.addAll(includeTasks, tasks);
+	}
+
+	public void setIncludeTasks(Iterable<?> includeTasks) {
+		this.includeTasks.clear();
+		GUtil.addToCollection(this.includeTasks, includeTasks);
+	}
+
+	private String print(){
+		return this.includeTasks.stream().map(o -> (String)o).collect(Collectors.joining(", "));
 	}
 
 	static final String NAME = "osgiBndManifest";
