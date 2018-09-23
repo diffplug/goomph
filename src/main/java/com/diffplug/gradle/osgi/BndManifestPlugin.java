@@ -101,6 +101,9 @@ public class BndManifestPlugin extends ProjectPlugin {
 
 			final Jar copyFromTask = (extension.copyFromTask == null) ? null : getAsJar(proj, extension.copyFromTask);
 
+			Preconditions.checkArgument(extension.copyFromTask == null || extension.includeTasks.contains(extension.copyFromTask),
+                    "copyFromTask must reside within includeTask");
+
 			extension.includeTasks.forEach(name -> {
 
 				Jar jarTask = getAsJar(proj, (String) name);
