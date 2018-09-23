@@ -25,7 +25,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Function;
 
-import com.diffplug.common.base.*;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.java.archives.Attributes;
@@ -38,6 +37,7 @@ import org.gradle.api.tasks.bundling.Jar;
 import aQute.bnd.osgi.Builder;
 import aQute.bnd.osgi.Constants;
 
+import com.diffplug.common.base.*;
 import com.diffplug.common.collect.ImmutableMap;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.ProjectPlugin;
@@ -88,12 +88,12 @@ import com.diffplug.gradle.ZipMisc;
  * features and tighter integrations with IDEs and gradle's resources pipeline.
  */
 public class BndManifestPlugin extends ProjectPlugin {
-    @Override
-    protected void applyOnce(Project proj) {
-        ProjectPlugin.getPlugin(proj, JavaPlugin.class);
-        BndManifestExtension extension = proj.getExtensions().create(BndManifestExtension.NAME, BndManifestExtension.class);
+	@Override
+	protected void applyOnce(Project proj) {
+		ProjectPlugin.getPlugin(proj, JavaPlugin.class);
+		BndManifestExtension extension = proj.getExtensions().create(BndManifestExtension.NAME, BndManifestExtension.class);
 
-        proj.afterEvaluate(project -> {
+		proj.afterEvaluate(project -> {
 
 			// copyFromTask must be configured if copyTo is used
 			Preconditions.checkArgument(extension.copyTo == null || extension.copyFromTask != null,
@@ -102,7 +102,7 @@ public class BndManifestPlugin extends ProjectPlugin {
 			final Jar copyFromTask = (extension.copyFromTask == null) ? null : getAsJar(proj, extension.copyFromTask);
 
 			Preconditions.checkArgument(extension.copyFromTask == null || extension.includeTasks.contains(extension.copyFromTask),
-                    "copyFromTask must reside within includeTask");
+					"copyFromTask must reside within includeTask");
 
 			extension.includeTasks.forEach(name -> {
 
@@ -135,12 +135,12 @@ public class BndManifestPlugin extends ProjectPlugin {
 				});
 			});
 
-            // find the file that the user would like us to copy to (if any)
-            if (extension.copyTo != null && copyFromTask != null) {
-                copyFromTask.getOutputs().file(extension.copyTo);
-            }
-        });
-    }
+			// find the file that the user would like us to copy to (if any)
+			if (extension.copyTo != null && copyFromTask != null) {
+				copyFromTask.getOutputs().file(extension.copyTo);
+			}
+		});
+	}
 
 	private static Path outputManifest(Jar jarTask) {
 		JavaPluginConvention javaConvention = jarTask.getProject().getConvention().getPlugin(JavaPluginConvention.class);
@@ -228,7 +228,7 @@ public class BndManifestPlugin extends ProjectPlugin {
 
 	private static Jar getAsJar(Project project, String taskName) {
 		Task task = project.getTasks().getByName(taskName);
-		Preconditions.checkArgument(task instanceof Jar,  "Task " + taskName + " must be a Jar derived task for generating BndManifest");
-		return (Jar)task;
+		Preconditions.checkArgument(task instanceof Jar, "Task " + taskName + " must be a Jar derived task for generating BndManifest");
+		return (Jar) task;
 	}
 }

@@ -105,8 +105,8 @@ public class BndManifestPluginTest extends GradleIntegrationTest {
 				"	classifier 'custom'",
 				"}",
 				"osgiBndManifest { ",
-					"mergeWithExisting true",
-					"includeTask 'customJar'",
+				"mergeWithExisting true",
+				"includeTask 'customJar'",
 				"}");
 
 		testCase(buildScript, expectedMerge, "customJar");
