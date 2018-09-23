@@ -140,7 +140,7 @@ public class BndManifestPluginTest extends GradleIntegrationTest {
 				"		return new StringPrinter(str -> {});",
 				"	}",
 				"}");
-		gradleRunner().withArguments(task, "--stacktrace", "-i").withDebug(true).build();
+		gradleRunner().withArguments(task, "--stacktrace", "-i").build();
 
 		// make sure the jar contains the proper manifest
 		File libsDir = file("build/libs");
