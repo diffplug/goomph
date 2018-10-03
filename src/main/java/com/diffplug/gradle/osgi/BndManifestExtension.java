@@ -16,7 +16,6 @@
 package com.diffplug.gradle.osgi;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.util.GUtil;
@@ -54,10 +53,6 @@ public class BndManifestExtension {
 	public void setIncludeTasks(Iterable<?> includeTasks) {
 		this.includeTasks.clear();
 		GUtil.addToCollection(this.includeTasks, includeTasks);
-	}
-
-	private String print() {
-		return this.includeTasks.stream().map(o -> (String) o).collect(Collectors.joining(", "));
 	}
 
 	static final String NAME = "osgiBndManifest";

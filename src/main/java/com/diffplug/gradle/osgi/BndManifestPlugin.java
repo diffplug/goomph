@@ -184,7 +184,7 @@ public class BndManifestPlugin extends ProjectPlugin {
 			JavaPluginConvention javaConvention = project.getConvention().getPlugin(JavaPluginConvention.class);
 			SourceSetOutput main = javaConvention.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME).getOutput();
 			// delete empty folders so that bnd doesn't make Export-Package entries for them
-			Set<String> includeresource = new HashSet<>();
+			Set<String> includeresource = new LinkedHashSet<>();
 			deleteEmptyFoldersIfExists(main.getResourcesDir());
 			includeresource.add(fix(main.getResourcesDir()));
 			for (File file : main.getClassesDirs()) {

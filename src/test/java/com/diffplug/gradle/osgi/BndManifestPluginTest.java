@@ -75,7 +75,7 @@ public class BndManifestPluginTest extends GradleIntegrationTest {
 	}
 
 	@Test
-	public void assertCustomJarTasks() throws IOException {
+	public void assertCustomJarTask() throws IOException {
 		write("src/main/resources/META-INF/MANIFEST.MF",
 				"Manifest-Version: 1.0",
 				"Bundle-ManifestVersion: 2",
@@ -105,11 +105,72 @@ public class BndManifestPluginTest extends GradleIntegrationTest {
 				"	classifier 'custom'",
 				"}",
 				"osgiBndManifest { ",
-				"mergeWithExisting true",
-				"includeTask 'customJar'",
+				"  mergeWithExisting true",
+				"  includeTask 'customJar'",
 				"}");
 
 		testCase(buildScript, expectedMerge, "customJar");
+	}
+
+	@Test
+	public void assertCustomJarOnly() throws IOException {
+		write("src/main/resources/META-INF/MANIFEST.MF",
+				"Manifest-Version: 1.0",
+				"Bundle-ManifestVersion: 2",
+				"Bundle-Name: Mock",
+				"Bundle-SymbolicName: org.eclipse.e4.demo.e4photo.flickr.mock; singleton:=true",
+				"Bundle-Version: 1.0.0.qualifier",
+				"Bundle-ActivationPolicy: lazy",
+				"Require-Bundle: org.eclipse.core.runtime");
+
+		String expected = StringPrinter.buildStringFromLines(
+				"Manifest-Version: 1.0",
+				"Bundle-ActivationPolicy: lazy",
+				"Bundle-ManifestVersion: 2",
+				"Bundle-SymbolicName: test",
+				"Bundle-Version: 0.0.0.ERRORSETVERSION",
+				"Export-Package: test;uses:=\"com.diffplug.common.base\";version=\"0.0.0\"",
+				"Import-Package: com.diffplug.common.base;version=\"[3.4,4)\"",
+				"Require-Bundle: org.eclipse.core.runtime",
+				"Require-Capability: osgi.ee;filter:=\"(&(osgi.ee=JavaSE)(version=1.8))\"");
+
+		String buildscriptAddendum = StringPrinter.buildStringFromLines(
+				"task customJar(type: Jar) {",
+				"  with jar",
+				"  manifest.attributes(",
+				"    '-exportcontents': 'test.*',",
+				"    '-removeheaders': 'Bnd-LastModified,Bundle-Name,Created-By,Tool,Private-Package',",
+				"    'Bundle-SymbolicName': 'test'",
+				"  )",
+				"	classifier 'custom'",
+				"}",
+				"osgiBndManifest { ",
+				"  copyFromTask 'customJar'",
+				"  mergeWithExisting true",
+				"  includeTasks = ['customJar']",
+				"}");
+
+		testCase(buildscriptAddendum, expected, "customJar");
+	}
+
+	@Test
+	public void assertCustomJarExcluded() throws IOException {
+		String expected = StringPrinter.buildStringFromLines(
+				"Manifest-Version: 1.0",
+				"");
+
+		write("src/main/resources/META-INF/MANIFEST.MF",
+				"Manifest-Version: 1.0");
+
+		String buildscriptAddendum = StringPrinter.buildStringFromLines(
+				"task customJar(type: Jar) {",
+				"	classifier 'custom'",
+				"}",
+				"osgiBndManifest { ",
+				"  mergeWithExisting true",
+				"}");
+
+		testCase(buildscriptAddendum, expected, "customJar");
 	}
 
 	private void testCase(String buildscriptAddendum, String expectedManifest) throws IOException {
@@ -140,7 +201,7 @@ public class BndManifestPluginTest extends GradleIntegrationTest {
 				"		return new StringPrinter(str -> {});",
 				"	}",
 				"}");
-		gradleRunner().withArguments(task, "--stacktrace", "-i").build();
+		gradleRunner().withArguments(task, "--stacktrace").build();
 
 		// make sure the jar contains the proper manifest
 		File libsDir = file("build/libs");
