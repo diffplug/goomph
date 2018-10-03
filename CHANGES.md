@@ -1,6 +1,8 @@
 # Goomph releases
 
-### Version 3.17.0-SNAPSHOT - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
+### Version 3.18.0-SNAPSHOT - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
+
+### Version 3.17.0 - October 3rd 2018 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.17.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.0/view))
 
 - Generated manifest is now put into the output resources directory, to make sure that it's available at runtime for development.
 - Fixed a bug in ProjectDepsPlugin where similarly-named jars might not replace all of the desired projects.
