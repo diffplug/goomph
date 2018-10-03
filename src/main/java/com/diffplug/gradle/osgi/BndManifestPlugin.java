@@ -22,13 +22,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 
 import org.gradle.api.Project;
+import org.gradle.api.Task;
 import org.gradle.api.java.archives.Attributes;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.plugins.JavaPluginConvention;
@@ -39,10 +37,7 @@ import org.gradle.api.tasks.bundling.Jar;
 import aQute.bnd.osgi.Builder;
 import aQute.bnd.osgi.Constants;
 
-import com.diffplug.common.base.Errors;
-import com.diffplug.common.base.Predicates;
-import com.diffplug.common.base.StringPrinter;
-import com.diffplug.common.base.Throwing;
+import com.diffplug.common.base.*;
 import com.diffplug.common.collect.ImmutableMap;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.ProjectPlugin;
@@ -50,11 +45,11 @@ import com.diffplug.gradle.ZipMisc;
 
 /**
  * Generates a manifest using purely bnd, and outputs it for IDE consumption.
- * 
+ *
  * Generating manifests by hand is a recipe for mistakes. Bnd does a fantastic
  * job generating all this stuff for you, but there's a lot of wiring required
  * to tie bnd into both Eclipse PDE and Gradle. Which is what Goomph is for!
- * 
+ *
  * ```groovy
  * apply plugin: 'com.diffplug.gradle.osgi.bndmanifest'
  * // Pass headers and bnd directives: http://www.aqute.biz/Bnd/Format
@@ -76,17 +71,17 @@ import com.diffplug.gradle.ZipMisc;
  *     // By default, the existing manifest is completely ignored.
  *     // The line below will cause the existing manifest's fields
  *     // to be merged with the fields set by bnd.
- *     mergeWithExisting true  
+ *     mergeWithExisting true
  * }
  * ```
- * 
+ *
  * Besides passing raw headers and bnd directives, this plugin also takes the following actions:
- * 
+ *
  * * Passes the project version to bnd if {@code Bundle-Version} hasn't been set explicitly.
  * * Replaces `-SNAPSHOT` in the version with `.IyyyyMMddkkmm` (to-the-minute timestamp).
  * * Passes the {@code runtime} configuration's classpath to bnd for manifest calculation.
  * * Instructs bnd to respect the result of the {@code processResources} task.
- * 
+ *
  * Many thanks to JRuyi and Agemo Cui for their excellent
  * [osgibnd-gradle-plugin](https://github.com/jruyi/osgibnd-gradle-plugin).
  * This plugin follows the template set by their plugin, but with fewer automagic
@@ -97,36 +92,52 @@ public class BndManifestPlugin extends ProjectPlugin {
 	protected void applyOnce(Project proj) {
 		ProjectPlugin.getPlugin(proj, JavaPlugin.class);
 		BndManifestExtension extension = proj.getExtensions().create(BndManifestExtension.NAME, BndManifestExtension.class);
-		Jar jarTask = (Jar) proj.getTasks().getByName(JavaPlugin.JAR_TASK_NAME);
-		// at the end of the jar, modify the manifest, and possibly write it to `osgiBndManifest { bndManifestcopyTo }`.
-		jarTask.doLast(unused -> {
-			Errors.rethrow().run(() -> {
-				byte[] manifest = getManifestContent(jarTask, extension).getBytes(StandardCharsets.UTF_8);
-				// modify the jar
-				Map<String, Function<byte[], byte[]>> toModify = ImmutableMap.of("META-INF/MANIFEST.MF", in -> manifest);
-				ZipMisc.modify(jarTask.getArchivePath(), toModify, Predicates.alwaysFalse());
-				// write manifest to the output resources directory
-				Throwing.Consumer<Path> writeManifest = path -> {
-					if (Files.exists(path)) {
-						if (Arrays.equals(Files.readAllBytes(path), manifest)) {
-							return;
-						}
-					}
-					Files.createDirectories(path.getParent());
-					Files.write(path, manifest);
-				};
-				writeManifest.accept(outputManifest(jarTask));
-				// and the jarTask, maybe
-				if (extension.copyTo != null) {
-					writeManifest.accept(jarTask.getProject().file(extension.copyTo).toPath());
-				}
-			});
-		});
 
 		proj.afterEvaluate(project -> {
+
+			// copyFromTask must be configured if copyTo is used
+			Preconditions.checkArgument(extension.copyTo == null || extension.copyFromTask != null,
+					"copyFromTask can not be null if copyTo is set. Please provide a source task.");
+
+			final Jar copyFromTask = (extension.copyFromTask == null) ? null : getAsJar(proj, extension.copyFromTask);
+
+			Preconditions.checkArgument(extension.copyFromTask == null || extension.includeTasks.contains(extension.copyFromTask),
+					"copyFromTask must reside within includeTask");
+
+			extension.includeTasks.forEach(name -> {
+
+				Jar jarTask = getAsJar(proj, (String) name);
+
+				// at the end of the jar, modify the manifest
+				jarTask.doLast(unused -> {
+					Errors.rethrow().run(() -> {
+						byte[] manifest = getManifestContent(jarTask, extension).getBytes(StandardCharsets.UTF_8);
+						// modify the jar
+						Map<String, Function<byte[], byte[]>> toModify = ImmutableMap.of("META-INF/MANIFEST.MF", in -> manifest);
+						ZipMisc.modify(jarTask.getArchivePath(), toModify, Predicates.alwaysFalse());
+						// write manifest to the output resources directory
+						Throwing.Consumer<Path> writeManifest = path -> {
+							if (Files.exists(path)) {
+								if (Arrays.equals(Files.readAllBytes(path), manifest)) {
+									return;
+								}
+							}
+							Files.createDirectories(path.getParent());
+							Files.write(path, manifest);
+						};
+						writeManifest.accept(outputManifest(jarTask));
+
+						// and maybe write it to `osgiBndManifest { copyTo }`.
+						if (extension.copyTo != null && jarTask.equals(copyFromTask)) {
+							writeManifest.accept(jarTask.getProject().file(extension.copyTo).toPath());
+						}
+					});
+				});
+			});
+
 			// find the file that the user would like us to copy to (if any)
-			if (extension.copyTo != null) {
-				jarTask.getOutputs().file(extension.copyTo);
+			if (extension.copyTo != null && copyFromTask != null) {
+				copyFromTask.getOutputs().file(extension.copyTo);
 			}
 		});
 	}
@@ -142,7 +153,7 @@ public class BndManifestPlugin extends ProjectPlugin {
 		if (!extension.mergeWithExisting) {
 			Files.deleteIfExists(outputManifest(jarTask));
 		}
-		// take the bnd action 
+		// take the bnd action
 		return BndManifestPlugin.takeBndAction(jarTask.getProject(), jarTask, jar -> {
 			return StringPrinter.buildString(printer -> {
 				try (OutputStream output = printer.toOutputStream(StandardCharsets.UTF_8)) {
@@ -173,15 +184,14 @@ public class BndManifestPlugin extends ProjectPlugin {
 			JavaPluginConvention javaConvention = project.getConvention().getPlugin(JavaPluginConvention.class);
 			SourceSetOutput main = javaConvention.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME).getOutput();
 			// delete empty folders so that bnd doesn't make Export-Package entries for them
-			StringBuilder includeresource = new StringBuilder();
+			Set<String> includeresource = new LinkedHashSet<>();
 			deleteEmptyFoldersIfExists(main.getResourcesDir());
-			includeresource.append(fix(main.getResourcesDir()));
+			includeresource.add(fix(main.getResourcesDir()));
 			for (File file : main.getClassesDirs()) {
 				deleteEmptyFoldersIfExists(file);
-				includeresource.append(",");
-				includeresource.append(fix(file));
+				includeresource.add(fix(file));
 			}
-			builder.set(Constants.INCLUDERESOURCE, includeresource.toString());
+			builder.set(Constants.INCLUDERESOURCE, String.join(",", includeresource));
 
 			// set the version
 			if (builder.getBundleVersion() == null) {
@@ -214,5 +224,11 @@ public class BndManifestPlugin extends ProjectPlugin {
 	private static String dateQualifier() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddkkmm");
 		return dateFormat.format(new Date());
+	}
+
+	private static Jar getAsJar(Project project, String taskName) {
+		Task task = project.getTasks().getByName(taskName);
+		Preconditions.checkArgument(task instanceof Jar, "Task " + taskName + " must be a Jar derived task for generating BndManifest");
+		return (Jar) task;
 	}
 }
