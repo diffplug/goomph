@@ -154,6 +154,7 @@ import com.diffplug.gradle.ProjectPlugin;
 public class OomphIdePlugin extends ProjectPlugin {
 	static final String IDE = "ide";
 	static final String IDE_SETUP_WORKSPACE = "ideSetupWorkspace";
+	static final String IDE_SETUP_INSTALLATION = "ideSetupInstallation";
 	static final String IDE_SETUP_P2 = "ideSetupP2";
 	static final String IDE_CLEAN = "ideClean";
 
@@ -169,6 +170,12 @@ public class OomphIdePlugin extends ProjectPlugin {
 		ideSetupP2.doFirst(unused -> {
 			Errors.rethrow().run(extension::ideSetupP2);
 		});
+		// ideSetupInstallation
+		Task ideSetupInstallation = project.getTasks().create(IDE_SETUP_INSTALLATION);
+		ideSetupInstallation.doFirst(unused -> {
+			Errors.rethrow().run(extension::ideSetupInstallation);
+		});
+		ideSetupInstallation.dependsOn(ideSetupP2);
 		// ideSetupWorkspace
 		Task ideSetupWorkspace = project.getTasks().create(IDE_SETUP_WORKSPACE);
 		ideSetupWorkspace.doFirst(unused -> {
@@ -195,6 +202,9 @@ public class OomphIdePlugin extends ProjectPlugin {
 				if (!extension.workspaceExists()) {
 					ide.dependsOn(ideSetupWorkspace);
 				}
+
+				//tie ide to ideSetupInstallation
+				ide.dependsOn(ideSetupInstallation);
 			});
 		});
 

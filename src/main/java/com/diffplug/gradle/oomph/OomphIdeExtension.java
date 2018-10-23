@@ -74,9 +74,15 @@ public class OomphIdeExtension implements P2Declarative {
 	final Project project;
 	final WorkspaceRegistry workspaceRegistry;
 	final SortedSet<File> projectFiles = new TreeSet<>();
+
 	final Map<String, Object> workspaceFiles = new HashMap<>();
 	final Map<String, Action<Map<String, String>>> workspaceProps = new HashMap<>();
 	final Map<String, Action<XmlProvider>> workspaceXmls = new HashMap<>();
+
+	final Map<String, Object> installationFiles = new HashMap<>();
+	final Map<String, Action<Map<String, String>>> installationProps = new HashMap<>();
+	final Map<String, Action<XmlProvider>> installationXmls = new HashMap<>();
+
 	final P2Model p2 = new P2Model();
 	final Lazyable<List<SetupAction>> setupActions = Lazyable.ofList();
 
@@ -309,12 +315,41 @@ public class OomphIdeExtension implements P2Declarative {
 
 	/**
 	 * Modifies the xml that was written in a previous call to {@link #workspaceFile(String, Object)} or
-	 * {@link #workspaceXml(String, Action)}. However, 
+	 * {@link #workspaceXml(String, Action)}. However,
 	 */
 	@SuppressWarnings("unchecked")
 	public void workspaceXml(String destination, Action<XmlProvider> xmlSupplier) {
 		workspaceXmls.merge(destination, xmlSupplier, (before, after) -> Actions.composite(before, after));
 	}
+
+
+	/** Sets the given path within the installation directory (were eclipse app is located) to be a copy of the file located at fileSrc. */
+	public void installationFile(String destination, Object fileSrc) {
+		Object previousValue = installationFiles.put(destination, fileSrc);
+		if (previousValue != null) {
+			project.getLogger().warn("installationFile('" + destination + "', ...), was called more than once, previous value was discarded");
+		}
+	}
+
+	/**
+	 * Sets the given path within the installation directory (were eclipse app is located) to be a property file.  If a property file was already
+	 * written by a previous call to {@link #installationFile(String, Object)} or {@link #installationProp(String, Action)},
+	 * then it can be modified by this action.
+	 */
+	@SuppressWarnings("unchecked")
+	public void installationProp(String destination, Action<Map<String, String>> configSupplier) {
+		installationProps.merge(destination, configSupplier, (before, after) -> Actions.composite(before, after));
+	}
+
+	/**
+	 * Modifies the xml that was written in a previous call to {@link #installationFile(String, Object)} or
+	 * {@link #installationXml(String, Action)}.
+	 */
+	@SuppressWarnings("unchecked")
+	public void installationXml(String destination, Action<XmlProvider> xmlSupplier) {
+		installationXmls.merge(destination, xmlSupplier, (before, after) -> Actions.composite(before, after));
+	}
+
 
 	/** Adds an action which will be run inside our running application. */
 	public void addSetupAction(SetupAction internalSetupAction) {
@@ -534,6 +569,53 @@ public class OomphIdeExtension implements P2Declarative {
 
 		SetupWithinEclipse internal = new SetupWithinEclipse(ideDir, ordered);
 		Errors.constrainTo(IOException.class).run(() -> JavaExecable.exec(project, internal));
+	}
+
+	//////////////////////////
+	// ideSetupInstallation //
+	//////////////////////////
+	void ideSetupInstallation () throws Exception {
+		File ideDir = getIdeDir();
+		// write the workspace files
+		installationFiles.forEach((path, src) -> {
+			File target = new File(ideDir, path);
+			File srcFile = project.file(src);
+			try {
+				FileUtils.copyFile(srcFile, target);
+			} catch (IOException e) {
+				throw new GradleException("error for installationFile('" + path + "', '" + srcFile + "'), maybe the source file does not exist?", e);
+			}
+		});
+		// for each prop, load the existing map, if any, and pass it to the actions
+		installationProps.forEach((path, propAction) -> {
+			File target = new File(ideDir, path);
+			Map<String, String> initial;
+			try {
+				if (target.exists()) {
+					initial = ConfigMisc.loadProps(target);
+				} else {
+					initial = new LinkedHashMap<>();
+					FileMisc.mkdirs(target.getParentFile());
+				}
+				propAction.execute(initial);
+				ConfigMisc.writeProps(initial, target);
+			} catch (IOException e) {
+				throw new GradleException("error when writing workspaceProp '" + path + "'", e);
+			}
+		});
+		// for each prop, load the existing file, which must exist, and then pass it to the actions
+		installationXmls.forEach((path, xmlAction) -> {
+			File target = new File(ideDir, path);
+			if (!target.exists()) {
+				throw new GradleException("installationXml('" + path + "', ... must be initialized by a call to installationFile('" + path + "', ...");
+			}
+			try  {
+				ConfigMisc.modifyXmlInPlace(target, xmlAction);
+			} catch (IOException e) {
+				throw new GradleException("error when writing installationXml '" + path + "'", e);
+			}
+		});
+
 	}
 
 	/////////

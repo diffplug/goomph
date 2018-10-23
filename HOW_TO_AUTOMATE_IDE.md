@@ -74,6 +74,52 @@ oomphIde {
 
 You can also use Eclipse's internal APIs to programatically set properties.  This is pretty advanced.  You'll want to look at Goomph's code, and examine the subclasses of `SetupAction`.
 
+## How do I find and set a ide setting / preference?
+
+The general formula for setting a particular setting in this:
+
+- Create and open a clean IDE `gradlew ideClean ide`
+- Close the IDE (which will save the workspace metadata)
+- Find the ide directory (it will be inside `build/oomph-ide.app`)
+- Copy the ide directory
+- Open the IDE `gradlew ide` and set the settings you'd like to set
+- Close the IDE
+- Diff the ide directory before and after
+
+This will let you know which property file you need to set, and what you need to set it to.  Once you know what you need to do, this is how you can actually do it:
+
+### Set a workspace property or xml file
+
+Most eclipse settings are set in property files.  You can set them manually like this:
+
+```gradle
+oomphIde {
+	...
+	installationProp 'Contents/Eclipse/configuration/.settings/org.eclipse.core.net.prefs', {
+        it.put('org.eclipse.core.net.hasMigrated', 'true')
+        it.put('systemProxiesEnabled', 'false')
+        it.put('nonProxiedHosts', 'localhost|127.0.0.1')
+        it.put('proxyData/HTTP/hasAuth', 'false')
+        it.put('proxyData/HTTP/host', 'proxy.company')
+        it.put('proxyData/HTTP/port', '8080')
+        it.put('proxyData/HTTPS/hasAuth', 'false')
+        it.put('proxyData/HTTPS/host', 'proxy.company')
+        it.put('proxyData/HTTPS/port', '8080')
+    }
+}
+```
+
+You can also set xml files.  In order to set an xml file, you must first provide a template, and then you can modify the xml using [`XmlProvider`](https://docs.gradle.org/current/javadoc/org/gradle/api/XmlProvider.html).
+
+```gradle
+oomphIde {
+	...
+	installationFile('destination', 'source')
+	installationXml('destination', { xmlProvider -> ...}) // modify your xml here
+}
+```
+ 
+
 ## How do I add a DSL for a plugin?
 
 If you have an Eclipse plugin that you'd like to add to to Goomph, we'd love to have it!  Take a look at [ConventionThirdParty](https://github.com/diffplug/goomph/blob/master/src/main/java/com/diffplug/gradle/oomph/thirdparty/ConventionThirdParty.java), and add a block for your plugin there.  If you look at all subclasses of `OomphConvention`, you can see how you can make a configuration DSL for your users, if you'd like.  But even just a simple "add the repo, add the feature" is helpful.
