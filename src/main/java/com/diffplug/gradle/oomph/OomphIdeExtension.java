@@ -322,7 +322,6 @@ public class OomphIdeExtension implements P2Declarative {
 		workspaceXmls.merge(destination, xmlSupplier, (before, after) -> Actions.composite(before, after));
 	}
 
-
 	/** Sets the given path within the installation directory (were eclipse app is located) to be a copy of the file located at fileSrc. */
 	public void installationFile(String destination, Object fileSrc) {
 		Object previousValue = installationFiles.put(destination, fileSrc);
@@ -349,7 +348,6 @@ public class OomphIdeExtension implements P2Declarative {
 	public void installationXml(String destination, Action<XmlProvider> xmlSupplier) {
 		installationXmls.merge(destination, xmlSupplier, (before, after) -> Actions.composite(before, after));
 	}
-
 
 	/** Adds an action which will be run inside our running application. */
 	public void addSetupAction(SetupAction internalSetupAction) {
@@ -574,7 +572,7 @@ public class OomphIdeExtension implements P2Declarative {
 	//////////////////////////
 	// ideSetupInstallation //
 	//////////////////////////
-	void ideSetupInstallation () throws Exception {
+	void ideSetupInstallation() throws Exception {
 		File ideDir = getIdeDir();
 		// write the workspace files
 		installationFiles.forEach((path, src) -> {
@@ -609,7 +607,7 @@ public class OomphIdeExtension implements P2Declarative {
 			if (!target.exists()) {
 				throw new GradleException("installationXml('" + path + "', ... must be initialized by a call to installationFile('" + path + "', ...");
 			}
-			try  {
+			try {
 				ConfigMisc.modifyXmlInPlace(target, xmlAction);
 			} catch (IOException e) {
 				throw new GradleException("error when writing installationXml '" + path + "'", e);

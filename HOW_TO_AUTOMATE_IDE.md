@@ -96,16 +96,16 @@ Most eclipse settings are set in property files.  You can set them manually like
 oomphIde {
 	...
 	installationProp 'Contents/Eclipse/configuration/.settings/org.eclipse.core.net.prefs', {
-        it.put('org.eclipse.core.net.hasMigrated', 'true')
-        it.put('systemProxiesEnabled', 'false')
-        it.put('nonProxiedHosts', 'localhost|127.0.0.1')
-        it.put('proxyData/HTTP/hasAuth', 'false')
-        it.put('proxyData/HTTP/host', 'proxy.company')
-        it.put('proxyData/HTTP/port', '8080')
-        it.put('proxyData/HTTPS/hasAuth', 'false')
-        it.put('proxyData/HTTPS/host', 'proxy.company')
-        it.put('proxyData/HTTPS/port', '8080')
-    }
+		it.put('org.eclipse.core.net.hasMigrated', 'true')
+		it.put('systemProxiesEnabled', 'false')
+		it.put('nonProxiedHosts', 'localhost|127.0.0.1')
+		it.put('proxyData/HTTP/hasAuth', 'false')
+		it.put('proxyData/HTTP/host', 'proxy.company')
+		it.put('proxyData/HTTP/port', '8080')
+		it.put('proxyData/HTTPS/hasAuth', 'false')
+		it.put('proxyData/HTTPS/host', 'proxy.company')
+		it.put('proxyData/HTTPS/port', '8080')
+	}
 }
 ```
 
@@ -118,7 +118,7 @@ oomphIde {
 	installationXml('destination', { xmlProvider -> ...}) // modify your xml here
 }
 ```
- 
+
 
 ## How do I add a DSL for a plugin?
 
