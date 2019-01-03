@@ -2,6 +2,8 @@
 
 ### Version 3.18.0-SNAPSHOT - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
+### Version 3.17.1 - January 2nd 2019 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.17.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.1/view))
+
 - Added eclipse `4.10.0`.
 
 ### Version 3.17.0 - October 3rd 2018 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.17.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.0/view))
