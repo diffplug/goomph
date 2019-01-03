@@ -17,7 +17,7 @@ buildscript {
 
 plugins {
 	// github pages
-	id 'org.ajoberstar.github-pages' version '1.4.2'
+	id 'org.ajoberstar.github-pages' version '1.7.2'
 	// https://github.com/ben-manes/gradle-versions-plugin
 	id 'com.github.ben-manes.versions' version '0.20.0' // dependencyUpdates
 }
