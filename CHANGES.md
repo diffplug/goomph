@@ -2,6 +2,8 @@
 
 ### Version 3.18.0-SNAPSHOT - TBD ([javadoc](http://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
+### Version 3.17.2 - February 4th 2019 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.17.2/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.2/view))
+
 - Fix the `equinoxLaunch` plugin, and added a test to prevent future breakage. ([#93](https://github.com/diffplug/goomph/pull/93))
 
 ### Version 3.17.1 - January 2nd 2019 ([javadoc](http://diffplug.github.io/goomph/javadoc/3.17.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.1/view))
