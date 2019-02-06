@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Function;
 
+import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.java.archives.Attributes;
@@ -105,33 +106,34 @@ public class BndManifestPlugin extends ProjectPlugin {
 					"copyFromTask must reside within includeTask");
 
 			extension.includeTasks.forEach(name -> {
-
 				Jar jarTask = getAsJar(proj, (String) name);
-
 				// at the end of the jar, modify the manifest
-				jarTask.doLast(unused -> {
-					Errors.rethrow().run(() -> {
-						byte[] manifest = getManifestContent(jarTask, extension).getBytes(StandardCharsets.UTF_8);
-						// modify the jar
-						Map<String, Function<byte[], byte[]>> toModify = ImmutableMap.of("META-INF/MANIFEST.MF", in -> manifest);
-						ZipMisc.modify(jarTask.getArchivePath(), toModify, Predicates.alwaysFalse());
-						// write manifest to the output resources directory
-						Throwing.Consumer<Path> writeManifest = path -> {
-							if (Files.exists(path)) {
-								if (Arrays.equals(Files.readAllBytes(path), manifest)) {
-									return;
+				jarTask.doLast("Set OSGi manifest", new Action<Task>() {
+					@Override
+					public void execute(Task unused) {
+						Errors.rethrow().run(() -> {
+							byte[] manifest = getManifestContent(jarTask, extension).getBytes(StandardCharsets.UTF_8);
+							// modify the jar
+							Map<String, Function<byte[], byte[]>> toModify = ImmutableMap.of("META-INF/MANIFEST.MF", in -> manifest);
+							ZipMisc.modify(jarTask.getArchivePath(), toModify, Predicates.alwaysFalse());
+							// write manifest to the output resources directory
+							Throwing.Consumer<Path> writeManifest = path -> {
+								if (Files.exists(path)) {
+									if (Arrays.equals(Files.readAllBytes(path), manifest)) {
+										return;
+									}
 								}
-							}
-							Files.createDirectories(path.getParent());
-							Files.write(path, manifest);
-						};
-						writeManifest.accept(outputManifest(jarTask));
+								Files.createDirectories(path.getParent());
+								Files.write(path, manifest);
+							};
+							writeManifest.accept(outputManifest(jarTask));
 
-						// and maybe write it to `osgiBndManifest { copyTo }`.
-						if (extension.copyTo != null && jarTask.equals(copyFromTask)) {
-							writeManifest.accept(jarTask.getProject().file(extension.copyTo).toPath());
-						}
-					});
+							// and maybe write it to `osgiBndManifest { copyTo }`.
+							if (extension.copyTo != null && jarTask.equals(copyFromTask)) {
+								writeManifest.accept(jarTask.getProject().file(extension.copyTo).toPath());
+							}
+						});
+					}
 				});
 			});
 
