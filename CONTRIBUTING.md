@@ -35,7 +35,6 @@ buildscript {
 
 	dependencies {
 		classpath 'com.diffplug.gradle:goomph:+'
-		classpath 'com.diffplug.durian:durian-swt:+'
 	}
 }
 
