@@ -2,6 +2,8 @@
 
 ### Version 3.18.0-SNAPSHOT - TBD ([javadoc](https://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
+- Replace `http://` with `https://` throughout the project, now that [eclipse supports https for download.eclipse.org](https://bugs.eclipse.org/bugs/show_bug.cgi?id=444350).
+
 ### Version 3.17.3 - February 6th 2019 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.17.3/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.3/view))
 
 - Fixed up-to-date checking for the `BndManifestPlugin` ([6480298](https://github.com/diffplug/goomph/commit/6480298173988656fa29035c6533fac39ceedfa4)).
