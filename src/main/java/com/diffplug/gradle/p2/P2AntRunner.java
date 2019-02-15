@@ -1,11 +1,11 @@
 /*
- * Copyright 2016 DiffPlug
+ * Copyright 2019 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,7 +27,7 @@ import com.diffplug.gradle.pde.PdeInstallation;
 /**
  * Models an eclipse ant task which can be run by the P2 Bootstrapper.
  * 
- * Other useful tasks are [here](http://help.eclipse.org/neon/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Fguide%2Fp2_repositorytasks.htm).
+ * Other useful tasks are [here](https://help.eclipse.org/neon/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Fguide%2Fp2_repositorytasks.htm).
  * 
  * If the task you require isn't contained in the p2 bootstrapper,
  * you can also run the task using a full PDE installation using

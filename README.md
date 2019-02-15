@@ -51,8 +51,8 @@ See the [plugin's javadoc](https://diffplug.github.io/goomph/javadoc/3.17.3/com/
 
 ## Blog posts
 
-- [P2, Maven, and Gradle](http://discuss.diffplug.com/t/p2-maven-and-gradle)
-- [Parting out eclipse](http://discuss.diffplug.com/t/parting-out-eclipse)
+- [P2, Maven, and Gradle](https://discuss.diffplug.com/t/p2-maven-and-gradle)
+- [Parting out eclipse](https://discuss.diffplug.com/t/parting-out-eclipse)
 
 ## Building OSGi bundles, Eclipse plugins, and RCP applications.
 
@@ -60,7 +60,7 @@ It turns out that the tooling required to implement "IDE-as-build-artifact" is t
 
 Real world Eclipse software built with Goomph:
 - [DiffPlug](https://www.diffplug.com/)
-- [Veriluma](http://veriluma.com/)
+- [Veriluma](https://veriluma.com/)
 - [GenStar](https://github.com/ANRGenstar/genstar)
 - (your project here)
 
@@ -75,7 +75,7 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 
 * [`mavencentral`](https://diffplug.github.io/goomph/javadoc/3.17.3/com/diffplug/gradle/eclipse/MavenCentralPlugin.html) makes it easy to add dependency jars from an eclipse release.
 * [`classic`](https://diffplug.github.io/goomph/javadoc/3.17.3/com/diffplug/gradle/eclipse/GradleClassicPlugin.html) makes eclipse projects in the way that `gradle <= 4.3` did.
-* [`buildproperties`](https://diffplug.github.io/goomph/javadoc/3.17.3/com/diffplug/gradle/eclipse/BuildPropertiesPlugin.html) uses [`build.properties`](http://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Fguide%2Ftools%2Feditors%2Fmanifest_editor%2Fbuild.htm) to control a gradle build, and fixes eclipse project classpath to include binary assets specified in `build.properties`.
+* [`buildproperties`](https://diffplug.github.io/goomph/javadoc/3.17.3/com/diffplug/gradle/eclipse/BuildPropertiesPlugin.html) uses [`build.properties`](https://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Fguide%2Ftools%2Feditors%2Fmanifest_editor%2Fbuild.htm) to control a gradle build, and fixes eclipse project classpath to include binary assets specified in `build.properties`.
 * [`excludebuildfolder`](https://diffplug.github.io/goomph/javadoc/3.17.3/com/diffplug/gradle/eclipse/ExcludeBuildFolderPlugin.html) excludes the gradle `build` folder from Eclipse's resource indexing.
 * [`projectdeps`](https://diffplug.github.io/goomph/javadoc/3.17.3/com/diffplug/gradle/eclipse/ProjectDepsPlugin.html) fixes an intermittent problem where dependencies on other projects within the workspace aren't always resolved correctly within Eclipse.
 * [`resourcefilters`](https://diffplug.github.io/goomph/javadoc/3.17.3/com/diffplug/gradle/eclipse/ResourceFiltersPlugin.html) adds resource filters to the eclipse project.
@@ -122,7 +122,7 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 * Thanks to Neil Fraser of Google for [diff-match-patch](https://code.google.com/p/google-diff-match-patch/) which is very helpful for testing.
 * Thanks to Thipor Kong for his [handy windows cmdline length workaround for the classpath](https://discuss.gradle.org/t/javaexec-fails-for-long-classpaths-on-windows/15266).
 * Formatted by [spotless](https://github.com/diffplug/spotless).
-* Bugs found by [findbugs](http://findbugs.sourceforge.net/).
-* Built by [gradle](http://gradle.org/).
-* Tested by [junit](http://junit.org/).
-* Maintained by [DiffPlug](http://www.diffplug.com/).
+* Bugs found by [findbugs](https://findbugs.sourceforge.net/).
+* Built by [gradle](https://gradle.org/).
+* Tested by [junit](https://junit.org/).
+* Maintained by [DiffPlug](https://www.diffplug.com/).

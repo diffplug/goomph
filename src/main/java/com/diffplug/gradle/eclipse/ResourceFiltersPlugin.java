@@ -1,11 +1,11 @@
 /*
- * Copyright 2016 DiffPlug
+ * Copyright 2019 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,10 +26,10 @@ import groovy.util.Node;
 import com.diffplug.gradle.ProjectPlugin;
 
 /**
- * Eclipse projects can have [resource filters](http://help.eclipse.org/neon/index.jsp?topic=%2Forg.eclipse.platform.doc.user%2Fconcepts%2Fresourcefilters.htm)
+ * Eclipse projects can have [resource filters](https://help.eclipse.org/neon/index.jsp?topic=%2Forg.eclipse.platform.doc.user%2Fconcepts%2Fresourcefilters.htm)
  * which include or exclude certain files.
  * 
- * ![Screenshot](http://i.stack.imgur.com/7eIVE.png)
+ * ![Screenshot](https://i.stack.imgur.com/7eIVE.png)
  * 
  * This plugin allows you to easily configure these settings.
  *

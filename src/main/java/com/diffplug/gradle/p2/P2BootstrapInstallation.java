@@ -1,11 +1,11 @@
 /*
- * Copyright 2016 DiffPlug
+ * Copyright 2019 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -160,8 +160,8 @@ class P2BootstrapInstallation {
 	java.version=1.8.0_74
 	java.vendor=Oracle Corporation
 	BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
-	Framework arguments:  -application org.eclipse.equinox.p2.director -repository http://download.eclipse.org/eclipse/updates/4.5/R-4.5.2-201602121500/ -artifactRepository file:C:\Users\ntwigg\.goomph\shared-bundles -installIU org.eclipse.rcp.configuration.feature.group,org.eclipse.equinox.executable.feature.group -profile profile -destination file:C:\Users\ntwigg\Documents\DiffPlugDev\DiffPlug\targetplatform\build\p2asmaven\__p2__ -profileProperties org.eclipse.update.install.features=true -p2.os win32 -p2.ws win32 -p2.arch x86
-	Command-line arguments:  -clean -consolelog -application org.eclipse.equinox.p2.director -repository http://download.eclipse.org/eclipse/updates/4.5/R-4.5.2-201602121500/ -artifactRepository file:C:\Users\ntwigg\.goomph\shared-bundles -installIU org.eclipse.rcp.configuration.feature.group,org.eclipse.equinox.executable.feature.group -profile profile -destination file:C:\Users\ntwigg\Documents\DiffPlugDev\DiffPlug\targetplatform\build\p2asmaven\__p2__ -profileProperties org.eclipse.update.install.features=true -p2.os win32 -p2.ws win32 -p2.arch x86
+	Framework arguments:  -application org.eclipse.equinox.p2.director -repository https://download.eclipse.org/eclipse/updates/4.5/R-4.5.2-201602121500/ -artifactRepository file:C:\Users\ntwigg\.goomph\shared-bundles -installIU org.eclipse.rcp.configuration.feature.group,org.eclipse.equinox.executable.feature.group -profile profile -destination file:C:\Users\ntwigg\Documents\DiffPlugDev\DiffPlug\targetplatform\build\p2asmaven\__p2__ -profileProperties org.eclipse.update.install.features=true -p2.os win32 -p2.ws win32 -p2.arch x86
+	Command-line arguments:  -clean -consolelog -application org.eclipse.equinox.p2.director -repository https://download.eclipse.org/eclipse/updates/4.5/R-4.5.2-201602121500/ -artifactRepository file:C:\Users\ntwigg\.goomph\shared-bundles -installIU org.eclipse.rcp.configuration.feature.group,org.eclipse.equinox.executable.feature.group -profile profile -destination file:C:\Users\ntwigg\Documents\DiffPlugDev\DiffPlug\targetplatform\build\p2asmaven\__p2__ -profileProperties org.eclipse.update.install.features=true -p2.os win32 -p2.ws win32 -p2.arch x86
 	
 	!ENTRY org.eclipse.update.configurator 4 0 2016-06-16 15:52:15.886
 	!MESSAGE FrameworkEvent ERROR

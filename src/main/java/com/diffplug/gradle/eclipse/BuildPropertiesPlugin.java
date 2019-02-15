@@ -1,11 +1,11 @@
 /*
- * Copyright 2016 DiffPlug
+ * Copyright 2019 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -41,7 +41,7 @@ import com.diffplug.gradle.GroovyCompat;
 import com.diffplug.gradle.ProjectPlugin;
 
 /**
- * Uses [`build.properties`](http://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Fguide%2Ftools%2Feditors%2Fmanifest_editor%2Fbuild.htm)
+ * Uses [`build.properties`](https://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Fguide%2Ftools%2Feditors%2Fmanifest_editor%2Fbuild.htm)
  * to control a gradle build, and fixes the eclipse project classpath to include binary assets specified in `build.properties`.
  * 
  * Eclipse PDE uses a `build.properties` file to control the build process.  Even if you aren't using PDE for

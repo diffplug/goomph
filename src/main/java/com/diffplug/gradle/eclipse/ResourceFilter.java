@@ -1,11 +1,11 @@
 /*
- * Copyright 2016 DiffPlug
+ * Copyright 2019 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -144,7 +144,7 @@ public class ResourceFilter {
 		matcherNode.appendNode("arguments", "1.0-" + matcher.name() + "-matches-" + caseSensitive + "-" + isRegex + "-" + matchValue);
 	}
 
-	/** Values from from [IResourceFilterDescription](http://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fcore%2Fresources%2Fclass-use%2FIResourceFilterDescription.html) */
+	/** Values from from [IResourceFilterDescription](https://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fcore%2Fresources%2Fclass-use%2FIResourceFilterDescription.html) */
 	enum Kind {
 		INCLUDE_ONLY, EXCLUDE_ALL, FILES, FOLDERS, INHERITABLE;
 

@@ -1,11 +1,11 @@
 /*
- * Copyright 2016 DiffPlug
+ * Copyright 2019 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -53,7 +53,7 @@ import com.diffplug.gradle.ZipMisc;
  *
  * ```groovy
  * apply plugin: 'com.diffplug.gradle.osgi.bndmanifest'
- * // Pass headers and bnd directives: http://www.aqute.biz/Bnd/Format
+ * // Pass headers and bnd directives: https://www.aqute.biz/Bnd/Format
  * jar.manifest.attributes(
  *     '-exportcontents': 'com.diffplug.*',
  *     '-removeheaders': 'Bnd-LastModified,Bundle-Name,Created-By,Tool,Private-Package',

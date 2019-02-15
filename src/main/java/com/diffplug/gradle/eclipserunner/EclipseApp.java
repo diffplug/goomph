@@ -1,11 +1,11 @@
 /*
- * Copyright 2016 DiffPlug
+ * Copyright 2019 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -47,7 +47,7 @@ import com.diffplug.gradle.FileMisc;
  **
  * ```java
  * EclipseApp p2director = new EclipseApp("org.eclipse.equinox.p2.director");
- * p2director.addArg("repository", "http://somerepo");
+ * p2director.addArg("repository", "https://somerepo");
  * p2director.addArg("destination", "file://somefile");
  * p2director.addArg("installIU", "org.eclipse.jdt");
  * p2director.addArg("installIU", "org.eclipse.text");
@@ -58,7 +58,7 @@ import com.diffplug.gradle.FileMisc;
  *
  * ```
  * eclipsec.exe -application org.eclipse.equinox.p2.director
- *     -repository http://somerepo
+ *     -repository https://somerepo
  *     -destination file://somefile
  *     -installIU org.eclipse.jdt,org.eclipse.text
  * ```
@@ -195,7 +195,7 @@ public class EclipseApp {
 	/**
 	 * Models the `org.eclipse.ant.core.antRunner` application, including its `build.xml`.
 	 *
-	 * [Ant task documentation](http://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Fguide%2Fp2_repositorytasks.htm)
+	 * [Ant task documentation](https://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Fguide%2Fp2_repositorytasks.htm)
 	 */
 	public static class AntRunner extends EclipseApp {
 		public static final String ID = "org.eclipse.ant.core.antRunner";

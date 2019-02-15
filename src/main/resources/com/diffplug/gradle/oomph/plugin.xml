@@ -3,7 +3,7 @@
 <plugin>
 	<extension id="product" point="org.eclipse.core.runtime.products"> 
 		<product name="%name%" application="org.eclipse.ui.ide.workbench" description="%productBlurb%"> 
-			<!-- For documentation on updating icons, see http://wiki.eclipse.org/Platform-releng/Updating_Branding -->
+			<!-- For documentation on updating icons, see https://wiki.eclipse.org/Platform-releng/Updating_Branding -->
 			<property name="windowImages" value="eclipse16.png,eclipse32.png,eclipse48.png,eclipse64.png,eclipse128.png,eclipse256.png"/> 
 			<property name="aboutImage" value="eclipse128.png"/> 
 			<property name="aboutText" value="%productBlurb%"/> 
