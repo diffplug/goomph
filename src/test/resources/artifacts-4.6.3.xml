@@ -5,7 +5,7 @@
     <property name='publishPackFilesAsSiblings' value='true'/>
     <property name='p2.compressed' value='true'/>
     <property name='p2.timestamp' value='1489643688231'/>
-    <property name='p2.mirrorsURL' value='http://www.eclipse.org/downloads/download.php?format=xml&amp;file=/eclipse/updates/4.6/R-4.6.3-201703010400'/>
+    <property name='p2.mirrorsURL' value='https://www.eclipse.org/downloads/download.php?format=xml&amp;file=/eclipse/updates/4.6/R-4.6.3-201703010400'/>
   </properties>
   <mappings size='5'>
     <rule filter='(&amp; (classifier=osgi.bundle) (format=packed))' output='${repoUrl}/plugins/${id}_${version}.jar.pack.gz'/>

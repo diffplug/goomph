@@ -215,7 +215,7 @@ public class P2Model implements Serializable {
 			}
 		}
 		// otherwise, we need to make an empty artifacts repo there
-		// http://stackoverflow.com/questions/11954898/eclipse-empty-testing-update-site
+		// https://stackoverflow.com/questions/11954898/eclipse-empty-testing-update-site
 		Errors.rethrow().run(() -> {
 			// clean the folder
 			FileMisc.cleanDir(cacheFile);

@@ -144,7 +144,7 @@ public class ResourceFilter {
 		matcherNode.appendNode("arguments", "1.0-" + matcher.name() + "-matches-" + caseSensitive + "-" + isRegex + "-" + matchValue);
 	}
 
-	/** Values from from [IResourceFilterDescription](http://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fcore%2Fresources%2Fclass-use%2FIResourceFilterDescription.html) */
+	/** Values from from [IResourceFilterDescription](https://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fcore%2Fresources%2Fclass-use%2FIResourceFilterDescription.html) */
 	enum Kind {
 		INCLUDE_ONLY, EXCLUDE_ALL, FILES, FOLDERS, INHERITABLE;
 

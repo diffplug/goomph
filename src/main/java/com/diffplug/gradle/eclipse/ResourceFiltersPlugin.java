@@ -26,10 +26,10 @@ import groovy.util.Node;
 import com.diffplug.gradle.ProjectPlugin;
 
 /**
- * Eclipse projects can have [resource filters](http://help.eclipse.org/neon/index.jsp?topic=%2Forg.eclipse.platform.doc.user%2Fconcepts%2Fresourcefilters.htm)
+ * Eclipse projects can have [resource filters](https://help.eclipse.org/neon/index.jsp?topic=%2Forg.eclipse.platform.doc.user%2Fconcepts%2Fresourcefilters.htm)
  * which include or exclude certain files.
  * 
- * ![Screenshot](http://i.stack.imgur.com/7eIVE.png)
+ * ![Screenshot](https://i.stack.imgur.com/7eIVE.png)
  * 
  * This plugin allows you to easily configure these settings.
  *

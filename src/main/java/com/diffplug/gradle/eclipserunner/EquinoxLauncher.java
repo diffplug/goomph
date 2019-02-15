@@ -123,7 +123,7 @@ public class EquinoxLauncher {
 	/**
 	 * Sets the system properties which will be set on the runtime.
 	 *
-	 * Available options [here](http://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fmisc%2Fruntime-options.html).
+	 * Available options [here](https://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fmisc%2Fruntime-options.html).
 	 *
 	 * This should usually not need to be set.  Below are the default properties.  To unset
 	 * one of the defaults, set its value to the empty string and it will be cleared.

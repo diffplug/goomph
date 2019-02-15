@@ -173,7 +173,7 @@ task sourcesJar(type: Jar) {
 // use markdown in javadoc
 def makeLink = { url, text -> "<a href=\"${url}\" style=\"text-transform: none;\">${text}</a>" }
 def javadocInfo = '<h2>' + makeLink("https://github.com/${org}/${name}", "${group}:${name}:${version}") +
-' by ' + makeLink('http://www.diffplug.com', 'DiffPlug') + '</h2>'
+' by ' + makeLink('https://www.diffplug.com', 'DiffPlug') + '</h2>'
 
 def verSnapshot = { it.endsWith('-SNAPSHOT') ? 'snapshot' : it }
 
@@ -192,7 +192,7 @@ javadoc {
 	options.linksOffline("https://docs.gradle.org/${VER_GRADLE}/javadoc/", 'gradle/javadoc/gradle')
 	options.linksOffline("https://diffplug.github.io/durian/javadoc/${verSnapshot(VER_DURIAN)}/", 'gradle/javadoc/durian')
 	options.linksOffline("https://diffplug.github.io/durian-swt/javadoc/${verSnapshot(VER_DURIAN_SWT)}/", 'gradle/javadoc/durian-swt')
-	options.linksOffline("http://www.javadoc.io/doc/biz.aQute.bnd/biz.aQute.bndlib/${VER_BNDLIB}/", 'gradle/javadoc/bndlib')
+	options.linksOffline("https://www.javadoc.io/doc/biz.aQute.bnd/biz.aQute.bndlib/${VER_BNDLIB}/", 'gradle/javadoc/bndlib')
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -237,7 +237,7 @@ model { publishing {
 					licenses {
 						license {
 							name 'The Apache Software License, Version 2.0'
-							url 'http://www.apache.org/license/LICENSE-2.0.txt'
+							url 'https://www.apache.org/license/LICENSE-2.0.txt'
 							distribution 'repo'
 						}
 					}

@@ -53,7 +53,7 @@ import com.diffplug.gradle.ZipMisc;
  *
  * ```groovy
  * apply plugin: 'com.diffplug.gradle.osgi.bndmanifest'
- * // Pass headers and bnd directives: http://www.aqute.biz/Bnd/Format
+ * // Pass headers and bnd directives: https://www.aqute.biz/Bnd/Format
  * jar.manifest.attributes(
  *     '-exportcontents': 'com.diffplug.*',
  *     '-removeheaders': 'Bnd-LastModified,Bundle-Name,Created-By,Tool,Private-Package',

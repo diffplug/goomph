@@ -261,7 +261,7 @@ public class Main {
 	/**
 	 * A structured form for a version identifier.
 	 * 
-	 * @see "http://java.sun.com/j2se/versioning_naming.html for information on valid version strings"
+	 * @see "https://java.sun.com/j2se/versioning_naming.html for information on valid version strings"
 	 */
 	static class Identifier {
 		private static final String DELIM = ". _-"; //$NON-NLS-1$

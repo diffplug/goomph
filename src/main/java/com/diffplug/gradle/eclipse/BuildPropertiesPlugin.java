@@ -41,7 +41,7 @@ import com.diffplug.gradle.GroovyCompat;
 import com.diffplug.gradle.ProjectPlugin;
 
 /**
- * Uses [`build.properties`](http://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Fguide%2Ftools%2Feditors%2Fmanifest_editor%2Fbuild.htm)
+ * Uses [`build.properties`](https://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Fguide%2Ftools%2Feditors%2Fmanifest_editor%2Fbuild.htm)
  * to control a gradle build, and fixes the eclipse project classpath to include binary assets specified in `build.properties`.
  * 
  * Eclipse PDE uses a `build.properties` file to control the build process.  Even if you aren't using PDE for

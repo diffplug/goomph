@@ -22,7 +22,7 @@ import com.diffplug.gradle.oomph.OomphIdeExtension;
  * Adds the [minimalist gradle editor](https://github.com/Nodeclipse/nodeclipse-1/tree/master/org.nodeclipse.enide.editors.gradle).
  */
 public class ConventionMinimalistGradleEditor extends WithRepoConvention {
-	public static final String REPO = "http://www.nodeclipse.org/updates/gradle-ide-pack/";
+	public static final String REPO = "https://www.nodeclipse.org/updates/gradle-ide-pack/";
 	public static final String FEATURE = "org.nodeclipse.enide.editors.gradle.feature";
 
 	ConventionMinimalistGradleEditor(OomphIdeExtension extension) {

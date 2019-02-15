@@ -75,7 +75,7 @@ import com.diffplug.gradle.ProjectPlugin;
  * 
  * ```groovy
  * oomphIde {
- *     repo 'http://download.eclipse.org/buildship/updates/e45/releases/1.0'
+ *     repo 'https://download.eclipse.org/buildship/updates/e45/releases/1.0'
  *     iu   'org.eclipse.buildship'
  * }
  * ```

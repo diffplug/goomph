@@ -75,7 +75,7 @@ public final class EclipseRelease {
 	private static EclipseRelease officialReleaseMaybe(String version) {
 		Function<String, String> updateSiteFunc = v -> {
 			// @formatter:off
-			String root = "http://download.eclipse.org/eclipse/updates/";
+			String root = "https://download.eclipse.org/eclipse/updates/";
 			switch (v) {
 			case "3.5.0": return root + "3.5/R-3.5-200906111540/";
 			case "3.5.1": return root + "3.5/R-3.5.1-200909170800/";

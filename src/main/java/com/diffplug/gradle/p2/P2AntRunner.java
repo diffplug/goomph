@@ -27,7 +27,7 @@ import com.diffplug.gradle.pde.PdeInstallation;
 /**
  * Models an eclipse ant task which can be run by the P2 Bootstrapper.
  * 
- * Other useful tasks are [here](http://help.eclipse.org/neon/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Fguide%2Fp2_repositorytasks.htm).
+ * Other useful tasks are [here](https://help.eclipse.org/neon/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Fguide%2Fp2_repositorytasks.htm).
  * 
  * If the task you require isn't contained in the p2 bootstrapper,
  * you can also run the task using a full PDE installation using
