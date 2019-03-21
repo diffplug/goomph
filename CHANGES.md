@@ -2,6 +2,8 @@
 
 ### Version 3.18.0-SNAPSHOT - TBD ([javadoc](https://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
+### Version 3.17.6 - March 21st 2019 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.17.6/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.6/view))
+
 - Adopted `okhttp` so that we respect redirects when downloading.  Fixes bugs introduced when `download.eclipse.org` began using redirects.
 
 ### Version 3.17.5 - March 20th 2019 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.17.5/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.5/view))
