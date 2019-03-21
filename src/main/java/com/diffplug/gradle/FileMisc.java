@@ -34,6 +34,12 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.Project;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okio.BufferedSink;
+import okio.Okio;
+
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Joiner;
 import com.diffplug.common.base.Preconditions;
@@ -46,6 +52,16 @@ import com.diffplug.common.tree.TreeStream;
 
 /** Miscellaneous utilties for copying files around. */
 public class FileMisc {
+	/** Downloads the url to the destination file (with support for redirects). */
+	public static void download(String url, File dst) throws IOException {
+		mkdirs(dst.getParentFile());
+		OkHttpClient client = new OkHttpClient.Builder().build();
+		Request req = new Request.Builder().url(url).build();
+		try (Response response = client.newCall(req).execute();
+				BufferedSink sink = Okio.buffer(Okio.sink(dst))) {
+			sink.writeAll(response.body().source());
+		}
+	}
 
 	///////////////////////////////////////////////////////////////////
 	// Replacements for File.* which check exceptional return values //

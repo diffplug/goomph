@@ -18,7 +18,6 @@ package com.diffplug.gradle.pde;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -179,10 +178,10 @@ public class PdeInstallation implements EclipseRunner {
 			System.out.print("Installing pde " + release + " from " + url + "... ");
 			File target = new File(getRootFolder(), DOWNLOAD_FILE);
 			try {
-				obtainBootstrap(url + release.version() + DOWNLOAD_FILE, target);
+				FileMisc.download(url + release.version() + DOWNLOAD_FILE, target);
 			} catch (FileNotFoundException ex) {
 				//try versioned artifact - Common when bootstrap is on a maven type(sonatype nexus, etc.) repository.
-				obtainBootstrap(url + release.version() + String.format(VERSIONED_DOWNLOAD_FILE, release.version()), target);
+				FileMisc.download(url + release.version() + String.format(VERSIONED_DOWNLOAD_FILE, release.version()), target);
 			}
 			// unzip it
 			ZipMisc.unzip(target, target.getParentFile());
@@ -202,12 +201,6 @@ public class PdeInstallation implements EclipseRunner {
 		pdeBuildFolder = new File(GoomphCacheLocations.bundlePool(), "plugins/org.eclipse.pde.build_" + pdeBuildVersion);
 		FileMisc.writeToken(getRootFolder(), TOKEN, pdeBuildFolder.getAbsolutePath());
 		System.out.println("Success.");
-	}
-
-	/** Obtain PDE Installation from custom file or url */
-	private void obtainBootstrap(String bootstrapUrl, File target) throws IOException {
-		URL url = new URL(bootstrapUrl);
-		FileUtils.copyURLToFile(url, target);
 	}
 
 	/** Obtain PDE Installation from remote p2 repository */

@@ -37,7 +37,6 @@ class PdeBuildProperties {
 	static String rawFile() {
 		return Errors.rethrow().get(() -> {
 			URL url = PdeBuildProperties.class.getResource("template.build.properties");
-			System.out.println("url=" + url);
 			byte[] content = Resources.toByteArray(url);
 			return new String(content, StandardCharsets.UTF_8);
 		});

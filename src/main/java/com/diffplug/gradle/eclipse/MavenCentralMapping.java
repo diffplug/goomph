@@ -18,7 +18,6 @@ package com.diffplug.gradle.eclipse;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -34,8 +33,6 @@ import org.xml.sax.SAXException;
 
 import com.diffplug.common.base.Box;
 import com.diffplug.common.base.Errors;
-import com.diffplug.common.io.Files;
-import com.diffplug.common.io.Resources;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
 import com.diffplug.gradle.ZipMisc;
@@ -100,8 +97,7 @@ public class MavenCentralMapping {
 			}
 		}
 		return Errors.rethrow().get(() -> {
-			byte[] content = Resources.toByteArray(new URL(release.updateSite() + "artifacts.jar"));
-			Files.write(content, artifactsJar);
+			FileMisc.download(release.updateSite() + "artifacts.jar", artifactsJar);
 			return parseFromFile(artifactsJar);
 		});
 	}

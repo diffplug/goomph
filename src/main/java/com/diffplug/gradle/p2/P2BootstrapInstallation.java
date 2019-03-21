@@ -18,10 +18,8 @@ package com.diffplug.gradle.p2;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Objects;
 
-import org.apache.commons.io.FileUtils;
 import org.gradle.api.Project;
 
 import com.diffplug.common.base.Preconditions;
@@ -85,10 +83,10 @@ class P2BootstrapInstallation {
 		// download the URL
 		File target = new File(getRootFolder(), DOWNLOAD_FILE);
 		try {
-			obtainBootstrap(GoomphCacheLocations.p2bootstrapUrl().orElse(DOWNLOAD_ROOT) + release.version() + DOWNLOAD_FILE, target);
+			FileMisc.download(GoomphCacheLocations.p2bootstrapUrl().orElse(DOWNLOAD_ROOT) + release.version() + DOWNLOAD_FILE, target);
 		} catch (FileNotFoundException ex) {
 			//try versioned artifact - Common when boostrap is on a maven type(sonatype nexus, etc.) repository.
-			obtainBootstrap(GoomphCacheLocations.p2bootstrapUrl().orElse(DOWNLOAD_ROOT) + release.version() + String.format(VERSIONED_DOWNLOAD_FILE, release.version()), target);
+			FileMisc.download(GoomphCacheLocations.p2bootstrapUrl().orElse(DOWNLOAD_ROOT) + release.version() + String.format(VERSIONED_DOWNLOAD_FILE, release.version()), target);
 		}
 		// unzip it
 		ZipMisc.unzip(target, target.getParentFile());
@@ -96,11 +94,6 @@ class P2BootstrapInstallation {
 		FileMisc.forceDelete(target);
 		FileMisc.writeToken(getRootFolder(), TOKEN);
 		System.out.print("Success.");
-	}
-
-	private void obtainBootstrap(String bootstrapUrl, File target) throws IOException {
-		URL url = new URL(bootstrapUrl);
-		FileUtils.copyURLToFile(url, target);
 	}
 
 	/**
