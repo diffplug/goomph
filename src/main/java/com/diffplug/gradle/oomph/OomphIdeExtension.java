@@ -302,7 +302,6 @@ public class OomphIdeExtension implements P2Declarative {
 	 * written by a previous call to {@link #workspaceFile(String, Object)} or {@link #workspaceProp(String, Action)},
 	 * then it can be modified by this action.
 	 */
-	@SuppressWarnings("unchecked")
 	public void workspaceProp(String destination, Action<Map<String, String>> configSupplier) {
 		workspaceProps.merge(destination, configSupplier, (before, after) -> Actions.composite(before, after));
 	}
@@ -311,7 +310,6 @@ public class OomphIdeExtension implements P2Declarative {
 	 * Modifies the xml that was written in a previous call to {@link #workspaceFile(String, Object)} or
 	 * {@link #workspaceXml(String, Action)}. However, 
 	 */
-	@SuppressWarnings("unchecked")
 	public void workspaceXml(String destination, Action<XmlProvider> xmlSupplier) {
 		workspaceXmls.merge(destination, xmlSupplier, (before, after) -> Actions.composite(before, after));
 	}

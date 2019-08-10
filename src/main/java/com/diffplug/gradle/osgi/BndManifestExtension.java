@@ -18,7 +18,8 @@ package com.diffplug.gradle.osgi;
 import java.util.*;
 
 import org.gradle.api.plugins.JavaPlugin;
-import org.gradle.util.GUtil;
+
+import com.diffplug.common.collect.Iterables;
 
 /** Determines where the manifest is written out by {@link BndManifestPlugin}. */
 public class BndManifestExtension {
@@ -52,7 +53,7 @@ public class BndManifestExtension {
 
 	public void setIncludeTasks(Iterable<?> includeTasks) {
 		this.includeTasks.clear();
-		GUtil.addToCollection(this.includeTasks, includeTasks);
+		includeTasks(Iterables.toArray(includeTasks, Object.class));
 	}
 
 	static final String NAME = "osgiBndManifest";

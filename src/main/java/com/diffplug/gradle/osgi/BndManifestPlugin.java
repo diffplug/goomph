@@ -115,7 +115,7 @@ public class BndManifestPlugin extends ProjectPlugin {
 							byte[] manifest = getManifestContent(jarTask, extension).getBytes(StandardCharsets.UTF_8);
 							// modify the jar
 							Map<String, Function<byte[], byte[]>> toModify = ImmutableMap.of("META-INF/MANIFEST.MF", in -> manifest);
-							ZipMisc.modify(jarTask.getArchivePath(), toModify, Predicates.alwaysFalse());
+							ZipMisc.modify(jarTask.getArchiveFile().get().getAsFile(), toModify, Predicates.alwaysFalse());
 							// write manifest to the output resources directory
 							Throwing.Consumer<Path> writeManifest = path -> {
 								if (Files.exists(path)) {
