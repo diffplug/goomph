@@ -33,7 +33,7 @@ public class GradleClassicPluginTest extends GradleIntegrationTest {
 		String plainEclipse = testCase("eclipse", false);
 		Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 				"<classpath>\n" +
-				"	<classpathentry path=\"bin/default\" kind=\"output\"/>\n" +
+				"	<classpathentry kind=\"output\" path=\"bin/default\"/>\n" +
 				"	<classpathentry output=\"bin/main\" kind=\"src\" path=\"src/main/java\">\n" +
 				"		<attributes>\n" +
 				"			<attribute name=\"gradle_scope\" value=\"main\"/>\n" +
@@ -59,7 +59,7 @@ public class GradleClassicPluginTest extends GradleIntegrationTest {
 		String underTestEclipse = testCase("com.diffplug.gradle.eclipse.classic", true);
 		Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 				"<classpath>\n" +
-				"	<classpathentry path=\"bin\" kind=\"output\"/>\n" +
+				"	<classpathentry kind=\"output\" path=\"bin\"/>\n" +
 				"	<classpathentry kind=\"src\" path=\"src/main/java\"/>\n" +
 				"	<classpathentry kind=\"src\" path=\"src/main/resources\"/>\n" +
 				"	<classpathentry kind=\"src\" path=\"src/test/java\"/>\n" +
