@@ -35,7 +35,7 @@ public class BndManifestPluginTest extends GradleIntegrationTest {
 	@Test
 	public void assertManifestCustomLocation() throws IOException {
 		testCase("osgiBndManifest { copyTo 'customlocation' }", generatedManifest());
-		Assert.assertEquals(generatedManifest(), read("customlocation"));
+		Assert.assertEquals(generatedManifest().trim(), read("customlocation").trim());
 	}
 
 	@Test
@@ -207,7 +207,7 @@ public class BndManifestPluginTest extends GradleIntegrationTest {
 		File libsDir = file("build/libs");
 		File jar = FileMisc.list(libsDir).get(0);
 		String manifestContent = ZipMisc.read(jar, "META-INF/MANIFEST.MF");
-		Assert.assertEquals(expectedManifest, manifestContent);
+		Assert.assertEquals(expectedManifest.trim(), manifestContent.trim());
 	}
 
 	private String generatedManifest() {
