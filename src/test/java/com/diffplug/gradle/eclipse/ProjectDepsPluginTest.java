@@ -94,7 +94,7 @@ public class ProjectDepsPluginTest extends GradleIntegrationTest {
 				.replaceAll("\"(?:.*)/(.*?)\"", "$1");
 		Assert.assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 				"<classpath>\n" +
-				"	<classpathentry path=default kind=\"output\"/>\n" +
+				"	<classpathentry kind=default/>\n" +
 				"	<classpathentry kind=/>\n" +
 				"	<classpathentry sourcepath=durian-collect-1.0.0.jar>\n" +
 				"		<attributes>\n" +
