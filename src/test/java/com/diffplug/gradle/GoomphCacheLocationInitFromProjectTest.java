@@ -16,12 +16,10 @@
 package com.diffplug.gradle;
 
 import java.io.IOException;
-import java.io.Writer;
 
-import org.junit.Assert;
+import org.assertj.core.api.Assertions;
+import org.gradle.testkit.runner.BuildResult;
 import org.junit.Test;
-
-import com.diffplug.common.base.StringPrinter;
 
 public class GoomphCacheLocationInitFromProjectTest extends GradleIntegrationTest {
 	@Test
@@ -32,15 +30,11 @@ public class GoomphCacheLocationInitFromProjectTest extends GradleIntegrationTes
 				"}",
 				"ext.goomph_override_p2bootstrapUrl='somewhere'",
 				"com.diffplug.gradle.GoomphCacheLocations.initFromProject(project)",
-				"System.out.println(com.diffplug.gradle.GoomphCacheLocations.p2bootstrapUrl())",
+				"System.out.println(\"test\");",
+				"System.out.println(\"p2bootstrapUrl=\" + com.diffplug.gradle.GoomphCacheLocations.p2bootstrapUrl())",
 				// if we leave it, it will muck with future testkit tests
 				"project.afterEvaluate { com.diffplug.gradle.GoomphCacheLocations.override_p2bootstrapUrl=null }");
-		StringBuilder buffer = new StringBuilder();
-		StringPrinter printer = new StringPrinter(buffer::append);
-		try (Writer writer = printer.toPrintWriter()) {
-			gradleRunner().forwardStdOutput(writer).build();
-		}
-		String firstLine = buffer.toString().split(System.getProperty("line.separator"))[0];
-		Assert.assertEquals("Optional[somewhere]", firstLine);
+		BuildResult build = gradleRunner().build();
+		Assertions.assertThat(build.getOutput()).contains("p2bootstrapUrl=Optional[somewhere]");
 	}
 }
