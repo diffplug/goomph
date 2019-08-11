@@ -37,6 +37,7 @@ import org.gradle.api.Project;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okio.BufferedSink;
 import okio.Okio;
 
@@ -59,7 +60,12 @@ public class FileMisc {
 		Request req = new Request.Builder().url(url).build();
 		try (Response response = client.newCall(req).execute();
 				BufferedSink sink = Okio.buffer(Okio.sink(dst))) {
-			sink.writeAll(response.body().source());
+			try (ResponseBody body = response.body()) {
+				if (body == null) {
+					throw new IllegalArgumentException("Body was expected to be non-null");
+				}
+				sink.writeAll(body.source());
+			}
 		}
 	}
 

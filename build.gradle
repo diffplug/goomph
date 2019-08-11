@@ -41,7 +41,7 @@ targetCompatibility = '1.8'
 
 String VER_DURIAN = '1.2.0'
 String VER_DURIAN_SWT = '3.0.0'
-String VER_BNDLIB = '4.0.0'
+String VER_BNDLIB = '4.2.0'
 String OLDEST_SUPPORTED_GRADLE = '5.1'
 dependencies {
 	// Compile misc
@@ -51,8 +51,8 @@ dependencies {
 	compile "com.diffplug.durian:durian-swt.os:${VER_DURIAN_SWT}"
 	compile "commons-io:commons-io:2.6"
 	compile "com.diffplug.spotless:spotless-lib:1.5.1"
-	compile "com.squareup.okhttp3:okhttp:3.14.0"
-	compile "com.squareup.okio:okio:2.2.2"
+	compile "com.squareup.okhttp3:okhttp:4.0.1"
+	compile "com.squareup.okio:okio:2.3.0"
 	// OSGi
 	compile "biz.aQute.bnd:biz.aQute.bndlib:${VER_BNDLIB}"
 	// p2 (osgi used in 4.7.2 to match p2-bootstrap)
@@ -69,7 +69,7 @@ dependencies {
 	compileOnly 'org.eclipse.emf:org.eclipse.emf.ecore:2.12.0'
 	// testing
 	testCompile "junit:junit:4.12"
-	testCompile "org.assertj:assertj-core:3.10.0"
+	testCompile "org.assertj:assertj-core:3.13.2"
 }
 configurations.all {
 	exclude group: 'org.eclipse.platform', module: 'org.eclipse.swt.${osgi.platform}'
