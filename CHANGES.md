@@ -4,6 +4,7 @@
 
 - Minimum gradle version is now `5.1`
 - Migrated off of all deprecated APIs as of Gradle `5.5.1`.
+- Fix URL for the `minimalistGradleEditor()` update site.
 
 ### Version 3.17.7 - June 26th 2019 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.17.7/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.7/view))
 
