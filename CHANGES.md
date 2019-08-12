@@ -1,6 +1,8 @@
 # Goomph releases
 
-### Version 3.18.0-SNAPSHOT - TBD ([javadoc](https://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
+### Version 3.18.1-SNAPSHOT - TBD ([javadoc](https://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
+
+### Version 3.18.0 - August 12th 2019 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.18.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.18.0/view))
 
 - Minimum gradle version is now `5.1`
 - Migrated off of all deprecated APIs as of Gradle `5.5.1`.
