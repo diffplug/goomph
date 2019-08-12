@@ -119,7 +119,7 @@ public class ProjectDepsPlugin extends ProjectPlugin {
 		List<String> toReplace = new ArrayList<>(extension.jarsToReplace);
 		// sort from longest to shortest
 		Collections.sort(toReplace, Comparator.comparing(String::length).reversed().thenComparing(Function.identity()));
-		for (String jarToReplace : extension.jarsToReplace) {
+		for (String jarToReplace : toReplace) {
 			// find the longest jar which matches the project
 			Optional<String> matching = jarDeps.stream()
 					.filter(dep -> dep.startsWith(jarToReplace))
