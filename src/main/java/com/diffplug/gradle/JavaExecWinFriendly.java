@@ -56,7 +56,7 @@ public class JavaExecWinFriendly {
 				File classpathJar = toJarWithClasspath(execSpec.getClasspath());
 				classpathJar.deleteOnExit();
 				// set the classpath to be just that one jar
-				execSpec.setClasspath(project.files(classpathJar));
+				execSpec = execSpec.setClasspath(project.files(classpathJar));
 				// save the jar so it can be deleted later
 				classpathJarBox.set(classpathJar);
 			});

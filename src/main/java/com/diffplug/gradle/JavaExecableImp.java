@@ -41,16 +41,15 @@ class JavaExecableImp {
 		try {
 			// write the input object to a file
 			SerializableMisc.write(tempFile, input);
-
 			ExecResult execResult = javaExecer.apply(execSpec -> {
-				// use the main below as the main
-				execSpec.setMain(JavaExecable.class.getName());
-				// pass the input object to the main
-				execSpec.args(tempFile.getAbsolutePath());
-				// set the nominal classpath
-				execSpec.setClasspath(classpath);
 				// let the user change things
-				settings.execute(execSpec);
+				settings.execute(
+						// use the main below as the main
+						execSpec.setMain(JavaExecable.class.getName())
+								// pass the input object to the main
+								.args(tempFile.getAbsolutePath())
+								// set the nominal classpath
+								.setClasspath(classpath));
 			});
 			execResult.rethrowFailure();
 			// load the resultant object after it has been executed and resaved

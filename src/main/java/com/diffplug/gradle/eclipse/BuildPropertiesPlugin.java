@@ -77,16 +77,19 @@ public class BuildPropertiesPlugin extends ProjectPlugin {
 			ProjectPlugin.getPlugin(project, JavaPlugin.class);
 			ProcessResources task = (ProcessResources) project.getTasks().getByName(JavaPlugin.PROCESS_RESOURCES_TASK_NAME);
 			// handle the build.properties includes
-			task.from(project.getProjectDir());
-			for (String binInclude : getBinIncludes()) {
-				if (binInclude.endsWith("/")) {
-					// include all of a specified folder
-					task.include(binInclude + "**");
-				} else {
-					// or a single specified item
-					task.include(binInclude);
+			//AbstractCopyTask copyTask = task.from(project.getProjectDir());
+			task.from(project.getProjectDir(), GroovyCompat.<CopySpec> closureFrom(task, spec -> {
+				for (String binInclude : getBinIncludes()) {
+					if (binInclude.endsWith("/")) {
+						// include all of a specified folder
+						spec = spec.include(binInclude + "**");
+					} else {
+						// or a single specified item
+						spec = spec.include(binInclude);
+					}
 				}
-			}
+				return spec;
+			}));
 			// handle the eclipse built-ins (properties files embedded in the src directory)
 			task.from("src", GroovyCompat.<CopySpec> closureFrom(task, spec -> {
 				return spec.include("**").exclude("**/*.java");

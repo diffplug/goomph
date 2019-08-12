@@ -11,6 +11,8 @@ plugins {
 	id 'com.jfrog.bintray' version '1.8.4'
 	// https://github.com/mnlipp/jdrupes-mdoclet/releases
 	id 'org.jdrupes.mdoclet' version '1.0.5'
+	// https://github.com/spotbugs/spotbugs-gradle-plugin/blob/master/CHANGELOG.md
+	id 'com.github.spotbugs' version '2.0.0'
 }
 
 repositories {
@@ -133,9 +135,9 @@ spotless {
 //////////////
 // FINDBUGS //
 //////////////
-apply plugin: 'findbugs'
-findbugs {
-	toolVersion = '3.0.1'
+spotbugs {
+	// https://github.com/spotbugs/spotbugs/blob/master/CHANGELOG.md
+	toolVersion = '3.1.12'
 	sourceSets = [sourceSets.main]	// don't check the test code
 	ignoreFailures = false 	// bug free or it doesn't ship!
 	reportsDir = file('build/findbugs')
@@ -144,7 +146,7 @@ findbugs {
 	omitVisitors = []		// bugs that we want to ignore
 }
 // HTML instead of XML
-tasks.withType(FindBugs) {
+tasks.withType(com.github.spotbugs.SpotBugsTask) {
 	reports {
 		xml.enabled = false
 		html.enabled = true
