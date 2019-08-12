@@ -384,8 +384,8 @@ gitPublish {
 	branch = 'gh-pages'
 	preserve { include '**/*' }
 	contents {
-		from 'build/javadoc/'
-		into 'javadoc/'
+		from javadoc.destinationDir
+		into "javadoc/${project.version}"
 	}
 }
 tasks.gitPublishCopy.dependsOn(":javadoc")
