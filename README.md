@@ -74,7 +74,6 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 **`com.diffplug.gradle.eclipse` Plugins for handling eclipse' maven central artifacts and creating and manipulating eclipse project files.**
 
 * [`mavencentral`](https://diffplug.github.io/goomph/javadoc/3.18.1/com/diffplug/gradle/eclipse/MavenCentralPlugin.html) makes it easy to add dependency jars from an eclipse release.
-* [`classic`](https://diffplug.github.io/goomph/javadoc/3.18.1/com/diffplug/gradle/eclipse/GradleClassicPlugin.html) makes eclipse projects in the way that `gradle <= 4.3` did.
 * [`buildproperties`](https://diffplug.github.io/goomph/javadoc/3.18.1/com/diffplug/gradle/eclipse/BuildPropertiesPlugin.html) uses [`build.properties`](https://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Fguide%2Ftools%2Feditors%2Fmanifest_editor%2Fbuild.htm) to control a gradle build, and fixes eclipse project classpath to include binary assets specified in `build.properties`.
 * [`excludebuildfolder`](https://diffplug.github.io/goomph/javadoc/3.18.1/com/diffplug/gradle/eclipse/ExcludeBuildFolderPlugin.html) excludes the gradle `build` folder from Eclipse's resource indexing.
 * [`projectdeps`](https://diffplug.github.io/goomph/javadoc/3.18.1/com/diffplug/gradle/eclipse/ProjectDepsPlugin.html) fixes an intermittent problem where dependencies on other projects within the workspace aren't always resolved correctly within Eclipse.

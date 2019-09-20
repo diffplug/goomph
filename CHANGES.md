@@ -5,6 +5,7 @@
 ### Version 3.18.1 - September 20th 2019 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.18.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.18.1/view))
 
 - Added eclipse `4.13.0` aka `2019-09`.
+- Removed the `com.diffplug.gradle.eclipse.classic` plugin, because it does not work well with newer versions of gradle or eclipse.
 
 ### Version 3.18.0 - August 12th 2019 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.18.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.18.0/view))
 
