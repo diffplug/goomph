@@ -60,7 +60,7 @@ public final class EclipseRelease {
 		}
 	}
 
-	public static final String LATEST = "4.12.0";
+	public static final String LATEST = "4.13.0";
 
 	public static EclipseRelease latestOfficial() {
 		return official(LATEST);
@@ -116,9 +116,10 @@ public final class EclipseRelease {
 			case "4.10.0": return root + "4.10/R-4.10-201812060815/";
 			case "4.11.0": return root + "4.11/R-4.11-201903070500/";
 			case "4.12.0": return root + "4.12/R-4.12-201906051800/";
+			case "4.13.0": return root + "4.13/R-4.13-201909161045/";
 			// less-specific versions
 			case "3.5": case "3.6": case "3.7": case "3.8":
-			case "4.2": case "4.3": case "4.4": case "4.5": case "4.6": case "4.7": case "4.8": case "4.9": case "4.10": case "4.11": case "4.12":
+			case "4.2": case "4.3": case "4.4": case "4.5": case "4.6": case "4.7": case "4.8": case "4.9": case "4.10": case "4.11": case "4.12": case "4.13":
 				return root + v + "/";
 			default: return null;
 			}
