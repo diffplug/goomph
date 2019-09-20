@@ -308,12 +308,6 @@ pluginBundle {
 			description = "Excludes the gradle build folder from Eclipse's resource indexing."
 			tags = ['eclipse']
 		}
-		eclipseGradleClassicPlugin {
-			id = 'com.diffplug.gradle.eclipse.classic'
-			displayName = 'Goomph eclipse.classic'
-			description = 'Makes gradle produce old-style eclipse projects.'
-			tags = ['eclipse']
-		}
 		eclipseMavenCentralPlugin {
 			id = 'com.diffplug.gradle.eclipse.mavencentral'
 			displayName = 'Goomph eclipse.mavencentral'
