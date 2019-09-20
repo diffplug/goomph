@@ -2,11 +2,11 @@ plugins {
 	// github pages
 	id 'org.ajoberstar.git-publish' version '2.1.1'
 	// https://github.com/ben-manes/gradle-versions-plugin
-	id 'com.github.ben-manes.versions' version '0.22.0' // dependencyUpdates
+	id 'com.github.ben-manes.versions' version '0.25.0' // dependencyUpdates
 	//  https://plugins.gradle.org/plugin/com.gradle.plugin-publish/0.10.1
 	id 'com.gradle.plugin-publish' version '0.10.1'
 	// https://github.com/diffplug/spotless/blob/master/plugin-gradle/CHANGES.md
-	id 'com.diffplug.gradle.spotless' version '3.24.0'
+	id 'com.diffplug.gradle.spotless' version '3.24.2'
 	// https://github.com/bintray/gradle-bintray-plugin/releases
 	id 'com.jfrog.bintray' version '1.8.4'
 	// https://github.com/mnlipp/jdrupes-mdoclet/releases
@@ -44,8 +44,8 @@ dependencies {
 	compile "com.diffplug.durian:durian-swt.os:${VER_DURIAN_SWT}"
 	compile "commons-io:commons-io:2.6"
 	compile "com.diffplug.spotless:spotless-lib:1.5.1"
-	compile "com.squareup.okhttp3:okhttp:4.0.1"
-	compile "com.squareup.okio:okio:2.3.0"
+	compile "com.squareup.okhttp3:okhttp:4.2.0"
+	compile "com.squareup.okio:okio:2.4.0"
 	// OSGi
 	compile "biz.aQute.bnd:biz.aQute.bndlib:${VER_BNDLIB}"
 	// p2 (osgi used in 4.7.2 to match p2-bootstrap)
