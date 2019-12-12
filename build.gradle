@@ -176,6 +176,7 @@ def javadocInfo = '<h2>' + makeLink("https://github.com/${org}/${name}", "${grou
 def verSnapshot = { it.endsWith('-SNAPSHOT') ? 'snapshot' : it }
 
 javadoc {
+    inputs.dir "$project.projectDir/gradle/javadoc"
 	// Where it's possible to name parameters and methods clearly enough
 	// that javadoc is not necessary, why make the code bigger?
 	//
