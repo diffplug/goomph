@@ -4,4 +4,5 @@
 @ParametersAreNonnullByDefault
 package com.diffplug.gradle.eclipse;
 
+
 import javax.annotation.ParametersAreNonnullByDefault;

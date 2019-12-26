@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,22 +15,21 @@
  */
 package com.diffplug.gradle;
 
+
+import com.diffplug.common.base.Throwing;
+import com.diffplug.common.base.Unhandled;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Consumer;
-
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.tasks.JavaExec;
 import org.gradle.process.ExecResult;
 import org.gradle.process.JavaExecSpec;
-
-import com.diffplug.common.base.Throwing;
-import com.diffplug.common.base.Unhandled;
 
 /** Private implementation details. */
 class JavaExecableImp {

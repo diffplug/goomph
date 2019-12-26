@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,11 @@
  */
 package com.diffplug.gradle.osgi;
 
+
+import com.diffplug.gradle.FileMisc;
+import com.diffplug.gradle.JavaExecWinFriendly;
+import com.diffplug.gradle.SerializableMisc;
+import com.diffplug.gradle.ZipMisc;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -23,15 +28,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 import java.util.jar.Manifest;
-
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
-
-import com.diffplug.gradle.FileMisc;
-import com.diffplug.gradle.JavaExecWinFriendly;
-import com.diffplug.gradle.SerializableMisc;
-import com.diffplug.gradle.ZipMisc;
 
 class OsgiExecImp {
 	/** The name of this bundle, which contains the osgiembed package. */

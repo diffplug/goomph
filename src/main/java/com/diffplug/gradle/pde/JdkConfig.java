@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,14 @@
  */
 package com.diffplug.gradle.pde;
 
+
+import com.diffplug.common.base.StandardSystemProperty;
+import com.diffplug.common.collect.ImmutableList;
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
 import org.gradle.api.Project;
-
-import com.diffplug.common.base.StandardSystemProperty;
-import com.diffplug.common.collect.ImmutableList;
 
 /**
  * Detects the JDK folder from the gradle project,

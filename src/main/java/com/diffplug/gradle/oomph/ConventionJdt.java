@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,13 @@
  */
 package com.diffplug.gradle.oomph;
 
+
+import com.diffplug.common.collect.ImmutableList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.gradle.api.Action;
 import org.gradle.api.JavaVersion;
-
-import com.diffplug.common.collect.ImmutableList;
 
 /**
  * Adding the JDT convention to your project

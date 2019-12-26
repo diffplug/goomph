@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,13 @@
  */
 package com.diffplug.gradle;
 
+
+import com.diffplug.common.base.StringPrinter;
 import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
 import javax.annotation.Nullable;
-
 import org.gradle.api.Project;
-
-import com.diffplug.common.base.StringPrinter;
 
 /** Helper for generating a state string. */
 public class StateBuilder {

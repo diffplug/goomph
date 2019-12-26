@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  */
 package com.diffplug.gradle;
 
+
+import com.diffplug.common.base.Preconditions;
+import com.diffplug.common.base.StringPrinter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -23,9 +26,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import com.diffplug.common.base.Preconditions;
-import com.diffplug.common.base.StringPrinter;
 
 /** Expresses ordering constraints on the given type. */
 public class OrderingConstraints<T> {

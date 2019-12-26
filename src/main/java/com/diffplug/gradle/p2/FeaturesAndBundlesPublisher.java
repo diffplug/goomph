@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,13 @@
  */
 package com.diffplug.gradle.p2;
 
-import java.io.File;
-import java.util.Arrays;
-
-import org.gradle.api.Project;
 
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.eclipserunner.EclipseApp;
+import java.io.File;
+import java.util.Arrays;
+import org.gradle.api.Project;
 
 /**
  * Models the FeaturesAndBundlesPublisher application ([eclipse docs](https://wiki.eclipse.org/Equinox/p2/Publisher#Features_And_Bundles_Publisher_Application)).

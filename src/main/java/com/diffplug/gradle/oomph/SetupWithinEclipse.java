@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,13 @@
  */
 package com.diffplug.gradle.oomph;
 
-import java.io.File;
-import java.util.List;
-import java.util.Objects;
 
 import com.diffplug.gradle.JavaExecable;
 import com.diffplug.gradle.eclipserunner.EclipseIniLauncher;
 import com.diffplug.gradle.osgi.OsgiExecable;
+import java.io.File;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Runs a series of actions with the OSGi context.

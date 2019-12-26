@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,19 @@
  */
 package com.diffplug.gradle.eclipserunner;
 
+
+import com.diffplug.common.io.Files;
+import com.diffplug.gradle.FileMisc;
+import com.diffplug.gradle.p2.ParsedJar;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import org.gradle.api.Action;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
-
-import com.diffplug.common.io.Files;
-import com.diffplug.gradle.FileMisc;
-import com.diffplug.gradle.p2.ParsedJar;
 
 /**
  * Copies a bunch of OSGi plugins into a directory so that they can

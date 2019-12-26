@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 package com.diffplug.gradle.oomph;
 
-import java.util.List;
 
 import com.diffplug.gradle.OrderingConstraints;
 import com.diffplug.gradle.osgi.OsgiExecable;
+import java.util.List;
 
 /**
  * Setup action which takes place within the Eclipse installation.

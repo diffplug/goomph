@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,22 +15,21 @@
  */
 package com.diffplug.gradle.eclipserunner;
 
+
+import com.diffplug.common.base.Unhandled;
+import com.diffplug.spotless.FileSignature;
+import com.diffplug.spotless.LazyForwardingEquality;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.Dependency;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.tasks.bundling.Jar;
-
-import com.diffplug.common.base.Unhandled;
-import com.diffplug.spotless.FileSignature;
-import com.diffplug.spotless.LazyForwardingEquality;
 
 /** Defines the source jars for an eclipse launch, with lazy resolution for performance. */
 public class EquinoxLaunchSource extends LazyForwardingEquality<FileSignature> {

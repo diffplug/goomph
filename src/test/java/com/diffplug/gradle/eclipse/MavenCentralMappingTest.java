@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,15 @@
  */
 package com.diffplug.gradle.eclipse;
 
+
+import com.diffplug.gradle.pde.EclipseRelease;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
-
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.xml.sax.SAXException;
-
-import com.diffplug.gradle.pde.EclipseRelease;
 
 public class MavenCentralMappingTest {
 	@Test

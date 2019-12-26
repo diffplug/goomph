@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,12 @@
  */
 package com.diffplug.gradle.p2;
 
-import java.io.File;
-
-import org.junit.Assert;
-import org.junit.Test;
 
 import com.diffplug.common.base.StringPrinter;
 import com.diffplug.gradle.FileMisc;
+import java.io.File;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class P2ModelTest {
 	private P2Model testData() {

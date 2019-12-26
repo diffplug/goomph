@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,37 +15,6 @@
  */
 package com.diffplug.gradle.oomph;
 
-import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import javax.annotation.Nonnull;
-import javax.imageio.ImageIO;
-
-import org.apache.commons.io.FileUtils;
-import org.gradle.api.Action;
-import org.gradle.api.GradleException;
-import org.gradle.api.Project;
-import org.gradle.api.Task;
-import org.gradle.api.XmlProvider;
-import org.gradle.api.initialization.IncludedBuild;
-import org.gradle.api.specs.Spec;
-import org.gradle.api.specs.Specs;
-import org.gradle.api.tasks.TaskReference;
-import org.gradle.internal.Actions;
-import org.gradle.plugins.ide.eclipse.GenerateEclipseProject;
 
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Preconditions;
@@ -66,6 +35,35 @@ import com.diffplug.gradle.p2.P2Model;
 import com.diffplug.gradle.p2.P2Model.DirectorApp;
 import com.diffplug.gradle.pde.EclipseRelease;
 import com.diffplug.gradle.pde.PdeInstallation;
+import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import javax.annotation.Nonnull;
+import javax.imageio.ImageIO;
+import org.apache.commons.io.FileUtils;
+import org.gradle.api.Action;
+import org.gradle.api.GradleException;
+import org.gradle.api.Project;
+import org.gradle.api.Task;
+import org.gradle.api.XmlProvider;
+import org.gradle.api.initialization.IncludedBuild;
+import org.gradle.api.specs.Spec;
+import org.gradle.api.specs.Specs;
+import org.gradle.api.tasks.TaskReference;
+import org.gradle.internal.Actions;
+import org.gradle.plugins.ide.eclipse.GenerateEclipseProject;
 
 /** DSL for {@link OomphIdePlugin}. */
 public class OomphIdeExtension implements P2Declarative {

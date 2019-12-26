@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
  */
 package com.diffplug.gradle.p2;
 
-import java.io.File;
 
 import com.diffplug.common.base.StandardSystemProperty;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.pde.EclipseRelease;
+import java.io.File;
 
 /** Creates a new folder for uploading to [goomph-p2-bootstrap](https://bintray.com/diffplug/opensource/goomph-p2-bootstrap). */
 public class P2BootstrapInstallationCreate {

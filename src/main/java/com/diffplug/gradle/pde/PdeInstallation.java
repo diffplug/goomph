@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,6 @@
  */
 package com.diffplug.gradle.pde;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
-import org.apache.commons.io.FileUtils;
-import org.gradle.api.Project;
-import org.osgi.framework.Version;
 
 import com.diffplug.common.base.Comparison;
 import com.diffplug.common.base.Preconditions;
@@ -40,6 +28,17 @@ import com.diffplug.gradle.eclipserunner.EclipseApp;
 import com.diffplug.gradle.eclipserunner.EclipseRunner;
 import com.diffplug.gradle.eclipserunner.NativeRunner;
 import com.diffplug.gradle.p2.P2Model;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import org.apache.commons.io.FileUtils;
+import org.gradle.api.Project;
+import org.osgi.framework.Version;
 
 /** Wraps a PDE installation for the given eclipse release.*/
 public class PdeInstallation implements EclipseRunner {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,16 @@
  */
 package com.diffplug.gradle.eclipse;
 
+
+import com.diffplug.common.swt.os.SwtPlatform;
+import com.diffplug.gradle.pde.EclipseRelease;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
-
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.ModuleVersionSelector;
 import org.gradle.api.plugins.JavaPlugin;
-
-import com.diffplug.common.swt.os.SwtPlatform;
-import com.diffplug.gradle.pde.EclipseRelease;
 
 public class MavenCentralExtension {
 	public static final String NAME = "eclipseMavenCentral";

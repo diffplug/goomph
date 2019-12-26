@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,14 @@
  */
 package com.diffplug.gradle.osgi;
 
+
+import aQute.bnd.osgi.Builder;
+import aQute.bnd.osgi.Constants;
+import com.diffplug.common.base.*;
+import com.diffplug.common.collect.ImmutableMap;
+import com.diffplug.gradle.FileMisc;
+import com.diffplug.gradle.ProjectPlugin;
+import com.diffplug.gradle.ZipMisc;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -24,7 +32,6 @@ import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Function;
-
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
@@ -34,15 +41,6 @@ import org.gradle.api.plugins.JavaPluginConvention;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetOutput;
 import org.gradle.api.tasks.bundling.Jar;
-
-import aQute.bnd.osgi.Builder;
-import aQute.bnd.osgi.Constants;
-
-import com.diffplug.common.base.*;
-import com.diffplug.common.collect.ImmutableMap;
-import com.diffplug.gradle.FileMisc;
-import com.diffplug.gradle.ProjectPlugin;
-import com.diffplug.gradle.ZipMisc;
 
 /**
  * Generates a manifest using purely bnd, and outputs it for IDE consumption.

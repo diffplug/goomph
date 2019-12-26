@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@
  */
 package com.diffplug.gradle;
 
+
+import com.diffplug.common.base.Box;
+import com.diffplug.common.base.Errors;
+import com.diffplug.common.swt.os.OS;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -25,17 +29,12 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.process.ExecResult;
 import org.gradle.process.JavaExecSpec;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.gradle.util.CollectionUtils;
-
-import com.diffplug.common.base.Box;
-import com.diffplug.common.base.Errors;
-import com.diffplug.common.swt.os.OS;
 
 /**
  * Thanks to Thipor Kong for his workaround for Gradle's windows problems.

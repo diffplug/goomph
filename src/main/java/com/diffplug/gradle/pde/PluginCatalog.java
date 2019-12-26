@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,8 @@
  */
 package com.diffplug.gradle.pde;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.jar.Manifest;
-import java.util.stream.Collectors;
-
-import javax.annotation.Nullable;
-
-import org.osgi.framework.Version;
 
 import aQute.lib.filter.Filter;
-
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.collect.HashBasedTable;
@@ -39,6 +27,15 @@ import com.diffplug.common.collect.Table;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.ZipMisc;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.jar.Manifest;
+import java.util.stream.Collectors;
+import javax.annotation.Nullable;
+import org.osgi.framework.Version;
 
 /** Catalogs all of the plugins and their versions in the given paths. */
 class PluginCatalog {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,18 @@
  */
 package com.diffplug.gradle.pde;
 
-import java.io.File;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Joiner;
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.io.Resources;
 import com.diffplug.common.swt.os.SwtPlatform;
+import java.io.File;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Takes `org.eclipse.pde.build_{version}/templates/headless-build/build.properties`

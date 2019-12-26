@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,6 @@
  */
 package com.diffplug.gradle.eclipserunner;
 
-import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Objects;
-
-import groovy.util.Node;
-import groovy.xml.XmlUtil;
 
 import com.diffplug.common.base.Joiner;
 import com.diffplug.common.collect.Iterables;
@@ -32,6 +22,15 @@ import com.diffplug.common.collect.ListMultimap;
 import com.diffplug.common.collect.Multimaps;
 import com.diffplug.common.io.Files;
 import com.diffplug.gradle.FileMisc;
+import groovy.util.Node;
+import groovy.xml.XmlUtil;
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Models an eclipse utility application and all of

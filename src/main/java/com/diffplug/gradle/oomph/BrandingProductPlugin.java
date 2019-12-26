@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,14 @@
  */
 package com.diffplug.gradle.oomph;
 
+
+import com.diffplug.common.base.Preconditions;
+import com.diffplug.common.collect.ImmutableList;
+import com.diffplug.common.collect.ImmutableMap;
+import com.diffplug.common.io.ByteSource;
+import com.diffplug.common.io.Resources;
+import com.diffplug.gradle.FileMisc;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -27,17 +35,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
-
 import javax.imageio.ImageIO;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
-import com.diffplug.common.base.Preconditions;
-import com.diffplug.common.collect.ImmutableList;
-import com.diffplug.common.collect.ImmutableMap;
-import com.diffplug.common.io.ByteSource;
-import com.diffplug.common.io.Resources;
-import com.diffplug.gradle.FileMisc;
 
 /**
  * Creates a product branding plugin which sets
