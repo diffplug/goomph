@@ -25,17 +25,17 @@ To make changes to Goomph and test those changes on a local project, add the fol
 
 ```groovy
 buildscript {
-	repositories {
-		mavenLocal()
-		jcenter()
-		configurations.all {
-			resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-		}
-	}
+  repositories {
+    mavenLocal()
+    jcenter()
+    configurations.all {
+      resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    }
+  }
 
-	dependencies {
-		classpath 'com.diffplug.gradle:goomph:+'
-	}
+  dependencies {
+    classpath 'com.diffplug.gradle:goomph:+'
+  }
 }
 
 ```
@@ -55,7 +55,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-	https://www.apache.org/licenses/LICENSE-2.0
+  https://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,

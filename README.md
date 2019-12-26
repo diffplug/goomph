@@ -2,28 +2,28 @@
 
 <!---freshmark shields
 output = [
-	link(shield('Maven artifact', 'mavenCentral', '{{group}}:{{name}}', 'blue'), 'https://bintray.com/{{org}}/opensource/{{name}}/view'),
-	link(shield('Latest version', 'latest', '{{stable}}', 'blue'), 'https://github.com/{{org}}/{{name}}/releases/latest'),
-	link(shield('Javadoc', 'javadoc', 'OK', 'blue'), 'https://{{org}}.github.io/{{name}}/javadoc/{{stable}}/'),
-	link(shield('License Apache', 'license', 'Apache', 'blue'), 'https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)'),
-	'',
-	link(shield('Changelog', 'changelog', '{{version}}', 'brightgreen'), 'CHANGES.md'),
-	link(image('Travis CI', 'https://travis-ci.org/{{org}}/{{name}}.svg?branch=master'), 'https://travis-ci.org/{{org}}/{{name}}'),
-	link(shield('Live chat', 'gitter', 'live chat', 'brightgreen'), 'https://gitter.im/{{org}}/{{name}}')
-	].join('\n');
+  link(shield('Maven artifact', 'mavenCentral', 'com.diffplug.gradle:goomph', 'blue'), 'https://bintray.com/diffplug/opensource/goomph/view'),
+  link(shield('Latest version', 'latest', '{{versionLast}}}', 'blue'), 'https://github.com/diffplug/goomph/releases/latest'),
+  link(shield('Javadoc', 'javadoc', 'OK', 'blue'), 'https://diffplug.github.io/goomph/javadoc/{{versionLast}}}/'),
+  link(shield('License Apache', 'license', 'Apache', 'blue'), 'https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)'),
+  '',
+  link(shield('Changelog', 'changelog', '{{versionLast}}', 'brightgreen'), 'CHANGES.md'),
+  link(image('Travis CI', 'https://travis-ci.org/diffplug/goomph.svg?branch=master'), 'https://travis-ci.org/diffplug/goomph'),
+  link(shield('Live chat', 'gitter', 'live chat', 'brightgreen'), 'https://gitter.im/diffplug/goomph')
+  ].join('\n');
 -->
 [![Maven artifact](https://img.shields.io/badge/mavenCentral-com.diffplug.gradle%3Agoomph-blue.svg)](https://bintray.com/diffplug/opensource/goomph/view)
-[![Latest version](https://img.shields.io/badge/latest-3.18.1-blue.svg)](https://github.com/diffplug/goomph/releases/latest)
-[![Javadoc](https://img.shields.io/badge/javadoc-OK-blue.svg)](https://diffplug.github.io/goomph/javadoc/3.18.1/)
+[![Latest version](https://img.shields.io/badge/latest-3.18.1%7D-blue.svg)](https://github.com/diffplug/goomph/releases/latest)
+[![Javadoc](https://img.shields.io/badge/javadoc-OK-blue.svg)](https://diffplug.github.io/goomph/javadoc/3.18.1}/)
 [![License Apache](https://img.shields.io/badge/license-Apache-blue.svg)](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))
 
-[![Changelog](https://img.shields.io/badge/changelog-3.18.2--SNAPSHOT-brightgreen.svg)](CHANGES.md)
+[![Changelog](https://img.shields.io/badge/changelog-3.18.1-brightgreen.svg)](CHANGES.md)
 [![Travis CI](https://travis-ci.org/diffplug/goomph.svg?branch=master)](https://travis-ci.org/diffplug/goomph)
 [![Live chat](https://img.shields.io/badge/gitter-live_chat-brightgreen.svg)](https://gitter.im/diffplug/goomph)
 <!---freshmark /shields -->
 
 <!---freshmark javadoc
-output = prefixDelimiterReplace(input, 'https://{{org}}.github.io/{{name}}/javadoc/', '/', stable);
+output = prefixDelimiterReplace(input, 'https://diffplug.github.io/goomph/javadoc/', '/', versionLast);
 -->
 
 ## IDE-as-build-artifact.
@@ -35,15 +35,15 @@ When you run `gradlew ide`, it builds and downloads an IDE into `build/oomphIde`
 ```groovy
 apply plugin: 'com.diffplug.gradle.oomph.ide'
 oomphIde {
-	repoEclipseLatest()
-	jdt {}
-	eclipseIni {
-		vmargs('-Xmx2g')    // IDE can have up to 2 gigs of RAM
-	}
-	style {
-		classicTheme()  // oldschool cool
-		niceText()      // with nice fonts and visible whitespace
-	}
+  repoEclipseLatest()
+  jdt {}
+  eclipseIni {
+    vmargs('-Xmx2g')    // IDE can have up to 2 gigs of RAM
+  }
+  style {
+    classicTheme()  // oldschool cool
+    niceText()      // with nice fonts and visible whitespace
+  }
 }
 ```
 

@@ -1,7 +1,7 @@
 # How to automate IDE generation
 
 <!---freshmark javadoc
-output = prefixDelimiterReplace(input, 'https://{{org}}.github.io/{{name}}/javadoc/', '/', stable);
+output = prefixDelimiterReplace(input, 'https://diffplug.github.io/goomph/javadoc/', '/', versionLast);
 -->
 
 So you want to automate your IDE configuration.  The first thing to do is look at a few examples.
@@ -53,10 +53,10 @@ Most eclipse settings are set in property files.  You can set them manually like
 
 ```gradle
 oomphIde {
-	...
-	workspaceProp '.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.e4.ui.css.swt.theme.prefs', {
-		it.put('themeid', 'org.eclipse.e4.ui.css.theme.e4_classic')
-	}
+  ...
+  workspaceProp '.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.e4.ui.css.swt.theme.prefs', {
+    it.put('themeid', 'org.eclipse.e4.ui.css.theme.e4_classic')
+  }
 }
 ```
 
@@ -64,9 +64,9 @@ You can also set xml files.  In order to set an xml file, you must first provide
 
 ```gradle
 oomphIde {
-	...
-	workspaceFile('destination', 'source')
-	workspaceXml('destination', { xmlProvider -> ...}) // modify your xml here
+  ...
+  workspaceFile('destination', 'source')
+  workspaceXml('destination', { xmlProvider -> ...}) // modify your xml here
 }
 ```
 
