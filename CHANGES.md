@@ -1,160 +1,162 @@
 # Goomph releases
 
-### Version 3.18.2-SNAPSHOT - TBD ([javadoc](https://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
+## [Unreleased] ([javadoc](https://diffplug.github.io/goomph/javadoc/snapshot/), [snapshot](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/gradle/goomph/))
 
-### Version 3.18.1 - September 20th 2019 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.18.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.18.1/view))
+## [3.18.1] - 2019-09-20 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.18.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.18.1/view))
 
 - Added eclipse `4.13.0` aka `2019-09`.
 - Removed the `com.diffplug.gradle.eclipse.classic` plugin, because it does not work well with newer versions of gradle or eclipse.
 
-### Version 3.18.0 - August 12th 2019 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.18.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.18.0/view))
+## [3.18.0] - 2019-08-12 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.18.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.18.0/view))
 
 - Minimum gradle version is now `5.1`
 - Migrated off of all deprecated APIs as of Gradle `5.5.1`.
 - Fix URL for the `minimalistGradleEditor()` update site.
 - Fix bug in `com.diffplug.gradle.eclipse.projectdeps` where libraries which were a prefix of another library could screw up replacement, e.g. `durian-swt` and `durian-swt.os`.
 
-### Version 3.17.7 - June 26th 2019 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.17.7/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.7/view))
+## [3.17.7] - 2019-06-26 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.17.7/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.7/view))
 
 - Added eclipse `4.12.0` aka `2019-06`.
 
-### Version 3.17.6 - March 21st 2019 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.17.6/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.6/view))
+## [3.17.6] - 2019-03-21 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.17.6/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.6/view))
 
 - Adopted `okhttp` so that we respect redirects when downloading.  Fixes bugs introduced when `download.eclipse.org` began using redirects.
 
-### Version 3.17.5 - March 20th 2019 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.17.5/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.5/view))
+## [3.17.5] - 2019-03-20 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.17.5/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.5/view))
 
 - Added eclipse `4.11.0` aka `2019-03`.
 
-### Version 3.17.4 - February 15th 2019 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.17.4/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.4/view))
+## [3.17.4] - 2019-02-15 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.17.4/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.4/view))
 
 - Replace `http://` with `https://` throughout the project, now that [eclipse supports https for download.eclipse.org](https://bugs.eclipse.org/bugs/show_bug.cgi?id=444350) ([#94](https://github.com/diffplug/goomph/pull/94)).
 
-### Version 3.17.3 - February 6th 2019 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.17.3/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.3/view))
+## [3.17.3] - 2019-02-06 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.17.3/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.3/view))
 
 - Fixed up-to-date checking for the `BndManifestPlugin` ([6480298](https://github.com/diffplug/goomph/commit/6480298173988656fa29035c6533fac39ceedfa4)).
 
-### Version 3.17.2 - February 4th 2019 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.17.2/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.2/view))
+## [3.17.2] - 2019-02-04 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.17.2/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.2/view))
 
 - Fix the `equinoxLaunch` plugin, and added a test to prevent future breakage. ([#93](https://github.com/diffplug/goomph/pull/93))
 
-### Version 3.17.1 - January 2nd 2019 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.17.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.1/view))
+## [3.17.1] - 2019-01-02 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.17.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.1/view))
 
 - Added eclipse `4.10.0`.
 
-### Version 3.17.0 - October 3rd 2018 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.17.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.0/view))
+## [3.17.0] - 2018-10-03 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.17.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.17.0/view))
 
 - Generated manifest is now put into the output resources directory, to make sure that it's available at runtime for development.
 - Fixed a bug in ProjectDepsPlugin where similarly-named jars might not replace all of the desired projects.
-	+ e.g. if you want to replace `durian-swt`, `durian-swt.os`, and `durian-swt.cocoa.macosx.x86_64`, in the old version `durian-swt` would not get replaced.  Now fixed. ([#80](https://github.com/diffplug/goomph/pull/80))
+  + e.g. if you want to replace `durian-swt`, `durian-swt.os`, and `durian-swt.cocoa.macosx.x86_64`, in the old version `durian-swt` would not get replaced.  Now fixed. ([#80](https://github.com/diffplug/goomph/pull/80))
 - Add BndManifest support for every Jar task. [(#79)](https://github.com/diffplug/goomph/pull/79)
 - Added eclipse `4.9.0`. ([#83](https://github.com/diffplug/goomph/pull/83))
 
-### Version 3.16.0 - August 1st 2018 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.16.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.16.0/view))
+## [3.16.0] - 2018-08-01 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.16.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.16.0/view))
 
 - Added ability to set vmArgs for EquinoxLaunchTask.
 - Add `4.7.3.a` as an EclipseRelease.
 - Update minimum gradle version to `4.0`:
-	+ `eclipseMavenCentral` now supports the new configurations: `api`, `implementation`, `runtimeOnly`, `testRuntimeOnly`.
-	+ `osgiBndManifest` no longer uses deprecated methods.
+  + `eclipseMavenCentral` now supports the new configurations: `api`, `implementation`, `runtimeOnly`, `testRuntimeOnly`.
+  + `osgiBndManifest` no longer uses deprecated methods.
 - Updated `bndlib` to `4.0`.
 - Replaced dependency on `com.diffplug.durian:durian-swt` with `durian-swt.os`. This removes the dependency on `org.eclipse.swt`.
 - Set the `oomphIde` splash location with an absolute path to fix warnings on mac. ([#74](https://github.com/diffplug/goomph/issues/74))
 
-### Version 3.15.0 - July 6th 2018 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.15.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.15.0/view))
+## [3.15.0] - 2018-07-06 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.15.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.15.0/view))
 
 - Added support for eclipse 4.8.0.
 
-### Version 3.14.0 - May 18th 2018 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.14.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.14.0/view))
+## [3.14.0] - 2018-05-18 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.14.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.14.0/view))
 
 - EquinoxLaunch handles applications with async exist code (EXIT_ASYNC_RESULT) [(#66)](https://github.com/diffplug/goomph/pull/66)
 - Added `useNativesForRunningPlatform()` to `eclipseMavenCentral`.
 
-### Version 3.13.0 - March 20th 2018 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.13.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.13.0/view))
+## [3.13.0] - 2018-03-20 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.13.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.13.0/view))
 
 - Added support for translating eclipse releases to maven central coordinates. [(#61)](https://github.com/diffplug/goomph/pull/61)
 - Added support for eclipse 4.7.3. [(#62)](https://github.com/diffplug/goomph/pull/62)
 
-### Version 3.12.0 - February 26th 2018 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.12.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.12.0/view))
+## [3.12.0] - 2018-02-26 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.12.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.12.0/view))
 
 - Added support for `includeLaunchers` property from product files [(#58)](https://github.com/diffplug/goomph/pull/58)
 
-### Version 3.11.1 - February 22nd 2018 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.11.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.11.1/view))
+## [3.11.1] - 2018-02-22 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.11.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.11.1/view))
 
 - Bump OSGi version to fix `NoClassDefFoundError: org/eclipse/osgi/framework/util/CaseInsensitiveDictionaryMap` [(#57)](https://github.com/diffplug/goomph/pull/57)
 
-### Version 3.11.0 - February 18th 2018 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.11.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.11.0/view))
+## [3.11.0] - 2018-02-18 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.11.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.11.0/view))
 
 - Bump pde-bootstrap from `4.5.2` to `4.7.2`.
 - Allow fine grained configuration of EclipseApp in PdeBuildTask [(#55)](https://github.com/diffplug/goomph/pull/55)
 
-### Version 3.10.0 - February 5th 2018 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.10.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.10.0/view))
+## [3.10.0] - 2018-02-05 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.10.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.10.0/view))
 
 - Added nosplash argument to EclipseApp in order to prevent splash screens during gradle tasks. [(#53)](https://github.com/diffplug/goomph/pull/53)
 - Added a feature to provide a custom goomph-pde-bootstrap installation. [(#52)](https://github.com/diffplug/goomph/pull/52)
 - Fix typo in `GOOMPH_PDE_UPDATE_SITE` property (was accidentally UDPATE). [(#48)](https://github.com/diffplug/goomph/pull/48)
-	- Old spelling (UDPATE) is still supported for backward-compatibility.
+ ] - Old spelling (UDPATE) is still supported for backward-compatibility.
 
-### Version 3.9.1 - February 2nd 2018 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.9.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.9.1/view))
+## [3.9.1] - 2018-02-02 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.9.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.9.1/view))
 
 - Added `--launcher.suppressErrors` to all `EclipseApp` invocations so that build errors won't open a blocking dialog on build servers. [(#49)](https://github.com/diffplug/goomph/pull/49)
 - Fixed a bug where a console app's execution might block because of an overfilled stderr. [(#50)](https://github.com/diffplug/goomph/pull/50)
 
-### Version 3.9.0 - December 21st 2017 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.9.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.9.0/view))
+## [3.9.0] - 2017-12-21 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.9.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.9.0/view))
 
 - Added `addBuildSrc()` method to Oomph configuration.
 - Upgrade bndlib from `3.4.0` to `3.5.0`.
 - `p2asmaven` now supports [slicing options](https://wiki.eclipse.org/Equinox/p2/Ant_Tasks#SlicingOptions). ([#41](https://github.com/diffplug/goomph/pull/41))
-- `p2asmaven` now supports appending - a huge performance improvement for incrementally adding p2 deps. ([#44](https://github.com/diffplug/goomph/pull/44))
+- `p2asmaven` now supports appending] - a huge performance improvement for incrementally adding p2 deps. ([#44](https://github.com/diffplug/goomph/pull/44))
 - Updated `EclipseRelease` to `4.7.2`.
 
-### Version 3.8.1 - October 13th 2017 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.8.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.8.1/view))
+## [3.8.1] - 2017-10-13 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.8.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.8.1/view))
 
 - Updated `EclipseRelease` to `4.7.1a`, and also added `4.7.1`.
 - Updated default buildship release from `e46/releases/1.0` to `e47/releases/2.x`.
 
-### Version 3.8.0 - September 21st 2017 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.8.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.8.0/view))
+## [3.8.0] - 2017-09-21 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.8.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.8.0/view))
 
 - Added the [`com.diffplug.gradle.equinoxlaunch`](https://diffplug.github.io/goomph/javadoc/snapshot/com/diffplug/gradle/eclipserunner/EquinoxLaunchPlugin.html) can configure and run equinox applications as part of the build, such as a code generator.
 - CopyJarsUsingProductFile now gives better error messages when a plugin is missing.
 - Bump bndlib from `3.2.0` to `3.4.0`.
 
-### Version 3.7.3 - July 4th 2017 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.7.3/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.7.3/view))
+<!-- END CHANGELOG -->
+
+## [3.7.3] - July 4th 2017 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.7.3/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.7.3/view))
 
 - Updated `EclipseRelease.latestOfficial()` to `Oxygen`.
 
-### Version 3.7.2 - April 13th 2017 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.7.2/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.7.2/view))
+## [3.7.2] - April 13th 2017 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.7.2/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.7.2/view))
 
 - Updated `EclipseRelease.latestOfficial()` to `Neon.3`.
 - Fixed a confusing error message ([#30](https://github.com/diffplug/goomph/issues/30)).
 
-### Version 3.7.1 - February 14th 2017 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.7.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.7.1/view))
+## [3.7.1] - February 14th 2017 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.7.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.7.1/view))
 
 * `com.diffplug.gradle.eclipse.buildproperties` now includes all non-java files in the `src` folder as resources, instead of only `*.properties` files.
 
-### Version 3.7.0 - December 22nd 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.7.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.7.0/view))
+## [3.7.0] - December 22nd 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.7.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.7.0/view))
 
 * Updated `EclipseResult.latestOfficial()` to `Neon.2`.
 * It is now possible to set the description in the startup dialog and about dialog. [commit](https://github.com/diffplug/goomph/commit/f24ac1ba8d00731ba754f1ede70bd93d232f0b67)
 * Fixed JDK detection on mac. [commit](https://github.com/diffplug/goomph/commit/d0555c8a483f29f9b8b39c05578a7ea9cc45253f)
 * Goomph constants (such as p2 bootstrap url) can now be overridden using Gradle extension properties:
-	+ e.g. `ext.goomph_override_p2bootstrapUrl='https://intranet/goomph-p2-boostrap'`
-	+ Required when splitting buildscripts across files, because of Gradle classpath separation.
-	+ See [issue #25](https://github.com/diffplug/goomph/issues/25) for more details.
+  + e.g. `ext.goomph_override_p2bootstrapUrl='https://intranet/goomph-p2-boostrap'`
+  + Required when splitting buildscripts across files, because of Gradle classpath separation.
+  + See [issue #25](https://github.com/diffplug/goomph/issues/25) for more details.
 * Fixed bug which prevented buildship import. [issue](https://github.com/diffplug/gradle-and-eclipse-rcp/issues/7)
 * Added a mechanism for integrating third-party plugins into Goomph, e.g.
 
 ```gradle
 oomphIde {
-	thirdParty {
-		tmTerminal {}
-		minimalistGradleEditor {}
-		buildship {}
-	}
+  thirdParty {
+    tmTerminal {}
+    minimalistGradleEditor {}
+    buildship {}
+  }
 }
 ```
 
-### Version 3.6.0 - December 5th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.6.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.6.0/view))
+## [3.6.0] - December 5th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.6.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.6.0/view))
 
 * Added `workspaceFile('pathInWorkspace', 'srcFile')` for copying files into the workspace directly.
 * Improved `workspaceProp('pathInWorkspace', { map -> map.put('key', 'value')}` so it can now be called multiple times to modify earlier results, including modifying a file set by `workspaceFile`.  It can still create a file from scratch, as before.
@@ -164,87 +166,87 @@ oomphIde {
 * Improvements to the JDT config and the ability to link resources ([#23](https://github.com/diffplug/goomph/pull/23)).
 * The p2bootstrap url can now be overridden ([#25](https://github.com/diffplug/goomph/issues/25)).
 
-### Version 3.5.0 - November 24th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.5.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.5.0/view))
+## [3.5.0] - November 24th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.5.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.5.0/view))
 
 * Added the ability to set the installed JRE (#16).
-	+ See [javadoc](https://diffplug.github.io/goomph/javadoc/3.5.0/com/diffplug/gradle/oomph/ConventionJdt.html) for details.
+  + See [javadoc](https://diffplug.github.io/goomph/javadoc/3.5.0/com/diffplug/gradle/oomph/ConventionJdt.html) for details.
 
-### Version 3.4.0 - November 22nd 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.4.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.4.0/view))
+## [3.4.0] - November 22nd 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.4.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.4.0/view))
 
 * Added `FileMisc.deleteEmptyFolders().`
 * Fixed `com.diffplug.gradle.eclipse.bndmanifest` so that it doesn't create `Export-Package` entries for empty packages.
-	+ If bnd sees an empty folder in the classes directory, it will put that directory into the manifest.
-	+ To fix this, we now clean empty folders out of the classes directory before we run bndmanifest.
+  + If bnd sees an empty folder in the classes directory, it will put that directory into the manifest.
+  + To fix this, we now clean empty folders out of the classes directory before we run bndmanifest.
 
-### Version 3.3.0 - October 13th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.3.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.3.0/view))
+## [3.3.0] - October 13th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.3.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.3.0/view))
 
 * Added javadoc to [`AsMavenPlugin`](https://diffplug.github.io/goomph/javadoc/3.3.0/com/diffplug/gradle/p2/AsMavenPlugin.html) and [`OomphIdePlugin`](https://diffplug.github.io/goomph/javadoc/3.3.0/com/diffplug/gradle/oomph/OomphIdePlugin.html) which describes proxy support.
 * Added `OomphIdeExtension::p2director`, to allow the proxy support described above.
 
-### Version 3.2.1 - September 29th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.2.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.2.1/view))
+## [3.2.1] - September 29th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.2.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.2.1/view))
 
 * IDE setup tasks could not upgrade or downgrade the IDE version, because of a p2 director limitation. Fixed.
 
-### Version 3.2.0 - September 28th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.2.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.2.0/view))
+## [3.2.0] - September 28th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.2.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.2.0/view))
 
 * `p2asmaven` now respects the buildDir variable ([#9](https://github.com/diffplug/goomph/issues/9)).
 * `EclipseRelease` now knows about Neon.1, and uses Neon.1 as the latest available eclipse release.
 * Improved `FeaturesAndBundlesPublisher` javadoc.
 * P2BootstrapInstallation could fail intermittently due to filesystem flushing issues.  Fixed now.
 
-### Version 3.1.2 - September 15th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.1.2/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.1.2/view))
+## [3.1.2] - September 15th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.1.2/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.1.2/view))
 
 * Second attempt at fixing a bug where trailing whitespaces in bundle symbolic names would break `p2asmaven`.
 
-### Version 3.1.1 - September 14th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.1.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.1.1/view))
+## [3.1.1] - September 14th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.1.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.1.1/view))
 
 * Fixed a bug where trailing whitespaces in bundle symbolic names would break `p2asmaven`.
 
-### Version 3.1.0 - August 24th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.1.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.1.0/view))
+## [3.1.0] - August 24th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.1.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.1.0/view))
 
 * Added `OomphIdeExtension.addProjectFolder()`.  You can now add projects to the eclipse IDE without having an eclipse project in the build.
 
-### Version 3.0.6 - August 15th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.0.6/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.6/view))
+## [3.0.6] - August 15th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.0.6/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.6/view))
 
 * More fixes to behavior around creating the goomph bundle pool.
-	+ Old behavior sometimes created a bundle pool which worked, but sometimes didn't.
-	+ New behavior is more reliable.
+  + Old behavior sometimes created a bundle pool which worked, but sometimes didn't.
+  + New behavior is more reliable.
 * We were creating `file://` URLs on Windows, which should have been `file:///`.  This fix may cause some p2 repositories to become marked as dirty and redownload, even though they are really clean.  One-time fix.
 
-### Version 3.0.5 - August 7th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.0.5/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.5/view))
+## [3.0.5] - August 7th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.0.5/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.5/view))
 
 * Fixed behavior around creating the goomph bundle pool.
-	+ Old behavior was: if pool is listed as dependency but doesn't exist, just remove the dependency.
-	+ New behavior is: if pool is listed as dependency but doesn't exist, create the pool.
+  + Old behavior was: if pool is listed as dependency but doesn't exist, just remove the dependency.
+  + New behavior is: if pool is listed as dependency but doesn't exist, create the pool.
 
-### Version 3.0.4 - July 30th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.0.4/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.4/view))
+## [3.0.4] - July 30th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.0.4/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.4/view))
 
 * Fixed a mac-specific bug which made it impossible to use any PDE tasks.
 
-### Version 3.0.3 - July 29th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.0.3/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.3/view))
+## [3.0.3] - July 29th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.0.3/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.3/view))
 
 * Fixed unnecessary errors for users who don't specify `org.gradle.java.home` manually.
 * Fixed NPE when using `p2asmaven` on jars with no manifest.
-	+ Failures on a single jar will no longer bring down the whole build.
-	+ Jars with no manifest have their name and version parsed from their filename.
+  + Failures on a single jar will no longer bring down the whole build.
+  + Jars with no manifest have their name and version parsed from their filename.
 
-### Version 3.0.2 - July 15th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.0.2/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.2/view))
+## [3.0.2] - July 15th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.0.2/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.2/view))
 
 * Fixed `com.diffplug.gradle.eclipse.excludebuildfolder`.
 
-### Version 3.0.1 - July 14th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.0.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.1/view))
+## [3.0.1] - July 14th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.0.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.1/view))
 
 * Fixed plugin metadata so that all our plugins make it to the plugin portal.  The following were missing:
-	+ `com.diffplug.gradle.eclipse.resourcefilters`
-	+ `com.diffplug.gradle.oomph.ide`
+  + `com.diffplug.gradle.eclipse.resourcefilters`
+  + `com.diffplug.gradle.oomph.ide`
 
-### Version 3.0.0 - July 13th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.0.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.0/view))
+## [3.0.0] - July 13th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/3.0.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/3.0.0/view))
 
 We added a ton of stuff in 3.0.0.  Everything in the `p2` and `pde` packages has been revamped, but the `eclipse`
 and `osgi` packages are unchanged.
 
 * BREAKING CHANGE: Everything in the `pde` package has been revamped.
-	+ Wuff/Unpuzzle are no longer required.
+  + Wuff/Unpuzzle are no longer required.
 * BREAKING CHANGE: Renamed ZipUtil to ZipMisc.
 * BREAKING CHANGE: Renamed P2DirectorModel to P2Model.
 * Added the ability to download a small (~10MB) archive with everything required to run p2 director and the p2 ant tasks.
@@ -252,16 +254,16 @@ and `osgi` packages are unchanged.
 * Added `NativeFileManager` for opening the native file manager to look at a file (for debugging).
 * Added `OomphIdePlugin`.
 
-### Version 2.1.1 - May 9th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/2.1.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/2.1.1/view))
+## [2.1.1] - May 9th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/2.1.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/2.1.1/view))
 
 * `com.diffplug.gradle.osgi.bndmanifest` now always writes out the calculated manifest to the output resources directory.  This way, if a task such as `test` relies on having a valid manifest, it will be there.
 * Note that if your tests rely on having an accurate META-INF/MANIFEST.MF, you should add `test.dependsOn(jar)` to your buildscript.
 
-### Version 2.1.0 - May 9th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/2.1.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/2.1.0/view))
+## [2.1.0] - May 9th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/2.1.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/2.1.0/view))
 
 * `com.diffplug.gradle.osgi.bndmanifest` now has the ability to specify whether or not to merge the calculated manifest with the existing manifest.  Default behavior is don't merge.
 
-### Version 2.0.0 - May 7th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/2.0.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/2.0.0/view))
+## [2.0.0] - May 7th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/2.0.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/2.0.0/view))
 
 * BREAKING CHANGE: Moved former contents of `com.diffplug.gradle.eclipse` into `com.diffplug.gradle.pde`.
 * BREAKING CHANGE: Renamed plugin  `com.diffplug.gradle.swt` to `com.diffplug.gradle.swt.nativedeps`.
@@ -271,30 +273,30 @@ and `osgi` packages are unchanged.
 * Added plugin `com.diffplug.gradle.eclipse.excludebuildfolder` which excludes the build folder from the eclipse project resources.
 * All plugins are now tested by Gradle's testkit.  Some of the custom tasks in the `pde` package still need better coverage.
 
-### Version 1.3.1 - April 6th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/1.3.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/1.3.1/view))
+## [1.3.1] - April 6th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/1.3.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/1.3.1/view))
 
 * Fixed EclipseWuff on OS X for the rest (not just binaries).
 
-### Version 1.3.0 - March 14th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/1.3.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/1.3.0/view))
+## [1.3.0] - March 14th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/1.3.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/1.3.0/view))
 
 * Fixed location of OS X eclipse binaries for Eclipse Mars and later.
-	+ Required adding a `getVersionOsgi()` method to EclipseWuff.
+  + Required adding a `getVersionOsgi()` method to EclipseWuff.
 
-### Version 1.2.0 - March 8th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/1.2.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/1.2.0/view))
+## [1.2.0] - March 8th 2016 ([javadoc](https://diffplug.github.io/goomph/javadoc/1.2.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/1.2.0/view))
 
 * Fixed a DiffPlug-specific constant in PdeProductBuildTask
 * Added support for Mars SR2
 
-### Version 1.1.0 - November 12th 2015 ([javadoc](https://diffplug.github.io/goomph/javadoc/1.1.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/1.1.0/view))
+## [1.1.0] - November 12th 2015 ([javadoc](https://diffplug.github.io/goomph/javadoc/1.1.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/1.1.0/view))
 
 * Added the 'com.diffplug.gradle.swt' plugin, which applies all Eclipse dependencies needed to use SWT and JFace.
 * Added EnvMisc for getting environment variables with nice error messages for missing variables.
 
-### Version 1.0.1 - November 12th 2015 ([javadoc](https://diffplug.github.io/goomph/javadoc/1.0.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/1.0.1/view))
+## [1.0.1] - November 12th 2015 ([javadoc](https://diffplug.github.io/goomph/javadoc/1.0.1/), [jcenter](https://bintray.com/diffplug/opensource/goomph/1.0.1/view))
 
 * Fixed a hardcoded version.  Yikes.
 
-### Version 1.0.0 - October 12th 2015 ([javadoc](https://diffplug.github.io/goomph/javadoc/1.0.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/1.0.0/view))
+## [1.0.0] - October 12th 2015 ([javadoc](https://diffplug.github.io/goomph/javadoc/1.0.0/), [jcenter](https://bintray.com/diffplug/opensource/goomph/1.0.0/view))
 
 * Throw it over the wall!
 * We use it in production at DiffPlug, for whatever that's worth.
