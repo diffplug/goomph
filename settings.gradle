@@ -1,0 +1,8 @@
+plugins {
+	id 'com.diffplug.blowdryerSetup' version '0.1.1'
+}
+rootProject.name = 'goomph'
+blowdryerSetup {
+	github 'diffplug/blowdryer-diffplug', 'commit', 'a0a7dbfc2f306ba801073e9a50980dd8243df2f5'
+	//devLocal '../blowdryer-diffplug'
+}

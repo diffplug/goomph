@@ -1,36 +1,34 @@
 plugins {
-	// github pages
-	id 'org.ajoberstar.git-publish' version '2.1.1'
 	// https://github.com/ben-manes/gradle-versions-plugin
-	id 'com.github.ben-manes.versions' version '0.25.0' // dependencyUpdates
+	id 'com.github.ben-manes.versions' version '0.27.0' // dependencyUpdates
 	//  https://plugins.gradle.org/plugin/com.gradle.plugin-publish/0.10.1
 	id 'com.gradle.plugin-publish' version '0.10.1'
 	// https://github.com/diffplug/spotless/blob/master/plugin-gradle/CHANGES.md
-	id 'com.diffplug.gradle.spotless' version '3.24.2'
+	id 'com.diffplug.gradle.spotless' version '3.26.1'
 	// https://github.com/bintray/gradle-bintray-plugin/releases
 	id 'com.jfrog.bintray' version '1.8.4'
+	// https://github.com/diffplug/spotless-changelog/blob/master/CHANGELOG.md
+	id 'com.diffplug.spotless-changelog' version '0.1.0'
 	// https://github.com/mnlipp/jdrupes-mdoclet/releases
 	id 'org.jdrupes.mdoclet' version '1.0.5'
 	// https://github.com/spotbugs/spotbugs-gradle-plugin/blob/master/CHANGELOG.md
 	id 'com.github.spotbugs' version '2.0.0'
+
 }
 
-repositories {
-	jcenter()
-	// SNAPSHOT versions are free to rely on other SNAPSHOT libraries
-	if (project.version.endsWith('-SNAPSHOT')) {
-		maven {
-			url 'https://oss.sonatype.org/content/repositories/snapshots/'
-		}
-		configurations.all {
-			resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-		}
-	}
+spotlessChangelog {
+	changelogFile 'CHANGES.md'
 }
 
-apply plugin: 'java-gradle-plugin'
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+apply plugin: 'com.diffplug.blowdryer'
+
+apply from: 干.file('base/java8.gradle')
+apply from: 干.file('base/changelog.gradle')
+apply from: 干.file('base/gradle-plugin.gradle')
+apply from: 干.file('base/maven.gradle')
+apply from: 干.file('base/bintray.gradle')
+apply from: 干.file('spotless/freshmark.gradle')
+apply from: 干.file('spotless/java.gradle')
 
 String VER_DURIAN = '1.2.0'
 String VER_DURIAN_SWT = '3.0.0'
@@ -74,63 +72,19 @@ test {
 	}
 }
 
-apply plugin: 'eclipse'
-eclipse {
-	classpath {
-		downloadSources true
-		downloadJavadoc true
-	}
-	project.file.withXml { provider ->
-		Node filteredResources = provider.asNode().appendNode('filteredResources')
-		Node filter = filteredResources.appendNode('filter')
-		filter.appendNode('id', '1093830624')
-		filter.appendNode('name', '')
-		filter.appendNode('type', '10')
-		Node matcher = filter.appendNode('matcher')
-		matcher.appendNode('id', 'org.eclipse.ui.ide.multiFilter')
-		matcher.appendNode('arguments', '1.0-name-matches-false-false-build')
-	}
-}
-// always create fresh projects
-tasks.eclipse.dependsOn(cleanEclipse)
-// with up-to-date test deps
-tasks.eclipse.dependsOn(pluginUnderTestMetadata)
-
 ///////////////////
 // OSGi metadata //
 ///////////////////
 jar.manifest.attributes(
-	'Manifest-Version': '1.0',
-	'Bundle-SymbolicName': 'com.diffplug.gradle.goomph',
-	'Bundle-Name': 'com.diffplug.gradle.goomph',
-	'Bundle-Version': '0.0.0.SNAPSHOT',
-	'Export-Package': 'com.diffplug.gradle.osgi',
-	'Bundle-ClassPath': '.',
-	'Bundle-ManifestVersion': '2',
-	'DynamicImport-Package': '*'
-)
-
-////////////
-// FORMAT //
-////////////
-spotless {
-	java {
-		licenseHeaderFile	'gradle/spotless.license.java'			// License header file
-		importOrderFile		'gradle/spotless.importorder'			// An import ordering file, exported from Eclipse
-		eclipse().configFile('gradle/spotless.eclipseformat.xml')	// XML file dumped out by the Eclipse formatter
-		removeUnusedImports()
-	}
-	format 'misc', {
-		target '.gitignore', '*.gradle', '*.md', '.ci/*.sh'
-		indentWithTabs()
-		trimTrailingWhitespace()
-		endWithNewline()
-	}
-	freshmark {
-		target '*.md'
-		propertiesFile('gradle.properties')
-	}
-}
+		'Manifest-Version': '1.0',
+		'Bundle-SymbolicName': 'com.diffplug.gradle.goomph',
+		'Bundle-Name': 'com.diffplug.gradle.goomph',
+		'Bundle-Version': '0.0.0.SNAPSHOT',
+		'Export-Package': 'com.diffplug.gradle.osgi',
+		'Bundle-ClassPath': '.',
+		'Bundle-ManifestVersion': '2',
+		'DynamicImport-Package': '*'
+		)
 
 //////////////
 // FINDBUGS //
@@ -138,7 +92,8 @@ spotless {
 spotbugs {
 	// https://github.com/spotbugs/spotbugs/blob/master/CHANGELOG.md
 	toolVersion = '3.1.12'
-	sourceSets = [sourceSets.main]	// don't check the test code
+	sourceSets = [
+		sourceSets.main]	// don't check the test code
 	ignoreFailures = false 	// bug free or it doesn't ship!
 	reportsDir = file('build/findbugs')
 	effort = 'max'			// min|default|max
@@ -161,231 +116,20 @@ dependencies {
 ///////////
 // MAVEN //
 ///////////
-apply plugin: 'maven-publish'
-
-task sourcesJar(type: Jar) {
-	classifier = 'sources'
-	from sourceSets.main.allJava
-}
-
-// use markdown in javadoc
-def makeLink = { url, text -> "<a href=\"${url}\" style=\"text-transform: none;\">${text}</a>" }
-def javadocInfo = '<h2>' + makeLink("https://github.com/${org}/${name}", "${group}:${name}:${version}") +
-' by ' + makeLink('https://www.diffplug.com', 'DiffPlug') + '</h2>'
-
-def verSnapshot = { it.endsWith('-SNAPSHOT') ? 'snapshot' : it }
-
 javadoc {
-	// Where it's possible to name parameters and methods clearly enough
-	// that javadoc is not necessary, why make the code bigger?
-	//
-	// Thus, no javadoc warnings.
-	options.addStringOption('Xdoclint:none')
-	// setup the header
-	options.header javadocInfo
-	options.footer javadocInfo
+	// TODO: error on invalid javadoc
 	// setup links
 	options.linksOffline('https://docs.oracle.com/javase/8/docs/api/', 'gradle/javadoc/java8')
 	options.linksOffline("https://docs.gradle.org/${OLDEST_SUPPORTED_GRADLE}/javadoc/", 'gradle/javadoc/gradle')
-	options.linksOffline("https://diffplug.github.io/durian/javadoc/${verSnapshot(VER_DURIAN)}/", 'gradle/javadoc/durian')
-	options.linksOffline("https://diffplug.github.io/durian-swt/javadoc/${verSnapshot(VER_DURIAN_SWT)}/", 'gradle/javadoc/durian-swt')
+	options.linksOffline("https://diffplug.github.io/durian/javadoc/${VER_DURIAN}/", 'gradle/javadoc/durian')
+	options.linksOffline("https://diffplug.github.io/durian-swt/javadoc/${VER_DURIAN_SWT}/", 'gradle/javadoc/durian-swt')
 	options.linksOffline("https://www.javadoc.io/doc/biz.aQute.bnd/biz.aQute.bndlib/${VER_BNDLIB}/", 'gradle/javadoc/bndlib')
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-	classifier = 'javadoc'
-	from javadoc.destinationDir
-}
-
-////////////////
-// PUBLISHING //
-////////////////
-def isSnapshot = project.version.endsWith('-SNAPSHOT')
-// pulls the credentials from either the environment variable or gradle.properties
-def cred = {
-	if (System.env[it] != null) {
-		return System.env[it]
-	} else if (project.hasProperty(it)) {
-		return project[it]
-	} else {
-		return 'unknown_' + it
-	}
-}
-
-model { publishing {
-	publications {
-		pluginMaven {
-			artifact sourcesJar
-			artifact javadocJar
-			pom.withXml {
-				// findbugs annotations should have scope "provided"
-				asNode().dependencies.'*'.findAll() { it.groupId.text() == 'com.google.code.findbugs' }.each() { it.scope*.value = 'provided' }
-				// add MavenCentral requirements to the POM
-				asNode().children().last() + {
-					resolveStrategy = Closure.DELEGATE_FIRST
-					name project.name
-					description project.description
-					url "https://github.com/${project.org}/${project.name}"
-					scm {
-						url "https://github.com/${project.org}/${project.name}"
-						connection "scm:git:git://github.com/${project.org}/${project.name}"
-						developerConnection "scm:git:ssh:git@github.com/${project.org}/${project.name}"
-					}
-					licenses {
-						license {
-							name 'The Apache Software License, Version 2.0'
-							url 'https://www.apache.org/license/LICENSE-2.0.txt'
-							distribution 'repo'
-						}
-					}
-					developers {
-						developer {
-							id 'nedtwigg'
-							name 'Ned Twigg'
-							email 'ned.twigg@diffplug.com'
-						}
-					}
-				}
-			}
-		}
-	}
-	if (isSnapshot) {
-		// upload snapshots to oss.sonatype.org
-		repositories { maven {
-			url = 'https://oss.sonatype.org/content/repositories/snapshots'
-			credentials {
-				username = cred('nexus_user')
-				password = cred('nexus_pass')
-			}
-		} }
-	}
-} }
-
-if (!isSnapshot) {
-	////////////////////
-	// BINTRAY UPLOAD //
-	////////////////////
-	bintray {
-		user = cred('bintray_user')
-		key = cred('bintray_pass')
-		publications = ['pluginMaven']
-		publish = true
-		pkg {
-			repo = 'opensource'
-			name = project.name
-			userOrg = project.org
-			version {
-				name = project.version
-				mavenCentralSync {
-					user = cred('nexus_user')
-					password = cred('nexus_pass')
-				}
-			}
-		}
-	}
-	publish.dependsOn(bintrayUpload)
-	bintrayUpload.dependsOn(['generatePomFileForPluginMavenPublication', jar, sourcesJar, javadocJar])
-}
-
-//////////////////////////
-// GRADLE PLUGIN PORTAL //
-//////////////////////////
-pluginBundle {
-	// These settings are set for the whole plugin bundle
-	website = "https://github.com/${project.org}/${project.name}"
-	vcsUrl = "https://github.com/${project.org}/${project.name}"
-
-	plugins {
-		eclipseBuildPropertiesPlugin {
-			id = 'com.diffplug.gradle.eclipse.buildproperties'
-			displayName = 'Goomph eclipse.buildproperties'
-			description = "Uses Eclipse's build.properties to control a gradle build, and fixes the eclipse project classpath to include binary assets specified in build.properties."
-			tags = ['eclipse']
-		}
-		eclipseExcludeBuildFolderPlugin {
-			id = 'com.diffplug.gradle.eclipse.excludebuildfolder'
-			displayName = 'Goomph eclipse.excludebuildfolder'
-			description = "Excludes the gradle build folder from Eclipse's resource indexing."
-			tags = ['eclipse']
-		}
-		eclipseMavenCentralPlugin {
-			id = 'com.diffplug.gradle.eclipse.mavencentral'
-			displayName = 'Goomph eclipse.mavencentral'
-			description = 'Maps eclipse releases and bundle ids to their MavenCentral coordinates.'
-			tags = ['eclipse', 'mavenCentral']
-		}
-		eclipseProjectDepsPlugin {
-			id = 'com.diffplug.gradle.eclipse.projectdeps'
-			displayName = 'Goomph eclipse.projectdeps'
-			description = "Fixes an intermittent problem where dependencies on other projects within the workspace aren't always resolved correctly within Eclipse."
-			tags = ['eclipse']
-		}
-		eclipseResourceFiltersPlugin {
-			id = 'com.diffplug.gradle.eclipse.resourcefilters'
-			displayName = 'Goomph eclipse.resourcefilters'
-			description = "Adds filters to an eclipse project which exclude or include specific resources."
-			tags = ['eclipse']
-		}
-		equinoxLaunch {
-			id = 'com.diffplug.gradle.equinoxlaunch'
-			displayName = 'Goomph launch an equinox application'
-			description = "Launches an equinox application with whatever set of plugins the user specifies"
-			tags = ['eclipse', 'osgi']
-		}
-		oomphIdePlugin {
-			id = 'com.diffplug.gradle.oomph.ide'
-			displayName = 'Goomph ooomph.ide'
-			description = "Downloads and sets up any Eclipse-based IDE."
-			tags = ['eclipse', 'ide', 'p2']
-		}
-		p2AsMavenPlugin {
-			id = 'com.diffplug.gradle.p2.asmaven'
-			displayName = 'Goomph p2.asmaven'
-			description = "Downloads a set of artifacts from a p2 repository and stuffs them into a local maven repository."
-			tags = ['p2', 'eclipse', 'osgi']
-		}
-		osgiBndManifestPlugin {
-			id = 'com.diffplug.gradle.osgi.bndmanifest'
-			displayName = 'Goomph osgi.bndmanifest'
-			description = "Generates a manifest using purely bnd, and outputs it for IDE consumption."
-			tags = ['osgi', 'bnd', 'eclipse']
-		}
-		swtNativeDepsPlugin {
-			id = 'com.diffplug.gradle.swt.nativedeps'
-			displayName = 'Goomph swt.nativedeps'
-			description = "Adds the platform-specific SWT jars to the runtime classpath so that SWT code can run."
-			tags = ['eclipse', 'swt']
-		}
-	}
-
-	mavenCoordinates {
-		groupId = project.group
-		artifactId = project.name
-		version = project.version
-	}
-}
-// the gradle plugin portal isn't really compatible with SNAPSHOT versions
-// https://discuss.gradle.org/t/uploading-snapshot-versions-to-the-plugin-portal/11347
-if (isSnapshot) {
-	publishPlugins.enabled = false
-}
-
-//////////////////
-// GITHUB PAGES //
-//////////////////
-gitPublish {
-	repoUri = "https://github.com/${project.org}/${project.name}"
-	branch = 'gh-pages'
-	preserve { include '**/*' }
-	contents {
-		from javadoc.destinationDir
-		into "javadoc/${project.version}"
-	}
-}
-tasks.gitPublishCopy.dependsOn(":javadoc")
-
-// helps external scripts detect version
-task printVersion
-printVersion.doLast {
-	println version
-}
+// TODO: are we handling the com.google.code.findbugs dep correctly in the new publishing setup?
+/*
+ model.publishing.publications.pluginMaven.pom.withXml {
+ // findbugs annotations should have scope "provided"
+ asNode().dependencies.'*'.findAll() { it.groupId.text() == 'com.google.code.findbugs' }.each() { it.scope*.value = 'provided' }
+ }
+ */
