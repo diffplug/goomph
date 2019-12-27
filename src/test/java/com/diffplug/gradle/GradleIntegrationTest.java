@@ -36,6 +36,8 @@ import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 
 public class GradleIntegrationTest {
+	public static final String VER_GRADLE_REQUIRED = "5.1";
+
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
 
@@ -57,7 +59,7 @@ public class GradleIntegrationTest {
 	}
 
 	protected GradleRunner gradleRunner() {
-		return GradleRunner.create().withProjectDir(folder.getRoot()).withPluginClasspath();
+		return GradleRunner.create().withProjectDir(folder.getRoot()).withPluginClasspath().withGradleVersion(VER_GRADLE_REQUIRED);
 	}
 
 	/** Dumps the complete file contents of the folder to the console. */
