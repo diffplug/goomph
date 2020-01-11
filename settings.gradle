@@ -3,6 +3,6 @@ plugins {
 }
 rootProject.name = 'goomph'
 blowdryerSetup {
-	github 'diffplug/blowdryer-diffplug', 'commit', 'a0a7dbfc2f306ba801073e9a50980dd8243df2f5'
+	github 'diffplug/blowdryer-diffplug', 'tag', '3.0.0'
 	//devLocal '../blowdryer-diffplug'
 }
