@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [3.20.0] - 2020-01-11
 ### Added
 - Added eclipse `4.14.0` aka `2019-12` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.14/)).
 - `EquinoxLaunchTask` now has up-to-date support if you manually specify output files, as well as any program-specific input files
