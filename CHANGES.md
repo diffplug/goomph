@@ -14,6 +14,10 @@
 - `oomphIde` `workspaceXml` would wipe out the existing XML (fixes issue found in [#85](https://github.com/diffplug/goomph/issues/85)).
 - if the p2 bootstrap download fails, it will now complain loudly rather than write the text `404` to a file (fixes [#101](https://github.com/diffplug/goomph/issues/101)).
 
+## [3.19.0] - 2020-01-11 [YANKED]
+
+This was published accidentally.  Nothing bad in it, it's just a halfway-done version of `3.20.0` above.
+
 ## [3.18.1] - 2019-09-20
 - Added eclipse `4.13.0` aka `2019-09` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.13/)).
 - Removed the `com.diffplug.gradle.eclipse.classic` plugin, because it does not work well with newer versions of gradle or eclipse.
