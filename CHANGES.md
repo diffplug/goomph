@@ -1,6 +1,14 @@
 # Goomph releases
 
 ## [Unreleased]
+### Added
+- `EquinoxLaunchTask` now has up-to-date support if you manually specify output files, as well as any program-specific input files
+### Changed
+- Simplified build with [blowdryer](https://github.com/diffplug/blowdryer).
+- Updated gradle and all plugins.
+### Fixed
+- broken javadoc links ([#105](https://github.com/diffplug/goomph/issues/105))
+- missing annotation warnings on `PdeBuildTask` (still no up-to-date support though)
 
 ## [3.18.1] - 2019-09-20
 - Added eclipse `4.13.0` aka `2019-09`.
