@@ -36,12 +36,9 @@ import com.diffplug.gradle.p2.P2Model.DirectorApp;
 import com.diffplug.gradle.pde.EclipseRelease;
 import com.diffplug.gradle.pde.PdeInstallation;
 import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -507,9 +504,9 @@ public class OomphIdeExtension implements P2Declarative {
 			if (!target.exists()) {
 				throw new GradleException("workspaceXml('" + path + "', ... must be initialized by a call to workspaceFile('" + path + "', ...");
 			}
-			try (OutputStream output = new BufferedOutputStream(new FileOutputStream(target))) {
+			try {
 				ConfigMisc.modifyXmlInPlace(target, xmlAction);
-			} catch (IOException e) {
+			} catch (Exception e) {
 				throw new GradleException("error when writing workspaceXml '" + path + "'", e);
 			}
 		});
