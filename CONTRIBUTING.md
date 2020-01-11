@@ -2,8 +2,6 @@
 
 Pull requests are welcome, preferably against `master`.
 
-Every successful Travis CI build on branch `master` is automatically published to [`https://oss.sonatype.org/content/repositories/snapshots`](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/), and its javadoc are published [here](https://javadoc.io/doc/com.diffplug.gradle/goomph/javadoc/snapshot/).
-
 ## Build instructions
 
 It's a bog-standard gradle build.
@@ -49,7 +47,7 @@ By contributing your code, you agree to license your contribution under the term
 All files are released with the Apache 2.0 license as such:
 
 ```
-Copyright 2016 DiffPlug
+Copyright 2020 DiffPlug
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
