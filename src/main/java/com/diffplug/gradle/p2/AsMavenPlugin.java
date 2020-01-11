@@ -190,6 +190,10 @@ public class AsMavenPlugin extends ProjectPlugin {
 			// set maven repo
 			project.getRepositories().maven(maven -> {
 				maven.setUrl(extension.mavenDir(proj));
+				maven.metadataSources(sources -> {
+					sources.mavenPom();
+					sources.artifact();
+				});
 			});
 		});
 	}
