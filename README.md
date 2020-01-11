@@ -1,25 +1,26 @@
 # <img align="left" src="images/goomph_logo.png"> Goomph: IDE as build artifact
+***Also plugins for working with SWT, OSGi, p2, and Eclipse RCP***
 
 <!---freshmark shields
 output = [
-  link(shield('Maven artifact', 'mavenCentral', 'com.diffplug.gradle:goomph', 'blue'), 'https://bintray.com/diffplug/opensource/goomph/view'),
-  link(shield('Latest version', 'latest', '{{versionLast}}}', 'blue'), 'https://github.com/diffplug/goomph/releases/latest'),
-  link(shield('Javadoc', 'javadoc', 'OK', 'blue'), 'https://diffplug.github.io/goomph/javadoc/{{versionLast}}}/'),
+  link(shield('Gradle plugin', 'plugins.gradle.org', 'yes', 'blue'), 'https://plugins.gradle.org/search?term=goomph'),
+  link(shield('Maven artifact', 'mavenCentral', 'com.diffplug.gradle:goomph', 'blue'), 'https://search.maven.org/artifact/com.diffplug.gradle/goomph'),
   link(shield('License Apache', 'license', 'Apache', 'blue'), 'https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)'),
   '',
   link(shield('Changelog', 'changelog', '{{versionLast}}', 'brightgreen'), 'CHANGES.md'),
-  link(image('Travis CI', 'https://travis-ci.org/diffplug/goomph.svg?branch=master'), 'https://travis-ci.org/diffplug/goomph'),
-  link(shield('Live chat', 'gitter', 'live chat', 'brightgreen'), 'https://gitter.im/diffplug/goomph')
+  link(shield('Javadoc', 'javadoc', 'yes', 'brightgreen'), 'https://javadoc.io/doc/com.diffplug.gradle/goomph/{{versionLast}}/index.html'),
+  link(shield('Live chat', 'gitter', 'live chat', 'brightgreen'), 'https://gitter.im/diffplug/goomph'),
+  link(image('Travis CI', 'https://travis-ci.org/diffplug/goomph.svg?branch=master'), 'https://travis-ci.org/diffplug/goomph')
   ].join('\n');
 -->
-[![Maven artifact](https://img.shields.io/badge/mavenCentral-com.diffplug.gradle%3Agoomph-blue.svg)](https://bintray.com/diffplug/opensource/goomph/view)
-[![Latest version](https://img.shields.io/badge/latest-3.18.1%7D-blue.svg)](https://github.com/diffplug/goomph/releases/latest)
-[![Javadoc](https://img.shields.io/badge/javadoc-OK-blue.svg)](https://diffplug.github.io/goomph/javadoc/3.18.1}/)
+[![Gradle plugin](https://img.shields.io/badge/plugins.gradle.org-yes-blue.svg)](https://plugins.gradle.org/search?term=goomph)
+[![Maven artifact](https://img.shields.io/badge/mavenCentral-com.diffplug.gradle%3Agoomph-blue.svg)](https://search.maven.org/artifact/com.diffplug.gradle/goomph)
 [![License Apache](https://img.shields.io/badge/license-Apache-blue.svg)](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))
 
 [![Changelog](https://img.shields.io/badge/changelog-3.18.1-brightgreen.svg)](CHANGES.md)
-[![Travis CI](https://travis-ci.org/diffplug/goomph.svg?branch=master)](https://travis-ci.org/diffplug/goomph)
+[![Javadoc](https://img.shields.io/badge/javadoc-yes-brightgreen.svg)](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.18.1/index.html)
 [![Live chat](https://img.shields.io/badge/gitter-live_chat-brightgreen.svg)](https://gitter.im/diffplug/goomph)
+[![Travis CI](https://travis-ci.org/diffplug/goomph.svg?branch=master)](https://travis-ci.org/diffplug/goomph)
 <!---freshmark /shields -->
 
 <!---freshmark javadoc
