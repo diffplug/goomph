@@ -2,7 +2,7 @@
 
 Pull requests are welcome, preferably against `master`.
 
-Every successful Travis CI build on branch `master` is automatically published to [`https://oss.sonatype.org/content/repositories/snapshots`](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/), and its javadoc are published [here](https://diffplug.github.io/goomph/javadoc/snapshot/).
+Every successful Travis CI build on branch `master` is automatically published to [`https://oss.sonatype.org/content/repositories/snapshots`](https://oss.sonatype.org/content/repositories/snapshots/com/diffplug/), and its javadoc are published [here](https://javadoc.io/doc/com.diffplug.gradle/goomph/javadoc/snapshot/).
 
 ## Build instructions
 
