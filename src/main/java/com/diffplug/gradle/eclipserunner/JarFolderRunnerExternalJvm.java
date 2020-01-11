@@ -101,7 +101,7 @@ public class JarFolderRunnerExternalJvm implements EclipseRunner {
 				return true;
 			}
 		}));
-		if (vmArgs != null) {
+		if (vmArgs != null && !vmArgs.isEmpty()) {
 			execSpec.jvmArgs(vmArgs);
 		}
 	}

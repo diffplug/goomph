@@ -17,6 +17,7 @@ package com.diffplug.gradle.eclipserunner;
 
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import org.gradle.api.DefaultTask;
@@ -32,8 +33,8 @@ import org.gradle.api.tasks.TaskAction;
 public class EquinoxLaunchTask extends DefaultTask {
 	private File installDir;
 	private File workingDir;
-	private List<String> args;
-	private List<String> vmArgs;
+	private List<String> args = Collections.emptyList();
+	private List<String> vmArgs = Collections.emptyList();
 
 	@TaskAction
 	public void launch() throws Exception {
@@ -54,7 +55,7 @@ public class EquinoxLaunchTask extends DefaultTask {
 	}
 
 	public void setInstallDir(File installDir) {
-		this.installDir = installDir;
+		this.installDir = Objects.requireNonNull(installDir);
 	}
 
 	@Internal
@@ -72,7 +73,7 @@ public class EquinoxLaunchTask extends DefaultTask {
 	}
 
 	public void setArgs(List<String> args) {
-		this.args = args;
+		this.args = Objects.requireNonNull(args);
 	}
 
 	@Input
@@ -81,6 +82,6 @@ public class EquinoxLaunchTask extends DefaultTask {
 	}
 
 	public void setVmArgs(List<String> vmArgs) {
-		this.vmArgs = vmArgs;
+		this.vmArgs = Objects.requireNonNull(vmArgs);
 	}
 }
