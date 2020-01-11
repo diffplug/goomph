@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added eclipse `4.14.0` aka `2019-12` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.14/)).
 - `EquinoxLaunchTask` now has up-to-date support if you manually specify output files, as well as any program-specific input files
 - Added `MavenCentralExtesion.testImplementation` and deprecated `testCompile` (fixes [#109](https://github.com/diffplug/goomph/issues/109)).
 ### Changed
@@ -14,7 +15,7 @@
 - if the p2 bootstrap download fails, it will now complain loudly rather than write the text `404` to a file (fixes [#101](https://github.com/diffplug/goomph/issues/101)).
 
 ## [3.18.1] - 2019-09-20
-- Added eclipse `4.13.0` aka `2019-09`.
+- Added eclipse `4.13.0` aka `2019-09` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.13/)).
 - Removed the `com.diffplug.gradle.eclipse.classic` plugin, because it does not work well with newer versions of gradle or eclipse.
 
 ## [3.18.0] - 2019-08-12
