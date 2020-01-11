@@ -56,9 +56,12 @@ public class FileMisc {
 		mkdirs(dst.getParentFile());
 		OkHttpClient client = new OkHttpClient.Builder().build();
 		Request req = new Request.Builder().url(url).build();
-		try (Response response = client.newCall(req).execute();
-				BufferedSink sink = Okio.buffer(Okio.sink(dst))) {
-			try (ResponseBody body = response.body()) {
+		try (Response response = client.newCall(req).execute()) {
+			if (!response.isSuccessful()) {
+				throw new IllegalArgumentException(url + "\nreceived http code " + response.code() + "\n" + response.body().string());
+			}
+			try (ResponseBody body = response.body();
+					BufferedSink sink = Okio.buffer(Okio.sink(dst))) {
 				if (body == null) {
 					throw new IllegalArgumentException("Body was expected to be non-null");
 				}

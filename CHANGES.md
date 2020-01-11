@@ -10,6 +10,7 @@
 - broken javadoc links ([#105](https://github.com/diffplug/goomph/issues/105))
 - missing annotation warnings on `PdeBuildTask` (still no up-to-date support though)
 - `oomphIde` `workspaceXml` would wipe out the existing XML (fixes issue found in [#85](https://github.com/diffplug/goomph/issues/85)).
+- if the p2 bootstrap download fails, it will now complain loudly rather than write the text `404` to a file ([#101](https://github.com/diffplug/goomph/issues/101)).
 
 ## [3.18.1] - 2019-09-20
 - Added eclipse `4.13.0` aka `2019-09`.
