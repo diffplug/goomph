@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,11 @@
  */
 package com.diffplug.gradle.eclipse;
 
+
+import com.diffplug.common.base.Preconditions;
+import com.diffplug.common.collect.Iterables;
+import com.diffplug.gradle.ProjectPlugin;
+import groovy.util.Node;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,17 +29,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
-
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.artifacts.ProjectDependency;
 import org.gradle.plugins.ide.eclipse.model.EclipseModel;
-
-import groovy.util.Node;
-
-import com.diffplug.common.base.Preconditions;
-import com.diffplug.common.collect.Iterables;
-import com.diffplug.gradle.ProjectPlugin;
 
 /**
  * Fixes an intermittent problem when generating eclipse

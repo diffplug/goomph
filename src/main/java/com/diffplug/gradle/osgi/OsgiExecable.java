@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,19 @@
  */
 package com.diffplug.gradle.osgi;
 
+
+import com.diffplug.gradle.FileMisc;
+import com.diffplug.gradle.JavaExecable;
+import com.diffplug.gradle.SerializableMisc;
 import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
-
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
-
-import com.diffplug.gradle.FileMisc;
-import com.diffplug.gradle.JavaExecable;
-import com.diffplug.gradle.SerializableMisc;
 
 /**
  * Runs code that lives outside an OSGi

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,14 @@
  */
 package com.diffplug.gradle.pde;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import org.gradle.api.DefaultTask;
-import org.gradle.api.tasks.TaskAction;
 
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.eclipserunner.EclipseApp;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import org.gradle.api.DefaultTask;
+import org.gradle.api.tasks.TaskAction;
 
 /**
  * Runs PDE build on an ant file.

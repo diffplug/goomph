@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,16 @@
  */
 package com.diffplug.gradle.swt;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.gradle.api.Project;
-import org.gradle.api.plugins.JavaPlugin;
 
 import com.diffplug.common.collect.ImmutableList;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.ProjectPlugin;
 import com.diffplug.gradle.p2.AsMavenPlugin;
 import com.diffplug.gradle.pde.EclipseRelease;
+import java.util.List;
+import java.util.Optional;
+import org.gradle.api.Project;
+import org.gradle.api.plugins.JavaPlugin;
 
 /**
  * Adds the platform-specific SWT and jface jars which are appropriate for the

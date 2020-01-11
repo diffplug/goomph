@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
  */
 package com.diffplug.gradle;
 
-import java.io.File;
 
 import com.diffplug.common.swt.os.OS;
+import java.io.File;
 
 /** Interface for the native file manager. */
 public class NativeFileManager {

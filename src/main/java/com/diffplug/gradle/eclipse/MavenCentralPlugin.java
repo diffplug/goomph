@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 package com.diffplug.gradle.eclipse;
 
-import org.gradle.api.Project;
-import org.gradle.api.plugins.JavaPlugin;
 
 import com.diffplug.gradle.ProjectPlugin;
+import org.gradle.api.Project;
+import org.gradle.api.plugins.JavaPlugin;
 
 /**
  * Now that Eclipse is publishing artifacts to maven central,

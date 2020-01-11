@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 package com.diffplug.gradle;
 
+
+import com.diffplug.common.io.Files;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,12 +25,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
-
 import org.gradle.api.Action;
 import org.gradle.api.XmlProvider;
 import org.gradle.internal.xml.XmlTransformer;
-
-import com.diffplug.common.io.Files;
 
 /** Utilities for creating configuration content. */
 public class ConfigMisc {

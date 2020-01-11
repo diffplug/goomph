@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,21 +15,19 @@
  */
 package com.diffplug.gradle.eclipserunner;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Objects;
-
-import org.eclipse.core.runtime.adaptor.EclipseStarter;
-import org.osgi.framework.BundleContext;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import com.diffplug.common.base.Box;
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.eclipserunner.launcher.Main;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Objects;
+import org.eclipse.core.runtime.adaptor.EclipseStarter;
+import org.osgi.framework.BundleContext;
 
 /**
  * Given a directory containing osgi jars, this class

@@ -1,7 +1,7 @@
 # How to automate IDE generation
 
 <!---freshmark javadoc
-output = prefixDelimiterReplace(input, 'https://{{org}}.github.io/{{name}}/javadoc/', '/', stable);
+output = prefixDelimiterReplace(input, 'https://javadoc.io/doc/com.diffplug.gradle/goomph/javadoc/', '/', versionLast);
 -->
 
 So you want to automate your IDE configuration.  The first thing to do is look at a few examples.
@@ -12,7 +12,7 @@ So you want to automate your IDE configuration.  The first thing to do is look a
 - [Spotless](https://github.com/diffplug/spotless/blob/master/ide/build.gradle) (single-project Gradle plugin)
 - (your example here)
 
-The next thing is to look at the [javadoc](https://diffplug.github.io/goomph/javadoc/3.18.1/com/diffplug/gradle/oomph/OomphIdePlugin.html) for `OomphIdePlugin`, which inclues a pretty in-depth look at how it works.
+The next thing is to look at the [javadoc](https://javadoc.io/doc/com.diffplug.gradle/goomph/javadoc/3.18.1/com/diffplug/gradle/oomph/OomphIdePlugin.html) for `OomphIdePlugin`, which inclues a pretty in-depth look at how it works.
 
 ## How do I automate ${MY_THING} which isn't in the examples or docs?
 
@@ -28,7 +28,7 @@ Depending on what you're trying to automate, you might need to touch all three.
 
 Manipulating project files is a [core part of gradle](https://docs.gradle.org/current/userguide/eclipse_plugin.html), so we won't cover that here.
 
-Manipulating plugin and feature jars has lots of coverage in the examples above.  The entire `oomphIdeBlock` extends [P2Declarative](https://diffplug.github.io/goomph/javadoc/3.18.1/com/diffplug/gradle/p2/P2Declarative.html).
+Manipulating plugin and feature jars has lots of coverage in the examples above.  The entire `oomphIdeBlock` extends [P2Declarative](https://javadoc.io/doc/com.diffplug.gradle/goomph/javadoc/3.18.1/com/diffplug/gradle/p2/P2Declarative.html).
 So if you want to add any features, you just add the required p2 repositories, and then specify the features or installable units that you need.
 
 Manipulating the workspace is where it gets tricky.  We'll dig in below:
@@ -53,10 +53,10 @@ Most eclipse settings are set in property files.  You can set them manually like
 
 ```gradle
 oomphIde {
-	...
-	workspaceProp '.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.e4.ui.css.swt.theme.prefs', {
-		it.put('themeid', 'org.eclipse.e4.ui.css.theme.e4_classic')
-	}
+  ...
+  workspaceProp '.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.e4.ui.css.swt.theme.prefs', {
+    it.put('themeid', 'org.eclipse.e4.ui.css.theme.e4_classic')
+  }
 }
 ```
 
@@ -64,9 +64,9 @@ You can also set xml files.  In order to set an xml file, you must first provide
 
 ```gradle
 oomphIde {
-	...
-	workspaceFile('destination', 'source')
-	workspaceXml('destination', { xmlProvider -> ...}) // modify your xml here
+  ...
+  workspaceFile('destination', 'source')
+  workspaceXml('destination', { xmlProvider -> ...}) // modify your xml here
 }
 ```
 

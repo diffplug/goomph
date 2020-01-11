@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,11 @@
  */
 package com.diffplug.gradle.pde;
 
+
+import com.diffplug.common.base.StringPrinter;
+import com.diffplug.common.collect.ImmutableList;
+import com.diffplug.common.swt.os.SwtPlatform;
+import com.diffplug.gradle.Lazyable;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
@@ -22,15 +27,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Objects;
-
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
-
-import com.diffplug.common.base.StringPrinter;
-import com.diffplug.common.collect.ImmutableList;
-import com.diffplug.common.swt.os.SwtPlatform;
-import com.diffplug.gradle.Lazyable;
 
 /** Models the "product" part of {@link PdeBuildTask}. */
 public class PdeProductBuildConfig {

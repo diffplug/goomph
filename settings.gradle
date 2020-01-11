@@ -1,0 +1,26 @@
+pluginManagement {
+	plugins {
+		id 'com.diffplug.blowdryer' version '1.0.0'
+		id 'com.diffplug.blowdryerSetup' version '1.0.0'
+		id 'com.diffplug.gradle.eclipse.mavencentral' version '3.18.1'
+		id 'com.diffplug.gradle.spotless' version '3.27.0'
+		id 'com.diffplug.spotless-changelog' version '0.1.1'
+		id 'com.github.ben-manes.versions' version '0.27.0'
+		id 'com.gradle.plugin-publish' version '0.10.1'
+		id 'com.jfrog.bintray' version '1.8.4'
+	}
+}
+plugins {
+	id 'com.diffplug.blowdryerSetup'
+	id 'com.diffplug.gradle.eclipse.mavencentral' apply false
+	id 'com.diffplug.gradle.spotless' apply false
+	id 'com.diffplug.spotless-changelog' apply false
+	id 'com.github.ben-manes.versions' apply false
+	id 'com.gradle.plugin-publish' apply false
+	id 'com.jfrog.bintray' apply false
+}
+blowdryerSetup {
+	github 'diffplug/blowdryer-diffplug', 'tag', '3.0.0'
+	//devLocal '../blowdryer-diffplug'
+}
+rootProject.name = 'goomph'

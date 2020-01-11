@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,12 @@
  */
 package com.diffplug.gradle.pde;
 
+
+import com.diffplug.common.collect.Maps;
+import com.diffplug.common.io.Files;
+import com.diffplug.common.swt.os.SwtPlatform;
+import com.diffplug.gradle.FileMisc;
+import com.diffplug.gradle.eclipserunner.EclipseApp;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -22,17 +28,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
 import org.gradle.api.Action;
 import org.gradle.api.DefaultTask;
+import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.internal.Actions;
-
-import com.diffplug.common.collect.Maps;
-import com.diffplug.common.io.Files;
-import com.diffplug.common.swt.os.SwtPlatform;
-import com.diffplug.gradle.FileMisc;
-import com.diffplug.gradle.eclipserunner.EclipseApp;
 
 /**
  * Runs PDE build to make an RCP application or a p2 repository.
@@ -124,6 +124,7 @@ public class PdeBuildTask extends DefaultTask {
 	private JdkConfig config = new JdkConfig(getProject());
 
 	/** Returns the JDK config for users to edit. */
+	@Internal
 	public JdkConfig getJdkConfig() {
 		return config;
 	}
@@ -131,6 +132,7 @@ public class PdeBuildTask extends DefaultTask {
 	private Map<String, String> buildProperties = Maps.newLinkedHashMap();
 
 	/** Extra properties to set in the build. */
+	@Internal
 	public Map<String, String> getProps() {
 		return buildProperties;
 	}

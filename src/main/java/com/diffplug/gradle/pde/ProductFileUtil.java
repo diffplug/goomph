@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  */
 package com.diffplug.gradle.pde;
 
+
+import com.diffplug.common.base.StringPrinter;
+import com.diffplug.gradle.FileMisc;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -24,11 +27,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.osgi.framework.Version;
-
-import com.diffplug.common.base.StringPrinter;
-import com.diffplug.gradle.FileMisc;
 
 public class ProductFileUtil {
 	private static final String PLUGIN_PREFIX = "<plugin id=\"";

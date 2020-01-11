@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,12 @@
  */
 package com.diffplug.gradle.pde;
 
+
+import com.diffplug.common.base.Errors;
+import com.diffplug.common.base.Preconditions;
+import com.diffplug.common.swt.os.SwtPlatform;
+import com.diffplug.gradle.FileMisc;
+import com.diffplug.gradle.Lazyable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -23,18 +29,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.Action;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
 import org.osgi.framework.Version;
-
-import com.diffplug.common.base.Errors;
-import com.diffplug.common.base.Preconditions;
-import com.diffplug.common.swt.os.SwtPlatform;
-import com.diffplug.gradle.FileMisc;
-import com.diffplug.gradle.Lazyable;
 
 /**
  * THIS CLASS IS EXPERIMENTAL AND SUBJECT TO CHANGE.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,12 @@
  */
 package com.diffplug.gradle.oomph;
 
-import org.gradle.api.Project;
-import org.gradle.api.Task;
 
 import com.diffplug.common.base.Errors;
 import com.diffplug.gradle.GoomphCacheLocations;
 import com.diffplug.gradle.ProjectPlugin;
+import org.gradle.api.Project;
+import org.gradle.api.Task;
 
 /**
  * Downloads and sets up an Eclipse IDE.  Each IDE created by

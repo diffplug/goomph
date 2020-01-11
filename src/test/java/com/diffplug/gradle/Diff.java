@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 package com.diffplug.gradle;
 
-import java.util.LinkedList;
 
 import com.diffplug.common.base.StringPrinter;
 import com.diffplug.common.base.Unhandled;
+import java.util.LinkedList;
 
 /** Creates diffs which are easy to assert against. */
 public class Diff {

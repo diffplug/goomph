@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,6 @@ package com.diffplug.gradle.eclipserunner;
 
 import static java.util.stream.Collectors.toList;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.SortedSet;
-import java.util.function.BiConsumer;
-
-import org.eclipse.core.runtime.adaptor.EclipseStarter;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.Version;
-
 import com.diffplug.common.base.Joiner;
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.collect.ImmutableList;
@@ -37,6 +25,16 @@ import com.diffplug.common.collect.Iterables;
 import com.diffplug.common.collect.SortedSetMultimap;
 import com.diffplug.common.collect.TreeMultimap;
 import com.diffplug.gradle.FileMisc;
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.SortedSet;
+import java.util.function.BiConsumer;
+import org.eclipse.core.runtime.adaptor.EclipseStarter;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.Version;
 
 /**
  * Given a directory containing osgi jars, this class

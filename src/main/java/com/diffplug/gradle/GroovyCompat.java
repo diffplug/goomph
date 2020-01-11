@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
  */
 package com.diffplug.gradle;
 
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import groovy.lang.Closure;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class GroovyCompat {
 	/** Creates a Groovy {@link Closure} from a Java 8 {@link Function}, uses the delegate as the input. */

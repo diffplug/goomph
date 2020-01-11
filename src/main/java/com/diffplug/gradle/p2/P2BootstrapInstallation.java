@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,6 @@
  */
 package com.diffplug.gradle.p2;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Objects;
-
-import org.gradle.api.Project;
 
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.collect.ImmutableSet;
@@ -31,6 +25,11 @@ import com.diffplug.gradle.eclipserunner.EclipseRunner;
 import com.diffplug.gradle.eclipserunner.JarFolderRunner;
 import com.diffplug.gradle.eclipserunner.JarFolderRunnerExternalJvm;
 import com.diffplug.gradle.pde.EclipseRelease;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Objects;
+import org.gradle.api.Project;
 
 /** Wraps a Bootstrap installation for the given eclipse release. */
 class P2BootstrapInstallation {

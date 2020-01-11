@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,10 @@
  */
 package com.diffplug.gradle.p2;
 
-import java.io.File;
-
-import org.gradle.api.Action;
 
 import com.diffplug.gradle.pde.EclipseRelease;
+import java.io.File;
+import org.gradle.api.Action;
 
 /** A declarative-style wrapper around a {@link P2Model}, appropriate for use as a DSL mixin. */
 public interface P2Declarative {

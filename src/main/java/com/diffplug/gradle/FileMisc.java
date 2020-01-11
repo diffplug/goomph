@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,16 @@
  */
 package com.diffplug.gradle;
 
+
+import com.diffplug.common.base.Errors;
+import com.diffplug.common.base.Joiner;
+import com.diffplug.common.base.Preconditions;
+import com.diffplug.common.base.Throwing;
+import com.diffplug.common.collect.Maps;
+import com.diffplug.common.io.Files;
+import com.diffplug.common.swt.os.OS;
+import com.diffplug.common.tree.TreeDef;
+import com.diffplug.common.tree.TreeStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -30,26 +40,14 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import org.apache.commons.io.FileUtils;
-import org.gradle.api.Project;
-
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okio.BufferedSink;
 import okio.Okio;
-
-import com.diffplug.common.base.Errors;
-import com.diffplug.common.base.Joiner;
-import com.diffplug.common.base.Preconditions;
-import com.diffplug.common.base.Throwing;
-import com.diffplug.common.collect.Maps;
-import com.diffplug.common.io.Files;
-import com.diffplug.common.swt.os.OS;
-import com.diffplug.common.tree.TreeDef;
-import com.diffplug.common.tree.TreeStream;
+import org.apache.commons.io.FileUtils;
+import org.gradle.api.Project;
 
 /** Miscellaneous utilties for copying files around. */
 public class FileMisc {

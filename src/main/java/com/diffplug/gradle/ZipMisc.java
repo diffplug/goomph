@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,14 @@
  */
 package com.diffplug.gradle;
 
+
+import com.diffplug.common.base.Errors;
+import com.diffplug.common.base.StringPrinter;
+import com.diffplug.common.base.Throwing;
+import com.diffplug.common.io.ByteSink;
+import com.diffplug.common.io.ByteSource;
+import com.diffplug.common.io.ByteStreams;
+import com.diffplug.common.io.Files;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -33,16 +41,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-
 import org.apache.commons.io.IOUtils;
-
-import com.diffplug.common.base.Errors;
-import com.diffplug.common.base.StringPrinter;
-import com.diffplug.common.base.Throwing;
-import com.diffplug.common.io.ByteSink;
-import com.diffplug.common.io.ByteSource;
-import com.diffplug.common.io.ByteStreams;
-import com.diffplug.common.io.Files;
 
 /** Utilities for mucking with zip files. */
 public class ZipMisc {

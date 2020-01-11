@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,13 @@
  */
 package com.diffplug.gradle.p2;
 
-import org.gradle.api.Action;
-import org.gradle.api.Project;
-
-import groovy.util.Node;
 
 import com.diffplug.gradle.eclipserunner.EclipseApp;
 import com.diffplug.gradle.pde.EclipseRelease;
 import com.diffplug.gradle.pde.PdeInstallation;
+import groovy.util.Node;
+import org.gradle.api.Action;
+import org.gradle.api.Project;
 
 /**
  * Models an eclipse ant task which can be run by the P2 Bootstrapper.

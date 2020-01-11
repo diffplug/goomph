@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,10 @@
  */
 package com.diffplug.gradle.oomph.thirdparty;
 
-import org.gradle.api.Action;
 
 import com.diffplug.gradle.oomph.OomphConvention;
 import com.diffplug.gradle.oomph.OomphIdeExtension;
+import org.gradle.api.Action;
 
 /**
  * This is a place for third-party modules to add their own

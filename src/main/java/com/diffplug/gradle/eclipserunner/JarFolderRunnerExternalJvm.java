@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,21 +15,18 @@
  */
 package com.diffplug.gradle.eclipserunner;
 
-import java.io.File;
-import java.util.List;
-import java.util.Objects;
-
-import javax.annotation.Nullable;
-
-import org.gradle.api.Project;
-import org.gradle.api.file.FileCollection;
-import org.gradle.process.JavaExecSpec;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.collect.ImmutableList;
 import com.diffplug.gradle.JavaExecable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import java.io.File;
+import java.util.List;
+import java.util.Objects;
+import javax.annotation.Nullable;
+import org.gradle.api.Project;
+import org.gradle.api.file.FileCollection;
+import org.gradle.process.JavaExecSpec;
 
 /**
  * Runs an `EclipseApp` in a new JVM using a folder containing
@@ -104,7 +101,7 @@ public class JarFolderRunnerExternalJvm implements EclipseRunner {
 				return true;
 			}
 		}));
-		if (vmArgs != null) {
+		if (vmArgs != null && !vmArgs.isEmpty()) {
 			execSpec.jvmArgs(vmArgs);
 		}
 	}

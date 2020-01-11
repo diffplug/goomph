@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 DiffPlug
+ * Copyright 2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,6 @@
  */
 package com.diffplug.gradle.p2;
 
-import java.io.File;
-import java.io.Serializable;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
-import org.apache.commons.io.FileUtils;
-import org.gradle.api.Project;
-
-import groovy.util.Node;
 
 import com.diffplug.common.base.Consumers;
 import com.diffplug.common.base.Errors;
@@ -38,6 +26,16 @@ import com.diffplug.gradle.GoomphCacheLocations;
 import com.diffplug.gradle.eclipserunner.EclipseApp;
 import com.diffplug.gradle.eclipserunner.EclipseRunner;
 import com.diffplug.gradle.pde.EclipseRelease;
+import groovy.util.Node;
+import java.io.File;
+import java.io.Serializable;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+import org.apache.commons.io.FileUtils;
+import org.gradle.api.Project;
 
 /**
  * Models a request for some artifacts from some
