@@ -7,6 +7,7 @@ before_cache:
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
   - rm -fr $HOME/.gradle/caches/*/executionHistory/
   - rm -fr $HOME/.gradle/caches/*/fileContent/
+  - rm -fr $HOME/.gradle/caches/*/fileHashes/
 cache:
   directories:
   - $HOME/.gradle/caches/
