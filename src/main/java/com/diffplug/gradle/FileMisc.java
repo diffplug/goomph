@@ -58,7 +58,8 @@ public class FileMisc {
 		Request req = new Request.Builder().url(url).build();
 		try (Response response = client.newCall(req).execute()) {
 			if (!response.isSuccessful()) {
-				throw new IllegalArgumentException(url + "\nreceived http code " + response.code() + "\n" + response.body().string());
+				ResponseBody body = response.body();
+				throw new IllegalArgumentException(url + "\nreceived http code " + response.code() + (body == null ? "" : "\n" + body.string()));
 			}
 			try (ResponseBody body = response.body();
 					BufferedSink sink = Okio.buffer(Okio.sink(dst))) {
