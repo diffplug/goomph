@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Objects;
 import org.gradle.api.Action;
 import org.gradle.api.DefaultTask;
+import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.internal.Actions;
 
@@ -123,6 +124,7 @@ public class PdeBuildTask extends DefaultTask {
 	private JdkConfig config = new JdkConfig(getProject());
 
 	/** Returns the JDK config for users to edit. */
+	@Internal
 	public JdkConfig getJdkConfig() {
 		return config;
 	}
@@ -130,6 +132,7 @@ public class PdeBuildTask extends DefaultTask {
 	private Map<String, String> buildProperties = Maps.newLinkedHashMap();
 
 	/** Extra properties to set in the build. */
+	@Internal
 	public Map<String, String> getProps() {
 		return buildProperties;
 	}

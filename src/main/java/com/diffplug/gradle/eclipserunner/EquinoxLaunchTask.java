@@ -20,6 +20,9 @@ import java.io.File;
 import java.util.List;
 import java.util.Objects;
 import org.gradle.api.DefaultTask;
+import org.gradle.api.tasks.Input;
+import org.gradle.api.tasks.InputDirectory;
+import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.TaskAction;
 
 /**
@@ -45,6 +48,7 @@ public class EquinoxLaunchTask extends DefaultTask {
 	////////////////////////////////////////
 	// Auto-generated getters and setters //
 	////////////////////////////////////////
+	@InputDirectory
 	public File getInstallDir() {
 		return installDir;
 	}
@@ -53,6 +57,7 @@ public class EquinoxLaunchTask extends DefaultTask {
 		this.installDir = installDir;
 	}
 
+	@Internal
 	public File getWorkingDir() {
 		return workingDir;
 	}
@@ -61,6 +66,7 @@ public class EquinoxLaunchTask extends DefaultTask {
 		this.workingDir = workingDir;
 	}
 
+	@Input
 	public List<String> getArgs() {
 		return args;
 	}
@@ -69,6 +75,7 @@ public class EquinoxLaunchTask extends DefaultTask {
 		this.args = args;
 	}
 
+	@Input
 	public List<String> getVmArgs() {
 		return vmArgs;
 	}
