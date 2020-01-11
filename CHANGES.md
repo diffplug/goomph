@@ -3,14 +3,15 @@
 ## [Unreleased]
 ### Added
 - `EquinoxLaunchTask` now has up-to-date support if you manually specify output files, as well as any program-specific input files
+- Added `MavenCentralExtesion.testImplementation` and deprecated `testCompile` (fixes [#109](https://github.com/diffplug/goomph/issues/109)).
 ### Changed
 - Simplified build with [blowdryer](https://github.com/diffplug/blowdryer).
 - Updated gradle and all plugins.
 ### Fixed
-- broken javadoc links ([#105](https://github.com/diffplug/goomph/issues/105))
+- broken javadoc links (fixes [#105](https://github.com/diffplug/goomph/issues/105))
 - missing annotation warnings on `PdeBuildTask` (still no up-to-date support though)
 - `oomphIde` `workspaceXml` would wipe out the existing XML (fixes issue found in [#85](https://github.com/diffplug/goomph/issues/85)).
-- if the p2 bootstrap download fails, it will now complain loudly rather than write the text `404` to a file ([#101](https://github.com/diffplug/goomph/issues/101)).
+- if the p2 bootstrap download fails, it will now complain loudly rather than write the text `404` to a file (fixes [#101](https://github.com/diffplug/goomph/issues/101)).
 
 ## [3.18.1] - 2019-09-20
 - Added eclipse `4.13.0` aka `2019-09`.

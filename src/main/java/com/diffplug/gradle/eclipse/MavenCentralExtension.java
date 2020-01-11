@@ -73,8 +73,13 @@ public class MavenCentralExtension {
 			dep(JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME, bundleId);
 		}
 
+		@Deprecated
 		public void testCompile(String bundleId) {
 			dep(JavaPlugin.TEST_COMPILE_CONFIGURATION_NAME, bundleId);
+		}
+
+		public void testImplementation(String bundleId) {
+			dep(JavaPlugin.TEST_IMPLEMENTATION_CONFIGURATION_NAME, bundleId);
 		}
 
 		@Deprecated
@@ -138,8 +143,13 @@ public class MavenCentralExtension {
 			nativeDep(JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME, bundleId);
 		}
 
+		@Deprecated
 		public void testCompileNative(String bundleId) {
 			nativeDep(JavaPlugin.TEST_COMPILE_CONFIGURATION_NAME, bundleId);
+		}
+
+		public void testImplementationNative(String bundleId) {
+			nativeDep(JavaPlugin.TEST_IMPLEMENTATION_CONFIGURATION_NAME, bundleId);
 		}
 
 		@Deprecated
