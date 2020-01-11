@@ -1,0 +1,9 @@
+com.diffplug.gradle
+com.diffplug.gradle.eclipse
+com.diffplug.gradle.eclipserunner
+com.diffplug.gradle.eclipserunner.launcher
+com.diffplug.gradle.oomph
+com.diffplug.gradle.osgi
+com.diffplug.gradle.p2
+com.diffplug.gradle.pde
+com.diffplug.gradle.swt

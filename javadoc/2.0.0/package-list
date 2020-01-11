@@ -1,0 +1,5 @@
+com.diffplug.gradle
+com.diffplug.gradle.eclipse
+com.diffplug.gradle.osgi
+com.diffplug.gradle.pde
+com.diffplug.gradle.swt
