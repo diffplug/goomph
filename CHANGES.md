@@ -11,6 +11,7 @@
 - Simplified build with [blowdryer](https://github.com/diffplug/blowdryer).
 - Updated gradle and all plugins.
 ### Fixed
+- `p2asmaven` now works with Gradle 6+ (fixes [#106](https://github.com/diffplug/goomph/issues/106))
 - broken javadoc links (fixes [#105](https://github.com/diffplug/goomph/issues/105))
 - missing annotation warnings on `PdeBuildTask` (still no up-to-date support though)
 - `oomphIde` `workspaceXml` would wipe out the existing XML (fixes issue found in [#85](https://github.com/diffplug/goomph/issues/85)).
