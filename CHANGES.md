@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+### Added
+- Added a copy of [Thomas Broyer](https://github.com/tbroyer)'s excellent `net.ltgt.apt-eclipse` plugin.  It is now fixed so that it does not generate warnings in Gradle 6+.  We will maintain it to address any future deprecations as well.
 
 ## [3.20.0] - 2020-01-11
 ### Added
