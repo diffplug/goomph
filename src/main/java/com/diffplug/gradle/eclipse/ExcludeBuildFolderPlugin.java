@@ -16,6 +16,7 @@
 package com.diffplug.gradle.eclipse;
 
 
+import com.diffplug.gradle.LegacyPlugin;
 import com.diffplug.gradle.ProjectPlugin;
 import org.gradle.api.Project;
 
@@ -29,15 +30,22 @@ import org.gradle.api.Project;
  * which is usually not desirable.  To fix:
  * 
  * ```groovy
- * apply plugin: 'com.diffplug.gradle.eclipse.excludebuildfolder'
+ * apply plugin: 'com.diffplug.eclipse.excludebuildfolder'
  * ```
  * 
  * If you'd like to exclude more than just the build folder,
  * you might want to look at the more general {@link ResourceFiltersPlugin}.
  */
 public class ExcludeBuildFolderPlugin extends ProjectPlugin {
+	public static class Legacy extends LegacyPlugin {
+		public Legacy() {
+			super(ExcludeBuildFolderPlugin.class, "com.diffplug.eclipse.excludebuildfolder");
+		}
+	}
+
 	@Override
 	protected void applyOnce(Project project) {
+		project.getPlugins().apply(Legacy.class);
 		ResourceFiltersPlugin resourceFilters = project.getPlugins().apply(ResourceFiltersPlugin.class);
 		resourceFilters.extension.filters.add(ResourceFilter.exclude().folders().name("build"));
 	}

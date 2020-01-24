@@ -29,7 +29,7 @@ public class ExcludeBuildFolderPluginTest extends GradleIntegrationTest {
 		// write the normal eclipse file
 		String plainEclipse = testCase("eclipse");
 		// write the excluded build folder file
-		String underTestEclipse = testCase("com.diffplug.gradle.eclipse.excludebuildfolder");
+		String underTestEclipse = testCase("com.diffplug.eclipse.excludebuildfolder");
 		// assert the expected thing was added to the .project file
 		Assert.assertEquals(StringPrinter.buildStringFromLines(
 				"DELETE",
