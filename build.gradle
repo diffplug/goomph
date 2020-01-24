@@ -3,8 +3,6 @@ plugins {
 	id 'com.github.spotbugs' version '3.0.0'
 }
 
-apply plugin: 'com.github.ben-manes.versions'
-
 apply plugin: 'com.diffplug.spotless-changelog'
 spotlessChangelog {
 	changelogFile 'CHANGES.md'
