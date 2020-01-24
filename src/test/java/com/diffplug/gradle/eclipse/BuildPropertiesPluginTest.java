@@ -29,7 +29,7 @@ public class BuildPropertiesPluginTest extends GradleIntegrationTest {
 		// write the normal eclipse file
 		String plainEclipse = testCase("eclipse");
 		// write the excluded build folder file
-		String underTestEclipse = testCase("com.diffplug.gradle.eclipse.buildproperties");
+		String underTestEclipse = testCase("com.diffplug.eclipse.buildproperties");
 		// assert the expected thing was added to the .project file
 		Assert.assertEquals(StringPrinter.buildStringFromLines(
 				"INSERT",
