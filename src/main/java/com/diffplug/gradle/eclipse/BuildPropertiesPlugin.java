@@ -72,7 +72,7 @@ public class BuildPropertiesPlugin extends ProjectPlugin {
 			});
 
 			// update processResources based on build.properties
-			ProjectPlugin.getPlugin(project, JavaPlugin.class);
+			project.getPlugins().apply(JavaPlugin.class);
 			ProcessResources task = (ProcessResources) project.getTasks().getByName(JavaPlugin.PROCESS_RESOURCES_TASK_NAME);
 			// handle the build.properties includes
 			//AbstractCopyTask copyTask = task.from(project.getProjectDir());

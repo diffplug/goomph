@@ -89,7 +89,7 @@ import org.gradle.api.tasks.bundling.Jar;
 public class BndManifestPlugin extends ProjectPlugin {
 	@Override
 	protected void applyOnce(Project proj) {
-		ProjectPlugin.getPlugin(proj, JavaPlugin.class);
+		proj.getPlugins().apply(JavaPlugin.class);
 		BndManifestExtension extension = proj.getExtensions().create(BndManifestExtension.NAME, BndManifestExtension.class);
 
 		proj.afterEvaluate(project -> {

@@ -80,14 +80,14 @@ public class NativeDepsPlugin extends ProjectPlugin {
 		String swtGroup = getGroup(project);
 
 		// add the p2 repo and its dependencies
-		AsMavenPlugin asMavenPlugin = ProjectPlugin.getPlugin(project, AsMavenPlugin.class);
+		AsMavenPlugin asMavenPlugin = project.getPlugins().apply(AsMavenPlugin.class);
 		asMavenPlugin.extension().group(swtGroup, group -> {
 			group.repo(getRepo(project));
 			DEPS.forEach(group::iu);
 		});
 
 		// add all of SWT's dependencies 
-		ProjectPlugin.getPlugin(project, JavaPlugin.class);
+		project.getPlugins().apply(JavaPlugin.class);
 		for (String dep : DEPS) {
 			project.getDependencies().add("compile", swtGroup + ":" + dep + ":+");
 		}

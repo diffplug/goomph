@@ -38,7 +38,7 @@ import org.gradle.api.Project;
 public class ExcludeBuildFolderPlugin extends ProjectPlugin {
 	@Override
 	protected void applyOnce(Project project) {
-		ResourceFiltersPlugin resourceFilters = ProjectPlugin.getPlugin(project, ResourceFiltersPlugin.class);
+		ResourceFiltersPlugin resourceFilters = project.getPlugins().apply(ResourceFiltersPlugin.class);
 		resourceFilters.extension.filters.add(ResourceFilter.exclude().folders().name("build"));
 	}
 }

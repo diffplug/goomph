@@ -83,7 +83,7 @@ import org.gradle.api.plugins.JavaPlugin;
 public class MavenCentralPlugin extends ProjectPlugin {
 	@Override
 	protected void applyOnce(Project project) {
-		ProjectPlugin.getPlugin(project, JavaPlugin.class);
+		project.getPlugins().apply(JavaPlugin.class);
 		project.getExtensions().create(MavenCentralExtension.NAME, MavenCentralExtension.class, project);
 	}
 }

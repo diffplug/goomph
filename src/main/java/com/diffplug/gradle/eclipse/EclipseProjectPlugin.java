@@ -16,7 +16,6 @@
 package com.diffplug.gradle.eclipse;
 
 
-import com.diffplug.gradle.ProjectPlugin;
 import java.util.function.Consumer;
 import org.gradle.api.Project;
 import org.gradle.plugins.ide.eclipse.EclipsePlugin;
@@ -27,7 +26,7 @@ class EclipseProjectPlugin {
 	/** Applies the EclipsePlugin and provides the eclipse model for modification. */
 	public static void modifyEclipseProject(Project project, Consumer<EclipseModel> modifier) {
 		// make sure the eclipse plugin has been applied
-		ProjectPlugin.getPlugin(project, EclipsePlugin.class);
+		project.getPlugins().apply(EclipsePlugin.class);
 
 		// exclude the build folder
 		project.afterEvaluate(p -> {
