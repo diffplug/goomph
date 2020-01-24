@@ -67,9 +67,10 @@ Real world Eclipse software built with Goomph:
 
 Below is an index of Goomph's capabilities, along with links to the javadoc where you can find usage examples.
 
-**`com.diffplug.osgi` Plugin for generating OSGi metadata.**
+**`com.diffplug.osgi` Plugins for working with OSGi.**
 
 * [`bndmanifest`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/osgi/BndManifestPlugin.html) generates a manifest using purely bnd, and outputs it for IDE consumption.
+* [`equinoxlaunch`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/eclipserunner/EquinoxLaunchPlugin.html) can configure and run equinox applications as part of the build, such as a code generator.
 * [`OsgiExecable`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/osgi/OsgiExecable.html) makes it easy to run a chunk of code within an OSGi container, and get the result from outside the container.
 
 **`com.diffplug.eclipse` Plugins for handling eclipse' maven central artifacts and creating and manipulating eclipse project files.**
@@ -106,7 +107,6 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 **`com.diffplug.gradle.eclipserunner` Infrastructure for running headless eclipse applications.**
 
 * Used to power the infrastructure above.
-* [`com.diffplug.gradle.equinoxlaunch`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/eclipserunner/EquinoxLaunchPlugin.html) can configure and run equinox applications as part of the build, such as a code generator.
 
 <!---freshmark /javadoc -->
 

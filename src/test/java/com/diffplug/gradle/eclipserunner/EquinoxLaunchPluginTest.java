@@ -26,7 +26,7 @@ public class EquinoxLaunchPluginTest extends GradleIntegrationTest {
 	public void simpleTestCase() throws IOException, InterruptedException {
 		write("build.gradle",
 				"plugins {",
-				"    id 'com.diffplug.gradle.equinoxlaunch'",
+				"    id 'com.diffplug.osgi.equinoxlaunch'",
 				"}",
 				"apply plugin: 'java'",
 				"repositories { mavenCentral() }",
