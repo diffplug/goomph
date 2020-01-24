@@ -108,3 +108,23 @@ javadoc {
 	options.linksOffline("https://docs.gradle.org/${OLDEST_SUPPORTED_GRADLE}/javadoc/", 'gradle/javadoc/gradle')
 	options.linksOffline("https://www.javadoc.io/doc/biz.aQute.bnd/biz.aQute.bndlib/${VER_BNDLIB}/", 'gradle/javadoc/bndlib')
 }
+
+/////////////////////////////
+// LEGACY REDIRECT PLUGINS //
+/////////////////////////////
+// deprecated plugins
+def old_plugins = 'eclipseBuildProperties eclipseExcludeBuildFolder eclipseMavenCentral eclipseProjectDeps eclipseResourceFilters equinoxLaunch oomphIde p2AsMaven osgiBndManifest swtNativeDeps'.split()
+gradlePlugin {
+	plugins {
+		for (plugin in old_plugins) {
+			register "${plugin}Legacy", {
+				String newId = 干.proj("plugin_${plugin}_id", "for ${plugin}: apply plugin: 'id'")
+				String newImpl = 干.proj("plugin_${plugin}_impl", "for ${plugin}: implementationClass")
+				id                  = newId.replace('com.diffplug.', 'com.diffplug.gradle.')
+				implementationClass = "${newImpl}\$Legacy"
+				displayName         = "Back-compat alias to $newId"
+				description         = "Back-compat alias to $newId"
+			}
+		}
+	}
+}
