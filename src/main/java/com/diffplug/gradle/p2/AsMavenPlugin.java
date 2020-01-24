@@ -17,6 +17,7 @@ package com.diffplug.gradle.p2;
 
 
 import com.diffplug.common.base.Errors;
+import com.diffplug.gradle.LegacyPlugin;
 import com.diffplug.gradle.ProjectPlugin;
 import org.gradle.api.Project;
 
@@ -27,7 +28,7 @@ import org.gradle.api.Project;
  * to the project.
  *
  * ```groovy
- * apply plugin: 'com.diffplug.gradle.p2.asmaven'
+ * apply plugin: 'com.diffplug.p2.asmaven'
  * p2AsMaven {
  *     // the maven group they shall have
  *     group 'eclipse-deps', {
@@ -179,10 +180,17 @@ import org.gradle.api.Project;
  * gradle and p2, we will only use public APIs in both products.
  */
 public class AsMavenPlugin extends ProjectPlugin {
+	public static class Legacy extends LegacyPlugin {
+		public Legacy() {
+			super(AsMavenPlugin.class, "com.diffplug.p2.asmaven");
+		}
+	}
+
 	AsMavenExtension extension;
 
 	@Override
 	protected void applyOnce(Project project) {
+		project.getPlugins().apply(Legacy.class);
 		extension = project.getExtensions().create(AsMavenExtension.NAME, AsMavenExtension.class, project);
 		project.afterEvaluate(proj -> {
 			// reload

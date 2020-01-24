@@ -80,7 +80,7 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 * [`projectdeps`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/eclipse/ProjectDepsPlugin.html) fixes an intermittent problem where dependencies on other projects within the workspace aren't always resolved correctly within Eclipse.
 * [`resourcefilters`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/eclipse/ResourceFiltersPlugin.html) adds resource filters to the eclipse project.
 
-**`com.diffplug.gradle.p2` Tasks and plugins for manipulating p2 data.**
+**`com.diffplug.p2` Tasks and plugins for manipulating p2 data.**
 
 * [`asmaven`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/p2/AsMavenPlugin.html) downloads dependencies from a p2 repository and makes them available in a local maven repository.
 * [`P2Model`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/p2/P2Model.html) models a set of p2 repositories and IUs, and provides convenience methods for running p2-director or the p2.mirror ant task against these.
