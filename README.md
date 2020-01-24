@@ -93,7 +93,7 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 * [`PdeBuildTask`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/pde/PdeBuildTask.html) runs PDE build to build an RCP product.
 * [`PdeAntBuildTask`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/pde/PdeAntBuildTask.html) runs PDE on an ant file.
 
-**`com.diffplug.gradle.swt` Plugins for working with SWT in Gradle.**
+**`com.diffplug.swt` Plugins for working with SWT in Gradle.**
 
 * [`nativedeps`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/swt/NativeDepsPlugin.html) adds the platform-specific SWT jars to the runtime classpath so that SWT code can run.
 

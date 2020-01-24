@@ -26,7 +26,7 @@ public class NativeDepsPluginTest extends GradleIntegrationTest {
 		write("build.gradle",
 				"plugins {",
 				"	id 'java'",
-				"	id 'com.diffplug.gradle.swt.nativedeps'",
+				"	id 'com.diffplug.swt.nativedeps'",
 				"}",
 				"repositories { mavenCentral() }",
 				"dependencies { testCompile 'junit:junit:4.12' }");

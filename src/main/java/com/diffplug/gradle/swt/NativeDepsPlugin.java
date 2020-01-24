@@ -18,6 +18,7 @@ package com.diffplug.gradle.swt;
 
 import com.diffplug.common.collect.ImmutableList;
 import com.diffplug.common.swt.os.SwtPlatform;
+import com.diffplug.gradle.LegacyPlugin;
 import com.diffplug.gradle.ProjectPlugin;
 import com.diffplug.gradle.p2.AsMavenPlugin;
 import com.diffplug.gradle.pde.EclipseRelease;
@@ -38,7 +39,7 @@ import org.gradle.api.plugins.JavaPlugin;
  * * `org.eclipse.equinox.common`
  * 
  * ```groovy
- * apply plugin: 'com.diffplug.gradle.swt.nativedeps'
+ * apply plugin: 'com.diffplug.swt.nativedeps'
  * ```
  * 
  * * Property `SWT_VERSION` sets the eclipse version from which to get SWT (e.g. `4.6.0`).
@@ -52,6 +53,12 @@ import org.gradle.api.plugins.JavaPlugin;
  * 
  */
 public class NativeDepsPlugin extends ProjectPlugin {
+	public static class Legacy extends LegacyPlugin {
+		public Legacy() {
+			super(NativeDepsPlugin.class, "com.diffplug.swt.nativedeps");
+		}
+	}
+
 	static final String PROP_VERSION = "SWT_VERSION";
 	static final String PROP_REPO = "SWT_P2_REPO";
 	static final String PROP_GROUP = "SWT_P2_GROUP";
@@ -77,6 +84,7 @@ public class NativeDepsPlugin extends ProjectPlugin {
 
 	@Override
 	protected void applyOnce(Project project) {
+		project.getPlugins().apply(Legacy.class);
 		String swtGroup = getGroup(project);
 
 		// add the p2 repo and its dependencies
