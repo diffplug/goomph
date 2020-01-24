@@ -101,19 +101,10 @@ dependencies {
 // MAVEN //
 ///////////
 javadoc {
-	// TODO: error on invalid javadoc
+	// error on javadoc problem
+	options.addStringOption('Xwerror', '-quiet')
 	// setup links
 	options.linksOffline('https://docs.oracle.com/javase/8/docs/api/', 'gradle/javadoc/java8')
 	options.linksOffline("https://docs.gradle.org/${OLDEST_SUPPORTED_GRADLE}/javadoc/", 'gradle/javadoc/gradle')
-	options.linksOffline("https://diffplug.github.io/durian/javadoc/${VER_DURIAN}/", 'gradle/javadoc/durian')
-	options.linksOffline("https://diffplug.github.io/durian-swt/javadoc/${VER_DURIAN_SWT}/", 'gradle/javadoc/durian-swt')
 	options.linksOffline("https://www.javadoc.io/doc/biz.aQute.bnd/biz.aQute.bndlib/${VER_BNDLIB}/", 'gradle/javadoc/bndlib')
 }
-
-// TODO: are we handling the com.google.code.findbugs dep correctly in the new publishing setup?
-/*
- model.publishing.publications.pluginMaven.pom.withXml {
- // findbugs annotations should have scope "provided"
- asNode().dependencies.'*'.findAll() { it.groupId.text() == 'com.google.code.findbugs' }.each() { it.scope*.value = 'provided' }
- }
- */

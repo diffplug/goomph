@@ -174,7 +174,7 @@ public class OomphIdeExtension implements P2Declarative {
 	}
 
 	/**
-	 * @see OomphIdeExtension#findProjectsInIncludedBuilds(), passes include
+	 * @see OomphIdeExtension#findProjectsInIncludedBuilds()
 	 */
 	public void findProjectsInIncludedBuilds(Spec<String> spec) {
 		for (IncludedBuild included : project.getGradle().getIncludedBuilds()) {
