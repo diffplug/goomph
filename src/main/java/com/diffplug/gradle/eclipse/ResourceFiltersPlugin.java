@@ -16,6 +16,7 @@
 package com.diffplug.gradle.eclipse;
 
 
+import com.diffplug.gradle.LegacyPlugin;
 import com.diffplug.gradle.ProjectPlugin;
 import groovy.util.Node;
 import java.util.List;
@@ -32,7 +33,7 @@ import org.gradle.api.Project;
  * This plugin allows you to easily configure these settings.
  *
  * ```groovy
- * apply plugin: 'com.diffplug.gradle.eclipse.resourcefilters'
+ * apply plugin: 'com.diffplug.eclipse.resourcefilters'
  * eclipseResourceFilters {
  *     exclude().folders().name('build')
  *     include().folders().projectRelativePath('main/src/*')
@@ -43,11 +44,18 @@ import org.gradle.api.Project;
  * For full details on what filters you can create, see {@link ResourceFilter}.
  */
 public class ResourceFiltersPlugin extends ProjectPlugin {
+	public static class Legacy extends LegacyPlugin {
+		public Legacy() {
+			super(ResourceFiltersPlugin.class, "com.diffplug.eclipse.resourcefilters");
+		}
+	}
+
 	ResourceFiltersExtension extension;
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void applyOnce(Project project) {
+		project.getPlugins().apply(Legacy.class);
 		extension = project.getExtensions().create(ResourceFiltersExtension.NAME, ResourceFiltersExtension.class);
 		EclipseProjectPlugin.modifyEclipseProject(project, eclipseModel -> {
 			eclipseModel.getProject().getFile().getXmlTransformer().addAction(xmlProvider -> {
