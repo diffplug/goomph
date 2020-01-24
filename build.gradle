@@ -20,7 +20,7 @@ apply from: 干.file('spotless/java.gradle')
 
 String VER_DURIAN = '1.2.0'
 String VER_DURIAN_SWT = '3.0.0'
-String VER_BNDLIB = '4.2.0'
+String VER_BNDLIB = '5.0.0'
 String OLDEST_SUPPORTED_GRADLE = '5.1'
 dependencies {
 	// Compile misc
