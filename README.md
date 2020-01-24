@@ -67,7 +67,7 @@ Real world Eclipse software built with Goomph:
 
 Below is an index of Goomph's capabilities, along with links to the javadoc where you can find usage examples.
 
-**`com.diffplug.gradle.osgi` Plugin for generating OSGi metadata.**
+**`com.diffplug.osgi` Plugin for generating OSGi metadata.**
 
 * [`bndmanifest`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/osgi/BndManifestPlugin.html) generates a manifest using purely bnd, and outputs it for IDE consumption.
 * [`OsgiExecable`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/osgi/OsgiExecable.html) makes it easy to run a chunk of code within an OSGi container, and get the result from outside the container.

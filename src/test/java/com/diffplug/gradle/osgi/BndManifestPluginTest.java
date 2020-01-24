@@ -180,7 +180,7 @@ public class BndManifestPluginTest extends GradleIntegrationTest {
 		write("build.gradle",
 				"plugins {",
 				"    id 'java'",
-				"    id 'com.diffplug.gradle.osgi.bndmanifest'",
+				"    id 'com.diffplug.osgi.bndmanifest'",
 				"}",
 				"repositories { mavenCentral() }",
 				"dependencies { compile 'com.diffplug.durian:durian:3.4.0' }",

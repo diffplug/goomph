@@ -24,7 +24,6 @@ public class LegacyPlugin implements Plugin<Project> {
 	private final String newId;
 
 	protected LegacyPlugin(Class<? extends Plugin<Project>> newPlugin, String newPluginId) {
-		super();
 		this.newPlugin = newPlugin;
 		this.newId = newPluginId;
 	}
