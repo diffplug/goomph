@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 ### Changed
-- All plugin ids (not classes) have moved, from `plugins { id 'com.diffplug.gradle.blah' }` to `com.diffplug.blah` ([#115](https://github.com/diffplug/goomph/pull/115))
+- All plugin ids (not classes) have [moved, from `plugins { id 'com.diffplug.gradle.blah' }` to `com.diffplug.blah`](https://github.com/diffplug/goomph/pull/115/files#diff-503f218d646c10f484fdc9d6315bf2e3)) ([#115](https://github.com/diffplug/goomph/pull/115))
   - The old ids will keep working, but they'll print a warning advising a switch to the new id.
   - One exception: `com.diffplug.gradle.equinoxlaunch` -> `com.diffplug.osgi.equinoxlaunch` (it should have been in OSGi category all along)
   - This is annoying, but the deprecation warnings include an easy regex fix, and it's better to fix this now than later.
