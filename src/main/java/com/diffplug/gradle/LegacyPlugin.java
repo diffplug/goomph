@@ -31,7 +31,12 @@ public class LegacyPlugin implements Plugin<Project> {
 	@Override
 	public void apply(Project proj) {
 		proj.getPlugins().apply(newPlugin);
-		String oldId = newId.replace("com.diffplug.", "com.diffplug.gradle.");
+		String oldId;
+		if (newId.equals("com.diffplug.gradle.equinoxlaunch")) {
+			oldId = "com.diffplug.osgi.equinoxlaunch";
+		} else {
+			oldId = newId.replace("com.diffplug.", "com.diffplug.gradle.");
+		}
 		System.out.println("  plugin id '" + oldId + "' has been deprecated");
 		System.out.println("replaced by '" + newId + "'");
 		System.out.println("A simple find-replace will fix it.  Here is why we moved: https://dev.to/nedtwigg/names-in-java-maven-and-gradle-2fm2#gradle-plugin-id");

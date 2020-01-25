@@ -118,9 +118,15 @@ gradlePlugin {
 	plugins {
 		for (plugin in old_plugins) {
 			register "${plugin}Legacy", {
-				String newId = 干.proj("plugin_${plugin}_id", "for ${plugin}: apply plugin: 'id'")
+				String newId   = 干.proj("plugin_${plugin}_id", "for ${plugin}: apply plugin: 'id'")
 				String newImpl = 干.proj("plugin_${plugin}_impl", "for ${plugin}: implementationClass")
-				id                  = newId.replace('com.diffplug.', 'com.diffplug.gradle.')
+				String oldId;
+				if (newId.equals("com.diffplug.gradle.equinoxlaunch")) {
+					oldId = "com.diffplug.osgi.equinoxlaunch";
+				} else {
+					oldId = newId.replace("com.diffplug.", "com.diffplug.gradle.");
+				}
+				id                  = oldId
 				implementationClass = "${newImpl}\$Legacy"
 				displayName         = "Back-compat alias to $newId"
 				description         = "Back-compat alias to $newId"
