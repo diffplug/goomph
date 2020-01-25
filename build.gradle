@@ -121,8 +121,8 @@ gradlePlugin {
 				String newId   = 干.proj("plugin_${plugin}_id", "for ${plugin}: apply plugin: 'id'")
 				String newImpl = 干.proj("plugin_${plugin}_impl", "for ${plugin}: implementationClass")
 				String oldId;
-				if (newId.equals("com.diffplug.gradle.equinoxlaunch")) {
-					oldId = "com.diffplug.osgi.equinoxlaunch";
+				if (newId.equals("com.diffplug.osgi.equinoxlaunch")) {
+					oldId = "com.diffplug.gradle.equinoxlaunch";
 				} else {
 					oldId = newId.replace("com.diffplug.", "com.diffplug.gradle.");
 				}

@@ -32,8 +32,8 @@ public class LegacyPlugin implements Plugin<Project> {
 	public void apply(Project proj) {
 		proj.getPlugins().apply(newPlugin);
 		String oldId;
-		if (newId.equals("com.diffplug.gradle.equinoxlaunch")) {
-			oldId = "com.diffplug.osgi.equinoxlaunch";
+		if (newId.equals("com.diffplug.osgi.equinoxlaunch")) {
+			oldId = "com.diffplug.gradle.equinoxlaunch";
 		} else {
 			oldId = newId.replace("com.diffplug.", "com.diffplug.gradle.");
 		}
