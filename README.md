@@ -34,7 +34,7 @@ It is possible to have many installations of the Eclipse IDE share a common set 
 When you run `gradlew ide`, it builds and downloads an IDE into `build/oomphIde` with just the features you need.  Takes ~15 seconds and 1MB of disk space once all the common artifacts have been cached at `~/.goomph`.
 
 ```groovy
-apply plugin: 'com.diffplug.gradle.oomph.ide'
+apply plugin: 'com.diffplug.oomph.ide'
 oomphIde {
   repoEclipseLatest()
   jdt {}

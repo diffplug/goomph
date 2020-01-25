@@ -112,7 +112,7 @@ javadoc {
 /////////////////////////////
 // LEGACY REDIRECT PLUGINS //
 /////////////////////////////
-// deprecated plugins
+// plugin ids that we are migrating
 def old_plugins = 'eclipseBuildProperties eclipseExcludeBuildFolder eclipseMavenCentral eclipseProjectDeps eclipseResourceFilters equinoxLaunch oomphIde p2AsMaven osgiBndManifest swtNativeDeps'.split()
 gradlePlugin {
 	plugins {

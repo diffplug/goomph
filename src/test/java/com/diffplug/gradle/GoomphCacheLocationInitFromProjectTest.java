@@ -26,7 +26,7 @@ public class GoomphCacheLocationInitFromProjectTest extends GradleIntegrationTes
 	public void ensureOverrideWorks() throws IOException {
 		write("build.gradle",
 				"plugins {",
-				"    id 'com.diffplug.gradle.oomph.ide'",
+				"    id 'com.diffplug.oomph.ide'",
 				"}",
 				"ext.goomph_override_p2bootstrapUrl='somewhere'",
 				"com.diffplug.gradle.GoomphCacheLocations.initFromProject(project)",
