@@ -18,6 +18,7 @@ package com.diffplug.gradle.oomph;
 
 import com.diffplug.common.base.Errors;
 import com.diffplug.gradle.GoomphCacheLocations;
+import com.diffplug.gradle.LegacyPlugin;
 import com.diffplug.gradle.ProjectPlugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
@@ -34,7 +35,7 @@ import org.gradle.api.Task;
  * To create an IDE for java projects (see {@link ConventionJdt} for more JDT options).
  *
  * ```groovy
- * apply plugin: 'com.diffplug.gradle.oomph.ide'
+ * apply plugin: 'com.diffplug.oomph.ide'
  * oomphIde {
  *     repoEclipseLatest()
  *     jdt {}
@@ -160,6 +161,12 @@ public class OomphIdePlugin extends ProjectPlugin {
 	private static final String TASK_GROUP = "IDE";
 	private static final String IDE_DESC = "Launches a preconfigured IDE, downloading if necessary.";
 	private static final String IDE_CLEAN_DESC = "Cleans the preconfigured IDE, so that the next call to " + IDE + " will provision a fresh IDE.";
+
+	public static class Legacy extends LegacyPlugin {
+		public Legacy() {
+			super(OomphIdePlugin.class, "com.diffplug.oomph.ide");
+		}
+	}
 
 	@Override
 	protected void applyOnce(Project project) {

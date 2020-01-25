@@ -16,6 +16,7 @@
 package com.diffplug.gradle.eclipserunner;
 
 
+import com.diffplug.gradle.LegacyPlugin;
 import com.diffplug.gradle.ProjectPlugin;
 import java.io.File;
 import org.gradle.api.NamedDomainObjectFactory;
@@ -27,7 +28,7 @@ import org.gradle.api.Project;
  * Here is a simple example:
  * 
  * ```groovy
- * apply plugin: 'com.diffplug.gradle.equinoxlaunch'
+ * apply plugin: 'com.diffplug.osgi.equinoxlaunch'
  * equinoxLaunch {
  *     // creates an EquinoxLaunchSetupTask named 'headlessAppSetup'
  *     headlessAppSetup {
@@ -45,7 +46,7 @@ import org.gradle.api.Project;
  * And a more complex example:
  * 
  * ```groovy
- * apply plugin: 'com.diffplug.gradle.equinoxlaunch'
+ * apply plugin: 'com.diffplug.osgi.equinoxlaunch'
  * equinoxLaunch {
  *     // creates an EquinoxLaunchSetupTask named 'equinoxSetup'
  *     equinoxSetup {
@@ -82,8 +83,15 @@ import org.gradle.api.Project;
 public class EquinoxLaunchPlugin extends ProjectPlugin {
 	public static final String NAME = "equinoxLaunch";
 
+	public static class Legacy extends LegacyPlugin {
+		public Legacy() {
+			super(EquinoxLaunchPlugin.class, "com.diffplug.osgi.equinoxlaunch");
+		}
+	}
+
 	@Override
 	protected void applyOnce(Project project) {
+		project.getPlugins().apply(Legacy.class);
 		project.getExtensions().add(NAME, project.container(EquinoxLaunchSetupTask.class, new NamedDomainObjectFactory<EquinoxLaunchSetupTask>() {
 			@Override
 			public EquinoxLaunchSetupTask create(String name) {

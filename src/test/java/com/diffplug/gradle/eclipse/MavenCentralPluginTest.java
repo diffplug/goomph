@@ -25,7 +25,7 @@ public class MavenCentralPluginTest extends GradleIntegrationTest {
 	public void test() throws IOException {
 		write("build.gradle",
 				"plugins {",
-				"    id 'com.diffplug.gradle.eclipse.mavencentral'",
+				"    id 'com.diffplug.eclipse.mavencentral'",
 				"}",
 				"eclipseMavenCentral {",
 				"    release '4.7.0', {",

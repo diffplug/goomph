@@ -18,6 +18,7 @@ package com.diffplug.gradle.eclipse;
 
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.collect.Iterables;
+import com.diffplug.gradle.LegacyPlugin;
 import com.diffplug.gradle.ProjectPlugin;
 import groovy.util.Node;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ import org.gradle.plugins.ide.eclipse.model.EclipseModel;
  * the workspace aren't always resolved correctly within Eclipse.
  *
  * ```groovy
- * apply plugin: 'com.diffplug.gradle.eclipse.projectdeps'
+ * apply plugin: 'com.diffplug.eclipse.projectdeps'
  * ```
  *
  * Can also be configured to replace binary dependencies with
@@ -54,8 +55,15 @@ import org.gradle.plugins.ide.eclipse.model.EclipseModel;
  * ```
  */
 public class ProjectDepsPlugin extends ProjectPlugin {
+	public static class Legacy extends LegacyPlugin {
+		public Legacy() {
+			super(ProjectDepsPlugin.class, "com.diffplug.eclipse.projectdeps");
+		}
+	}
+
 	@Override
 	protected void applyOnce(Project project) {
+		project.getPlugins().apply(Legacy.class);
 		ProjectDepsExtension extension = project.getExtensions().create(ProjectDepsExtension.NAME, ProjectDepsExtension.class);
 		EclipseProjectPlugin.modifyEclipseProject(project, eclipseModel -> {
 			// find the project's referenced projects and reference them explicitly in the eclipse model

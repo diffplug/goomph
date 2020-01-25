@@ -26,7 +26,7 @@ public class AsMavenPluginTest extends GradleIntegrationTest {
 	public void simpleTestCase() throws IOException, InterruptedException {
 		write("build.gradle",
 				"plugins {",
-				"    id 'com.diffplug.gradle.p2.asmaven'",
+				"    id 'com.diffplug.p2.asmaven'",
 				"}",
 				"p2AsMaven {",
 				"    group 'eclipse-deps', {",
@@ -47,7 +47,7 @@ public class AsMavenPluginTest extends GradleIntegrationTest {
 	public void complexTestCase() throws IOException, InterruptedException {
 		write("build.gradle",
 				"plugins {",
-				"    id 'com.diffplug.gradle.p2.asmaven'",
+				"    id 'com.diffplug.p2.asmaven'",
 				"}",
 				"def SUPPORTED_VERSIONS = ['4.4.0', '4.5.0', '4.6.0']",
 				"p2AsMaven {",

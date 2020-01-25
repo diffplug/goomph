@@ -29,7 +29,7 @@ public class ProjectDepsPluginTest extends GradleIntegrationTest {
 		// write the normal eclipse file
 		String plainEclipse = testCase("eclipse", "2.13");
 		// write the excluded build folder file
-		String underTestEclipse = testCase("com.diffplug.gradle.eclipse.projectdeps", "2.13");
+		String underTestEclipse = testCase("com.diffplug.eclipse.projectdeps", "2.13");
 		// assert the expected thing was added to the .project file
 		Assert.assertEquals(StringPrinter.buildStringFromLines(
 				"DELETE",
@@ -43,7 +43,7 @@ public class ProjectDepsPluginTest extends GradleIntegrationTest {
 		// write the normal eclipse file
 		String plainEclipse = testCase("eclipse", "2.14-rc-4");
 		// write the excluded build folder file
-		String underTestEclipse = testCase("com.diffplug.gradle.eclipse.projectdeps", "2.14-rc-4");
+		String underTestEclipse = testCase("com.diffplug.eclipse.projectdeps", "2.14-rc-4");
 		// assert the expected thing was added to the .project file
 		Assert.assertEquals(StringPrinter.buildStringFromLines(
 				"INSERT",
@@ -75,7 +75,7 @@ public class ProjectDepsPluginTest extends GradleIntegrationTest {
 	@Test
 	public void testReplaceWithProject() throws IOException {
 		write("build.gradle",
-				"plugins { id 'com.diffplug.gradle.eclipse.projectdeps' }",
+				"plugins { id 'com.diffplug.eclipse.projectdeps' }",
 				"apply plugin: 'java'",
 				"repositories { mavenCentral() }",
 				"dependencies {",

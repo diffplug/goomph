@@ -25,10 +25,6 @@ import org.gradle.api.Project;
 public abstract class ProjectPlugin implements Plugin<Project> {
 	@Override
 	public final void apply(Project project) {
-		// ensure we don't double-apply the plugin
-		if (project.getPlugins().hasPlugin(this.getClass())) {
-			return;
-		}
 		project.afterEvaluate(GoomphCacheLocations::initFromProject);
 		// apply the plugin once
 		applyOnce(project);
@@ -38,6 +34,7 @@ public abstract class ProjectPlugin implements Plugin<Project> {
 	protected abstract void applyOnce(Project project);
 
 	/** Returns the instance of the given plugin, by returning the existing or applying brand new, as appropriate. */
+	@Deprecated
 	public static <T extends Plugin<?>> T getPlugin(Project project, Class<T> pluginClazz) {
 		// make sure the eclipse plugin has been applied
 		if (project.getPlugins().hasPlugin(pluginClazz)) {

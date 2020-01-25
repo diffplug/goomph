@@ -21,6 +21,7 @@ import aQute.bnd.osgi.Constants;
 import com.diffplug.common.base.*;
 import com.diffplug.common.collect.ImmutableMap;
 import com.diffplug.gradle.FileMisc;
+import com.diffplug.gradle.LegacyPlugin;
 import com.diffplug.gradle.ProjectPlugin;
 import com.diffplug.gradle.ZipMisc;
 import java.io.File;
@@ -50,7 +51,7 @@ import org.gradle.api.tasks.bundling.Jar;
  * to tie bnd into both Eclipse PDE and Gradle. Which is what Goomph is for!
  *
  * ```groovy
- * apply plugin: 'com.diffplug.gradle.osgi.bndmanifest'
+ * apply plugin: 'com.diffplug.osgi.bndmanifest'
  * // Pass headers and bnd directives: https://www.aqute.biz/Bnd/Format
  * jar.manifest.attributes(
  *     '-exportcontents': 'com.diffplug.*',
@@ -87,13 +88,19 @@ import org.gradle.api.tasks.bundling.Jar;
  * features and tighter integrations with IDEs and gradle's resources pipeline.
  */
 public class BndManifestPlugin extends ProjectPlugin {
+	public static class Legacy extends LegacyPlugin {
+		public Legacy() {
+			super(BndManifestPlugin.class, "com.diffplug.osgi.bndmanifest");
+		}
+	}
+
 	@Override
 	protected void applyOnce(Project proj) {
-		ProjectPlugin.getPlugin(proj, JavaPlugin.class);
+		proj.getPlugins().apply(Legacy.class);
+		proj.getPlugins().apply(JavaPlugin.class);
 		BndManifestExtension extension = proj.getExtensions().create(BndManifestExtension.NAME, BndManifestExtension.class);
 
 		proj.afterEvaluate(project -> {
-
 			// copyFromTask must be configured if copyTo is used
 			Preconditions.checkArgument(extension.copyTo == null || extension.copyFromTask != null,
 					"copyFromTask can not be null if copyTo is set. Please provide a source task.");

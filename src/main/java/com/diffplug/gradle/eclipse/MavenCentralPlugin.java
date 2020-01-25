@@ -16,6 +16,7 @@
 package com.diffplug.gradle.eclipse;
 
 
+import com.diffplug.gradle.LegacyPlugin;
 import com.diffplug.gradle.ProjectPlugin;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.JavaPlugin;
@@ -33,7 +34,7 @@ import org.gradle.api.plugins.JavaPlugin;
  * Here is the fix:
  * 
  * ```
- * apply plugin: 'com.diffplug.gradle.eclipse.mavencentral'
+ * apply plugin: 'com.diffplug.eclipse.mavencentral'
  * eclipseMavenCentral {
  *     release '4.7.0', {
  *         // supports the standard java configurations
@@ -81,9 +82,16 @@ import org.gradle.api.plugins.JavaPlugin;
  * 
  */
 public class MavenCentralPlugin extends ProjectPlugin {
+	public static class Legacy extends LegacyPlugin {
+		public Legacy() {
+			super(MavenCentralPlugin.class, "com.diffplug.eclipse.mavencentral");
+		}
+	}
+
 	@Override
 	protected void applyOnce(Project project) {
-		ProjectPlugin.getPlugin(project, JavaPlugin.class);
+		project.getPlugins().apply(Legacy.class);
+		project.getPlugins().apply(JavaPlugin.class);
 		project.getExtensions().create(MavenCentralExtension.NAME, MavenCentralExtension.class, project);
 	}
 }

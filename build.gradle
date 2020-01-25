@@ -3,8 +3,6 @@ plugins {
 	id 'com.github.spotbugs' version '3.0.0'
 }
 
-apply plugin: 'com.github.ben-manes.versions'
-
 apply plugin: 'com.diffplug.spotless-changelog'
 spotlessChangelog {
 	changelogFile 'CHANGES.md'
@@ -22,7 +20,7 @@ apply from: 干.file('spotless/java.gradle')
 
 String VER_DURIAN = '1.2.0'
 String VER_DURIAN_SWT = '3.0.0'
-String VER_BNDLIB = '4.2.0'
+String VER_BNDLIB = '5.0.0'
 String OLDEST_SUPPORTED_GRADLE = '5.1'
 dependencies {
 	// Compile misc
@@ -32,8 +30,8 @@ dependencies {
 	implementation "com.diffplug.durian:durian-swt.os:${VER_DURIAN_SWT}"
 	implementation "commons-io:commons-io:2.6"
 	implementation "com.diffplug.spotless:spotless-lib:1.5.1"
-	implementation "com.squareup.okhttp3:okhttp:4.2.0"
-	implementation "com.squareup.okio:okio:2.4.0"
+	implementation "com.squareup.okhttp3:okhttp:4.3.1"
+	implementation "com.squareup.okio:okio:2.4.3"
 	// OSGi
 	implementation "biz.aQute.bnd:biz.aQute.bndlib:${VER_BNDLIB}"
 	// p2 (osgi used in 4.7.2 to match p2-bootstrap)
@@ -49,8 +47,8 @@ dependencies {
 	// from 4.6.3 cuz that's the latest one
 	compileOnly 'org.eclipse.emf:org.eclipse.emf.ecore:2.12.0'
 	// testing
-	testImplementation "junit:junit:4.12"
-	testImplementation "org.assertj:assertj-core:3.13.2"
+	testImplementation "junit:junit:4.13"
+	testImplementation "org.assertj:assertj-core:3.14.0"
 }
 configurations.all {
 	exclude group: 'org.eclipse.platform', module: 'org.eclipse.swt.${osgi.platform}'
@@ -103,19 +101,36 @@ dependencies {
 // MAVEN //
 ///////////
 javadoc {
-	// TODO: error on invalid javadoc
+	// error on javadoc problem
+	options.addStringOption('Xwerror', '-quiet')
 	// setup links
 	options.linksOffline('https://docs.oracle.com/javase/8/docs/api/', 'gradle/javadoc/java8')
 	options.linksOffline("https://docs.gradle.org/${OLDEST_SUPPORTED_GRADLE}/javadoc/", 'gradle/javadoc/gradle')
-	options.linksOffline("https://diffplug.github.io/durian/javadoc/${VER_DURIAN}/", 'gradle/javadoc/durian')
-	options.linksOffline("https://diffplug.github.io/durian-swt/javadoc/${VER_DURIAN_SWT}/", 'gradle/javadoc/durian-swt')
 	options.linksOffline("https://www.javadoc.io/doc/biz.aQute.bnd/biz.aQute.bndlib/${VER_BNDLIB}/", 'gradle/javadoc/bndlib')
 }
 
-// TODO: are we handling the com.google.code.findbugs dep correctly in the new publishing setup?
-/*
- model.publishing.publications.pluginMaven.pom.withXml {
- // findbugs annotations should have scope "provided"
- asNode().dependencies.'*'.findAll() { it.groupId.text() == 'com.google.code.findbugs' }.each() { it.scope*.value = 'provided' }
- }
- */
+/////////////////////////////
+// LEGACY REDIRECT PLUGINS //
+/////////////////////////////
+// plugin ids that we are migrating
+def old_plugins = 'eclipseBuildProperties eclipseExcludeBuildFolder eclipseMavenCentral eclipseProjectDeps eclipseResourceFilters equinoxLaunch oomphIde p2AsMaven osgiBndManifest swtNativeDeps'.split()
+gradlePlugin {
+	plugins {
+		for (plugin in old_plugins) {
+			register "${plugin}Legacy", {
+				String newId   = 干.proj("plugin_${plugin}_id", "for ${plugin}: apply plugin: 'id'")
+				String newImpl = 干.proj("plugin_${plugin}_impl", "for ${plugin}: implementationClass")
+				String oldId;
+				if (newId.equals("com.diffplug.osgi.equinoxlaunch")) {
+					oldId = "com.diffplug.gradle.equinoxlaunch";
+				} else {
+					oldId = newId.replace("com.diffplug.", "com.diffplug.gradle.");
+				}
+				id                  = oldId
+				implementationClass = "${newImpl}\$Legacy"
+				displayName         = "Back-compat alias to $newId"
+				description         = "Back-compat alias to $newId"
+			}
+		}
+	}
+}

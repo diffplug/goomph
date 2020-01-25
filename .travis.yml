@@ -4,11 +4,7 @@ jdk:
 script: ./gradlew build
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-  - rm -fr $HOME/.gradle/caches/*/executionHistory/
-  - rm -fr $HOME/.gradle/caches/*/fileContent/
-  - rm -fr $HOME/.gradle/caches/*/fileHashes/
 cache:
   directories:
-  - $HOME/.gradle/caches/
+  - $HOME/.gradle/caches/modules-2/
   - $HOME/.gradle/wrapper/

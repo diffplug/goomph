@@ -61,7 +61,7 @@ public class GoomphCacheLocations {
 	}
 
 	/**
-	 * {@link MavenCentralMap} needs to look at p2 metadata
+	 * {@link com.diffplug.gradle.eclipse.MavenCentralMapping} needs to look at p2 metadata
 	 * to know what the version numbers are for the specific
 	 * bundles of a given eclipse release are.
 	 * 

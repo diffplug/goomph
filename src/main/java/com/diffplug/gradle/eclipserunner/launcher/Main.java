@@ -36,8 +36,8 @@ import java.util.zip.ZipFile;
  * org.eclipse.core.runtime.adaptor.EclipseStarter. The fields and methods
  * on this class are not API.
  * 
- * @noextend This class is not intended to be subclassed by clients.
- * @noinstantiate This class is not intended to be instantiated by clients.
+ * This class is not intended to be subclassed by clients.
+ * This class is not intended to be instantiated by clients.
  */
 @SuppressWarnings({"unchecked", "rawtypes", "deprecation"})
 public class Main {

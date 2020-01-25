@@ -18,6 +18,7 @@ package com.diffplug.gradle.eclipse;
 
 import com.diffplug.common.base.Suppliers;
 import com.diffplug.gradle.GroovyCompat;
+import com.diffplug.gradle.LegacyPlugin;
 import com.diffplug.gradle.ProjectPlugin;
 import groovy.util.Node;
 import java.io.BufferedInputStream;
@@ -50,15 +51,22 @@ import org.gradle.language.jvm.tasks.ProcessResources;
  * can be the single source of truth for all the binary assets inside your plugin.
  * 
  * ```groovy
- * apply plugin: 'com.diffplug.gradle.eclipse.buildproperties'
+ * apply plugin: 'com.diffplug.eclipse.buildproperties'
  * ```
  */
 public class BuildPropertiesPlugin extends ProjectPlugin {
+	public static class Legacy extends LegacyPlugin {
+		public Legacy() {
+			super(BuildPropertiesPlugin.class, "com.diffplug.eclipse.buildproperties");
+		}
+	}
+
 	private Project project;
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void applyOnce(Project project) {
+		project.getPlugins().apply(Legacy.class);
 		this.project = project;
 
 		EclipseProjectPlugin.modifyEclipseProject(project, eclipseModel -> {
@@ -72,7 +80,7 @@ public class BuildPropertiesPlugin extends ProjectPlugin {
 			});
 
 			// update processResources based on build.properties
-			ProjectPlugin.getPlugin(project, JavaPlugin.class);
+			project.getPlugins().apply(JavaPlugin.class);
 			ProcessResources task = (ProcessResources) project.getTasks().getByName(JavaPlugin.PROCESS_RESOURCES_TASK_NAME);
 			// handle the build.properties includes
 			//AbstractCopyTask copyTask = task.from(project.getProjectDir());
@@ -115,7 +123,7 @@ public class BuildPropertiesPlugin extends ProjectPlugin {
 		// parse build.properties and put it into binIncludes
 		File buildProperties = project.file("build.properties");
 		if (!buildProperties.exists()) {
-			throw new IllegalArgumentException("There is no 'build.properties' file - do not apply 'com.diffplug.gradle.eclipse.buildproperties' to this project");
+			throw new IllegalArgumentException("There is no 'build.properties' file - do not apply 'com.diffplug.eclipse.buildproperties' to this project");
 		}
 
 		Properties parsedProperties = new Properties();

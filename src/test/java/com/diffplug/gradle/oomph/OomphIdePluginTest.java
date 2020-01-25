@@ -38,7 +38,7 @@ public class OomphIdePluginTest extends GradleIntegrationTest {
 	public void assertReadmeExampleWorks() throws IOException {
 		write("build.gradle",
 				"plugins {",
-				"    id 'com.diffplug.gradle.oomph.ide'",
+				"    id 'com.diffplug.oomph.ide'",
 				"}",
 				"",
 				"oomphIde {",
