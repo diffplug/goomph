@@ -17,6 +17,11 @@ apply from: 干.file('base/maven.gradle')
 apply from: 干.file('base/bintray.gradle')
 apply from: 干.file('spotless/freshmark.gradle')
 apply from: 干.file('spotless/java.gradle')
+spotless {
+	java {
+		targetExclude 'src/main/java/com/diffplug/gradle/eclipse/apt/**'
+	}
+}
 
 String VER_DURIAN = '1.2.0'
 String VER_DURIAN_SWT = '3.0.0'
