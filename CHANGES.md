@@ -7,6 +7,7 @@
   - One exception: `com.diffplug.gradle.equinoxlaunch` -> `com.diffplug.osgi.equinoxlaunch` (it should have been in OSGi category all along)
   - This is annoying, but the deprecation warnings include an easy regex fix, and it's better to fix this now than later.
   - [More detail on the reasoning](https://dev.to/nedtwigg/names-in-java-maven-and-gradle-2fm2) if you're curious.
+- Bump `bndlib` from `4.2.0` to `5.0.0`.
 
 ## [3.20.0] - 2020-01-11
 ### Added
