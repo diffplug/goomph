@@ -170,6 +170,7 @@ public class OomphIdePlugin extends ProjectPlugin {
 
 	@Override
 	protected void applyOnce(Project project) {
+		LegacyPlugin.applyForCompat(project, Legacy.class);
 		OomphIdeExtension extension = project.getExtensions().create(OomphIdeExtension.NAME, OomphIdeExtension.class, project);
 		// ideSetupP2
 		Task ideSetupP2 = project.getTasks().create(IDE_SETUP_P2);

@@ -18,6 +18,7 @@ package com.diffplug.gradle;
 
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.util.SingleMessageLogger;
 
 public class LegacyPlugin implements Plugin<Project> {
 	private final Class<? extends Plugin<Project>> newPlugin;
@@ -30,6 +31,10 @@ public class LegacyPlugin implements Plugin<Project> {
 
 	@Override
 	public void apply(Project proj) {
+		if (getClass().equals(clazzBeingCompatApplied.get())) {
+			clazzBeingCompatApplied.set(null);
+			return;
+		}
 		proj.getPlugins().apply(newPlugin);
 		String oldId;
 		if (newId.equals("com.diffplug.osgi.equinoxlaunch")) {
@@ -37,8 +42,13 @@ public class LegacyPlugin implements Plugin<Project> {
 		} else {
 			oldId = newId.replace("com.diffplug.", "com.diffplug.gradle.");
 		}
-		System.out.println("  plugin id '" + oldId + "' has been deprecated");
-		System.out.println("replaced by '" + newId + "'");
-		System.out.println("A simple find-replace will fix it.  Here is why we moved: https://dev.to/nedtwigg/names-in-java-maven-and-gradle-2fm2#gradle-plugin-id");
+		SingleMessageLogger.nagUserOfReplacedPlugin(oldId, newId);
 	}
+
+	public static void applyForCompat(Project proj, Class<? extends LegacyPlugin> clazz) {
+		clazzBeingCompatApplied.set(clazz);
+		proj.getPlugins().apply(clazz);
+	}
+
+	private static ThreadLocal<Class<? extends LegacyPlugin>> clazzBeingCompatApplied = new ThreadLocal<>();
 }

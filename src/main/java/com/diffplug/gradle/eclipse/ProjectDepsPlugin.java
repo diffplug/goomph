@@ -63,7 +63,7 @@ public class ProjectDepsPlugin extends ProjectPlugin {
 
 	@Override
 	protected void applyOnce(Project project) {
-		project.getPlugins().apply(Legacy.class);
+		LegacyPlugin.applyForCompat(project, Legacy.class);
 		ProjectDepsExtension extension = project.getExtensions().create(ProjectDepsExtension.NAME, ProjectDepsExtension.class);
 		EclipseProjectPlugin.modifyEclipseProject(project, eclipseModel -> {
 			// find the project's referenced projects and reference them explicitly in the eclipse model

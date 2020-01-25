@@ -55,7 +55,7 @@ public class ResourceFiltersPlugin extends ProjectPlugin {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void applyOnce(Project project) {
-		project.getPlugins().apply(Legacy.class);
+		LegacyPlugin.applyForCompat(project, Legacy.class);
 		extension = project.getExtensions().create(ResourceFiltersExtension.NAME, ResourceFiltersExtension.class);
 		EclipseProjectPlugin.modifyEclipseProject(project, eclipseModel -> {
 			eclipseModel.getProject().getFile().getXmlTransformer().addAction(xmlProvider -> {

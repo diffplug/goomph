@@ -91,7 +91,7 @@ public class EquinoxLaunchPlugin extends ProjectPlugin {
 
 	@Override
 	protected void applyOnce(Project project) {
-		project.getPlugins().apply(Legacy.class);
+		LegacyPlugin.applyForCompat(project, Legacy.class);
 		project.getExtensions().add(NAME, project.container(EquinoxLaunchSetupTask.class, new NamedDomainObjectFactory<EquinoxLaunchSetupTask>() {
 			@Override
 			public EquinoxLaunchSetupTask create(String name) {

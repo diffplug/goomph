@@ -190,7 +190,7 @@ public class AsMavenPlugin extends ProjectPlugin {
 
 	@Override
 	protected void applyOnce(Project project) {
-		project.getPlugins().apply(Legacy.class);
+		LegacyPlugin.applyForCompat(project, Legacy.class);
 		extension = project.getExtensions().create(AsMavenExtension.NAME, AsMavenExtension.class, project);
 		project.afterEvaluate(proj -> {
 			// reload

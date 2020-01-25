@@ -95,23 +95,23 @@ public class BndManifestPlugin extends ProjectPlugin {
 	}
 
 	@Override
-	protected void applyOnce(Project proj) {
-		proj.getPlugins().apply(Legacy.class);
-		proj.getPlugins().apply(JavaPlugin.class);
-		BndManifestExtension extension = proj.getExtensions().create(BndManifestExtension.NAME, BndManifestExtension.class);
+	protected void applyOnce(Project project) {
+		LegacyPlugin.applyForCompat(project, Legacy.class);
+		project.getPlugins().apply(JavaPlugin.class);
+		BndManifestExtension extension = project.getExtensions().create(BndManifestExtension.NAME, BndManifestExtension.class);
 
-		proj.afterEvaluate(project -> {
+		project.afterEvaluate(unused -> {
 			// copyFromTask must be configured if copyTo is used
 			Preconditions.checkArgument(extension.copyTo == null || extension.copyFromTask != null,
 					"copyFromTask can not be null if copyTo is set. Please provide a source task.");
 
-			final Jar copyFromTask = (extension.copyFromTask == null) ? null : getAsJar(proj, extension.copyFromTask);
+			final Jar copyFromTask = (extension.copyFromTask == null) ? null : getAsJar(project, extension.copyFromTask);
 
 			Preconditions.checkArgument(extension.copyFromTask == null || extension.includeTasks.contains(extension.copyFromTask),
 					"copyFromTask must reside within includeTask");
 
 			extension.includeTasks.forEach(name -> {
-				Jar jarTask = getAsJar(proj, (String) name);
+				Jar jarTask = getAsJar(project, (String) name);
 				// at the end of the jar, modify the manifest
 				jarTask.doLast("Set OSGi manifest", new Action<Task>() {
 					@Override

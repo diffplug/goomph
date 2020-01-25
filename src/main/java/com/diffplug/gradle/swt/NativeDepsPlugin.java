@@ -84,7 +84,7 @@ public class NativeDepsPlugin extends ProjectPlugin {
 
 	@Override
 	protected void applyOnce(Project project) {
-		project.getPlugins().apply(Legacy.class);
+		LegacyPlugin.applyForCompat(project, Legacy.class);
 		String swtGroup = getGroup(project);
 
 		// add the p2 repo and its dependencies

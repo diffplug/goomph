@@ -66,7 +66,7 @@ public class BuildPropertiesPlugin extends ProjectPlugin {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void applyOnce(Project project) {
-		project.getPlugins().apply(Legacy.class);
+		LegacyPlugin.applyForCompat(project, Legacy.class);
 		this.project = project;
 
 		EclipseProjectPlugin.modifyEclipseProject(project, eclipseModel -> {
