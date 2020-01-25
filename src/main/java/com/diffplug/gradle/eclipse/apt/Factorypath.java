@@ -28,6 +28,8 @@ import java.util.Set;
 import org.gradle.internal.xml.XmlTransformer;
 import org.gradle.plugins.ide.internal.generator.XmlPersistableConfigurationObject;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 public class Factorypath extends XmlPersistableConfigurationObject {
   private List<File> entries = new ArrayList<>();
 
@@ -62,6 +64,7 @@ public class Factorypath extends XmlPersistableConfigurationObject {
   }
 
   @Override
+  @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_INFERRED")
   protected void store(Node xml) {
     for (Object e : (NodeList) xml.get("factorypathentry")) {
       Node entryNode = (Node) e;

@@ -34,6 +34,8 @@ import org.gradle.plugins.ide.api.XmlFileContentMerger;
 import org.gradle.plugins.ide.eclipse.EclipsePlugin;
 import org.gradle.plugins.ide.eclipse.model.EclipseModel;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * Plugin which modifies the eclipse project file so that it will
  * include gradle `annotationProcessor` dependencies.  No configuration
@@ -143,6 +145,7 @@ public class AptEclipsePlugin implements Plugin<Project> {
     AptPlugin.IMPL.configureTask(project, Task.class, "cleanEclipse", dependsOn(cleanTask));
   }
 
+  @SuppressFBWarnings("BC_UNCONFIRMED_CAST")
   private void configureFactorypath(
       final Project project,
       EclipseModel eclipseModel,
