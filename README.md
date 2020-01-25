@@ -54,26 +54,22 @@ See the [plugin's javadoc](https://javadoc.io/static/com.diffplug.gradle/goomph/
 
 - [P2, Maven, and Gradle](https://discuss.diffplug.com/t/p2-maven-and-gradle)
 - [Parting out eclipse](https://discuss.diffplug.com/t/parting-out-eclipse)
+- [Gradle and Eclipse RCP (youtube talk 2016)](https://www.youtube.com/watch?v=PIC6YeRkRlo&feature=youtu.be)
 
 ## Building OSGi bundles, Eclipse plugins, and RCP applications.
 
-It turns out that the tooling required to implement "IDE-as-build-artifact" is the same tooling required to build Eclipse plugins and RCP applications in the first place.  That is Goomph's other side.  For a canonical example which demonstrates Goomph in use on a real project, see the [Gradle and Eclipse RCP talk](https://github.com/diffplug/gradle_and_eclipse_rcp).
+It turns out that the tooling required to implement "IDE-as-build-artifact" is the same tooling required to manipulate eclipse project files, and also to build Eclipse plugins and RCP applications in the first place.  That is Goomph's other side.  For an example project, see the [Gradle and Eclipse RCP talk](https://github.com/diffplug/gradle_and_eclipse_rcp).
 
 Real world Eclipse software built with Goomph:
 - [DiffPlug](https://www.diffplug.com/)
 - [Veriluma](https://veriluma.com/)
 - [GenStar](https://github.com/ANRGenstar/genstar)
+- [WALA](https://github.com/wala/WALA)
 - (your project here)
 
 Below is an index of Goomph's capabilities, along with links to the javadoc where you can find usage examples.
 
-**`com.diffplug.osgi` Plugins for working with OSGi.**
-
-* [`bndmanifest`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/osgi/BndManifestPlugin.html) generates a manifest using purely bnd, and outputs it for IDE consumption.
-* [`equinoxlaunch`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/eclipserunner/EquinoxLaunchPlugin.html) can configure and run equinox applications as part of the build, such as a code generator.
-* [`OsgiExecable`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/osgi/OsgiExecable.html) makes it easy to run a chunk of code within an OSGi container, and get the result from outside the container.
-
-**`com.diffplug.eclipse` Plugins for handling eclipse' maven central artifacts and creating and manipulating eclipse project files.**
+**`com.diffplug.eclipse` Eclipse project files and eclipse version-mapping maven central artifacts.**
 
 * [`mavencentral`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/eclipse/MavenCentralPlugin.html) makes it easy to add dependency jars from an eclipse release.
 * [`buildproperties`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/eclipse/BuildPropertiesPlugin.html) uses [`build.properties`](https://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Fguide%2Ftools%2Feditors%2Fmanifest_editor%2Fbuild.htm) to control a gradle build, and fixes eclipse project classpath to include binary assets specified in `build.properties`.
@@ -81,7 +77,17 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 * [`projectdeps`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/eclipse/ProjectDepsPlugin.html) fixes an intermittent problem where dependencies on other projects within the workspace aren't always resolved correctly within Eclipse.
 * [`resourcefilters`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/eclipse/ResourceFiltersPlugin.html) adds resource filters to the eclipse project.
 
-**`com.diffplug.p2` Tasks and plugins for manipulating p2 data.**
+**`com.diffplug.swt` Plugins for working with SWT in Gradle.**
+
+* [`nativedeps`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/swt/NativeDepsPlugin.html) adds the platform-specific SWT jars to the runtime classpath so that SWT code can run.
+
+**`com.diffplug.osgi` Plugins for working with OSGi.**
+
+* [`bndmanifest`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/osgi/BndManifestPlugin.html) generates a manifest using purely bnd, and outputs it for IDE consumption.
+* [`equinoxlaunch`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/eclipserunner/EquinoxLaunchPlugin.html) can configure and run equinox applications as part of the build, such as a code generator.
+* [`OsgiExecable`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/osgi/OsgiExecable.html) makes it easy to run a chunk of code within an OSGi container, and get the result from outside the container.
+
+**`com.diffplug.p2` A  and plugins for manipulating p2 data.**
 
 * [`asmaven`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/p2/AsMavenPlugin.html) downloads dependencies from a p2 repository and makes them available in a local maven repository.
 * [`P2Model`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/p2/P2Model.html) models a set of p2 repositories and IUs, and provides convenience methods for running p2-director or the p2.mirror ant task against these.
@@ -93,10 +99,6 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 
 * [`PdeBuildTask`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/pde/PdeBuildTask.html) runs PDE build to build an RCP product.
 * [`PdeAntBuildTask`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/pde/PdeAntBuildTask.html) runs PDE on an ant file.
-
-**`com.diffplug.swt` Plugins for working with SWT in Gradle.**
-
-* [`nativedeps`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/swt/NativeDepsPlugin.html) adds the platform-specific SWT jars to the runtime classpath so that SWT code can run.
 
 **`com.diffplug.gradle` Miscellaneous infrastructure.**
 
