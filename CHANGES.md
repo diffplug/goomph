@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [3.21.0] - 2020-01-26
 ### Added
 - New plugin `com.diffplug.eclipse.apt`, which modifies eclipse project files to support gradle's annotation processing.
   - It is a near-exact copy of [Thomas Broyer](https://github.com/tbroyer)'s excellent `net.ltgt.apt-eclipse` plugin.  The only change is that Gradle 6+ warnings have been fixed.  We will maintain it to address any future deprecations as well.
