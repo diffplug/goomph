@@ -38,10 +38,11 @@ import org.gradle.api.plugins.JavaPlugin;
  * eclipseMavenCentral {
  *     release '4.7.0', {
  *         // supports the standard java configurations
- *         compile 'org.eclipse.jdt'
- *         testCompile 'org.eclipse.jdt'
+ *         api 'org.eclipse.swt'
+ *         implementation 'org.eclipse.jdt'
+ *         testImplementation 'org.eclipse.swt'
  *         // and custom ones too
- *         dep 'compile', 'org.eclipse.jdt'
+ *         dep 'implementation', 'org.eclipse.jdt'
  *         // specify this to add the native jars for this platform
  *         useNativesForRunningPlatform()
  *     }
@@ -64,14 +65,14 @@ import org.gradle.api.plugins.JavaPlugin;
  * ```
  * eclipseMavenCentral {
  *     release '4.7.0', {
- *         testRuntimeNative 'org.eclipse.swt'
- *         nativeDep 'testRuntime', 'org.eclipse.swt'
+ *         testRuntimeOnlyNative 'org.eclipse.swt'
+ *         nativeDep 'testRuntimeOnly', 'org.eclipse.swt'
  *     }
  * }
  * ```
  * 
  * Either of the above lines will add the 
- * `org.eclipse.swt.win32.win32.x86_64` as a `testRuntime`
+ * `org.eclipse.swt.win32.win32.x86_64` as a `testRuntimeOnly`
  * dependency if you're running on a 64-bit JVM on Windows, or some
  * whichever platform-specific jar is appropriate.  This
  * works only for the SWT naming convention, `windowing.os.arch`.
