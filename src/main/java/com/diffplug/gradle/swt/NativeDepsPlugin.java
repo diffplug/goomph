@@ -28,6 +28,9 @@ import org.gradle.api.Project;
 import org.gradle.api.plugins.JavaPlugin;
 
 /**
+ * @deprecated This was helpful before SWT jars were available on maven central,
+ * but now {@link com.diffplug.gradle.eclipse.MavenCentralPlugin} is a better option.
+ * 
  * Adds the platform-specific SWT and jface jars which are appropriate for the
  * currently running platform (on the dev machine).
  * 
@@ -52,6 +55,7 @@ import org.gradle.api.plugins.JavaPlugin;
  * * (send us yours in a [PR](https://github.com/diffplug/goomph)!)
  * 
  */
+@Deprecated
 public class NativeDepsPlugin extends ProjectPlugin {
 	public static class Legacy extends LegacyPlugin {
 		public Legacy() {

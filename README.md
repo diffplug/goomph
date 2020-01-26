@@ -77,10 +77,6 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 * [`projectdeps`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/eclipse/ProjectDepsPlugin.html) fixes an intermittent problem where dependencies on other projects within the workspace aren't always resolved correctly within Eclipse.
 * [`resourcefilters`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/eclipse/ResourceFiltersPlugin.html) adds resource filters to the eclipse project.
 
-**`com.diffplug.swt` Plugins for working with SWT in Gradle.**
-
-* [`nativedeps`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/swt/NativeDepsPlugin.html) adds the platform-specific SWT jars to the runtime classpath so that SWT code can run.
-
 **`com.diffplug.osgi` Plugins for working with OSGi.**
 
 * [`bndmanifest`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.20.0/com/diffplug/gradle/osgi/BndManifestPlugin.html) generates a manifest using purely bnd, and outputs it for IDE consumption.
