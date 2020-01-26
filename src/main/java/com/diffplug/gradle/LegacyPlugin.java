@@ -16,6 +16,8 @@
 package com.diffplug.gradle;
 
 
+import com.diffplug.common.collect.Maps;
+import java.util.Map;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.util.SingleMessageLogger;
@@ -31,7 +33,8 @@ public class LegacyPlugin implements Plugin<Project> {
 
 	@Override
 	public void apply(Project proj) {
-		if (getClass().equals(clazzBeingCompatApplied.get())) {
+		Map.Entry<Integer, Class<? extends LegacyPlugin>> cacheEntry = Maps.immutableEntry(System.identityHashCode(proj), getClass());
+		if (cacheEntry.equals(clazzBeingCompatApplied.get())) {
 			clazzBeingCompatApplied.set(null);
 			return;
 		}
@@ -46,9 +49,9 @@ public class LegacyPlugin implements Plugin<Project> {
 	}
 
 	public static void applyForCompat(Project proj, Class<? extends LegacyPlugin> clazz) {
-		clazzBeingCompatApplied.set(clazz);
+		clazzBeingCompatApplied.set(Maps.immutableEntry(System.identityHashCode(proj), clazz));
 		proj.getPlugins().apply(clazz);
 	}
 
-	private static ThreadLocal<Class<? extends LegacyPlugin>> clazzBeingCompatApplied = new ThreadLocal<>();
+	private static ThreadLocal<Map.Entry<Integer, Class<? extends LegacyPlugin>>> clazzBeingCompatApplied = new ThreadLocal<>();
 }
