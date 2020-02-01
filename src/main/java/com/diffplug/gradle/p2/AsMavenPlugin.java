@@ -134,13 +134,13 @@ import org.gradle.api.Project;
  * 
  * You can see all the available slicing options [here](https://wiki.eclipse.org/Equinox/p2/Ant_Tasks#SlicingOptions).
  *
- *  ## Append option
+ * ## Append option
  *
- *  You can control whether iu's should be appended to destination repository
- *  true: already downloaded iu's are preserved, new iu's are downloaded into the existing repo
- *  false: Default value for goomph, repository will be completely cleared before download new iu's
+ * You can control whether iu's should be appended to destination repository
+ * true: already downloaded iu's are preserved, new iu's are downloaded into the existing repo
+ * false: Default value for goomph, repository will be completely cleared before download new iu's
  *
- *   * ```groovy
+ * ```groovy
  * p2AsMaven {
  *   group 'eclipse-deps', {
  *     ...
@@ -149,7 +149,7 @@ import org.gradle.api.Project;
  * }
  * ```
  *
- * More info [here]{https://help.eclipse.org/neon/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Fguide%2Fp2_repositorytasks.htm}.
+ * More info [here](https://help.eclipse.org/neon/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Fguide%2Fp2_repositorytasks.htm).
  *
  * ## Acknowledgements and comparisons to other options
  * 
