@@ -1,6 +1,7 @@
 # Goomph releases
 
 ## [Unreleased]
+- Fix markdown formatting for the `AsMavenPlugin` javadocs ([https://github.com/diffplug/goomph/pull/118])
 
 ## [3.21.0] - 2020-01-26
 ### Added
