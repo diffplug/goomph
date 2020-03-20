@@ -1,7 +1,11 @@
 # Goomph releases
 
 ## [Unreleased]
-- Fix markdown formatting for the `AsMavenPlugin` javadocs ([https://github.com/diffplug/goomph/pull/118])
+### Added
+- Eclipse `4.15.0` aka `2020-03` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.15/)).
+### Fixed
+- Fix markdown formatting for the `AsMavenPlugin` javadocs ([#118](https://github.com/diffplug/goomph/pull/118)).
+- Fix `java.lang.NoSuchMethodError: org.gradle.util.SingleMessageLogger.nagUserOfReplacedPlugin` error in gradle 6.2 ([details](https://github.com/diffplug/image-grinder/issues/5)).
 
 ## [3.21.0] - 2020-01-26
 ### Added

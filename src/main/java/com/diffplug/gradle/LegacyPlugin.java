@@ -20,7 +20,6 @@ import com.diffplug.common.collect.Maps;
 import java.util.Map;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
-import org.gradle.util.SingleMessageLogger;
 
 public class LegacyPlugin implements Plugin<Project> {
 	private final Class<? extends Plugin<Project>> newPlugin;
@@ -45,7 +44,10 @@ public class LegacyPlugin implements Plugin<Project> {
 		} else {
 			oldId = newId.replace("com.diffplug.", "com.diffplug.gradle.");
 		}
-		SingleMessageLogger.nagUserOfReplacedPlugin(oldId, newId);
+		System.err.println("Plugin '" + oldId + "' has been replaced by '" + newId + "'");
+		System.err.println("   This is just a name change, there is no behavior change.");
+		System.err.println("   The old id will keep working, but it will print this warning message.");
+		System.err.println("   See here for reason: https://dev.to/nedtwigg/names-in-java-maven-and-gradle-2fm2");
 	}
 
 	public static void applyForCompat(Project proj, Class<? extends LegacyPlugin> clazz) {
