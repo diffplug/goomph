@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 - Fix markdown formatting for the `AsMavenPlugin` javadocs ([https://github.com/diffplug/goomph/pull/118])
+- Fix `java.lang.NoSuchMethodError: org.gradle.util.SingleMessageLogger.nagUserOfReplacedPlugin` error in gradle 6.2.2 ([details](https://github.com/diffplug/image-grinder/issues/5)).
 
 ## [3.21.0] - 2020-01-26
 ### Added
