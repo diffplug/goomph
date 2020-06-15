@@ -6,10 +6,10 @@ output = prefixDelimiterReplace(input, 'https://javadoc.io/static/com.diffplug.g
 
 So you want to automate your IDE configuration.  The first thing to do is look at a few examples.
 
-- [Gradle and Eclipse RCP talk](https://github.com/diffplug/gradle_and_eclipse_rcp/blob/master/ide/build.gradle) (multi-project Eclipse RCP project)
-- [lsp4j](https://github.com/eclipse/lsp4j/blob/master/ide/build.gradle) (xtend IDE example)
-- [swt-chromium](https://github.com/diffplug/swt-chromium/blob/master/ide/build.gradle) (C++ example)
-- [Spotless](https://github.com/diffplug/spotless/blob/master/ide/build.gradle) (single-project Gradle plugin)
+- [Gradle and Eclipse RCP talk](https://github.com/diffplug/gradle_and_eclipse_rcp/blob/main/ide/build.gradle) (multi-project Eclipse RCP project)
+- [lsp4j](https://github.com/eclipse/lsp4j/blob/main/ide/build.gradle) (xtend IDE example)
+- [swt-chromium](https://github.com/diffplug/swt-chromium/blob/main/ide/build.gradle) (C++ example)
+- [Spotless](https://github.com/diffplug/spotless/blob/main/ide/build.gradle) (single-project Gradle plugin)
 - (your example here)
 
 The next thing is to look at the [javadoc](https://javadoc.io/static/com.diffplug.gradle/goomph/3.22.0/com/diffplug/gradle/oomph/OomphIdePlugin.html) for `OomphIdePlugin`, which inclues a pretty in-depth look at how it works.
@@ -76,15 +76,15 @@ You can also use Eclipse's internal APIs to programatically set properties.  Thi
 
 ## How do I add a DSL for a plugin?
 
-If you have an Eclipse plugin that you'd like to add to to Goomph, we'd love to have it!  Take a look at [ConventionThirdParty](https://github.com/diffplug/goomph/blob/master/src/main/java/com/diffplug/gradle/oomph/thirdparty/ConventionThirdParty.java), and add a block for your plugin there.  If you look at all subclasses of `OomphConvention`, you can see how you can make a configuration DSL for your users, if you'd like.  But even just a simple "add the repo, add the feature" is helpful.
+If you have an Eclipse plugin that you'd like to add to to Goomph, we'd love to have it!  Take a look at [ConventionThirdParty](https://github.com/diffplug/goomph/blob/main/src/main/java/com/diffplug/gradle/oomph/thirdparty/ConventionThirdParty.java), and add a block for your plugin there.  If you look at all subclasses of `OomphConvention`, you can see how you can make a configuration DSL for your users, if you'd like.  But even just a simple "add the repo, add the feature" is helpful.
 
 ##  Contribute back!
 
 If you find out how to set a useful setting, please consider contributing it back!  Key places where it might make sense to contribute:
 
-- [ConventionStyle](https://github.com/diffplug/goomph/blob/master/src/main/java/com/diffplug/gradle/oomph/ConventionStyle.java) is the `style{}` block in `oomphIde`.
-- [ConventionJdt](https://github.com/diffplug/goomph/blob/master/src/main/java/com/diffplug/gradle/oomph/ConventionJdt.java) is the `jdt{}` block in `oomphIde`.
-- [ConventionPde](https://github.com/diffplug/goomph/blob/master/src/main/java/com/diffplug/gradle/oomph/ConventionPde.java) is the `pde{}` block in `oomphIde`.
-- or a new subclass of [OomphConvention](https://github.com/diffplug/goomph/blob/master/src/main/java/com/diffplug/gradle/oomph/OomphConvention.java) to create a new way of grouping settings.
+- [ConventionStyle](https://github.com/diffplug/goomph/blob/main/src/main/java/com/diffplug/gradle/oomph/ConventionStyle.java) is the `style{}` block in `oomphIde`.
+- [ConventionJdt](https://github.com/diffplug/goomph/blob/main/src/main/java/com/diffplug/gradle/oomph/ConventionJdt.java) is the `jdt{}` block in `oomphIde`.
+- [ConventionPde](https://github.com/diffplug/goomph/blob/main/src/main/java/com/diffplug/gradle/oomph/ConventionPde.java) is the `pde{}` block in `oomphIde`.
+- or a new subclass of [OomphConvention](https://github.com/diffplug/goomph/blob/main/src/main/java/com/diffplug/gradle/oomph/OomphConvention.java) to create a new way of grouping settings.
 
 <!---freshmark /javadoc -->

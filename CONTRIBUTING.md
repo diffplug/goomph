@@ -1,6 +1,6 @@
 # Contributing to Goomph
 
-Pull requests are welcome, preferably against `master`.
+Pull requests are welcome, preferably against `main`.
 
 ## Build instructions
 
@@ -42,7 +42,7 @@ To test your changes, run `gradlew publishToMavenLocal` on your Goomph project. 
 
 ## License
 
-By contributing your code, you agree to license your contribution under the terms of the APLv2: https://github.com/diffplug/durian/blob/master/LICENSE
+By contributing your code, you agree to license your contribution under the terms of the APLv2: https://github.com/diffplug/durian/blob/main/LICENSE
 
 All files are released with the Apache 2.0 license as such:
 

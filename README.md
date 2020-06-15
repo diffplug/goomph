@@ -10,7 +10,7 @@ output = [
   link(shield('Changelog', 'changelog', '{{versionLast}}', 'brightgreen'), 'CHANGES.md'),
   link(shield('Javadoc', 'javadoc', 'yes', 'brightgreen'), 'https://javadoc.io/doc/com.diffplug.gradle/goomph/{{versionLast}}/index.html'),
   link(shield('Live chat', 'gitter', 'live chat', 'brightgreen'), 'https://gitter.im/diffplug/goomph'),
-  link(image('Travis CI', 'https://travis-ci.org/diffplug/goomph.svg?branch=master'), 'https://travis-ci.org/diffplug/goomph')
+  link(image('Travis CI', 'https://travis-ci.org/diffplug/goomph.svg?branch=main'), 'https://travis-ci.org/diffplug/goomph')
   ].join('\n');
 -->
 [![Gradle plugin](https://img.shields.io/badge/plugins.gradle.org-yes-blue.svg)](https://plugins.gradle.org/search?term=goomph)
@@ -20,7 +20,7 @@ output = [
 [![Changelog](https://img.shields.io/badge/changelog-3.22.0-brightgreen.svg)](CHANGES.md)
 [![Javadoc](https://img.shields.io/badge/javadoc-yes-brightgreen.svg)](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.22.0/index.html)
 [![Live chat](https://img.shields.io/badge/gitter-live_chat-brightgreen.svg)](https://gitter.im/diffplug/goomph)
-[![Travis CI](https://travis-ci.org/diffplug/goomph.svg?branch=master)](https://travis-ci.org/diffplug/goomph)
+[![Travis CI](https://travis-ci.org/diffplug/goomph.svg?branch=main)](https://travis-ci.org/diffplug/goomph)
 <!---freshmark /shields -->
 
 <!---freshmark javadoc
