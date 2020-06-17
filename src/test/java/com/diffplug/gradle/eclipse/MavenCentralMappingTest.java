@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2019 DiffPlug
+ * Copyright (C) 2015-2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,5 +43,12 @@ public class MavenCentralMappingTest {
 				.containsEntry("org.eclipse.debug.core", "3.10.100")
 				.containsEntry("org.eclipse.equinox.p2.metadata", "2.3.100")
 				.hasSize(895);
+	}
+
+	@Test
+	public void testMissingBugfixVersion() throws IOException {
+		Assertions.assertThatThrownBy(() -> {
+			MavenCentralMapping.bundleToVersion(EclipseRelease.official("4.14"));
+		}).hasMessage("Maven central mapping requires 'x.y.z' and does not support 'x.y'.  Try 4.14.0 instead of 4.14");
 	}
 }

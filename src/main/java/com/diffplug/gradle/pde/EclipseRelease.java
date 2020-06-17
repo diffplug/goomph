@@ -136,6 +136,12 @@ public final class EclipseRelease {
 		}
 	}
 
+	/** Returns false for x.y.z, and true for everything else. */
+	public boolean isXYZ() {
+		long numDots = id.chars().filter(c -> c == '.').count();
+		return numDots == 2;
+	}
+
 	/** Returns the OSGi version for this release. */
 	public Version version() {
 		return version;

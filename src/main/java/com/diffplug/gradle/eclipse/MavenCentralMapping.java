@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 DiffPlug
+ * Copyright (C) 2018-2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,7 +80,10 @@ public class MavenCentralMapping {
 	public static Map<String, String> bundleToVersion(EclipseRelease release) {
 		//  warn if the user is asking for a too-old version of eclipse, but go ahead and try anyway just in case
 		if (release.version().compareTo(FIRST_ON_CENTRAL.version()) < 0) {
-			System.err.println(FIRST_ON_CENTRAL.version() + " was the first eclipse release that was published on MavenCentral.");
+			throw new IllegalArgumentException(FIRST_ON_CENTRAL.version() + " was the first eclipse release that was published on maven central, you requested " + release);
+		}
+		if (!release.isXYZ()) {
+			throw new IllegalArgumentException("Maven central mapping requires 'x.y.z' and does not support 'x.y'.  Try " + release + ".0 instead of " + release);
 		}
 		File versionFolder = new File(GoomphCacheLocations.eclipseReleaseMetadata(), release.version().toString());
 		FileMisc.mkdirs(versionFolder);
