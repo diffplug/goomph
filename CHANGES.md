@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+### Added
+- Eclipse `4.16.0` aka `2020-06` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.16/)).
 ### Fixed
 - Give a better error message when using `com.diffplug.eclipse.mavencentral` with an underspecified release. ([#121](https://github.com/diffplug/goomph/issues/121))
 - Improve documentation for `com.diffplug.p2.asmaven` to better describe multiproject setups in Gradle 6+. ([#119](https://github.com/diffplug/goomph/issues/119))
