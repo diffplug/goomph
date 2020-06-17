@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [3.23.0] - 2020-06-17
 ### Added
 - Eclipse `4.16.0` aka `2020-06` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.16/)).
 ### Fixed
