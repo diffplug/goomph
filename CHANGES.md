@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Fixed
 - Give a better error message when using `com.diffplug.eclipse.mavencentral` with an underspecified release. ([#121](https://github.com/diffplug/goomph/issues/121))
+- Improve documentation for `com.diffplug.p2.asmaven` to better describe multiproject setups in Gradle 6+. ([#119](https://github.com/diffplug/goomph/issues/119))
 
 ## [3.22.0] - 2020-03-20
 ### Added

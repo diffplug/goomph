@@ -81,9 +81,25 @@ import org.gradle.api.Project;
  * But none of these dependencies are added automatically - you have to
  * add them yourself.
  * 
+ * ## Multiprojects
+ * 
+ * If you have a dedicated `p2` project, and other projects refer to it, it needs to look like this in gradle 6+:
+ * 
+ * ```groovy
+ * maven {
+ *   url project(':project-with-p2asmaven').file('build/p2asmaven/maven')
+ *   metadataSources {
+ *     mavenPom()
+ *     artifact()
+ *   }
+ * }
+ * evaluationDependsOn(':project-with-p2asmaven')
+ * ```
+ * 
  * ## Example projects
  * 
  * * [spotless](https://github.com/diffplug/spotless)
+ * * [gradle-and-eclipse-rcp](https://github.com/diffplug/gradle-and-eclipse-rcp)
  * * (send us yours in a [PR](https://github.com/diffplug/goomph)!)
  * 
  * ## Proxy support
