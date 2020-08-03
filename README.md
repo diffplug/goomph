@@ -89,6 +89,7 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 * [`asmaven`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.23.0/com/diffplug/gradle/p2/AsMavenPlugin.html) downloads dependencies from a p2 repository and makes them available in a local maven repository.
 * [`P2Model`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.23.0/com/diffplug/gradle/p2/P2Model.html) models a set of p2 repositories and IUs, and provides convenience methods for running p2-director or the p2.mirror ant task against these.
 * [`P2AntRunner`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.23.0/com/diffplug/gradle/p2/P2AntRunner.html) runs eclipse ant tasks.
+* [`CategoryPublisher`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.23.0/com/diffplug/gradle/p2/CategoryPublisher.html) models the CategoryPublisher eclipse application.
 * [`FeaturesAndBundlesPublisher`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.23.0/com/diffplug/gradle/p2/FeaturesAndBundlesPublisher.html) models the FeaturesAndBundlesPublisher eclipse application.
 * [`Repo2Runnable`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.23.0/com/diffplug/gradle/p2/Repo2Runnable.html) models the Repo2Runnable eclipse application.
 
