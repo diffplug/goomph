@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [3.24.0] - 2020-08-04
 ### Added
 - Added `CategoryPublisher` ([#124](https://github.com/diffplug/goomph/issues/124))
 
