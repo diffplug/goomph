@@ -115,6 +115,7 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 * Thanks to [Thomas Broyer](https://github.com/tbroyer) for the excellent [`net.ltgt.apt-eclipse`](https://github.com/tbroyer/gradle-apt-plugin) plugin.
   * It is no longer maintained at its original home, so we will continue to maintain it here at `com.diffplug.eclipse.apt`.
 * Thanks to [ralfgrossklaus](https://github.com/ralfgrossklaus) for fixes to [CmdLine hanging](https://github.com/diffplug/goomph/pull/50) and [opening dialogs on buildservers](https://github.com/diffplug/goomph/pull/49).
+* Thanks to [Kelvin Glaß](https://github.com/m273d15) for adding the `CategoryPublisher` application ([#126](https://github.com/diffplug/goomph/pull/126)).
 * Thanks to [hacki11](https://github.com/hacki11) for [slicingOptions](https://github.com/diffplug/goomph/pull/41) and [append](https://github.com/diffplug/goomph/pull/44) in p2asmaven, as well as every improvement in the `3.10.0` release.
 * Andrey Hihlovskiy's excellent [Wuff](https://github.com/akhikhl/wuff) and [Unpuzzle](https://github.com/akhikhl/unpuzzle) libraries have been a huge boon to everyone trying to get Gradle and Eclipse to collaborate.
 * Thanks to Peter Kriens for the excellent [bnd](https://github.com/bndtools/bnd).
