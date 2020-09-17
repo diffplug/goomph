@@ -57,6 +57,8 @@ dependencies {
 }
 configurations.all {
 	exclude group: 'org.eclipse.platform', module: 'org.eclipse.swt.${osgi.platform}'
+	exclude group: 'com.sun.jna', module: 'com.sun.jna'
+	exclude group: 'com.sun.jna', module: 'com.sun.jna.platform'
 }
 
 test.testLogging.exceptionFormat = 'full'
