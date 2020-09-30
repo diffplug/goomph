@@ -16,11 +16,13 @@
 package com.diffplug.gradle.eclipse;
 
 
+import com.diffplug.common.base.StringPrinter;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.pde.EclipseRelease;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.ModuleVersionSelector;
@@ -102,7 +104,17 @@ public class MavenCentralExtension {
 
 		public void dep(String configName, String bundleId) {
 			String groupIdArtifactId = MavenCentralMapping.groupIdArtifactId(bundleId);
-			project.getDependencies().add(configName, groupIdArtifactId + ":" + bundleToVersion.get(bundleId));
+			String version = bundleToVersion.get(bundleId);
+			if (version == null) {
+				throw new IllegalArgumentException(StringPrinter.buildString(printer -> {
+					printer.println("Eclipse " + release + " has no bundle named " + bundleId);
+					Map<String, String> versions = new TreeMap<>(bundleToVersion);
+					versions.forEach((key, value) -> {
+						printer.println("  " + key + "=" + value);
+					});
+				}));
+			}
+			project.getDependencies().add(configName, groupIdArtifactId + ":" + version);
 		}
 
 		private static final String $_OSGI_PLATFORM = "${osgi.platform}";
