@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 DiffPlug
+ * Copyright (C) 2016-2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,13 +42,15 @@ class JavaExecableImp {
 			SerializableMisc.write(tempFile, input);
 			ExecResult execResult = javaExecer.apply(execSpec -> {
 				// let the user change things
-				settings.execute(
-						// use the main below as the main
-						execSpec.setMain(JavaExecable.class.getName())
-								// pass the input object to the main
-								.args(tempFile.getAbsolutePath())
-								// set the nominal classpath
-								.setClasspath(classpath));
+				settings.execute((JavaExecSpec)
+				// use the main below as the main
+				execSpec.setMain(JavaExecable.class.getName())
+						// pass the input object to the main
+						.args(tempFile.getAbsolutePath())
+						// set the nominal classpath
+						.setClasspath(classpath)
+						// Needed for Java 9+
+						.jvmArgs("-XX:+IgnoreUnrecognizedVMOptions", "--add-modules=ALL-SYSTEM"));
 			});
 			execResult.rethrowFailure();
 			// load the resultant object after it has been executed and resaved

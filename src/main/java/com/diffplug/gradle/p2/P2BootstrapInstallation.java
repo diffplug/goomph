@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 DiffPlug
+ * Copyright (C) 2016-2020 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,8 @@ class P2BootstrapInstallation {
 	/** List of versions for which we have deployed a bootstrap to bintray. */
 	static final ImmutableSet<EclipseRelease> SUPPORTED = ImmutableSet.of(
 			EclipseRelease.official("4.5.2"),
-			EclipseRelease.official("4.7.2"));
+			EclipseRelease.official("4.7.2"),
+			EclipseRelease.official("4.13.0"));
 
 	final EclipseRelease release;
 

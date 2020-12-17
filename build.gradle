@@ -39,18 +39,18 @@ dependencies {
 	implementation "com.squareup.okio:okio:2.4.3"
 	// OSGi
 	implementation "biz.aQute.bnd:biz.aQute.bndlib:${VER_BNDLIB}"
-	// p2 (osgi used in 4.7.2 to match p2-bootstrap)
-	api "org.eclipse.platform:org.eclipse.osgi:3.12.50"
+	// p2 (osgi used in 4.13.0 to match p2-bootstrap)
+	api "org.eclipse.platform:org.eclipse.osgi:3.15.0"
 	// eclipse 4.7.2
-	compileOnly 'org.eclipse.platform:org.eclipse.core.jobs:3.9.2'
-	compileOnly 'org.eclipse.platform:org.eclipse.core.runtime:3.13.0'
-	compileOnly 'org.eclipse.platform:org.eclipse.core.resources:3.12.0'
-	compileOnly 'org.eclipse.platform:org.eclipse.equinox.common:3.9.0'
-	compileOnly 'org.eclipse.platform:org.eclipse.ui.workbench:3.110.1'
-	compileOnly 'org.eclipse.pde:org.eclipse.pde.core:3.11.100'
-	compileOnly 'org.eclipse.jdt:org.eclipse.jdt.launching:3.9.51'
+	compileOnly 'org.eclipse.platform:org.eclipse.core.jobs:3.10.500'
+	compileOnly 'org.eclipse.platform:org.eclipse.core.runtime:3.16.0'
+	compileOnly 'org.eclipse.platform:org.eclipse.core.resources:3.13.500'
+	compileOnly 'org.eclipse.platform:org.eclipse.equinox.common:3.10.500'
+	compileOnly 'org.eclipse.platform:org.eclipse.ui.workbench:3.116.0'
+	compileOnly 'org.eclipse.pde:org.eclipse.pde.core:3.13.100'
+	compileOnly 'org.eclipse.jdt:org.eclipse.jdt.launching:3.15.0'
 	// from 4.6.3 cuz that's the latest one
-	compileOnly 'org.eclipse.emf:org.eclipse.emf.ecore:2.12.0'
+	compileOnly 'org.eclipse.emf:org.eclipse.emf.ecore:2.19.0'
 	// testing
 	testImplementation "junit:junit:4.13"
 	testImplementation "org.assertj:assertj-core:3.14.0"
