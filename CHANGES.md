@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [3.26.0] - 2020-12-22
 ### Added
 - Eclipse `4.18.0` aka `2020-12` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.18/)).
   - **WARNING** the `ide` task is still broken with `4.17.0` and `4.18.0` (help wanted, [#129](https://github.com/diffplug/goomph/issues/129))
