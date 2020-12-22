@@ -1,6 +1,10 @@
 # Goomph releases
 
 ## [Unreleased]
+### Added
+- Eclipse `4.18.0` aka `2020-12` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.18/)).
+  - **WARNING** the `ide` task is still broken with `4.17.0` and `4.18.0` (help wanted, [#129](https://github.com/diffplug/goomph/issues/129))
+  - the `mavencentral` plugin still works great with `4.17.0` and `4.18.0`
 
 ## [3.25.0] - 2020-09-17
 ### Added
