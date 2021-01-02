@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2020 DiffPlug
+ * Copyright (C) 2016-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.diffplug.gradle.oomph;
 
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Preconditions;
+import com.diffplug.common.base.StandardSystemProperty;
 import com.diffplug.common.base.Unhandled;
 import com.diffplug.common.primitives.Booleans;
 import com.diffplug.common.swt.os.OS;
@@ -447,12 +448,17 @@ public class OomphIdeExtension implements P2Declarative {
 		if (OS.getNative().isMac()) {
 			ini.set("-install", new File(ideDir, "Contents/MacOS"));
 			ini.set("-configuration", new File(ideDir, "Contents/Eclipse/configuration"));
+			if (BadSemver.badSemver(StandardSystemProperty.OS_VERSION.value()) >= BIG_SUR) {
+				ini.set("-vm", StandardSystemProperty.JAVA_HOME.value());
+			}
 		}
 		if (eclipseIni != null) {
 			eclipseIni.execute(ini);
 		}
 		ini.writeTo(iniFile);
 	}
+
+	private static final int BIG_SUR = BadSemver.badSemver("10.16");
 
 	///////////////////////
 	// ideSetupWorkspace //
