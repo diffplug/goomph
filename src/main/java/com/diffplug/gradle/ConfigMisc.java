@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 DiffPlug
+ * Copyright (C) 2016-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.StringTokenizer;
 import org.gradle.api.Action;
 import org.gradle.api.XmlProvider;
 import org.gradle.internal.xml.XmlTransformer;
@@ -63,4 +67,20 @@ public class ConfigMisc {
 		}
 		return map;
 	}
+
+	public static List<String> tokenize(String prop, String separator) {
+		if (prop == null || prop.trim().equals("")) {
+			return Collections.emptyList();
+		}
+		List<String> list = new ArrayList<>();
+		StringTokenizer tokens = new StringTokenizer(prop, separator);
+		while (tokens.hasMoreTokens()) {
+			String token = tokens.nextToken().trim();
+			if (!token.isEmpty()) {
+				list.add(token);
+			}
+		}
+		return list;
+	}
+
 }

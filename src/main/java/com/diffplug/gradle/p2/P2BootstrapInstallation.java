@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2020 DiffPlug
+ * Copyright (C) 2016-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GoomphCacheLocations;
 import com.diffplug.gradle.ZipMisc;
 import com.diffplug.gradle.eclipserunner.EclipseRunner;
-import com.diffplug.gradle.eclipserunner.JarFolderRunner;
 import com.diffplug.gradle.eclipserunner.JarFolderRunnerExternalJvm;
 import com.diffplug.gradle.pde.EclipseRelease;
 import java.io.File;
@@ -122,14 +121,14 @@ class P2BootstrapInstallation {
 		model.addIU("org.eclipse.equinox.ds");
 		return model;
 	}
-
-	/** Returns an EclipseArgsBuilder.Runner which runs within this JVM. */
-	public EclipseRunner withinJvmRunner() throws IOException {
-		return args -> {
-			ensureInstalled();
-			new JarFolderRunner(getRootFolder()).run(args);
-		};
-	}
+	// TODO: This seems to be unused. Just remove it
+	//	/** Returns an EclipseArgsBuilder.Runner which runs within this JVM. */
+	//	public EclipseRunner withinJvmRunner() throws IOException {
+	//		return args -> {
+	//			ensureInstalled();
+	//			new JarFolderRunner(getRootFolder()).run(args);
+	//		};
+	//	}
 
 	/** Returns an EclipseArgsBuilder.Runner which runs outside this JVM. */
 	public EclipseRunner outsideJvmRunner() throws IOException {

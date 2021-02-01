@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2020 DiffPlug
+ * Copyright (C) 2016-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ class JavaExecableImp {
 						// set the nominal classpath
 						.setClasspath(classpath)
 						// Needed for Java 9+
-						.jvmArgs("-XX:+IgnoreUnrecognizedVMOptions", "--add-modules=ALL-SYSTEM"));
+						.jvmArgs("-XX:+IgnoreUnrecognizedVMOptions", "--add-modules=ALL-SYSTEM", "--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED"));
 			});
 			execResult.rethrowFailure();
 			// load the resultant object after it has been executed and resaved

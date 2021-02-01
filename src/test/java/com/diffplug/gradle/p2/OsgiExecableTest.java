@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 DiffPlug
+ * Copyright (C) 2016-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.diffplug.gradle.p2;
 
 
+import com.diffplug.gradle.eclipserunner.EquinoxInstallation;
 import com.diffplug.gradle.eclipserunner.EquinoxLauncher;
 import com.diffplug.gradle.osgi.OsgiExecable;
 import org.junit.Assert;
@@ -58,7 +59,8 @@ public class OsgiExecableTest {
 		P2BootstrapInstallation installation = P2BootstrapInstallation.latest();
 		installation.ensureInstalled();
 
-		EquinoxLauncher launcher = new EquinoxLauncher(installation.getRootFolder());
+		EquinoxInstallation exInstallation = new EquinoxInstallation(installation.getRootFolder());
+		EquinoxLauncher launcher = new EquinoxLauncher(exInstallation);
 		try (EquinoxLauncher.Running running = launcher.open()) {
 			Incrementer example = new Incrementer(5);
 			Incrementer result = OsgiExecable.exec(running.bundleContext(), example);
