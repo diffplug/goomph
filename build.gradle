@@ -1,6 +1,7 @@
 plugins {
 	// https://github.com/spotbugs/spotbugs-gradle-plugin/blob/master/CHANGELOG.md
 	id 'com.github.spotbugs' version '3.0.0'
+	id 'com.diffplug.eclipse.mavencentral'
 }
 
 apply plugin: 'com.diffplug.spotless-changelog'
@@ -27,6 +28,8 @@ String VER_DURIAN = '1.2.0'
 String VER_DURIAN_SWT = '3.0.0'
 String VER_BNDLIB = '5.0.0'
 String OLDEST_SUPPORTED_GRADLE = '5.1'
+String VER_P2_BOOTSTRAP = '4.7.2'
+
 dependencies {
 	// Compile misc
 	implementation "com.diffplug.durian:durian-core:${VER_DURIAN}"
@@ -39,22 +42,26 @@ dependencies {
 	implementation "com.squareup.okio:okio:2.4.3"
 	// OSGi
 	implementation "biz.aQute.bnd:biz.aQute.bndlib:${VER_BNDLIB}"
-	// p2 (osgi used in 4.7.2 to match p2-bootstrap)
-	api "org.eclipse.platform:org.eclipse.osgi:3.12.50"
-	// eclipse 4.7.2
-	compileOnly 'org.eclipse.platform:org.eclipse.core.jobs:3.9.2'
-	compileOnly 'org.eclipse.platform:org.eclipse.core.runtime:3.13.0'
-	compileOnly 'org.eclipse.platform:org.eclipse.core.resources:3.12.0'
-	compileOnly 'org.eclipse.platform:org.eclipse.equinox.common:3.9.0'
-	compileOnly 'org.eclipse.platform:org.eclipse.ui.workbench:3.110.1'
-	compileOnly 'org.eclipse.pde:org.eclipse.pde.core:3.11.100'
-	compileOnly 'org.eclipse.jdt:org.eclipse.jdt.launching:3.9.51'
-	// from 4.6.3 cuz that's the latest one
-	compileOnly 'org.eclipse.emf:org.eclipse.emf.ecore:2.12.0'
 	// testing
 	testImplementation "junit:junit:4.13"
 	testImplementation "org.assertj:assertj-core:3.14.0"
+	// should be in eclipseMavenCentral, but it is missing
+	compileOnly 'org.eclipse.emf:org.eclipse.emf.ecore:2.12.0'
 }
+eclipseMavenCentral {
+	release VER_P2_BOOTSTRAP, {
+		api 'org.eclipse.osgi'
+		compileOnly 'org.eclipse.core.jobs'
+		compileOnly 'org.eclipse.core.runtime'
+		compileOnly 'org.eclipse.core.resources'
+		compileOnly 'org.eclipse.equinox.common'
+		compileOnly 'org.eclipse.ui.workbench'
+		compileOnly 'org.eclipse.pde.core'
+		compileOnly 'org.eclipse.jdt.launching'
+		//compileOnly 'org.eclipse.emf.ecore'
+	}
+}
+
 configurations.all {
 	exclude group: 'org.eclipse.platform', module: 'org.eclipse.swt.${osgi.platform}'
 	exclude group: 'com.sun.jna', module: 'com.sun.jna'

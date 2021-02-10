@@ -1,8 +1,10 @@
 # Goomph releases
 
 ## [Unreleased]
+
 ### Fixed
 - `ide` task now works again on macOS BigSur ([#131](https://github.com/diffplug/goomph/issues/131))
+- Changed `p2-bootstrap` URLs to `repo.diffplug.com` because bintray is shutting down ([#135](https://github.com/diffplug/goomph/issues/135))
 
 ## [3.26.0] - 2020-12-22
 ### Added
