@@ -29,7 +29,7 @@ String VER_DURIAN = '1.2.0'
 String VER_DURIAN_SWT = '3.0.0'
 String VER_BNDLIB = '5.0.0'
 String OLDEST_SUPPORTED_GRADLE = '5.1'
-String VER_P2_BOOTSTRAP = '4.7.2'
+String VER_P2_BOOTSTRAP = '4.13.0'
 
 dependencies {
 	// Compile misc
@@ -46,8 +46,6 @@ dependencies {
 	// testing
 	testImplementation "junit:junit:4.13"
 	testImplementation "org.assertj:assertj-core:3.14.0"
-	// should be in eclipseMavenCentral, but it is missing
-	compileOnly 'org.eclipse.emf:org.eclipse.emf.ecore:2.12.0'
 }
 eclipseMavenCentral {
 	release VER_P2_BOOTSTRAP, {
@@ -59,7 +57,7 @@ eclipseMavenCentral {
 		compileOnly 'org.eclipse.ui.workbench'
 		compileOnly 'org.eclipse.pde.core'
 		compileOnly 'org.eclipse.jdt.launching'
-		//compileOnly 'org.eclipse.emf.ecore'
+		compileOnly 'org.eclipse.emf.ecore'
 	}
 }
 
