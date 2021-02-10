@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+### Added
+- the `mavencentral` plugin now supports EMF artifacts ([#136](https://github.com/diffplug/goomph/issues/136)).
 
 ## [3.26.1] - 2021-02-10
 ### Fixed

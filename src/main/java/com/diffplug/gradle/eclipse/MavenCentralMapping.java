@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2020 DiffPlug
+ * Copyright (C) 2018-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,7 @@ public class MavenCentralMapping {
 	private static final String PLATFORM = "org.eclipse.platform";
 	private static final String JDT = "org.eclipse.jdt";
 	private static final String PDE = "org.eclipse.pde";
+	private static final String EMF = "org.eclipse.emf";
 
 	/** Returns the MavenCentral groupId:artifactId appropriate for the given bundleId. */
 	public static String groupIdArtifactId(String bundleId) {
@@ -50,6 +51,8 @@ public class MavenCentralMapping {
 			return JDT + ":" + bundleId;
 		} else if (bundleId.startsWith(PDE)) {
 			return PDE + ":" + bundleId;
+		} else if (bundleId.startsWith(EMF)) {
+			return EMF + ":" + bundleId;
 		} else {
 			return PLATFORM + ":" + bundleId;
 		}
