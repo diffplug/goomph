@@ -2,6 +2,7 @@ plugins {
 	// https://github.com/spotbugs/spotbugs-gradle-plugin/blob/master/CHANGELOG.md
 	id 'com.github.spotbugs' version '3.0.0'
 	id 'com.diffplug.eclipse.mavencentral'
+	id 'com.diffplug.eclipse.excludebuildfolder'
 }
 
 apply plugin: 'com.diffplug.spotless-changelog'
