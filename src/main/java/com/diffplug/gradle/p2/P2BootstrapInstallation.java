@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 DiffPlug
+ * Copyright (C) 2016-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import org.gradle.api.Project;
 
 /** Wraps a Bootstrap installation for the given eclipse release. */
 class P2BootstrapInstallation {
-	static final String DOWNLOAD_ROOT = "https://dl.bintray.com/diffplug/opensource/com/diffplug/gradle/goomph-p2-bootstrap/";
+	static final String DOWNLOAD_ROOT = "https://repo.diffplug.com/misc/goomph-p2-bootstrap";
 	static final String DOWNLOAD_FILE = "/goomph-p2-bootstrap.zip";
 	static final String VERSIONED_DOWNLOAD_FILE = "/goomph-p2-bootstrap-%s.zip";
 
@@ -45,7 +45,7 @@ class P2BootstrapInstallation {
 	final EclipseRelease release;
 
 	static P2BootstrapInstallation latest() {
-		EclipseRelease latest = SUPPORTED.asList().listIterator(SUPPORTED.size()).previous();
+		EclipseRelease latest = SUPPORTED.asList().get(SUPPORTED.size() - 1);
 		return new P2BootstrapInstallation(latest);
 	}
 
@@ -82,9 +82,10 @@ class P2BootstrapInstallation {
 		// download the URL
 		File target = new File(getRootFolder(), DOWNLOAD_FILE);
 		try {
-			FileMisc.download(GoomphCacheLocations.p2bootstrapUrl().orElse(DOWNLOAD_ROOT) + release.version() + DOWNLOAD_FILE, target);
+			// s3 example
+			FileMisc.download(GoomphCacheLocations.p2bootstrapUrl().orElse(DOWNLOAD_ROOT) + String.format(VERSIONED_DOWNLOAD_FILE, release.version()), target);
 		} catch (FileNotFoundException ex) {
-			//try versioned artifact - Common when boostrap is on a maven type(sonatype nexus, etc.) repository.
+			// try versioned artifact - Common when boostrap is on a maven type(sonatype nexus, etc.) repository.
 			FileMisc.download(GoomphCacheLocations.p2bootstrapUrl().orElse(DOWNLOAD_ROOT) + release.version() + String.format(VERSIONED_DOWNLOAD_FILE, release.version()), target);
 		}
 		// unzip it
