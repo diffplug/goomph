@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 DiffPlug
+ * Copyright (C) 2016-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,15 @@ import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.pde.EclipseRelease;
 import java.io.File;
 
-/** Creates a new folder for uploading to [goomph-p2-bootstrap](https://bintray.com/diffplug/opensource/goomph-p2-bootstrap). */
+/**
+ * Creates a new folder for uploading to `repo.diffplug.com`, used by `4.5.2` and `4.7.2`.
+ * 
+ * However, for `4.13.0`, we took the following steps:
+ * 
+ * - run `eclipsec.exe -application org.eclipse.equinox.p2.director -repository https://download.eclipse.org/eclipse/updates/4.13/R-4.13-201909161045/ -installIU org.eclipse.equinox.p2.core.feature.feature.group,org.eclipse.equinox.p2.director.app,org.eclipse.equinox.p2.repository.tools,org.eclipse.core.net,org.eclipse.osgi.compatibility.state,org.eclipse.ant.core,org.apache.ant,org.eclipse.core.runtime,org.eclipse.update.configurator,org.eclipse.equinox.ds,org.eclipse.equinox.p2.reconciler.dropins -tag InitialState -destination result -profile SDKProfile -profileProperties org.eclipse.update.install.features=true`
+ * - delete `features` and `p2/org.eclipse.equinox.p2.engine/.settings`
+ * 
+ */
 public class P2BootstrapInstallationCreate {
 	/** The release to install.  Make sure that build.gradle's org.eclipse.platform:org.eclipse.osgi:VERSION matches the version from this release. */
 	static final EclipseRelease RELEASE = EclipseRelease.official("4.7.2");
