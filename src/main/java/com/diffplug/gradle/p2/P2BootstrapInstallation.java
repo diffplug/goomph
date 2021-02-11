@@ -40,7 +40,8 @@ class P2BootstrapInstallation {
 	/** List of versions for which we have deployed a bootstrap to bintray. */
 	static final ImmutableSet<EclipseRelease> SUPPORTED = ImmutableSet.of(
 			EclipseRelease.official("4.5.2"),
-			EclipseRelease.official("4.7.2"));
+			EclipseRelease.official("4.7.2"),
+			EclipseRelease.official("4.13.0"));
 
 	final EclipseRelease release;
 
