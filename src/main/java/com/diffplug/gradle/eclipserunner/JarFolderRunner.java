@@ -17,8 +17,6 @@ package com.diffplug.gradle.eclipserunner;
 
 
 import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
@@ -50,17 +48,10 @@ public class JarFolderRunner implements EclipseRunner {
 			bootpath = ClassPathUtil.getClasspath(parent);
 		}
 		try (URLClassLoader classLoader = new URLClassLoader(bootpath, parent)) {
-			Class<?> installationClazz = classLoader.loadClass("com.diffplug.gradle.eclipserunner.EquinoxInstallation");
-			Constructor<?> constructor = installationClazz.getDeclaredConstructor(File.class);
-			Object installation = constructor.newInstance(rootDirectory);
-
 			Class<?> launcherClazz = classLoader.loadClass("com.diffplug.gradle.eclipserunner.EquinoxLauncher");
-			constructor = launcherClazz.getConstructor(installationClazz);
-			Object launcher = constructor.newInstance(installation);
-			Method setArgs = launcherClazz.getDeclaredMethod("setArgs", List.class);
-			setArgs.invoke(launcher, args);
-			Method run = launcherClazz.getDeclaredMethod("run");
-			run.invoke(launcher);
+			Object launcher = launcherClazz.getConstructor(File.class).newInstance(rootDirectory);
+			launcherClazz.getDeclaredMethod("setArgs", List.class).invoke(launcher, args);
+			launcherClazz.getDeclaredMethod("run").invoke(launcher);
 		}
 	}
 }
