@@ -20,6 +20,7 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +65,7 @@ public class JarFolderRunner implements EclipseRunner {
 			parent = ClassLoader.getSystemClassLoader();
 			bootpath = ClassPathUtil.getClasspath(parent);
 		}
-		try (StartupClassLoader classLoader = new StartupClassLoader(bootpath, parent)) {
+		try (URLClassLoader classLoader = new URLClassLoader(bootpath, parent)) {
 			Class<?> installationClazz = classLoader.loadClass("com.diffplug.gradle.eclipserunner.EquinoxInstallation");
 			Constructor<?> constructor = installationClazz.getDeclaredConstructor(File.class);
 			Object installation = constructor.newInstance(rootDirectory);
