@@ -53,7 +53,7 @@ import java.util.zip.ZipFile;
  * - `Thread splashHandler` into `protected`
  * - `void invokeFramework(` into `protected`
  */
-@SuppressWarnings({"unchecked", "rawtypes", "deprecation"})
+@SuppressWarnings("deprecation")
 public class Main {
 
 	/**
