@@ -49,6 +49,9 @@ import java.util.zip.ZipFile;
 
 /**
  * Copied on 2021-02-11 straight from https://github.com/eclipse/rt.equinox.framework/blob/7433233fbcf44fe8b82e63a10f8733767e5b3042/bundles/org.eclipse.equinox.launcher/src/org/eclipse/equinox/launcher/Main.java
+ * - then make `void basicRun(String[] args)` into `public`
+ * - `Thread splashHandler` into `protected`
+ * - `void invokeFramework(` into `protected`
  */
 @SuppressWarnings({"unchecked", "rawtypes", "deprecation"})
 public class Main {
@@ -137,7 +140,7 @@ public class Main {
 		}
 	}
 
-	private final Thread splashHandler = new SplashHandler();
+	protected final Thread splashHandler = new SplashHandler();
 
 	//splash screen system properties
 	public static final String SPLASH_HANDLE = "org.eclipse.equinox.launcher.splash.handle"; //$NON-NLS-1$
@@ -553,7 +556,7 @@ public class Main {
 	 * @param args command-line arguments
 	 * @exception Exception thrown if a problem occurs during the launch
 	 */
-	protected void basicRun(String[] args) throws Exception {
+	public void basicRun(String[] args) throws Exception {
 		System.setProperty("eclipse.startTime", Long.toString(System.currentTimeMillis())); //$NON-NLS-1$
 		commands = args;
 		String[] passThruArgs = processCommandLine(args);
@@ -625,7 +628,7 @@ public class Main {
 		}
 	}
 
-	private void invokeFramework(String[] passThruArgs, URL[] bootPath) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, Error, Exception, InvocationTargetException {
+	protected void invokeFramework(String[] passThruArgs, URL[] bootPath) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, Error, Exception, InvocationTargetException {
 		String type = PARENT_CLASSLOADER_BOOT;
 		try {
 			String javaVersion = System.getProperty("java.version"); //$NON-NLS-1$
