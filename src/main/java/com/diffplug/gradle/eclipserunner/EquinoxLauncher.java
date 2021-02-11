@@ -120,7 +120,7 @@ public class EquinoxLauncher {
 		final BundleContext bundleContext;
 
 		private Running(Map<String, String> systemProps, List<String> args) throws Exception {
-			Map<String, String> defaults = installation.getSystemProperties();
+			Map<String, String> defaults = installation.getInitProperties();
 			modifyDefaultBy(defaults, systemProps);
 			EclipseStarter.setInitialProperties(defaults);
 			bundleContext = EclipseStarter.startup(args.toArray(new String[0]), null);

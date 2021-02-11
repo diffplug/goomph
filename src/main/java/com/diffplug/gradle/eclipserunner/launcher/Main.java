@@ -52,6 +52,11 @@ import java.util.zip.ZipFile;
  * - then make `void basicRun(String[] args)` into `public`
  * - `Thread splashHandler` into `protected`
  * - `void invokeFramework(` into `protected`
+ * - make the following `public`
+ *   - `String PARENT_CLASSLOADER_EXT`
+ *   - `String PARENT_CLASSLOADER_BOOT`
+ *   - `String PROP_PARENT_CLASSLOADER`
+ *   - `String PROP_FRAMEWORK_PARENT_CLASSLOADER`
  */
 @SuppressWarnings("deprecation")
 public class Main {
@@ -215,8 +220,8 @@ public class Main {
 	private static final String PROP_FRAMEWORK_SHAPE = "osgi.framework.shape"; //$NON-NLS-1$
 	private static final String PROP_LOGFILE = "osgi.logfile"; //$NON-NLS-1$
 	private static final String PROP_REQUIRED_JAVA_VERSION = "osgi.requiredJavaVersion"; //$NON-NLS-1$
-	private static final String PROP_PARENT_CLASSLOADER = "osgi.parentClassloader"; //$NON-NLS-1$
-	private static final String PROP_FRAMEWORK_PARENT_CLASSLOADER = "osgi.frameworkParentClassloader"; //$NON-NLS-1$
+	public static final String PROP_PARENT_CLASSLOADER = "osgi.parentClassloader"; //$NON-NLS-1$
+	public static final String PROP_FRAMEWORK_PARENT_CLASSLOADER = "osgi.frameworkParentClassloader"; //$NON-NLS-1$
 	private static final String PROP_NL = "osgi.nl"; //$NON-NLS-1$
 	static final String PROP_NOSHUTDOWN = "osgi.noShutdown"; //$NON-NLS-1$
 	private static final String PROP_DEBUG = "osgi.debug"; //$NON-NLS-1$
@@ -247,8 +252,8 @@ public class Main {
 
 	// types of parent classloaders the framework can have
 	private static final String PARENT_CLASSLOADER_APP = "app"; //$NON-NLS-1$
-	private static final String PARENT_CLASSLOADER_EXT = "ext"; //$NON-NLS-1$
-	private static final String PARENT_CLASSLOADER_BOOT = "boot"; //$NON-NLS-1$
+	public static final String PARENT_CLASSLOADER_EXT = "ext"; //$NON-NLS-1$
+	public static final String PARENT_CLASSLOADER_BOOT = "boot"; //$NON-NLS-1$
 	private static final String PARENT_CLASSLOADER_CURRENT = "current"; //$NON-NLS-1$
 
 	// log file handling

@@ -21,6 +21,7 @@ import com.diffplug.common.collect.Iterables;
 import com.diffplug.common.collect.SortedSetMultimap;
 import com.diffplug.common.collect.TreeMultimap;
 import com.diffplug.gradle.FileMisc;
+import com.diffplug.gradle.eclipserunner.launcher.Main;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +34,6 @@ import org.osgi.framework.Version;
 public class EquinoxInstallation {
 
 	final File installationRoot;
-	final Map<String, String> initProperties = new HashMap<>();
 	final SortedSetMultimap<String, Version> plugins = TreeMultimap.create();
 
 	public EquinoxInstallation(File installationRoot) {
@@ -75,10 +75,6 @@ public class EquinoxInstallation {
 		requireBecause.accept("org.eclipse.core.runtime", "eclipse application support");
 		requireBecause.accept("org.eclipse.equinox.ds", "OSGi declarative services");
 
-		// Init properties
-		initProperties.put("osgi.framework.useSystemProperties", "false");
-		initProperties.put(EclipseStarter.PROP_INSTALL_AREA, installationRoot.getAbsolutePath());
-		initProperties.put(EclipseStarter.PROP_NOSHUTDOWN, "false");
 	}
 
 	public File getPluginRequireSingle(String name) {
@@ -88,15 +84,15 @@ public class EquinoxInstallation {
 		return installationRoot.toPath().resolve("plugins/" + name + "_" + version + ".jar").toFile();
 	}
 
-	// Allow adding further properties
-	public void addInitProperty(String key, String value) {
-		initProperties.put(key, value);
+	public Map<String, String> getInitProperties() {
+		Map<String, String> initProperties = new HashMap<>();
+		initProperties.put("osgi.framework.useSystemProperties", "false");
+		initProperties.put(EclipseStarter.PROP_INSTALL_AREA, installationRoot.getAbsolutePath());
+		initProperties.put(EclipseStarter.PROP_NOSHUTDOWN, "false");
+		initProperties.put(EclipseStarter.PROP_FRAMEWORK, getPluginRequireSingle("org.eclipse.osgi").toURI().toString());
+		String classLoaderKind = JreVersion.thisVm() >= 9 ? Main.PARENT_CLASSLOADER_EXT : Main.PARENT_CLASSLOADER_BOOT;
+		initProperties.put(Main.PROP_PARENT_CLASSLOADER, classLoaderKind);
+		initProperties.put(Main.PROP_FRAMEWORK_PARENT_CLASSLOADER, classLoaderKind);
+		return initProperties;
 	}
-
-	public Map<String, String> getSystemProperties() {
-		Map<String, String> map = new HashMap<>(initProperties);
-		map.put(EclipseStarter.PROP_FRAMEWORK, getPluginRequireSingle("org.eclipse.osgi").toURI().toString());
-		return map;
-	}
-
 }
