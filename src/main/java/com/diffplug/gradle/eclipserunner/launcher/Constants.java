@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 DiffPlug
+ * Copyright (C) 2016-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,24 @@
  */
 package com.diffplug.gradle.eclipserunner.launcher;
 
+/*******************************************************************************
+ * Copyright (c) 2006, 2009 IBM Corporation and others.
+ *
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
+ * which accompanies this distribution, and is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *     Andrew Niefer - IBM Corporation - initial API and implementation
+ *******************************************************************************/
+
 /**
- * Copied straight from Eclipse Mars.2.
- *
- * @author aniefer
- *
+ * Copied on 2021-02-11 straight from https://github.com/eclipse/rt.equinox.framework/blob/7433233fbcf44fe8b82e63a10f8733767e5b3042/bundles/org.eclipse.equinox.launcher/src/org/eclipse/equinox/internal/launcher/Constants.java
  */
-class Constants {
-	public static final String INTERNAL_ARCH_I386 = "i386"; //$NON-NLS-1$
+public class Constants {
 	public static final String INTERNAL_AMD64 = "amd64"; //$NON-NLS-1$
 	public static final String INTERNAL_OS_SUNOS = "SunOS"; //$NON-NLS-1$
 	public static final String INTERNAL_OS_LINUX = "Linux"; //$NON-NLS-1$
