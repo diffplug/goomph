@@ -20,11 +20,8 @@ import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.collect.Iterables;
 import com.diffplug.common.collect.SortedSetMultimap;
 import com.diffplug.common.collect.TreeMultimap;
-import com.diffplug.gradle.ConfigMisc;
 import com.diffplug.gradle.FileMisc;
 import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -36,7 +33,6 @@ import org.osgi.framework.Version;
 public class EquinoxInstallation {
 
 	final File installationRoot;
-	final Map<String, String> bootstrapProperties = new HashMap<>();
 	final Map<String, String> initProperties = new HashMap<>();
 	final SortedSetMultimap<String, Version> plugins = TreeMultimap.create();
 
@@ -83,16 +79,6 @@ public class EquinoxInstallation {
 		initProperties.put("osgi.framework.useSystemProperties", "false");
 		initProperties.put(EclipseStarter.PROP_INSTALL_AREA, installationRoot.getAbsolutePath());
 		initProperties.put(EclipseStarter.PROP_NOSHUTDOWN, "false");
-
-		// Read config.ini from p2
-		File iniFile = installationRoot.toPath().resolve("configuration/config.ini").toFile();
-		if (iniFile.exists()) {
-			try {
-				bootstrapProperties.putAll(ConfigMisc.loadProps(iniFile));
-			} catch (IOException e) {
-				// Ignore for now
-			}
-		}
 	}
 
 	public File getPluginRequireSingle(String name) {
@@ -105,10 +91,6 @@ public class EquinoxInstallation {
 	// Allow adding further properties
 	public void addInitProperty(String key, String value) {
 		initProperties.put(key, value);
-	}
-
-	public Map<String, String> getP2Properties() {
-		return Collections.unmodifiableMap(bootstrapProperties);
 	}
 
 	public Map<String, String> getSystemProperties() {

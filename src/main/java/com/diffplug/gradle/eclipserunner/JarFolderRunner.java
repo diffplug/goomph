@@ -16,7 +16,6 @@
 package com.diffplug.gradle.eclipserunner;
 
 
-import com.diffplug.gradle.ConfigMisc;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -74,19 +73,6 @@ public class JarFolderRunner implements EclipseRunner {
 				addInitProperty.invoke(installation, e.getKey(), e.getValue());
 			}
 
-			Method getP2Properties = installationClazz.getDeclaredMethod("getP2Properties");
-			@SuppressWarnings("unchecked")
-			Map<String, String> properties = (Map<String, String>) getP2Properties.invoke(installation);
-			if (properties.containsKey(PROP_EXTENSIONS)) {
-				List<String> frameworkExtensions = ConfigMisc.tokenize(properties.get(PROP_EXTENSIONS), ",");
-				for (String extension : frameworkExtensions) {
-					ClassPathUtil misc = new ClassPathUtil(rootDirectory.getAbsolutePath());
-					String extFile = misc.searchForBundle(extension);
-					if (extFile != null) {
-						classLoader.addExtensionPath(extFile);
-					}
-				}
-			}
 			Class<?> launcherClazz = classLoader.loadClass("com.diffplug.gradle.eclipserunner.EquinoxLauncher");
 			constructor = launcherClazz.getConstructor(installationClazz);
 			Object launcher = constructor.newInstance(installation);
