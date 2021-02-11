@@ -27,7 +27,7 @@ spotless {
 
 String VER_DURIAN = '1.2.0'
 String VER_DURIAN_SWT = '3.0.0'
-String VER_BNDLIB = '5.0.0'
+String VER_BNDLIB = '5.2.0'
 String OLDEST_SUPPORTED_GRADLE = '5.1'
 String VER_P2_BOOTSTRAP = '4.13.0'
 
@@ -50,6 +50,7 @@ dependencies {
 eclipseMavenCentral {
 	release VER_P2_BOOTSTRAP, {
 		api 'org.eclipse.osgi'
+		api 'org.eclipse.osgi.compatibility.state'
 		compileOnly 'org.eclipse.core.jobs'
 		compileOnly 'org.eclipse.core.runtime'
 		compileOnly 'org.eclipse.core.resources'
