@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 DiffPlug
+ * Copyright (C) 2016-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,24 +20,22 @@ import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.JavaExecWinFriendly;
 import com.diffplug.gradle.SerializableMisc;
 import com.diffplug.gradle.ZipMisc;
+import com.diffplug.gradle.eclipserunner.JarFolderRunner;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 import java.util.jar.Manifest;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleException;
 
 class OsgiExecImp {
 	/** The name of this bundle, which contains the osgiembed package. */
 	private static final String BUNDLE_SYMBOLIC_NAME = "com.diffplug.gradle.goomph";
 
 	/** Returns this bundle within the given OSGi context, initializing it if necessary. */
-	static Bundle loadBundle(BundleContext context) throws BundleException, IOException {
+	static Bundle loadBundle(BundleContext context) throws Exception {
 		// look within the existing bundles
 		for (Bundle bundle : context.getBundles()) {
 			if (OsgiExecImp.BUNDLE_SYMBOLIC_NAME.equals(bundle.getSymbolicName())) {
@@ -45,8 +43,7 @@ class OsgiExecImp {
 			}
 		}
 		// look for our jar on the URLClassLoader path
-		URLClassLoader classLoader = (URLClassLoader) OsgiExecImp.class.getClassLoader();
-		for (URL url : classLoader.getURLs()) {
+		for (URL url : JarFolderRunner.getClasspath(OsgiExecImp.class.getClassLoader())) {
 			String name = url.getFile();
 			if (name != null) {
 				if (name.contains("/goomph")) {
