@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [3.28.0] - 2021-02-12
 ### Added
 Support for Java 11, `ide` task works again for eclipse `4.17` and `4.18` ([#137](https://github.com/diffplug/goomph/pull/137)).
 
