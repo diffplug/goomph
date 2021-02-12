@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 DiffPlug
+ * Copyright (C) 2016-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package com.diffplug.gradle.eclipserunner;
 
 import static java.util.stream.Collectors.toList;
 
-import com.diffplug.common.base.Joiner;
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.collect.ImmutableList;
 import com.diffplug.common.collect.ImmutableMap;
@@ -25,6 +24,7 @@ import com.diffplug.common.collect.Iterables;
 import com.diffplug.common.collect.SortedSetMultimap;
 import com.diffplug.common.collect.TreeMultimap;
 import com.diffplug.gradle.FileMisc;
+import com.diffplug.gradle.eclipserunner.launcher.Main;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -130,16 +130,6 @@ public class EquinoxLauncher {
 	 * map.put("osgi.framework.useSystemProperties", "false");
 	 * map.put("osgi.install.area", <installation root>);
 	 * map.put("osgi.noShutdown", "false");
-	 * // enable 
-	 * map.put("equinox.use.ds", "true");
-	 * map.put("osgi.bundles", Joiner.on(", ").join(
-	 *     // automatic bundle discovery and installation
-	 *     "org.eclipse.equinox.common@2:start",
-	 *     "org.eclipse.update.configurator@3:start",
-	 *     // support eclipse's -application argument
-	 *     "org.eclipse.core.runtime@4:start",
-	 *     // declarative services
-	 *     "org.eclipse.equinox.ds@5:start"));
 	 * 	map.put(EclipseStarter.PROP_FRAMEWORK, <path to plugin "org.eclipse.osgi">);
 	 * ```
 	 */
@@ -214,17 +204,10 @@ public class EquinoxLauncher {
 		map.put("osgi.framework.useSystemProperties", "false");
 		map.put(EclipseStarter.PROP_INSTALL_AREA, installationRoot.getAbsolutePath());
 		map.put(EclipseStarter.PROP_NOSHUTDOWN, "false");
-		// enable 
-		map.put("equinox.use.ds", "true");
-		map.put(EclipseStarter.PROP_BUNDLES, Joiner.on(", ").join(
-				// automatic bundle discovery and installation
-				"org.eclipse.equinox.common@2:start",
-				"org.eclipse.update.configurator@3:start",
-				// support eclipse's -application argument
-				"org.eclipse.core.runtime@4:start",
-				// declarative services
-				"org.eclipse.equinox.ds@5:start"));
 		map.put(EclipseStarter.PROP_FRAMEWORK, getPluginRequireSingle("org.eclipse.osgi").toURI().toString());
+		String classLoaderKind = JreVersion.thisVm() >= 9 ? Main.PARENT_CLASSLOADER_EXT : Main.PARENT_CLASSLOADER_BOOT;
+		map.put(Main.PROP_PARENT_CLASSLOADER, classLoaderKind);
+		map.put(Main.PROP_FRAMEWORK_PARENT_CLASSLOADER, classLoaderKind);
 		return map;
 	}
 
