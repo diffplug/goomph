@@ -1,5 +1,5 @@
 variables:
-  GIT_DEPTH: 100
+  GIT_DEPTH: 0
 
 test-jre8:
   stage: test
