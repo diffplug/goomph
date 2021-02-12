@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2020 DiffPlug
+ * Copyright (C) 2016-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,62 +16,12 @@
 package com.diffplug.gradle.eclipse;
 
 
-import com.diffplug.common.base.StringPrinter;
-import com.diffplug.gradle.Diff;
 import com.diffplug.gradle.GradleIntegrationTest;
 import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class ProjectDepsPluginTest extends GradleIntegrationTest {
-	@Test
-	public void assertClasspathChangedPre2_14() throws IOException {
-		// write the normal eclipse file
-		String plainEclipse = testCase("eclipse", "2.13");
-		// write the excluded build folder file
-		String underTestEclipse = testCase("com.diffplug.eclipse.projectdeps", "2.13");
-		// assert the expected thing was added to the .project file
-		Assert.assertEquals(StringPrinter.buildStringFromLines(
-				"DELETE",
-				"kind=\"src\" path=\"/a",
-				"INSERT",
-				"exported=\"true\" path=\"/a\" kind=\"src\" combineaccessrules=\"true"), Diff.computeDiff(plainEclipse, underTestEclipse));
-	}
-
-	@Test
-	public void assertClasspathChangedPost2_14() throws IOException {
-		// write the normal eclipse file
-		String plainEclipse = testCase("eclipse", "2.14-rc-4");
-		// write the excluded build folder file
-		String underTestEclipse = testCase("com.diffplug.eclipse.projectdeps", "2.14-rc-4");
-		// assert the expected thing was added to the .project file
-		Assert.assertEquals(StringPrinter.buildStringFromLines(
-				"INSERT",
-				" exported=\"true\"",
-				"INSERT",
-				" combineaccessrules=\"true\""), Diff.computeDiff(plainEclipse, underTestEclipse));
-	}
-
-	private String testCase(String pluginId, String version) throws IOException {
-		write("settings.gradle",
-				"include 'a'",
-				"include 'b'");
-		write("build.gradle",
-				"project(':a') {",
-				"	apply plugin: 'java'",
-				"	apply plugin: 'eclipse'",
-				"}",
-				"project(':b') {",
-				"	apply plugin: 'java'",
-				"	dependencies {",
-				"		compile project(':a')",
-				"	}",
-				"}");
-		write("b/build.gradle", "plugins { id '" + pluginId + "' }");
-		gradleRunner().withGradleVersion(version).withArguments("eclipse").build();
-		return read("b/.classpath");
-	}
-
 	@Test
 	public void testReplaceWithProject() throws IOException {
 		write("build.gradle",
