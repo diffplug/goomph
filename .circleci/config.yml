@@ -1,0 +1,35 @@
+version: 2.1
+
+jobs:
+  test_8: 
+    environment:
+      GRADLE_OPTS: "-Dorg.gradle.workers.max=2"
+    docker:
+      - image: cimg/openjdk:8.0
+    steps:
+      - checkout
+      - run:
+          name: gradlew test
+          command: ./gradlew test
+      - store_test_results:
+          path: build/test-results/test
+  test_11: 
+    docker:
+      - image: cimg/openjdk:11.0
+    steps:
+      - checkout
+      - run:
+          name: gradlew test
+          command: ./gradlew test
+      - run:
+          name: gradlew spotlessCheck
+          command: ./gradlew spotlessCheck
+      - store_test_results:
+          path: build/test-results/test
+
+workflows:
+  version: 2
+  workflow:
+    jobs:
+    - test_8
+    - test_11

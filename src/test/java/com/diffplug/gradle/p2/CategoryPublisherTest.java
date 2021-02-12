@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 DiffPlug
+ * Copyright (C) 2020-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.diffplug.gradle.p2;
 
 
+import com.diffplug.gradle.CleanedAssert;
 import com.diffplug.gradle.GradleIntegrationTest;
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +55,7 @@ public class CategoryPublisherTest extends GradleIntegrationTest {
 	 **/
 	@Test
 	public void testCreateUpdateSite() throws IOException {
-
+		CleanedAssert.assumeJre8();
 		write(
 				"build.gradle",
 				"plugins {",
