@@ -11,6 +11,8 @@ jobs:
       - run:
           name: gradlew test
           command: ./gradlew test
+      - store_test_results:
+          path: build/test-results/test
 
 workflows:
   version: 2
