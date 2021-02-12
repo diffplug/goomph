@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2019 DiffPlug
+ * Copyright (C) 2015-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,10 @@
 package com.diffplug.gradle.eclipserunner;
 
 
+import com.diffplug.gradle.JRE;
 import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.List;
 
 /**
@@ -32,8 +35,23 @@ public class JarFolderRunner implements EclipseRunner {
 
 	@Override
 	public void run(List<String> args) throws Exception {
-		EquinoxLauncher launcher = new EquinoxLauncher(rootDirectory);
-		launcher.setArgs(args);
-		launcher.run();
+		ClassLoader parent = null;
+		URL[] bootpath = null;
+		if (JRE.majorVersion() >= 9) {
+			// In J9+ the SystemClassLoader is a AppClassLoader. Thus we need it's parent
+			ClassLoader appClassLoader = ClassLoader.getSystemClassLoader();
+			parent = appClassLoader.getParent();
+			bootpath = JRE.getClasspath(appClassLoader);
+		} else {
+			// Running on Java 8
+			parent = ClassLoader.getSystemClassLoader();
+			bootpath = JRE.getClasspath(parent);
+		}
+		try (URLClassLoader classLoader = new URLClassLoader(bootpath, parent)) {
+			Class<?> launcherClazz = classLoader.loadClass("com.diffplug.gradle.eclipserunner.EquinoxLauncher");
+			Object launcher = launcherClazz.getConstructor(File.class).newInstance(rootDirectory);
+			launcherClazz.getDeclaredMethod("setArgs", List.class).invoke(launcher, args);
+			launcherClazz.getDeclaredMethod("run").invoke(launcher);
+		}
 	}
 }

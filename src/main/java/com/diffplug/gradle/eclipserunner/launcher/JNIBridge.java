@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 DiffPlug
+ * Copyright (C) 2016-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,25 @@
  */
 package com.diffplug.gradle.eclipserunner.launcher;
 
+/*******************************************************************************
+ * Copyright (c) 2006, 2015 IBM Corporation and others.
+ *
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License 2.0
+ * which accompanies this distribution, and is available at
+ * https://www.eclipse.org/legal/epl-2.0/
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Rapicorp, Inc - Default the configuration to Application Support (bug 461725)
+ *******************************************************************************/
+
 /**
- * Copied straight from Eclipse Mars.2.
- *
- * <b>Note:</b> This class should not be referenced programmatically by
- * other Java code. This class exists only for the purpose of interacting with
- * a native launcher. To launch Eclipse programmatically, use 
- * org.eclipse.core.runtime.adaptor.EclipseStarter. This class is not API.
- *
- * @noextend This class is not intended to be subclassed by clients.
- * @noinstantiate This class is not intended to be instantiated by clients.
+ * Copied on 2021-02-11 straight from https://github.com/eclipse/rt.equinox.framework/blob/7433233fbcf44fe8b82e63a10f8733767e5b3042/bundles/org.eclipse.equinox.launcher/src/org/eclipse/equinox/launcher/JNIBridge.java
  */
-class JNIBridge {
+public class JNIBridge {
 	//TODO: This class should not be public
 	private native void _set_exit_data(String sharedId, String data);
 
@@ -51,7 +58,7 @@ class JNIBridge {
 
 	/**
 	 * @noreference This constructor is not intended to be referenced by clients.
-	 * 
+	 *
 	 * @param library the given library
 	 */
 	public JNIBridge(String library) {
@@ -61,7 +68,7 @@ class JNIBridge {
 	private void loadLibrary() {
 		if (library != null) {
 			try {
-				if (library.indexOf("wpf") != -1) { //$NON-NLS-1$
+				if (library.contains("wpf")) { //$NON-NLS-1$
 					int idx = library.indexOf("eclipse_"); //$NON-NLS-1$
 					if (idx != -1) {
 						String comLibrary = library.substring(0, idx) + "com_"; //$NON-NLS-1$
@@ -158,10 +165,10 @@ class JNIBridge {
 	}
 
 	/**
-	 * Whether or not we loaded the shared library here from java.  
+	 * Whether or not we loaded the shared library here from java.
 	 * False does not imply the library is not available, it could have
 	 * been loaded natively by the executable.
-	 * 
+	 *
 	 * @return boolean
 	 */
 	boolean isLibraryLoadedByJava() {
@@ -189,7 +196,7 @@ class JNIBridge {
 	 */
 	public boolean uninitialize() {
 		if (libraryLoaded && library != null) {
-			if (library.indexOf("wpf") != -1) { //$NON-NLS-1$
+			if (library.contains("wpf")) { //$NON-NLS-1$
 				try {
 					OleUninitialize();
 				} catch (UnsatisfiedLinkError e) {

@@ -38,9 +38,7 @@ class P2BootstrapInstallation {
 	static final String VERSIONED_DOWNLOAD_FILE = "/goomph-p2-bootstrap-%s.zip";
 
 	/** List of versions for which we have deployed a bootstrap to bintray. */
-	static final ImmutableSet<EclipseRelease> SUPPORTED = ImmutableSet.of(
-			EclipseRelease.official("4.5.2"),
-			EclipseRelease.official("4.7.2"));
+	static final ImmutableSet<EclipseRelease> SUPPORTED = ImmutableSet.of(EclipseRelease.official("4.13.0"));
 
 	final EclipseRelease release;
 

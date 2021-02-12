@@ -81,12 +81,12 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 #### `com.diffplug.osgi` Plugins for working with OSGi.
 
 * [`bndmanifest`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.27.0/com/diffplug/gradle/osgi/BndManifestPlugin.html) generates a manifest using purely bnd, and outputs it for IDE consumption.
-* [`equinoxlaunch`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.27.0/com/diffplug/gradle/eclipserunner/EquinoxLaunchPlugin.html) can configure and run equinox applications as part of the build, such as a code generator.
+* ([semi-deprecated](#semi-deprecated)) [`equinoxlaunch`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.27.0/com/diffplug/gradle/eclipserunner/EquinoxLaunchPlugin.html) can configure and run equinox applications as part of the build, such as a code generator.
 * [`OsgiExecable`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.27.0/com/diffplug/gradle/osgi/OsgiExecable.html) makes it easy to run a chunk of code within an OSGi container, and get the result from outside the container.
 
 #### `com.diffplug.p2` A  and plugins for manipulating p2 data.
 
-* [`asmaven`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.27.0/com/diffplug/gradle/p2/AsMavenPlugin.html) downloads dependencies from a p2 repository and makes them available in a local maven repository.
+* ([semi-deprecated](#semi-deprecated)) [`asmaven`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.27.0/com/diffplug/gradle/p2/AsMavenPlugin.html) downloads dependencies from a p2 repository and makes them available in a local maven repository.
 * [`P2Model`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.27.0/com/diffplug/gradle/p2/P2Model.html) models a set of p2 repositories and IUs, and provides convenience methods for running p2-director or the p2.mirror ant task against these.
 * [`P2AntRunner`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.27.0/com/diffplug/gradle/p2/P2AntRunner.html) runs eclipse ant tasks.
 * [`CategoryPublisher`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.27.0/com/diffplug/gradle/p2/CategoryPublisher.html) models the CategoryPublisher eclipse application.
@@ -107,6 +107,16 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 #### `com.diffplug.gradle.eclipserunner` Infrastructure for running headless eclipse applications.
 
 * Used to power the infrastructure above.
+
+### Semi-deprecated
+
+Starting with Goomph `3.28.0`, we updated our "bootstrap" from Eclipse `4.7.2` to `4.13.0`. This was required to support Java 11, which is the minimum required for Eclipse `4.17.0` and onward. This upgrade broke several plugins, and we can't figure out why. If your plugin was broken, you can either:
+
+- stay on Goomph `3.27.0`
+- OR take a look at [PR #137](https://github.com/diffplug/goomph/pull/137) and figure out how to restore these plugins
+- OR migrate as shown below
+  - `com.diffplug.p2.asmaven` can download from arbitrary `p2` repositories. It's quite slow. If you only need `jdt`, `pde`, and `emf` artifacts, try switching to [`com.diffplug.eclipse.mavencentral`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.27.0/com/diffplug/gradle/eclipse/MavenCentralPlugin.html). It allows you to download those same artifacts, but using `mavenCentral` rather than `p2`.
+  - For everything else, you either need to stay on `3.27.0`, or fix the problem introduced in #137.
 
 <!---freshmark /javadoc -->
 
