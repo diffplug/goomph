@@ -1,6 +1,16 @@
 # Goomph releases
 
 ## [Unreleased]
+### Added
+Support for Java 11, `ide` task works again for eclipse `4.17` and `4.18` ([#137](https://github.com/diffplug/goomph/pull/137)).
+
+### Removed
+As an unfortunate side-effect of the PR above, the following plugins don't work anymore:
+  - `com.diffplug.swt.nativedeps`
+  - `com.diffplug.p2.asmaven`
+  - `com.diffplug.osgi.equinoxlaunch`
+
+This isn't on purpose, and it seems like it should be avoidable. If you use the plugins above, then you need to stick with `3.27.0`. If you want to fix them, look at the PR above. The code is still in-tree, but their tests are `@Ignored`.
 
 ## [3.27.0] - 2021-02-10
 ### Added
@@ -14,13 +24,13 @@
 ## [3.26.0] - 2020-12-22
 ### Added
 - Eclipse `4.18.0` aka `2020-12` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.18/)).
-  - **WARNING** the `ide` task is still broken with `4.17.0` and `4.18.0` (help wanted, [#129](https://github.com/diffplug/goomph/issues/129))
+  - the `ide` task is ~~still broken with `4.17.0` and `4.18.0`~~ **fixed in `3.28.0`**
   - the `mavencentral` plugin still works great with `4.17.0` and `4.18.0`
 
 ## [3.25.0] - 2020-09-17
 ### Added
 - Eclipse `4.17.0` aka `2020-09` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.17/)).
-  - **WARNING** the `ide` task is currently broken with `4.17.0` (help wanted, [#129](https://github.com/diffplug/goomph/issues/129))
+  - the `ide` task is currently ~~broken with `4.17.0`~~ **fixed in `3.28.0`**
   - the `mavencentral` plugin still works great with `4.17.0`
 
 ## [3.24.0] - 2020-08-04
