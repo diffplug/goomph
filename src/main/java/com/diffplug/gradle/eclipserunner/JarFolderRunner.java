@@ -27,7 +27,6 @@ import java.util.List;
  * a `plugins` folder with the necessary jars.
  */
 public class JarFolderRunner implements EclipseRunner {
-
 	final File rootDirectory;
 
 	public JarFolderRunner(File rootDirectory) {
