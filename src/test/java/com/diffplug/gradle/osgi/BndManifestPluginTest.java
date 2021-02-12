@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2020 DiffPlug
+ * Copyright (C) 2016-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package com.diffplug.gradle.osgi;
 
 
 import com.diffplug.common.base.StringPrinter;
+import com.diffplug.gradle.CleanedAssert;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.GradleIntegrationTest;
 import com.diffplug.gradle.ZipMisc;
@@ -28,17 +29,20 @@ import org.junit.Test;
 public class BndManifestPluginTest extends GradleIntegrationTest {
 	@Test
 	public void assertManifestContentDefaultLocation() throws IOException {
+		CleanedAssert.assumeJre8();
 		testCase("", generatedManifest());
 	}
 
 	@Test
 	public void assertManifestCustomLocation() throws IOException {
+		CleanedAssert.assumeJre8();
 		testCase("osgiBndManifest { copyTo 'customlocation' }", generatedManifest());
 		Assert.assertEquals(generatedManifest().trim(), read("customlocation").trim());
 	}
 
 	@Test
 	public void assertNoMerging() throws IOException {
+		CleanedAssert.assumeJre8();
 		write("src/main/resources/META-INF/MANIFEST.MF",
 				"Manifest-Version: 1.0",
 				"Bundle-ManifestVersion: 2",
@@ -52,6 +56,7 @@ public class BndManifestPluginTest extends GradleIntegrationTest {
 
 	@Test
 	public void assertMerging() throws IOException {
+		CleanedAssert.assumeJre8();
 		write("src/main/resources/META-INF/MANIFEST.MF",
 				"Manifest-Version: 1.0",
 				"Bundle-ManifestVersion: 2",
@@ -75,6 +80,7 @@ public class BndManifestPluginTest extends GradleIntegrationTest {
 
 	@Test
 	public void assertCustomJarTask() throws IOException {
+		CleanedAssert.assumeJre8();
 		write("src/main/resources/META-INF/MANIFEST.MF",
 				"Manifest-Version: 1.0",
 				"Bundle-ManifestVersion: 2",
@@ -113,6 +119,7 @@ public class BndManifestPluginTest extends GradleIntegrationTest {
 
 	@Test
 	public void assertCustomJarOnly() throws IOException {
+		CleanedAssert.assumeJre8();
 		write("src/main/resources/META-INF/MANIFEST.MF",
 				"Manifest-Version: 1.0",
 				"Bundle-ManifestVersion: 2",
