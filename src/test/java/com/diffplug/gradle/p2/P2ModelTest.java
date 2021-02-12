@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 DiffPlug
+ * Copyright (C) 2016-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package com.diffplug.gradle.p2;
 
 
 import com.diffplug.common.base.StringPrinter;
+import com.diffplug.gradle.CleanedAssert;
 import com.diffplug.gradle.FileMisc;
 import java.io.File;
 import org.junit.Assert;
@@ -75,7 +76,7 @@ public class P2ModelTest {
 				"    <iu id=\"com.diffplug.otheriu\" version=\"1.0.0\"/>",
 				"  </p2.mirror>",
 				"</project>");
-		Assert.assertEquals(expected, actual);
+		CleanedAssert.xml(expected, actual);
 	}
 
 	@Test
@@ -106,7 +107,7 @@ public class P2ModelTest {
 				"    <slicingOptions filter=\"key=value\" latestVersionOnly=\"true\" platformfilter=\"win32,win32,x86\"/>",
 				"  </p2.mirror>",
 				"</project>");
-		Assert.assertEquals(expected, actual);
+		CleanedAssert.xml(expected, actual);
 	}
 
 	@Test
@@ -134,7 +135,7 @@ public class P2ModelTest {
 				"    <iu id=\"com.diffplug.otheriu\" version=\"1.0.0\"/>",
 				"  </p2.mirror>",
 				"</project>");
-		Assert.assertEquals(expected, actual);
+		CleanedAssert.xml(expected, actual);
 	}
 
 	@Test
@@ -161,6 +162,6 @@ public class P2ModelTest {
 				"    <iu id=\"com.diffplug.otheriu\" version=\"1.0.0\"/>",
 				"  </p2.mirror>",
 				"</project>");
-		Assert.assertEquals(expected, actual);
+		CleanedAssert.xml(expected, actual);
 	}
 }

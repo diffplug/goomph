@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 DiffPlug
+ * Copyright (C) 2016-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.diffplug.gradle.eclipserunner;
 
 import com.diffplug.common.base.Joiner;
 import com.diffplug.common.base.StringPrinter;
+import com.diffplug.gradle.CleanedAssert;
 import groovy.util.Node;
 import org.junit.Assert;
 import org.junit.Test;
@@ -52,11 +53,11 @@ public class EclipseAppTest {
 		ant.setTask(task);
 
 		Assert.assertEquals("--launcher.suppressErrors -nosplash -application org.eclipse.ant.core.antRunner -Dkey=value", Joiner.on(" ").join(ant.toArgList()));
-		Assert.assertEquals(StringPrinter.buildStringFromLines(
+		CleanedAssert.xml(StringPrinter.buildStringFromLines(
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><project>",
 				"  <anttask prop=\"propvalue\"/>",
 				"</project>"), ant.buildXml());
-		Assert.assertEquals(StringPrinter.buildStringFromLines(
+		CleanedAssert.xml(StringPrinter.buildStringFromLines(
 				"### ARGS ###",
 				"--launcher.suppressErrors",
 				"-nosplash",
