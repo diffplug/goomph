@@ -1,0 +1,9 @@
+test-jre8:
+  stage: test
+  image: cimg/openjdk:8.0
+  script:
+    - ./gradlew test
+  artifacts:
+    when: always
+    reports:
+      junit: build/test-results/test/**/TEST-*.xml
