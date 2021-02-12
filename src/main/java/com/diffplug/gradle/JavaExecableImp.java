@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 DiffPlug
+ * Copyright (C) 2016-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@
 package com.diffplug.gradle;
 
 
+import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Throwing;
 import com.diffplug.common.base.Unhandled;
 import java.io.File;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -42,13 +42,15 @@ class JavaExecableImp {
 			SerializableMisc.write(tempFile, input);
 			ExecResult execResult = javaExecer.apply(execSpec -> {
 				// let the user change things
-				settings.execute(
-						// use the main below as the main
-						execSpec.setMain(JavaExecable.class.getName())
-								// pass the input object to the main
-								.args(tempFile.getAbsolutePath())
-								// set the nominal classpath
-								.setClasspath(classpath));
+				settings.execute((JavaExecSpec)
+				// use the main below as the main
+				execSpec.setMain(JavaExecable.class.getName())
+						// pass the input object to the main
+						.args(tempFile.getAbsolutePath())
+						// set the nominal classpath
+						.setClasspath(classpath)
+						// Needed for Java 9+
+						.jvmArgs("-XX:+IgnoreUnrecognizedVMOptions", "--add-modules=ALL-SYSTEM", "--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED"));
 			});
 			execResult.rethrowFailure();
 			// load the resultant object after it has been executed and resaved
@@ -69,12 +71,15 @@ class JavaExecableImp {
 	static Set<File> fromLocalClassloader() {
 		Set<File> files = new LinkedHashSet<>();
 		Consumer<Class<?>> addPeerClasses = clazz -> {
-			URLClassLoader urlClassloader = (URLClassLoader) clazz.getClassLoader();
-			for (URL url : urlClassloader.getURLs()) {
-				String name = url.getFile();
-				if (name != null) {
-					files.add(new File(name));
+			try {
+				for (URL url : JRE.getClasspath(clazz.getClassLoader())) {
+					String name = url.getFile();
+					if (name != null) {
+						files.add(new File(name));
+					}
 				}
+			} catch (Exception e) {
+				throw Errors.asRuntime(e);
 			}
 		};
 		// add the classes that goomph needs
