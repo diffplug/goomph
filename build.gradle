@@ -68,7 +68,12 @@ configurations.all {
 	exclude group: 'com.sun.jna', module: 'com.sun.jna.platform'
 }
 
-test.testLogging.exceptionFormat = 'full'
+test {
+	if(JavaVersion.current() != JavaVersion.VERSION_1_8) {
+		jvmArgs '--add-modules=ALL-SYSTEM', '--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED'
+	}
+	testLogging.exceptionFormat = 'full'
+}
 
 ///////////////////
 // OSGi metadata //
