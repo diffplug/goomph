@@ -16,11 +16,11 @@
 package com.diffplug.gradle;
 
 
+import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Throwing;
 import com.diffplug.common.base.Unhandled;
 import java.io.File;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -71,12 +71,15 @@ class JavaExecableImp {
 	static Set<File> fromLocalClassloader() {
 		Set<File> files = new LinkedHashSet<>();
 		Consumer<Class<?>> addPeerClasses = clazz -> {
-			URLClassLoader urlClassloader = (URLClassLoader) clazz.getClassLoader();
-			for (URL url : urlClassloader.getURLs()) {
-				String name = url.getFile();
-				if (name != null) {
-					files.add(new File(name));
+			try {
+				for (URL url : JRE.getClasspath(clazz.getClassLoader())) {
+					String name = url.getFile();
+					if (name != null) {
+						files.add(new File(name));
+					}
 				}
+			} catch (Exception e) {
+				throw Errors.asRuntime(e);
 			}
 		};
 		// add the classes that goomph needs

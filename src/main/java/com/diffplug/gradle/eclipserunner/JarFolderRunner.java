@@ -16,8 +16,8 @@
 package com.diffplug.gradle.eclipserunner;
 
 
+import com.diffplug.gradle.JRE;
 import java.io.File;
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
@@ -38,15 +38,15 @@ public class JarFolderRunner implements EclipseRunner {
 	public void run(List<String> args) throws Exception {
 		ClassLoader parent = null;
 		URL[] bootpath = null;
-		if (JreVersion.thisVm() >= 9) {
+		if (JRE.majorVersion() >= 9) {
 			// In J9+ the SystemClassLoader is a AppClassLoader. Thus we need it's parent
 			ClassLoader appClassLoader = ClassLoader.getSystemClassLoader();
 			parent = appClassLoader.getParent();
-			bootpath = getClasspath(appClassLoader);
+			bootpath = JRE.getClasspath(appClassLoader);
 		} else {
 			// Running on Java 8
 			parent = ClassLoader.getSystemClassLoader();
-			bootpath = getClasspath(parent);
+			bootpath = JRE.getClasspath(parent);
 		}
 		try (URLClassLoader classLoader = new URLClassLoader(bootpath, parent)) {
 			Class<?> launcherClazz = classLoader.loadClass("com.diffplug.gradle.eclipserunner.EquinoxLauncher");
@@ -55,23 +55,4 @@ public class JarFolderRunner implements EclipseRunner {
 			launcherClazz.getDeclaredMethod("run").invoke(launcher);
 		}
 	}
-
-	/** Returns the classpath of either a URLClassLoader or a Java9+ AppClassLoader. */
-	public static URL[] getClasspath(ClassLoader classLoader) throws Exception {
-		if (classLoader instanceof URLClassLoader) {
-			return ((URLClassLoader) classLoader).getURLs();
-		} else {
-			// Assume AppClassLoader of Java9+
-			Class<? extends ClassLoader> clz = classLoader.getClass();
-			Field ucpFld = clz.getDeclaredField("ucp");
-			ucpFld.setAccessible(true);
-			Object ucpObj = ucpFld.get(classLoader);
-			Field pathFld = ucpObj.getClass().getDeclaredField("path");
-			pathFld.setAccessible(true);
-			@SuppressWarnings("unchecked")
-			List<URL> pathObj = (List<URL>) pathFld.get(ucpObj);
-			return pathObj.toArray(new URL[pathObj.size()]);
-		}
-	}
-
 }

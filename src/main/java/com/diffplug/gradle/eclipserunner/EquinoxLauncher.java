@@ -24,6 +24,7 @@ import com.diffplug.common.collect.Iterables;
 import com.diffplug.common.collect.SortedSetMultimap;
 import com.diffplug.common.collect.TreeMultimap;
 import com.diffplug.gradle.FileMisc;
+import com.diffplug.gradle.JRE;
 import com.diffplug.gradle.eclipserunner.launcher.Main;
 import java.io.File;
 import java.util.HashMap;
@@ -205,7 +206,7 @@ public class EquinoxLauncher {
 		map.put(EclipseStarter.PROP_INSTALL_AREA, installationRoot.getAbsolutePath());
 		map.put(EclipseStarter.PROP_NOSHUTDOWN, "false");
 		map.put(EclipseStarter.PROP_FRAMEWORK, getPluginRequireSingle("org.eclipse.osgi").toURI().toString());
-		String classLoaderKind = JreVersion.thisVm() >= 9 ? Main.PARENT_CLASSLOADER_EXT : Main.PARENT_CLASSLOADER_BOOT;
+		String classLoaderKind = JRE.majorVersion() >= 9 ? Main.PARENT_CLASSLOADER_EXT : Main.PARENT_CLASSLOADER_BOOT;
 		map.put(Main.PROP_PARENT_CLASSLOADER, classLoaderKind);
 		map.put(Main.PROP_FRAMEWORK_PARENT_CLASSLOADER, classLoaderKind);
 		return map;

@@ -13,14 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.diffplug.gradle.eclipserunner;
+package com.diffplug.gradle;
 
 
+import java.lang.reflect.Field;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class JreVersion {
-	public static int thisVm() {
+public class JRE {
+	/** Returns 8, 9, 10, etc. */
+	public static int majorVersion() {
 		String jre = System.getProperty("java.version");
 		if (jre.startsWith("1.8")) {
 			return 8;
@@ -34,6 +39,24 @@ class JreVersion {
 				throw new IllegalArgumentException("Expected " + jre + " to start with an integer greater than 8");
 			}
 			return version;
+		}
+	}
+
+	/** Returns the classpath of either a URLClassLoader or a Java9+ AppClassLoader. */
+	public static URL[] getClasspath(ClassLoader classLoader) throws Exception {
+		if (classLoader instanceof URLClassLoader) {
+			return ((URLClassLoader) classLoader).getURLs();
+		} else {
+			// Assume AppClassLoader of Java9+
+			Class<? extends ClassLoader> clz = classLoader.getClass();
+			Field ucpFld = clz.getDeclaredField("ucp");
+			ucpFld.setAccessible(true);
+			Object ucpObj = ucpFld.get(classLoader);
+			Field pathFld = ucpObj.getClass().getDeclaredField("path");
+			pathFld.setAccessible(true);
+			@SuppressWarnings("unchecked")
+			List<URL> pathObj = (List<URL>) pathFld.get(ucpObj);
+			return pathObj.toArray(new URL[pathObj.size()]);
 		}
 	}
 }
