@@ -20,7 +20,7 @@ import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.JavaExecWinFriendly;
 import com.diffplug.gradle.SerializableMisc;
 import com.diffplug.gradle.ZipMisc;
-import com.diffplug.gradle.eclipserunner.ClassPathUtil;
+import com.diffplug.gradle.eclipserunner.JarFolderRunner;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -43,8 +43,7 @@ class OsgiExecImp {
 			}
 		}
 		// look for our jar on the URLClassLoader path
-		URL[] urls = ClassPathUtil.getClasspath(OsgiExecImp.class.getClassLoader());
-		for (URL url : urls) {
+		for (URL url : JarFolderRunner.getClasspath(OsgiExecImp.class.getClassLoader())) {
 			String name = url.getFile();
 			if (name != null) {
 				if (name.contains("/goomph")) {
