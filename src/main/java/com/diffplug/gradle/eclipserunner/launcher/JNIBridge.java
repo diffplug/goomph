@@ -57,7 +57,7 @@ public class JNIBridge {
 	private boolean libraryLoaded = false;
 
 	/**
-	 * @noreference This constructor is not intended to be referenced by clients.
+	 * This constructor is not intended to be referenced by clients.
 	 *
 	 * @param library the given library
 	 */
@@ -86,7 +86,7 @@ public class JNIBridge {
 	}
 
 	/**
-	 * @noreference This method is not intended to be referenced by clients.
+	 * This method is not intended to be referenced by clients.
 	 */
 	public boolean setExitData(String sharedId, String data) {
 		try {
@@ -102,7 +102,7 @@ public class JNIBridge {
 	}
 
 	/**
-	 * @noreference This method is not intended to be referenced by clients
+	 * This method is not intended to be referenced by clients
 	 */
 	public boolean setLauncherInfo(String launcher, String name) {
 		try {
@@ -118,7 +118,7 @@ public class JNIBridge {
 	}
 
 	/**
-	 * @noreference This method is not intended to be referenced by clients.
+	 * This method is not intended to be referenced by clients.
 	 */
 	public boolean showSplash(String bitmap) {
 		try {
@@ -134,7 +134,7 @@ public class JNIBridge {
 	}
 
 	/**
-	 * @noreference This method is not intended to be referenced by clients.
+	 * This method is not intended to be referenced by clients.
 	 */
 	public boolean updateSplash() {
 		try {
@@ -150,7 +150,7 @@ public class JNIBridge {
 	}
 
 	/**
-	 * @noreference This method is not intended to be referenced by clients.
+	 * This method is not intended to be referenced by clients.
 	 */
 	public long getSplashHandle() {
 		try {
@@ -176,7 +176,7 @@ public class JNIBridge {
 	}
 
 	/**
-	 * @noreference This method is not intended to be referenced by clients.
+	 * This method is not intended to be referenced by clients.
 	 */
 	public boolean takeDownSplash() {
 		try {
@@ -192,7 +192,7 @@ public class JNIBridge {
 	}
 
 	/**
-	 * @noreference This method is not intended to be referenced by clients.
+	 * This method is not intended to be referenced by clients.
 	 */
 	public boolean uninitialize() {
 		if (libraryLoaded && library != null) {

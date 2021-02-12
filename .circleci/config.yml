@@ -24,6 +24,9 @@ jobs:
       - run:
           name: gradlew spotlessCheck
           command: ./gradlew spotlessCheck
+      - run:
+          name: gradlew javadoc
+          command: ./gradlew javadoc
       - store_test_results:
           path: build/test-results/test
 
