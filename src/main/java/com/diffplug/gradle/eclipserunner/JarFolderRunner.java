@@ -17,10 +17,15 @@ package com.diffplug.gradle.eclipserunner;
 
 
 import com.diffplug.gradle.JRE;
+import com.diffplug.gradle.JavaExecWinFriendly;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.jar.JarFile;
 
 /**
  * Runs an `EclipseApp` within this JVM using a folder containing
@@ -35,23 +40,48 @@ public class JarFolderRunner implements EclipseRunner {
 
 	@Override
 	public void run(List<String> args) throws Exception {
+		File plugins = new File(rootDirectory, "plugins");
+		List<URL> osgiClasspath = new ArrayList<>();
+		for (File plugin : plugins.listFiles()) {
+			if (plugin.isFile() && plugin.getName().endsWith(".jar")) {
+				osgiClasspath.add(plugin.toURI().toURL());
+			}
+		}
 		ClassLoader parent = null;
-		URL[] bootpath = null;
+		URL[] boot;
 		if (JRE.majorVersion() >= 9) {
 			// In J9+ the SystemClassLoader is a AppClassLoader. Thus we need it's parent
 			ClassLoader appClassLoader = ClassLoader.getSystemClassLoader();
 			parent = appClassLoader.getParent();
-			bootpath = JRE.getClasspath(appClassLoader);
+			boot = JRE.getClasspath(appClassLoader);
 		} else {
 			// Running on Java 8
 			parent = ClassLoader.getSystemClassLoader();
-			bootpath = JRE.getClasspath(parent);
+			boot = JRE.getClasspath(parent);
 		}
-		try (URLClassLoader classLoader = new URLClassLoader(bootpath, parent)) {
+		add(osgiClasspath, boot);
+		try (URLClassLoader classLoader = new URLClassLoader(osgiClasspath.toArray(new URL[0]), parent)) {
 			Class<?> launcherClazz = classLoader.loadClass("com.diffplug.gradle.eclipserunner.EquinoxLauncher");
 			Object launcher = launcherClazz.getConstructor(File.class).newInstance(rootDirectory);
 			launcherClazz.getDeclaredMethod("setArgs", List.class).invoke(launcher, args);
 			launcherClazz.getDeclaredMethod("run").invoke(launcher);
+		}
+	}
+
+	private void add(List<URL> osgiClasspath, URL[] boot) throws IOException {
+		if (boot == null || boot.length == 0) {
+			return;
+		}
+		File only = new File(boot[0].getFile());
+		if (boot.length == 1 && only.getName().startsWith(JavaExecWinFriendly.LONG_CLASSPATH_JAR_PREFIX)) {
+			try (JarFile file = new JarFile(only)) {
+				String cp = file.getManifest().getMainAttributes().getValue("Class-Path");
+				for (String entry : cp.split(" ")) {
+					osgiClasspath.add(new URL(entry));
+				}
+			}
+		} else {
+			osgiClasspath.addAll(Arrays.asList(boot));
 		}
 	}
 }
