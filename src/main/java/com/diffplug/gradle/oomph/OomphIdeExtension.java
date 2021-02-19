@@ -470,7 +470,7 @@ public class OomphIdeExtension implements P2Declarative {
 	}
 
 	/** Sets up an IDE as described in this model from scratch. */
-	void ideSetupWorkspace() throws Exception {
+	void ideSetupWorkspace() throws Throwable {
 		if (workspaceExists()) {
 			project.getLogger().lifecycle("Skipping " + OomphIdePlugin.IDE_SETUP_WORKSPACE + " because it already exists, run " + OomphIdePlugin.IDE_CLEAN + " to force a rebuild.");
 		}
@@ -521,7 +521,7 @@ public class OomphIdeExtension implements P2Declarative {
 	}
 
 	/** Performs setup actions with a running OSGi container. */
-	private void internalSetup(File ideDir) throws IOException {
+	private void internalSetup(File ideDir) throws Throwable {
 		// get the user setup actions
 		List<SetupAction> list = setupActions.getResult();
 		// add the project importer
@@ -532,7 +532,7 @@ public class OomphIdeExtension implements P2Declarative {
 		ordered.add(new SaveWorkspace());
 
 		SetupWithinEclipse internal = new SetupWithinEclipse(ideDir, ordered);
-		Errors.constrainTo(IOException.class).run(() -> JavaExecable.exec(project, internal));
+		JavaExecable.exec(project, internal);
 	}
 
 	/////////
