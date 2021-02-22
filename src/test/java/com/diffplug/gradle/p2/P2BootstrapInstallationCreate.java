@@ -29,6 +29,7 @@ import java.io.File;
  * - run `eclipsec.exe -application org.eclipse.equinox.p2.director -repository https://download.eclipse.org/eclipse/updates/4.13/R-4.13-201909161045/ -installIU org.eclipse.equinox.p2.core.feature.feature.group,org.eclipse.equinox.p2.director.app,org.eclipse.equinox.p2.repository.tools,org.eclipse.core.net,org.eclipse.osgi.compatibility.state,org.eclipse.ant.core,org.apache.ant,org.eclipse.core.runtime,org.eclipse.update.configurator,org.eclipse.equinox.ds,org.eclipse.equinox.p2.reconciler.dropins -tag InitialState -destination result -profile SDKProfile -profileProperties org.eclipse.update.install.features=true`
  * - delete `features` and `p2/org.eclipse.equinox.p2.engine`
  * - generate `configuration/config.ini` and `configuration/org.eclipse.equinox.simpleconfigurator/bundles.info`
+ * - TODO: add org.eclipse.equinox.supplement to the bootstrapper to fix apparently bening warning
  */
 public class P2BootstrapInstallationCreate {
 	/** The release to install.  Make sure that build.gradle's org.eclipse.platform:org.eclipse.osgi:VERSION matches the version from this release. */
@@ -36,6 +37,8 @@ public class P2BootstrapInstallationCreate {
 	/** The place to install the release to. */
 	static final File INSTALL_TO = new File(StandardSystemProperty.USER_HOME.value() + "/Downloads/bootstrap");
 
+	// to run this, you will need to add the following vm arguments to the run configuration:
+	// "--add-modules=ALL-SYSTEM", "--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED"
 	public static void main(String[] args) throws Exception {
 		FileMisc.cleanDir(INSTALL_TO);
 		P2BootstrapInstallation installation = new P2BootstrapInstallation(RELEASE);
