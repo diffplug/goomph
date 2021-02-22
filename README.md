@@ -81,7 +81,7 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 #### `com.diffplug.osgi` Plugins for working with OSGi.
 
 * [`bndmanifest`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.28.0/com/diffplug/gradle/osgi/BndManifestPlugin.html) generates a manifest using purely bnd, and outputs it for IDE consumption.
-* ([semi-deprecated](#semi-deprecated)) [`equinoxlaunch`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.28.0/com/diffplug/gradle/eclipserunner/EquinoxLaunchPlugin.html) can configure and run equinox applications as part of the build, such as a code generator.
+* [`equinoxlaunch`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.28.0/com/diffplug/gradle/eclipserunner/EquinoxLaunchPlugin.html) can configure and run equinox applications as part of the build, such as a code generator.
 * [`OsgiExecable`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.28.0/com/diffplug/gradle/osgi/OsgiExecable.html) makes it easy to run a chunk of code within an OSGi container, and get the result from outside the container.
 
 #### `com.diffplug.p2` A  and plugins for manipulating p2 data.
