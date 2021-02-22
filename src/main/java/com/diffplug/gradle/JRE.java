@@ -16,10 +16,14 @@
 package com.diffplug.gradle;
 
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,8 +48,9 @@ public class JRE {
 
 	/** Returns the classpath of either a URLClassLoader or a Java9+ AppClassLoader. */
 	public static URL[] getClasspath(ClassLoader classLoader) throws Exception {
+		URL[] urls;
 		if (classLoader instanceof URLClassLoader) {
-			return ((URLClassLoader) classLoader).getURLs();
+			urls = ((URLClassLoader) classLoader).getURLs();
 		} else {
 			// Assume AppClassLoader of Java9+
 			Class<? extends ClassLoader> clz = classLoader.getClass();
@@ -56,7 +61,27 @@ public class JRE {
 			pathFld.setAccessible(true);
 			@SuppressWarnings("unchecked")
 			List<URL> pathObj = (List<URL>) pathFld.get(ucpObj);
-			return pathObj.toArray(new URL[pathObj.size()]);
+			urls = pathObj.toArray(new URL[pathObj.size()]);
+		}
+		return extractLongClasspathJar(urls);
+	}
+
+	private static URL[] extractLongClasspathJar(URL[] in) throws IOException {
+		if (in == null || in.length == 0) {
+			return new URL[0];
+		}
+		File only = new File(in[0].getFile());
+		if (in.length == 1 && only.getName().startsWith(JavaExecWinFriendly.LONG_CLASSPATH_JAR_PREFIX)) {
+			List<URL> urls = new ArrayList<>();
+			try (JarFile file = new JarFile(only)) {
+				String cp = file.getManifest().getMainAttributes().getValue("Class-Path");
+				for (String entry : cp.split(" ")) {
+					urls.add(new URL(entry));
+				}
+			}
+			return urls.toArray(new URL[0]);
+		} else {
+			return in;
 		}
 	}
 }

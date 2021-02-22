@@ -17,15 +17,12 @@ package com.diffplug.gradle.eclipserunner;
 
 
 import com.diffplug.gradle.JRE;
-import com.diffplug.gradle.JavaExecWinFriendly;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.jar.JarFile;
 
 /**
  * Runs an `EclipseApp` within this JVM using a folder containing
@@ -59,29 +56,12 @@ public class JarFolderRunner implements EclipseRunner {
 			parent = ClassLoader.getSystemClassLoader();
 			boot = JRE.getClasspath(parent);
 		}
-		add(osgiClasspath, boot);
+		osgiClasspath.addAll(Arrays.asList(boot));
 		try (URLClassLoader classLoader = new URLClassLoader(osgiClasspath.toArray(new URL[0]), parent)) {
 			Class<?> launcherClazz = classLoader.loadClass("com.diffplug.gradle.eclipserunner.EquinoxLauncher");
 			Object launcher = launcherClazz.getConstructor(File.class).newInstance(rootDirectory);
 			launcherClazz.getDeclaredMethod("setArgs", List.class).invoke(launcher, args);
 			launcherClazz.getDeclaredMethod("run").invoke(launcher);
-		}
-	}
-
-	private void add(List<URL> osgiClasspath, URL[] boot) throws IOException {
-		if (boot == null || boot.length == 0) {
-			return;
-		}
-		File only = new File(boot[0].getFile());
-		if (boot.length == 1 && only.getName().startsWith(JavaExecWinFriendly.LONG_CLASSPATH_JAR_PREFIX)) {
-			try (JarFile file = new JarFile(only)) {
-				String cp = file.getManifest().getMainAttributes().getValue("Class-Path");
-				for (String entry : cp.split(" ")) {
-					osgiClasspath.add(new URL(entry));
-				}
-			}
-		} else {
-			osgiClasspath.addAll(Arrays.asList(boot));
 		}
 	}
 }
