@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+### Fixed
+* `ide` task can now correctly configure the workspace, also fixed `com.diffplug.osgi.equinoxlaunch`. ([#140](https://github.com/diffplug/goomph/pull/140))
 
 ## [3.28.0] - 2021-02-12
 ### Added

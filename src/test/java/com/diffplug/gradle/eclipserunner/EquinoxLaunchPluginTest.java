@@ -19,10 +19,8 @@ package com.diffplug.gradle.eclipserunner;
 import com.diffplug.gradle.GradleIntegrationTest;
 import java.io.IOException;
 import org.assertj.core.api.Assertions;
-import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore
 public class EquinoxLaunchPluginTest extends GradleIntegrationTest {
 	@Test
 	public void simpleTestCase() throws IOException, InterruptedException {
@@ -47,7 +45,7 @@ public class EquinoxLaunchPluginTest extends GradleIntegrationTest {
 		// Not as good as asserting a complete success, but at least it asserts
 		// that we don't duplicate the error in #92
 		Assertions.assertThat(
-				gradleRunner().withArguments("headlessApp")
+				gradleRunner().withArguments("headlessApp", "--stacktrace")
 						.buildAndFail().getOutput())
 				.contains("org.eclipse.osgi is required");
 	}

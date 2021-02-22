@@ -111,6 +111,8 @@ class P2BootstrapInstallation {
 		model.addIU("org.eclipse.core.net");
 		// failed transitive required for shared installations touchpoints
 		model.addIU("org.eclipse.osgi.compatibility.state");
+		// failed transitive to fix error messages
+		model.addIU("org.eclipse.equinox.supplement");
 		// ant tasks
 		model.addIU("org.eclipse.ant.core");
 		model.addIU("org.apache.ant");
