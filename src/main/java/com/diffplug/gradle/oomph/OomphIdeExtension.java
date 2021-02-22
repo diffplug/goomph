@@ -535,7 +535,7 @@ public class OomphIdeExtension implements P2Declarative {
 
 		SetupWithinEclipse internal = new SetupWithinEclipse(ideDir, ordered);
 		JavaExecable.exec(project, internal, execSpec -> {
-			FileCollection cp = execSpec.getClasspath().filter(file -> file.getName().startsWith("org.eclipse."))
+			FileCollection cp = execSpec.getClasspath().filter(file -> !file.getName().startsWith("org.eclipse."))
 					.plus(project.files(EclipseIniLauncher.parseBundlesDotInfo(ideDir)));
 			execSpec.setClasspath(cp);
 		});

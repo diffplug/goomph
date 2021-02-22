@@ -16,17 +16,14 @@
 package com.diffplug.gradle.oomph;
 
 
-import com.diffplug.common.base.Errors;
 import com.diffplug.gradle.JavaExecable;
-import com.diffplug.gradle.eclipserunner.EclipseIniLauncher;
 import com.diffplug.gradle.eclipserunner.JarFolderRunner;
 import com.diffplug.gradle.osgi.OsgiExecable;
 import java.io.File;
-import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import org.gradle.internal.impldep.com.google.common.collect.Lists;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -49,10 +46,7 @@ class SetupWithinEclipse implements JavaExecable {
 
 	@Override
 	public void run() throws Throwable {
-		List<URL> osgiClasspath = Lists.transform(
-				EclipseIniLauncher.parseBundlesDotInfo(eclipseRoot),
-				f -> Errors.rethrow().get(() -> f.toURI().toURL()));
-		try (URLClassLoader classLoader = JarFolderRunner.open(osgiClasspath)) {
+		try (URLClassLoader classLoader = JarFolderRunner.open(Collections.emptyList())) {
 			Class<?> launcherClazz = classLoader.loadClass("com.diffplug.gradle.eclipserunner.EclipseIniLauncher");
 			Object launcher = launcherClazz.getConstructor(File.class).newInstance(eclipseRoot);
 			try (AutoCloseable running = (AutoCloseable) launcherClazz.getMethod("open").invoke(launcher)) {
