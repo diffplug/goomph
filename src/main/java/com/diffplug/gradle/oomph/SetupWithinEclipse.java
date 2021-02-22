@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2021 DiffPlug
+ * Copyright (C) 2016-2019 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,11 @@ package com.diffplug.gradle.oomph;
 
 
 import com.diffplug.gradle.JavaExecable;
-import com.diffplug.gradle.eclipserunner.JarFolderRunner;
+import com.diffplug.gradle.eclipserunner.EclipseIniLauncher;
 import com.diffplug.gradle.osgi.OsgiExecable;
 import java.io.File;
-import java.net.URLClassLoader;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import org.osgi.framework.BundleContext;
 
 /**
  * Runs a series of actions with the OSGi context.
@@ -46,20 +43,16 @@ class SetupWithinEclipse implements JavaExecable {
 
 	@Override
 	public void run() throws Throwable {
-		try (URLClassLoader classLoader = JarFolderRunner.open(Collections.emptyList())) {
-			Class<?> launcherClazz = classLoader.loadClass("com.diffplug.gradle.eclipserunner.EclipseIniLauncher");
-			Object launcher = launcherClazz.getConstructor(File.class).newInstance(eclipseRoot);
-			try (AutoCloseable running = (AutoCloseable) launcherClazz.getMethod("open").invoke(launcher)) {
-				BundleContext context = (BundleContext) running.getClass().getMethod("bundleContext").invoke(running);
-				// run the plugins
-				System.out.println("Running internal setup actions...");
-				for (SetupAction action : actionsWithinEclipse) {
-					System.out.print("    " + action.getDescription() + "... ");
-					OsgiExecable.exec(context, action);
-					System.out.println("done.");
-				}
-				System.out.println("Internal setup complete.");
+		EclipseIniLauncher launcher = new EclipseIniLauncher(eclipseRoot);
+		try (EclipseIniLauncher.Running running = launcher.open()) {
+			// run the plugins
+			System.out.println("Running internal setup actions...");
+			for (SetupAction action : actionsWithinEclipse) {
+				System.out.print("    " + action.getDescription() + "... ");
+				OsgiExecable.exec(running.bundleContext(), action);
+				System.out.println("done.");
 			}
+			System.out.println("Internal setup complete.");
 		}
 	}
 }
