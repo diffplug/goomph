@@ -44,6 +44,15 @@ public class JarFolderRunner implements EclipseRunner {
 				osgiClasspath.add(plugin.toURI().toURL());
 			}
 		}
+		try (URLClassLoader classLoader = open(osgiClasspath)) {
+			Class<?> launcherClazz = classLoader.loadClass("com.diffplug.gradle.eclipserunner.EquinoxLauncher");
+			Object launcher = launcherClazz.getConstructor(File.class).newInstance(rootDirectory);
+			launcherClazz.getDeclaredMethod("setArgs", List.class).invoke(launcher, args);
+			launcherClazz.getDeclaredMethod("run").invoke(launcher);
+		}
+	}
+
+	public static URLClassLoader open(List<URL> urls) throws Exception {
 		ClassLoader parent = null;
 		URL[] boot;
 		if (JRE.majorVersion() >= 9) {
@@ -56,12 +65,9 @@ public class JarFolderRunner implements EclipseRunner {
 			parent = ClassLoader.getSystemClassLoader();
 			boot = JRE.getClasspath(parent);
 		}
-		osgiClasspath.addAll(Arrays.asList(boot));
-		try (URLClassLoader classLoader = new URLClassLoader(osgiClasspath.toArray(new URL[0]), parent)) {
-			Class<?> launcherClazz = classLoader.loadClass("com.diffplug.gradle.eclipserunner.EquinoxLauncher");
-			Object launcher = launcherClazz.getConstructor(File.class).newInstance(rootDirectory);
-			launcherClazz.getDeclaredMethod("setArgs", List.class).invoke(launcher, args);
-			launcherClazz.getDeclaredMethod("run").invoke(launcher);
-		}
+		List<URL> classpath = new ArrayList<>();
+		classpath.addAll(urls);
+		classpath.addAll(Arrays.asList(boot));
+		return new URLClassLoader(classpath.toArray(new URL[0]), parent);
 	}
 }

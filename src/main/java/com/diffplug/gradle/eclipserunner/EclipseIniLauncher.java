@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 DiffPlug
+ * Copyright (C) 2016-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package com.diffplug.gradle.eclipserunner;
 
 
 import com.diffplug.common.base.Box;
+import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.eclipserunner.launcher.Main;
@@ -25,6 +26,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import org.eclipse.core.runtime.adaptor.EclipseStarter;
 import org.osgi.framework.BundleContext;
@@ -103,6 +107,28 @@ public class EclipseIniLauncher {
 		@Override
 		public void close() throws Exception {
 			EclipseStarter.shutdown();
+		}
+	}
+
+	/** Parses `configuration/org.eclipse.equinox.simpleconfigurator/bundles.info` into a list of files. */
+	public static List<File> parseBundlesDotInfo(File eclipseRoot) {
+		try {
+			List<File> files = new ArrayList<>();
+			File bundlesDotInfo = new File(eclipseRoot, FileMisc.macContentsEclipse() + "configuration/org.eclipse.equinox.simpleconfigurator/bundles.info");
+			String str = new String(Files.readAllBytes(bundlesDotInfo.toPath()));
+			String[] lines = str.split("\n");
+			for (String line : lines) {
+				String[] pieces = line.split(",");
+				if (pieces != null && pieces.length > 2) {
+					File file = new File(eclipseRoot, pieces[2]);
+					if (file.exists()) {
+						files.add(file);
+					}
+				}
+			}
+			return files;
+		} catch (IOException e) {
+			throw Errors.asRuntime(e);
 		}
 	}
 }

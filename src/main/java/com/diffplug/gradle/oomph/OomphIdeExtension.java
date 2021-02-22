@@ -30,6 +30,7 @@ import com.diffplug.gradle.JavaExecable;
 import com.diffplug.gradle.Lazyable;
 import com.diffplug.gradle.StateBuilder;
 import com.diffplug.gradle.eclipserunner.EclipseIni;
+import com.diffplug.gradle.eclipserunner.EclipseIniLauncher;
 import com.diffplug.gradle.oomph.thirdparty.ConventionThirdParty;
 import com.diffplug.gradle.p2.P2Declarative;
 import com.diffplug.gradle.p2.P2Model;
@@ -56,6 +57,7 @@ import org.gradle.api.GradleException;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.XmlProvider;
+import org.gradle.api.file.FileCollection;
 import org.gradle.api.initialization.IncludedBuild;
 import org.gradle.api.specs.Spec;
 import org.gradle.api.specs.Specs;
@@ -532,7 +534,11 @@ public class OomphIdeExtension implements P2Declarative {
 		ordered.add(new SaveWorkspace());
 
 		SetupWithinEclipse internal = new SetupWithinEclipse(ideDir, ordered);
-		JavaExecable.exec(project, internal);
+		JavaExecable.exec(project, internal, execSpec -> {
+			FileCollection cp = execSpec.getClasspath().filter(file -> file.getName().startsWith("org.eclipse."))
+					.plus(project.files(EclipseIniLauncher.parseBundlesDotInfo(ideDir)));
+			execSpec.setClasspath(cp);
+		});
 	}
 
 	/////////
