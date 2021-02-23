@@ -19,6 +19,7 @@ package com.diffplug.gradle.eclipserunner;
 import com.diffplug.common.base.Box;
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Preconditions;
+import com.diffplug.common.swt.os.OS;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.eclipserunner.launcher.Main;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -120,7 +121,13 @@ public class EclipseIniLauncher {
 			for (String line : lines) {
 				String[] pieces = line.split(",");
 				if (pieces != null && pieces.length > 2) {
-					File file = new File(eclipseRoot, pieces[2]);
+					String path = pieces[2];
+					if (OS.getNative().isMac()) {
+						if (path.startsWith("../../")) {
+							path = path.substring("../../".length());
+						}
+					}
+					File file = new File(eclipseRoot, path);
 					if (file.exists()) {
 						files.add(file);
 					}
