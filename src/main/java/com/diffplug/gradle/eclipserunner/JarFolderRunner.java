@@ -16,13 +16,20 @@
 package com.diffplug.gradle.eclipserunner;
 
 
-import com.diffplug.gradle.JRE;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.TreeSet;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
+import com.diffplug.common.base.Errors;
+import com.diffplug.gradle.JRE;
 
 /**
  * Runs an `EclipseApp` within this JVM using a folder containing
@@ -67,7 +74,41 @@ public class JarFolderRunner implements EclipseRunner {
 		}
 		List<URL> classpath = new ArrayList<>();
 		classpath.addAll(urls);
-		classpath.addAll(Arrays.asList(boot));
+		Arrays.stream(boot).filter(url -> {
+			String name = new File(url.getFile()).getName();;
+			return !name.startsWith("biz.aQute.bndlib-") && !name.startsWith("org.eclipse.");
+		}).forEach(classpath::add);
+		for (URL cp : classpath) {
+			dumpPackages(cp);
+		}
 		return new URLClassLoader(classpath.toArray(new URL[0]), parent);
+	}
+
+	private static void dumpPackages(URL url) {
+		File file = new File(url.getFile());
+		if (!file.isFile()) {
+			return;
+		}
+		System.out.println("boot " + file);
+		try (ZipFile zipFile = new ZipFile(file)) {
+			Enumeration<? extends ZipEntry> entries = zipFile.entries();
+			TreeSet<String> packages = new TreeSet<>();
+			while (entries.hasMoreElements()) {
+				ZipEntry entry = entries.nextElement();
+				String name = entry.getName();
+				if (!name.endsWith(".class")) {
+					continue;
+				}
+				int lastSlash = name.lastIndexOf('/');
+				if (lastSlash > 0) {
+					packages.add(name.substring(0, lastSlash));
+				}
+			}
+			for (String pkg : packages) {
+				System.out.println("  " + pkg);
+			}
+		} catch (IOException e) {
+			throw Errors.asRuntime(e);
+		}
 	}
 }
