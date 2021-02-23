@@ -41,6 +41,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -446,21 +447,26 @@ public class OomphIdeExtension implements P2Declarative {
 		ini.set("-showsplash", splashFile);
 		// wipe out defaults, because they mess up mac icons (and other stuff)
 		ini.vmargs("-Xmx1g");
+		// specify the VM now that we've got multiple versions floating around
+		File javaHome = new File(StandardSystemProperty.JAVA_HOME.value());
+		boolean containsJava = Arrays.stream(javaHome.listFiles()).anyMatch(f -> {
+			return f.isFile() && f.getName().equals("java");
+		});
+		if (!containsJava) {
+			javaHome = new File(javaHome, "bin");
+		}
+		ini.set("-vm", javaHome.getCanonicalPath());
+
 		// p2 director makes an invalid mac install out of the box.  Blech.
 		if (OS.getNative().isMac()) {
 			ini.set("-install", new File(ideDir, "Contents/MacOS"));
 			ini.set("-configuration", new File(ideDir, "Contents/Eclipse/configuration"));
-			if (BadSemver.badSemver(StandardSystemProperty.OS_VERSION.value()) >= BIG_SUR) {
-				ini.set("-vm", StandardSystemProperty.JAVA_HOME.value());
-			}
 		}
 		if (eclipseIni != null) {
 			eclipseIni.execute(ini);
 		}
 		ini.writeTo(iniFile);
 	}
-
-	private static final int BIG_SUR = BadSemver.badSemver("10.16");
 
 	///////////////////////
 	// ideSetupWorkspace //
