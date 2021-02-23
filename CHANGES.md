@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 ### Fixed
-* All `ide` tasks now explicitly specify the `-vm` argument in `eclipse.ini`.
+* All `ide` tasks now explicitly specify the `-vm` argument in `eclipse.ini`. ([#141](https://github.com/diffplug/goomph/pull/141))
 
 ## [3.28.1] - 2021-02-22
 ### Fixed
