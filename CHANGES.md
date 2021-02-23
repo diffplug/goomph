@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+### Fixed
+* All `ide` tasks now explicitly specify the `-vm` argument in `eclipse.ini`.
 
 ## [3.28.1] - 2021-02-22
 ### Fixed
