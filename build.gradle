@@ -52,6 +52,7 @@ eclipseMavenCentral {
 		compileOnly 'org.eclipse.core.jobs'
 		compileOnly 'org.eclipse.core.runtime'
 		compileOnly 'org.eclipse.core.resources'
+		compileOnly 'org.eclipse.e4.core.di'
 		compileOnly 'org.eclipse.equinox.common'
 		compileOnly 'org.eclipse.ui.workbench'
 		compileOnly 'org.eclipse.pde.core'
