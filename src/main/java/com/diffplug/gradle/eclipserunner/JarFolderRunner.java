@@ -18,6 +18,7 @@ package com.diffplug.gradle.eclipserunner;
 
 import com.diffplug.gradle.JRE;
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -39,16 +40,23 @@ public class JarFolderRunner implements EclipseRunner {
 	public void run(List<String> args) throws Exception {
 		File plugins = new File(rootDirectory, "plugins");
 		List<URL> osgiClasspath = new ArrayList<>();
-		for (File plugin : plugins.listFiles()) {
-			if (plugin.isFile() && plugin.getName().endsWith(".jar")) {
-				osgiClasspath.add(plugin.toURI().toURL());
-			}
-		}
+		populateClasspath(plugins, osgiClasspath);
 		try (URLClassLoader classLoader = open(osgiClasspath)) {
 			Class<?> launcherClazz = classLoader.loadClass("com.diffplug.gradle.eclipserunner.EquinoxLauncher");
 			Object launcher = launcherClazz.getConstructor(File.class).newInstance(rootDirectory);
 			launcherClazz.getDeclaredMethod("setArgs", List.class).invoke(launcher, args);
 			launcherClazz.getDeclaredMethod("run").invoke(launcher);
+		}
+	}
+
+	private void populateClasspath(File dirToExplore, List<URL> osgiClasspath) throws MalformedURLException {
+		for (File file : dirToExplore.listFiles()) {
+			if (file.isFile() && file.getName().endsWith(".jar")) {
+				System.out.println("add " + file.getName());
+				osgiClasspath.add(file.toURI().toURL());
+			} else if (file.isDirectory()) {
+				populateClasspath(file, osgiClasspath);
+			}
 		}
 	}
 
