@@ -40,7 +40,9 @@ public class JarFolderRunner implements EclipseRunner {
 		File plugins = new File(rootDirectory, "plugins");
 		List<URL> osgiClasspath = new ArrayList<>();
 		for (File plugin : plugins.listFiles()) {
-			osgiClasspath.add(plugin.toURI().toURL());
+			if (plugin.isFile() && plugin.getName().endsWith(".jar")) {
+				osgiClasspath.add(plugin.toURI().toURL());
+			}
 		}
 		try (URLClassLoader classLoader = open(osgiClasspath)) {
 			Class<?> launcherClazz = classLoader.loadClass("com.diffplug.gradle.eclipserunner.EquinoxLauncher");
