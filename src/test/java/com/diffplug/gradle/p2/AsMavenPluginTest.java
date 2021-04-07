@@ -19,10 +19,8 @@ package com.diffplug.gradle.p2;
 import com.diffplug.gradle.GradleIntegrationTest;
 import java.io.IOException;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore
 public class AsMavenPluginTest extends GradleIntegrationTest {
 	@Test
 	public void simpleTestCase() throws IOException, InterruptedException {
@@ -40,7 +38,7 @@ public class AsMavenPluginTest extends GradleIntegrationTest {
 				"dependencies {",
 				"    compile 'eclipse-deps:org.eclipse.jdt.core:+'",
 				"}");
-		gradleRunner().withArguments("jar").build();
+		gradleRunner().withArguments("jar", "--stacktrace").build();
 		Assert.assertTrue(file("build/p2asmaven/p2").isDirectory());
 		Assert.assertTrue(file("build/p2asmaven/maven").isDirectory());
 	}
