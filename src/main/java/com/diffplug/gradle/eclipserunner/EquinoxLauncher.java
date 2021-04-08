@@ -17,6 +17,7 @@ package com.diffplug.gradle.eclipserunner;
 
 import static java.util.stream.Collectors.toList;
 
+import com.diffplug.common.base.Joiner;
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.collect.ImmutableList;
 import com.diffplug.common.collect.ImmutableMap;
@@ -26,6 +27,7 @@ import com.diffplug.common.collect.TreeMultimap;
 import com.diffplug.gradle.FileMisc;
 import com.diffplug.gradle.JRE;
 import com.diffplug.gradle.eclipserunner.launcher.Main;
+import com.diffplug.gradle.pde.EclipseRelease;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +50,10 @@ import org.osgi.framework.Version;
  */
 public class EquinoxLauncher {
 	final File installationRoot;
+	final boolean bundleDiscoveryAuto;
 	final SortedSetMultimap<String, Version> plugins = TreeMultimap.create();
+
+	static final EclipseRelease LEGACY_144_WORKAROUND = EclipseRelease.official("4.7.2");
 
 	/**
 	 * Wraps a directory of jars in the launcher API, and
@@ -57,6 +62,8 @@ public class EquinoxLauncher {
 	 */
 	public EquinoxLauncher(File installationRoot) {
 		this.installationRoot = Objects.requireNonNull(installationRoot);
+		// for the special case where we are using the old P2BoostrapInstallation for the purposes of p2asmaven
+		this.bundleDiscoveryAuto = installationRoot.getName().equals(LEGACY_144_WORKAROUND.version().toString());
 		// populate the plugins
 		File pluginsDir = new File(installationRoot, "plugins");
 		Preconditions.checkArgument(FileMisc.dirExists(pluginsDir), "Eclipse launcher must have a plugins directory: %s", installationRoot);
@@ -133,6 +140,20 @@ public class EquinoxLauncher {
 	 * map.put("osgi.noShutdown", "false");
 	 * 	map.put(EclipseStarter.PROP_FRAMEWORK, <path to plugin "org.eclipse.osgi">);
 	 * ```
+	 * 
+	 * And, if `bundleDiscoveryAuto` is true, then:
+	 * 
+	 * ```java
+	 * map.put("equinox.use.ds", "true");
+	 * map.put("osgi.bundles", Joiner.on(", ").join(
+	 *     // automatic bundle discovery and installation
+	 *     "org.eclipse.equinox.common@2:start",
+	 *     "org.eclipse.update.configurator@3:start",
+	 *     // support eclipse's -application argument
+	 *     "org.eclipse.core.runtime@4:start",
+	 *     // declarative services
+	 *     "org.eclipse.equinox.ds@5:start"));
+	 * ```
 	 */
 	public EquinoxLauncher setProps(Map<String, String> props) {
 		this.props = ImmutableMap.copyOf(props);
@@ -205,6 +226,17 @@ public class EquinoxLauncher {
 		map.put("osgi.framework.useSystemProperties", "false");
 		map.put(EclipseStarter.PROP_INSTALL_AREA, installationRoot.getAbsolutePath());
 		map.put(EclipseStarter.PROP_NOSHUTDOWN, "false");
+		if (bundleDiscoveryAuto) {
+			map.put("equinox.use.ds", "true");
+			map.put(EclipseStarter.PROP_BUNDLES, Joiner.on(", ").join(
+					// automatic bundle discovery and installation
+					"org.eclipse.equinox.common@2:start",
+					"org.eclipse.update.configurator@3:start",
+					// support eclipse's -application argument
+					"org.eclipse.core.runtime@4:start",
+					// declarative services
+					"org.eclipse.equinox.ds@5:start"));
+		}
 		map.put(EclipseStarter.PROP_FRAMEWORK, getPluginRequireSingle("org.eclipse.osgi").toURI().toString());
 		String classLoaderKind = JRE.majorVersion() >= 9 ? Main.PARENT_CLASSLOADER_EXT : Main.PARENT_CLASSLOADER_BOOT;
 		map.put(Main.PROP_PARENT_CLASSLOADER, classLoaderKind);

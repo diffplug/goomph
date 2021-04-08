@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2019 DiffPlug
+ * Copyright (C) 2015-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,6 +52,10 @@ public class P2AntRunner extends EclipseApp.AntRunner {
 	/** Runs this application, downloading a small bootstrapper if necessary. */
 	public void runUsingBootstrapper(Project project) throws Exception {
 		runUsing(P2BootstrapInstallation.latest().outsideJvmRunner(project));
+	}
+
+	void runUsingBootstrapper144(Project project) throws Exception {
+		runUsing(P2BootstrapInstallation.workaround144().outsideJvmRunner(project));
 	}
 
 	/** Runs this application, using PDE as specified by {@link PdeInstallation#fromProject(Project)}. */

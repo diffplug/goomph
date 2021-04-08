@@ -37,14 +37,22 @@ class P2BootstrapInstallation {
 	static final String DOWNLOAD_FILE = "/goomph-p2-bootstrap.zip";
 	static final String VERSIONED_DOWNLOAD_FILE = "/goomph-p2-bootstrap-%s.zip";
 
+	static final EclipseRelease LEGACY_144_WORKAROUND = EclipseRelease.official("4.7.2");
+
 	/** List of versions for which we have deployed a bootstrap to bintray. */
-	static final ImmutableSet<EclipseRelease> SUPPORTED = ImmutableSet.of(EclipseRelease.official("4.13.0"));
+	static final ImmutableSet<EclipseRelease> SUPPORTED = ImmutableSet.of(
+			LEGACY_144_WORKAROUND,
+			EclipseRelease.official("4.13.0"));
 
 	final EclipseRelease release;
 
 	static P2BootstrapInstallation latest() {
 		EclipseRelease latest = SUPPORTED.asList().get(SUPPORTED.size() - 1);
 		return new P2BootstrapInstallation(latest);
+	}
+
+	static P2BootstrapInstallation workaround144() {
+		return new P2BootstrapInstallation(LEGACY_144_WORKAROUND);
 	}
 
 	P2BootstrapInstallation(EclipseRelease release) {
