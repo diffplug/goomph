@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 DiffPlug
+ * Copyright (C) 2016-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,40 +19,18 @@ package com.diffplug.gradle.p2;
 import com.diffplug.gradle.eclipserunner.EquinoxLauncher;
 import com.diffplug.gradle.osgi.OsgiExecable;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class OsgiExecableTest {
-	static class Incrementer implements OsgiExecable {
-		private static final long serialVersionUID = -5728572785844814830L;
-
-		int input;
-		int output;
-
-		Incrementer(int input) {
-			this.input = input;
-		}
-
-		public int getOutput() {
-			return output;
-		}
-
-		@Override
-		public void run() {
-			output = input + 1;
-		}
-	}
-
 	@Test
 	public void testInternal() throws Throwable {
 		// obvious
-		Incrementer example = new Incrementer(5);
+		IncrementerVisibleForTest example = new IncrementerVisibleForTest(5);
 		example.run();
 		Assert.assertEquals(6, example.output);
 	}
 
 	@Test
-	@Ignore // This works in Eclipse, works in real-life, but fails in gradle's test runner.  Dunno why.
 	public void testExternal() throws Throwable {
 		// magic
 		P2BootstrapInstallation installation = P2BootstrapInstallation.latest();
@@ -60,8 +38,8 @@ public class OsgiExecableTest {
 
 		EquinoxLauncher launcher = new EquinoxLauncher(installation.getRootFolder());
 		try (EquinoxLauncher.Running running = launcher.open()) {
-			Incrementer example = new Incrementer(5);
-			Incrementer result = OsgiExecable.exec(running.bundleContext(), example);
+			IncrementerVisibleForTest example = new IncrementerVisibleForTest(5);
+			IncrementerVisibleForTest result = OsgiExecable.exec(running.bundleContext(), example);
 			Assert.assertEquals(6, result.output);
 		}
 	}
