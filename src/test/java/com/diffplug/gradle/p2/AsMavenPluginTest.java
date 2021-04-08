@@ -17,15 +17,16 @@ package com.diffplug.gradle.p2;
 
 
 import com.diffplug.gradle.GradleIntegrationTest;
+import com.diffplug.gradle.JRE;
 import java.io.IOException;
 import org.junit.Assert;
-import org.junit.Ignore;
+import org.junit.Assume;
 import org.junit.Test;
 
-@Ignore
 public class AsMavenPluginTest extends GradleIntegrationTest {
 	@Test
 	public void simpleTestCase() throws IOException, InterruptedException {
+		Assume.assumeTrue(JRE.majorVersion() == 8);
 		write("build.gradle",
 				"plugins {",
 				"    id 'com.diffplug.p2.asmaven'",
@@ -40,13 +41,14 @@ public class AsMavenPluginTest extends GradleIntegrationTest {
 				"dependencies {",
 				"    compile 'eclipse-deps:org.eclipse.jdt.core:+'",
 				"}");
-		gradleRunner().withArguments("jar").build();
+		gradleRunner().withArguments("jar", "--stacktrace").build();
 		Assert.assertTrue(file("build/p2asmaven/p2").isDirectory());
 		Assert.assertTrue(file("build/p2asmaven/maven").isDirectory());
 	}
 
 	@Test
 	public void complexTestCase() throws IOException, InterruptedException {
+		Assume.assumeTrue(JRE.majorVersion() == 8);
 		write("build.gradle",
 				"plugins {",
 				"    id 'com.diffplug.p2.asmaven'",

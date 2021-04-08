@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 DiffPlug
+ * Copyright (C) 2016-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,14 +75,17 @@ class AsMavenGroupImpl {
 		project.getLogger().lifecycle("Only needs to be done once, future builds will be much faster");
 
 		project.getLogger().lifecycle("p2AsMaven " + def.group + " installing from p2");
-		getApp().runUsingBootstrapper(project);
+
+		// workaround for https://github.com/diffplug/goomph/issues/144
+		getApp().runUsingBootstrapper144(project);
 
 		if (def.repo2runnable) {
 			project.getLogger().lifecycle("p2AsMaven " + def.group + " creating runnable repo");
 			Repo2Runnable app = new Repo2Runnable();
 			app.source(dirP2());
 			app.destination(dirP2Runnable());
-			app.runUsingBootstrapper(project);
+			// workaround for https://github.com/diffplug/goomph/issues/144
+			app.runUsingBootstrapper144(project);
 		}
 
 		// put p2 into a maven repo

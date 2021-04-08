@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+### Fixed
+* `p2asmaven` works again, but requires JRE 8. ([#145](https://github.com/diffplug/goomph/pull/145))
 
 ## [3.29.0] - 2021-03-23
 ### Added
@@ -20,9 +22,8 @@ Support for Java 11, `ide` task works again for eclipse `4.17` and `4.18` ([#137
 
 ### Removed
 As an unfortunate side-effect of the PR above, the following plugins don't work anymore:
-  - `com.diffplug.swt.nativedeps`
-  - `com.diffplug.p2.asmaven`
-  - `com.diffplug.osgi.equinoxlaunch`
+  - `com.diffplug.swt.nativedeps` (fixed in 3.29.1)
+  - `com.diffplug.p2.asmaven` (fixed in 3.29.1)
 
 This isn't on purpose, and it seems like it should be avoidable. If you use the plugins above, then you need to stick with `3.27.0`. If you want to fix them, look at the PR above. The code is still in-tree, but their tests are `@Ignored`.
 
