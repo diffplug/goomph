@@ -17,12 +17,15 @@ package com.diffplug.gradle.swt;
 
 
 import com.diffplug.gradle.GradleIntegrationTest;
+import com.diffplug.gradle.JRE;
 import java.io.IOException;
+import org.junit.Assume;
 import org.junit.Test;
 
 public class NativeDepsPluginTest extends GradleIntegrationTest {
 	@Test
 	public void assertPluginWorks() throws IOException {
+		Assume.assumeTrue(JRE.majorVersion() == 8);
 		write("build.gradle",
 				"plugins {",
 				"	id 'java'",

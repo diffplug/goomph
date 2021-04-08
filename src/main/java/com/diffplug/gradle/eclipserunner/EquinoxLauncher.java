@@ -64,6 +64,11 @@ public class EquinoxLauncher {
 		this.installationRoot = Objects.requireNonNull(installationRoot);
 		// for the special case where we are using the old P2BoostrapInstallation for the purposes of p2asmaven
 		this.bundleDiscoveryAuto = installationRoot.getName().equals(LEGACY_144_WORKAROUND.version().toString());
+		if (bundleDiscoveryAuto) {
+			if (JRE.majorVersion() != 8) {
+				throw new Error("p2asmaven requires JRE 8, this is JRE " + JRE.majorVersion());
+			}
+		}
 		// populate the plugins
 		File pluginsDir = new File(installationRoot, "plugins");
 		Preconditions.checkArgument(FileMisc.dirExists(pluginsDir), "Eclipse launcher must have a plugins directory: %s", installationRoot);

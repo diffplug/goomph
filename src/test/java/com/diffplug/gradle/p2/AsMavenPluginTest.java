@@ -17,13 +17,16 @@ package com.diffplug.gradle.p2;
 
 
 import com.diffplug.gradle.GradleIntegrationTest;
+import com.diffplug.gradle.JRE;
 import java.io.IOException;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 
 public class AsMavenPluginTest extends GradleIntegrationTest {
 	@Test
 	public void simpleTestCase() throws IOException, InterruptedException {
+		Assume.assumeTrue(JRE.majorVersion() == 8);
 		write("build.gradle",
 				"plugins {",
 				"    id 'com.diffplug.p2.asmaven'",
@@ -45,6 +48,7 @@ public class AsMavenPluginTest extends GradleIntegrationTest {
 
 	@Test
 	public void complexTestCase() throws IOException, InterruptedException {
+		Assume.assumeTrue(JRE.majorVersion() == 8);
 		write("build.gradle",
 				"plugins {",
 				"    id 'com.diffplug.p2.asmaven'",
