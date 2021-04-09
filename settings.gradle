@@ -20,7 +20,7 @@ plugins {
 	id 'org.jdrupes.mdoclet'                   apply false
 }
 blowdryerSetup {
-	//github 'diffplug/blowdryer-diffplug', 'tag', '3.2.5'
-	devLocal '../blowdryer-diffplug'
+	github 'diffplug/blowdryer-diffplug', 'tag', '4.0.0'
+	//devLocal '../blowdryer-diffplug'
 }
 rootProject.name = 'goomph'
