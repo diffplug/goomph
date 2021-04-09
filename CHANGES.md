@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [3.29.1] - 2021-04-09
 ### Fixed
 * `p2asmaven` works again, but requires JRE 8. ([#145](https://github.com/diffplug/goomph/pull/145))
 
