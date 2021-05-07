@@ -7,7 +7,7 @@ output = prefixDelimiterReplace(input, 'https://javadoc.io/static/com.diffplug.g
 So you want to automate your IDE configuration.  The first thing to do is look at a few examples.
 
 - [Gradle and Eclipse RCP talk](https://github.com/diffplug/gradle_and_eclipse_rcp/blob/main/ide/build.gradle) (multi-project Eclipse RCP project)
-- [lsp4j](https://github.com/eclipse/lsp4j/blob/main/ide/build.gradle) (xtend IDE example)
+- [lsp4j](https://github.com/eclipse/lsp4j/blob/master/ide/build.gradle) (xtend IDE example)
 - [swt-chromium](https://github.com/diffplug/swt-chromium/blob/main/ide/build.gradle) (C++ example)
 - [Spotless](https://github.com/diffplug/spotless/blob/main/ide/build.gradle) (single-project Gradle plugin)
 - (your example here)
