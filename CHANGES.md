@@ -1,7 +1,7 @@
 # Goomph releases
 
 ## [Unreleased]
-
+### Fixed
 * Added support for using Goomph (pde bootstrap) with Gradle `6.7` and newer ([#147](https://github.com/diffplug/goomph/pull/147))
 
 ## [3.29.1] - 2021-04-09
