@@ -86,6 +86,8 @@ class JavaExecableImp {
 		addPeerClasses.accept(JavaExecable.class);
 		// add the gradle API
 		addPeerClasses.accept(JavaExec.class);
+		// Needed because of Gradle API classloader hierarchy changes with 2c5adc8 in Gradle 6.7+
+		addPeerClasses.accept(FileCollection.class);
 		return files;
 	}
 }
