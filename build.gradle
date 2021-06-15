@@ -45,6 +45,10 @@ dependencies {
 	testImplementation "junit:junit:4.13"
 	testImplementation "org.assertj:assertj-core:3.14.0"
 }
+
+configurations.compileClasspath {
+	transitive = false
+}
 eclipseMavenCentral {
 	release VER_P2_BOOTSTRAP, {
 		api 'org.eclipse.osgi'
