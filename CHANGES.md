@@ -1,6 +1,9 @@
 # Goomph releases
 
 ## [Unreleased]
+### Added
+- Eclipse `4.20.0` aka `2021-06` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.20/)).
+
 ### Fixed
 * Added support for using Goomph (pde bootstrap) with Gradle `6.7` and newer ([#147](https://github.com/diffplug/goomph/pull/147))
 
