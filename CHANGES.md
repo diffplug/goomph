@@ -199,7 +199,7 @@ This was published accidentally.  Nothing bad in it, it's just a halfway-done ve
 - Updated default buildship release from `e46/releases/1.0` to `e47/releases/2.x`.
 
 ## [3.8.0] - 2017-09-21
-- Added the [`com.diffplug.gradle.equinoxlaunch`](https://javadoc.io/static/com.diffplug.gradle/goomph/snapshot/com/diffplug/gradle/eclipserunner/EquinoxLaunchPlugin.html) can configure and run equinox applications as part of the build, such as a code generator.
+- Added the [`com.diffplug.gradle.equinoxlaunch`](https://javadoc.io/doc/com.diffplug.gradle/goomph/snapshot/com/diffplug/gradle/eclipserunner/EquinoxLaunchPlugin.html) can configure and run equinox applications as part of the build, such as a code generator.
 - CopyJarsUsingProductFile now gives better error messages when a plugin is missing.
 - Bump bndlib from `3.2.0` to `3.4.0`.
 
@@ -247,7 +247,7 @@ oomphIde {
 
 ## [3.5.0] - November 24th 2016
 * Added the ability to set the installed JRE (#16).
-  + See [javadoc](https://javadoc.io/static/com.diffplug.gradle/goomph/3.5.0/com/diffplug/gradle/oomph/ConventionJdt.html) for details.
+  + See [javadoc](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.5.0/com/diffplug/gradle/oomph/ConventionJdt.html) for details.
 
 ## [3.4.0] - November 22nd 2016
 * Added `FileMisc.deleteEmptyFolders().`
@@ -256,7 +256,7 @@ oomphIde {
   + To fix this, we now clean empty folders out of the classes directory before we run bndmanifest.
 
 ## [3.3.0] - October 13th 2016
-* Added javadoc to [`AsMavenPlugin`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.3.0/com/diffplug/gradle/p2/AsMavenPlugin.html) and [`OomphIdePlugin`](https://javadoc.io/static/com.diffplug.gradle/goomph/3.3.0/com/diffplug/gradle/oomph/OomphIdePlugin.html) which describes proxy support.
+* Added javadoc to [`AsMavenPlugin`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.3.0/com/diffplug/gradle/p2/AsMavenPlugin.html) and [`OomphIdePlugin`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.3.0/com/diffplug/gradle/oomph/OomphIdePlugin.html) which describes proxy support.
 * Added `OomphIdeExtension::p2director`, to allow the proxy support described above.
 
 ## [3.2.1] - September 29th 2016
