@@ -25,7 +25,7 @@ spotless {
 
 String VER_DURIAN = '1.2.0'
 String VER_DURIAN_SWT = '3.4.0'
-String VER_BNDLIB = '5.2.0'
+String VER_BNDLIB = '5.3.0'
 String OLDEST_SUPPORTED_GRADLE = '5.1'
 String VER_P2_BOOTSTRAP = '4.13.0'
 
