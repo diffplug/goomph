@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [3.30.2] - 2021-07-18
 ### Fixed
 - Bumped `bndlib` from `5.2.0` to `5.3.0` which adds support for `OS.MAC_silicon`.
 
