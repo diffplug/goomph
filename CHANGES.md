@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [3.30.1] - 2021-07-18
 ### Fixed
 - Bumped `durian-swt.os` to `3.4.0` which adds support for `OS.MAC_silicon`.
 
