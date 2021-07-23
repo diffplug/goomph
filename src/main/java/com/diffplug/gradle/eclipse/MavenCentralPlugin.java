@@ -45,6 +45,9 @@ import org.gradle.api.plugins.JavaPlugin;
  *         dep 'implementation', 'org.eclipse.jdt'
  *         // specify this to add the native jars for this platform
  *         useNativesForRunningPlatform()
+ *         // specify that all transitive dependencies should be from this release
+ *         // (otherwise the version ranges which eclipse uses will use latest available)
+ *         constrainTransitivesToThisRelease()
  *     }
  * }
  * ```

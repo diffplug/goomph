@@ -44,6 +44,10 @@ public class MavenCentralMapping {
 	private static final String JDT = "org.eclipse.jdt";
 	private static final String PDE = "org.eclipse.pde";
 	private static final String EMF = "org.eclipse.emf";
+	
+	public static boolean isEclipseGroup(String group) {
+		return group.equals(PLATFORM) || group.equals(JDT) || group.equals(PDE) || group.equals(EMF);
+	}
 
 	/** Returns the MavenCentral groupId:artifactId appropriate for the given bundleId. */
 	public static String groupIdArtifactId(String bundleId) {

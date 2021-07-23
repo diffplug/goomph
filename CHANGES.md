@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+### Added
+- `com.diffplug.eclipse.mavencentral` now has `constrainTransitivesToThisRelease()`
 
 ## [3.30.2] - 2021-07-18
 ### Fixed

@@ -130,6 +130,21 @@ public class MavenCentralExtension {
 				});
 			});
 		}
+		
+		public void constrainTransitivesToThisRelease() {
+			project.getConfigurations().forEach(config -> {
+				config.getResolutionStrategy().eachDependency(dep -> {
+					ModuleVersionSelector mod = dep.getRequested();
+					if (MavenCentralMapping.isEclipseGroup(mod.getGroup())) {
+						String version = bundleToVersion.get(mod.getName());
+						if (version != null) {
+							dep.useVersion(version);
+						}
+					}
+				});
+			});
+
+		}
 
 		/////////////
 		// natives //
