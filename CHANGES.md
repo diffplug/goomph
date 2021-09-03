@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+### Added
+- New plugin `com.diffplug.configuration-cache-for-platform-specific-build` which makes the `OS.getNative()` and `SwtPlatform.xxx` methods work without breaking the Gradle configuration cache. ([#153](https://github.com/diffplug/goomph/pull/153))
 
 ## [3.31.0] - 2021-07-23
 ### Added
