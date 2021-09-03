@@ -108,6 +108,10 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 
 * Used to power the infrastructure above.
 
+#### Other
+
+* [`com.diffplug.configuration-cache-for-platform-specific-build`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.31.0/com/diffplug/gradle/swt/PlatformSpecificBuildPlugin.html) allows you to use `OS.getNative()` and `OS.getRunning()` in your gradle build without breaking the configuration cache.
+
 <!---freshmark /javadoc -->
 
 ## Acknowledgements
