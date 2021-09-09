@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [3.32.1] - 2021-09-09
+
 ### Fixed
 - Fix version parsing in eclipseMavenCentral ([#156](https://github.com/diffplug/goomph/pull/156))
 
