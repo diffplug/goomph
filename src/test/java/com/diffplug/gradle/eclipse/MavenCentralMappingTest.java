@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2020 DiffPlug
+ * Copyright (C) 2015-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
 
 public class MavenCentralMappingTest {
 	@Test
-	public void testParsing() throws IOException, ParserConfigurationException, SAXException {
+	public void testParsing463() throws IOException, ParserConfigurationException, SAXException {
 		try (InputStream input = MavenCentralMappingTest.class.getResourceAsStream("/artifacts-4.6.3.xml")) {
 			assert463(MavenCentralMapping.parse(input));
 		}
@@ -42,7 +42,23 @@ public class MavenCentralMappingTest {
 		Assertions.assertThat(bundleToVersion)
 				.containsEntry("org.eclipse.debug.core", "3.10.100")
 				.containsEntry("org.eclipse.equinox.p2.metadata", "2.3.100")
-				.hasSize(895);
+				.containsEntry("org.eclipse.help", "3.7.0")
+				.hasSize(743);
+	}
+
+	@Test
+	public void testParsing4140() throws IOException, ParserConfigurationException, SAXException {
+		try (InputStream input = MavenCentralMappingTest.class.getResourceAsStream("/artifacts-4.14.0.xml")) {
+			assert4140(MavenCentralMapping.parse(input));
+		}
+	}
+
+	private void assert4140(Map<String, String> bundleToVersion) {
+		Assertions.assertThat(bundleToVersion)
+				.containsEntry("org.eclipse.debug.core", "3.14.100")
+				.containsEntry("org.eclipse.equinox.p2.metadata", "2.4.600")
+				.containsEntry("org.eclipse.help", "3.8.600")
+				.hasSize(785);
 	}
 
 	@Test
