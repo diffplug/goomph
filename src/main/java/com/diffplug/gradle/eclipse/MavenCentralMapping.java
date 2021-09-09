@@ -44,7 +44,7 @@ public class MavenCentralMapping {
 	private static final String JDT = "org.eclipse.jdt";
 	private static final String PDE = "org.eclipse.pde";
 	private static final String EMF = "org.eclipse.emf";
-	
+
 	public static boolean isEclipseGroup(String group) {
 		return group.equals(PLATFORM) || group.equals(JDT) || group.equals(PDE) || group.equals(EMF);
 	}
@@ -72,10 +72,13 @@ public class MavenCentralMapping {
 		for (int i = 0; i < artifacts.getChildNodes().getLength(); ++i) {
 			Node artifact = artifacts.getChildNodes().item(i);
 			if ("artifact".equals(artifact.getNodeName())) {
-				String id = artifact.getAttributes().getNamedItem("id").getNodeValue();
-				String version = artifact.getAttributes().getNamedItem("version").getNodeValue();
-				Version parsed = Version.parseVersion(version);
-				map.put(id, parsed.getMajor() + "." + parsed.getMinor() + "." + parsed.getMicro());
+				String classifier = artifact.getAttributes().getNamedItem("classifier").getNodeValue();
+				if ("osgi.bundle".equals(classifier)) {
+					String id = artifact.getAttributes().getNamedItem("id").getNodeValue();
+					String version = artifact.getAttributes().getNamedItem("version").getNodeValue();
+					Version parsed = Version.parseVersion(version);
+					map.put(id, parsed.getMajor() + "." + parsed.getMinor() + "." + parsed.getMicro());
+				}
 			}
 		}
 		return map;
