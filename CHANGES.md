@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Fixed
+- Fix ecj mapping in eclipseMavenCentral ([#158](https://github.com/diffplug/goomph/pull/158))
+
 ## [3.32.1] - 2021-09-09
 
 ### Fixed

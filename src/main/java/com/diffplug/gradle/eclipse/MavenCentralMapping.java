@@ -51,7 +51,9 @@ public class MavenCentralMapping {
 
 	/** Returns the MavenCentral groupId:artifactId appropriate for the given bundleId. */
 	public static String groupIdArtifactId(String bundleId) {
-		if (bundleId.startsWith(JDT)) {
+		if ("org.eclipse.jdt.core.compiler.batch".equals(bundleId)) {
+			return JDT + ":ecj";
+		} else if (bundleId.startsWith(JDT)) {
 			return JDT + ":" + bundleId;
 		} else if (bundleId.startsWith(PDE)) {
 			return PDE + ":" + bundleId;
