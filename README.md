@@ -116,6 +116,7 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 
 ## Acknowledgements
 
+* Thanks to [Jérémie Bresson](https://github.com/jmini) for [multiple](https://github.com/diffplug/goomph/pull/156) [fixes](https://github.com/diffplug/goomph/pull/158) to the `eclipseMavenCentral` plugin.
 * Thanks to [Thomas Broyer](https://github.com/tbroyer) for the excellent [`net.ltgt.apt-eclipse`](https://github.com/tbroyer/gradle-apt-plugin) plugin.
   * It is no longer maintained at its original home, so we will continue to maintain it here at `com.diffplug.eclipse.apt`.
 * Thanks to [ralfgrossklaus](https://github.com/ralfgrossklaus) for fixes to [Gradle 6.7](https://github.com/diffplug/goomph/pull/147), [CmdLine hanging](https://github.com/diffplug/goomph/pull/50), and [opening dialogs on buildservers](https://github.com/diffplug/goomph/pull/49).
