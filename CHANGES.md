@@ -3,6 +3,8 @@
 ## [Unreleased]
 
 ## [3.32.2] - 2021-09-13
+### Added
+- Eclipse `4.21.0` aka `2021-09` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.21/)).
 
 ### Fixed
 - Fix ecj mapping in eclipseMavenCentral ([#158](https://github.com/diffplug/goomph/pull/158))
