@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [3.33.1] - 2021-10-01
 ### Fixed
 - Fix ecf mapping in eclipseMavenCentral ([#163](https://github.com/diffplug/goomph/pull/163))
 
