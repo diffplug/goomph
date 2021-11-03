@@ -25,7 +25,7 @@ import org.junit.Test;
 public class NativeDepsPluginTest extends GradleIntegrationTest {
 	@Test
 	public void assertPluginWorks() throws IOException {
-		Assume.assumeTrue(JRE.majorVersion() == 11);
+		Assume.assumeTrue(JRE.majorVersion() == 8);
 		write("build.gradle",
 				"plugins {",
 				"	id 'java'",
