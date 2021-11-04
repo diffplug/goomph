@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -46,13 +47,17 @@ public class MavenCentralMapping {
 	private static final String EMF = "org.eclipse.emf";
 	private static final String ECF = "org.eclipse.ecf";
 
+	private static final String ICU_BUNDLE_ID = "com.ibm.icu";
+
 	public static boolean isEclipseGroup(String group) {
 		return group.equals(PLATFORM) || group.equals(JDT) || group.equals(PDE) || group.equals(EMF) || group.equals(ECF);
 	}
 
 	/** Returns the MavenCentral groupId:artifactId appropriate for the given bundleId. */
 	public static String groupIdArtifactId(String bundleId) {
-		if ("org.eclipse.jdt.core.compiler.batch".equals(bundleId)) {
+		if (ICU_BUNDLE_ID.equals(bundleId)) {
+			return "com.ibm.icu:icu4j";
+		} else if ("org.eclipse.jdt.core.compiler.batch".equals(bundleId)) {
 			return JDT + ":ecj";
 		} else if (bundleId.startsWith(JDT)) {
 			return JDT + ":" + bundleId;
@@ -67,8 +72,8 @@ public class MavenCentralMapping {
 		}
 	}
 
-	/** Creates a map from bundle-id to its corresponding 3-part version. */
-	static Map<String, String> parse(InputStream inputStream) throws ParserConfigurationException, SAXException, IOException {
+	/** Creates a map from a key defined by the keyExtractor function to its corresponding version in maven central. */
+	static Map<String, String> parse(InputStream inputStream, Function<String, String> keyExtractor) throws ParserConfigurationException, SAXException, IOException {
 		Map<String, String> map = new HashMap<>();
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = dbf.newDocumentBuilder();
@@ -79,20 +84,39 @@ public class MavenCentralMapping {
 			if ("artifact".equals(artifact.getNodeName())) {
 				String classifier = artifact.getAttributes().getNamedItem("classifier").getNodeValue();
 				if ("osgi.bundle".equals(classifier)) {
-					String id = artifact.getAttributes().getNamedItem("id").getNodeValue();
-					String version = artifact.getAttributes().getNamedItem("version").getNodeValue();
-					Version parsed = Version.parseVersion(version);
-					map.put(id, parsed.getMajor() + "." + parsed.getMinor() + "." + parsed.getMicro());
+					String bundleId = artifact.getAttributes().getNamedItem("id").getNodeValue();
+					String bundleVersion = artifact.getAttributes().getNamedItem("version").getNodeValue();
+					String key = keyExtractor.apply(bundleId);
+					String version = calculateMavenCentralVersion(bundleId, bundleVersion);
+					map.put(key, version);
 				}
 			}
 		}
 		return map;
 	}
 
-	private static final String ARTIFACTS_JAR = "artifacts.jar";
+	static String calculateMavenCentralVersion(String bundleId, String bundleVersion) {
+		Version parsed = Version.parseVersion(bundleVersion);
+		if (ICU_BUNDLE_ID.equals(bundleId) && parsed.getMicro() == 0) {
+			return parsed.getMajor() + "." + parsed.getMinor();
+		} else {
+			return parsed.getMajor() + "." + parsed.getMinor() + "." + parsed.getMicro();
+		}
+	}
 
 	/** Returns a map from every bundle-id to its corresponding 3-part version (the qualifier is dropped). */
 	public static Map<String, String> bundleToVersion(EclipseRelease release) {
+		return createVersionMap(release, Function.identity());
+	}
+
+	/** Returns a map from every groupId:artifactId to its corresponding version in maven central (the qualifier is dropped). */
+	public static Map<String, String> groupIdArtifactIdToVersion(EclipseRelease release) {
+		return createVersionMap(release, MavenCentralMapping::groupIdArtifactId);
+	}
+
+	private static final String ARTIFACTS_JAR = "artifacts.jar";
+
+	private static Map<String, String> createVersionMap(EclipseRelease release, Function<String, String> keyExtractor) {
 		//  warn if the user is asking for a too-old version of eclipse, but go ahead and try anyway just in case
 		if (release.version().compareTo(FIRST_ON_CENTRAL.version()) < 0) {
 			throw new IllegalArgumentException(FIRST_ON_CENTRAL.version() + " was the first eclipse release that was published on maven central, you requested " + release);
@@ -105,7 +129,7 @@ public class MavenCentralMapping {
 		File artifactsJar = new File(versionFolder, ARTIFACTS_JAR);
 		if (artifactsJar.exists() && artifactsJar.length() > 0) {
 			try {
-				return parseFromFile(artifactsJar);
+				return parseFromFile(artifactsJar, keyExtractor);
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.err.println("Retrying download...");
@@ -114,14 +138,14 @@ public class MavenCentralMapping {
 		}
 		return Errors.rethrow().get(() -> {
 			FileMisc.download(release.updateSite() + "artifacts.jar", artifactsJar);
-			return parseFromFile(artifactsJar);
+			return parseFromFile(artifactsJar, keyExtractor);
 		});
 	}
 
-	private static Map<String, String> parseFromFile(File artifactsJar) throws IOException {
+	private static Map<String, String> parseFromFile(File artifactsJar, Function<String, String> keyExtractor) throws IOException {
 		Box.Nullable<Map<String, String>> value = Box.Nullable.ofNull();
 		ZipMisc.read(artifactsJar, "artifacts.xml", input -> {
-			value.set(Errors.rethrow().get(() -> parse(input)));
+			value.set(Errors.rethrow().get(() -> parse(input, keyExtractor)));
 		});
 		return Objects.requireNonNull(value.get());
 	}
