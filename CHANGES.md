@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [3.33.2] - 2021-11-05
 ### Fixed
 - Handle "com.ibm.icu" in eclipseMavenCentral ([#170](https://github.com/diffplug/goomph/pull/170))
 
