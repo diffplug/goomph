@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2020 DiffPlug
+ * Copyright (C) 2015-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,32 @@ public class MavenCentralPluginTest extends GradleIntegrationTest {
 				"    }",
 				"}",
 				"apply plugin: 'java'");
+		gradleRunner().withArguments("jar", "--stacktrace").build();
+	}
+
+	@Test
+	public void testICU() throws IOException {
+		write("build.gradle",
+				"plugins {",
+				"    id 'com.diffplug.eclipse.mavencentral'",
+				"}",
+				"eclipseMavenCentral {",
+				"    release '4.7.0', {",
+				"        compile 'com.ibm.icu'",
+				"    }",
+				"}",
+				"repositories {",
+				"    mavenCentral()",
+				"}",
+				"apply plugin: 'java'");
+		write("src/main/java/pkg/Demo.java",
+				"package pkg;",
+				"import com.ibm.icu.text.UTF16;",
+				"public class Demo {",
+				"    public static void main(String[] args) {",
+				"        UTF16.isSurrogate('a');",
+				"    }",
+				"}");
 		gradleRunner().withArguments("jar", "--stacktrace").build();
 	}
 }

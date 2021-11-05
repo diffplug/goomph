@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2020 DiffPlug
+ * Copyright (C) 2018-2021 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,11 +47,11 @@ public class MavenCentralExtension {
 
 	public class ReleaseConfigurer {
 		final EclipseRelease release;
-		final Map<String, String> bundleToVersion;
+		final Map<String, String> groupIdArtifactIdToVersion;
 
 		public ReleaseConfigurer(EclipseRelease release) throws IOException {
 			this.release = release;
-			this.bundleToVersion = MavenCentralMapping.bundleToVersion(release);
+			this.groupIdArtifactIdToVersion = MavenCentralMapping.groupIdArtifactIdToVersion(release);
 		}
 
 		public void compileOnly(String bundleId) {
@@ -104,11 +104,11 @@ public class MavenCentralExtension {
 
 		public void dep(String configName, String bundleId) {
 			String groupIdArtifactId = MavenCentralMapping.groupIdArtifactId(bundleId);
-			String version = bundleToVersion.get(bundleId);
+			String version = groupIdArtifactIdToVersion.get(groupIdArtifactId);
 			if (version == null) {
 				throw new IllegalArgumentException(StringPrinter.buildString(printer -> {
 					printer.println("Eclipse " + release + " has no bundle named " + bundleId);
-					Map<String, String> versions = new TreeMap<>(bundleToVersion);
+					Map<String, String> versions = new TreeMap<>(groupIdArtifactIdToVersion);
 					versions.forEach((key, value) -> {
 						printer.println("  " + key + "=" + value);
 					});
@@ -130,16 +130,14 @@ public class MavenCentralExtension {
 				});
 			});
 		}
-		
+
 		public void constrainTransitivesToThisRelease() {
 			project.getConfigurations().forEach(config -> {
 				config.getResolutionStrategy().eachDependency(dep -> {
 					ModuleVersionSelector mod = dep.getRequested();
-					if (MavenCentralMapping.isEclipseGroup(mod.getGroup())) {
-						String version = bundleToVersion.get(mod.getName());
-						if (version != null) {
-							dep.useVersion(version);
-						}
+					String version = groupIdArtifactIdToVersion.get(mod.getGroup() + ":" + mod.getName());
+					if (version != null) {
+						dep.useVersion(version);
 					}
 				});
 			});
