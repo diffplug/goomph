@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [3.33.3] - 2021-11-29
 ### Fixed
 - Bumped `bndlib` from `5.3.0` to `6.1.0` which no longer includes copies of the OSGi packages ([#172](https://github.com/diffplug/goomph/pull/172))
 
