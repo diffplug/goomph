@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [3.34.0] - 2021-12-16
 ### Added
 - Eclipse `4.22.0` aka `2021-12` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.22/)).
 
