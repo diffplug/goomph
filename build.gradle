@@ -36,7 +36,7 @@ dependencies {
 	implementation "com.diffplug.durian:durian-io:${VER_DURIAN}"
 	implementation "com.diffplug.durian:durian-swt.os:${VER_DURIAN_SWT}"
 	implementation "commons-io:commons-io:2.6"
-	implementation "com.diffplug.spotless:spotless-lib:2.21.0"
+	implementation "com.diffplug.spotless:spotless-lib:2.20.0"
 	implementation "com.squareup.okhttp3:okhttp:4.3.1"
 	implementation "com.squareup.okio:okio:2.4.3"
 	// OSGi

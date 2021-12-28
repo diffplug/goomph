@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 ### Fixed
-- Bumped `spotless-lib` from `1.5.1` to `2.21.0` which is used in the [latest spotless gradle plugin](https://github.com/diffplug/spotless/releases/tag/gradle%2F6.1.0) ([#176](https://github.com/diffplug/goomph/pull/176))
+- Bumped `spotless-lib` from `1.5.1` to `2.20.0` which is used in the [spotless gradle plugin v6.0.0](https://github.com/diffplug/spotless/releases/tag/gradle%2F6.0.0) ([#176](https://github.com/diffplug/goomph/pull/176))
 
 ## [3.34.0] - 2021-12-16
 ### Added
