@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+### Fixed
+- Bumped `spotless-lib` from `1.5.1` to `2.21.0` which is used in the [latest spotless gradle plugin](https://github.com/diffplug/spotless/releases/tag/gradle%2F6.1.0).
 
 ## [3.34.0] - 2021-12-16
 ### Added
