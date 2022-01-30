@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2019 DiffPlug
+ * Copyright (C) 2015-2022 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 
 public class GradleIntegrationTest {
-	public static final String VER_GRADLE_REQUIRED = "5.1";
+	public static final String VER_GRADLE_REQUIRED = "5.6";
 
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();

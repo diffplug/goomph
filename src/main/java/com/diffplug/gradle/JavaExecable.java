@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 DiffPlug
+ * Copyright (C) 2016-2022 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.diffplug.gradle;
 
 
+import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Throwing;
 import com.diffplug.common.tree.TreeStream;
 import java.io.File;
@@ -27,8 +28,13 @@ import java.util.stream.Collectors;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.file.FileCollection;
+import org.gradle.api.file.RegularFileProperty;
+import org.gradle.api.provider.Property;
 import org.gradle.process.JavaExecSpec;
 import org.gradle.testfixtures.ProjectBuilder;
+import org.gradle.workers.WorkAction;
+import org.gradle.workers.WorkParameters;
+import org.gradle.workers.WorkQueue;
 
 /**
  * Easy way to execute code from a Gradle plugin in a separate JVM.
@@ -87,6 +93,37 @@ import org.gradle.testfixtures.ProjectBuilder;
  */
 public interface JavaExecable extends Serializable, Throwing.Runnable {
 	static final String BUILDSCRIPT_CLASSPATH = "classpath";
+
+	public interface PlugParameters extends WorkParameters {
+		Property<JavaExecable> getInput();
+
+		RegularFileProperty getOutputFile();
+	}
+
+	public static abstract class PlugAction implements WorkAction<PlugParameters> {
+		@Override
+		public void execute() {
+			JavaExecable gen = getParameters().getInput().get();
+			try {
+				gen.run();
+				SerializableMisc.write(getParameters().getOutputFile().get().getAsFile(), gen);
+			} catch (Throwable e) {
+				throw Errors.asRuntime(e);
+			}
+		}
+	}
+
+	public static <T extends JavaExecable> T exec(WorkQueue queue, T input) throws Throwable {
+		File tempFile = File.createTempFile("JavaExecQueue", ".temp");
+		queue.submit(PlugAction.class, action -> {
+			action.getInput().set(input);
+			action.getOutputFile().set(tempFile);
+		});
+		queue.await();
+		T result = SerializableMisc.read(tempFile);
+		FileMisc.forceDelete(tempFile);
+		return result;
+	}
 
 	/**
 	 * @param project	the project on which we'll call {@link Project#javaexec(Action)}.
