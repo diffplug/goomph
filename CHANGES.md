@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+### Added
+- Added new method `T output = JavaExecable.exec(WorkQueue queue, T input)`
 
 ## [3.34.1] - 2021-12-29
 ### Fixed
