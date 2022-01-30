@@ -37,7 +37,7 @@ public class JavaExecableWorkQueueTest extends GradleIntegrationTest {
 				"  }",
 				"}",
 				"tasks.register('demo', DemoTask)");
-		String output = gradleRunner().withGradleVersion("5.6").withArguments("demo").build().getOutput();
+		String output = gradleRunner().withArguments("demo").build().getOutput();
 		Assertions.assertThat(output).contains("~~6~~");
 	}
 }
