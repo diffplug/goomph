@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [3.35.0] - 2022-01-30
 ### Added
 - Added new method `T output = JavaExecable.exec(WorkQueue queue, T input)` ([#177](https://github.com/diffplug/goomph/pull/177)).
   - This bumps the minimum required Gradle from `5.1` to `5.6`.
