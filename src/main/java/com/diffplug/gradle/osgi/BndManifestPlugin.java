@@ -52,7 +52,7 @@ import org.gradle.api.tasks.bundling.Jar;
  *
  * ```groovy
  * apply plugin: 'com.diffplug.osgi.bndmanifest'
- * // Pass headers and bnd directives: https://www.aqute.biz/Bnd/Format
+ * // Pass headers and bnd instructions: https://bnd.bndtools.org/chapters/825-instructions-ref.html
  * jar.manifest.attributes(
  *     '-exportcontents': 'com.diffplug.*',
  *     '-removeheaders': 'Bnd-LastModified,Bundle-Name,Created-By,Tool,Private-Package',
