@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+### Added
+- Eclipse `4.23.0` aka `2022-02` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.23/)).
 
 ## [3.35.0] - 2022-01-30
 ### Added
