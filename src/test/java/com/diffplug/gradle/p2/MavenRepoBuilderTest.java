@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 DiffPlug
+ * Copyright (C) 2016-2022 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,29 @@ public class MavenRepoBuilderTest extends GradleIntegrationTest {
 				"repositories { maven { url '" + mavenRoot.getAbsolutePath().replace("\\", "/") + "' } }",
 				"dependencies {",
 				"    compile 'p2group:org.eclipse.ecf.provider.filetransfer.ssl:+'",
+				"}",
+				"apply plugin: 'eclipse'");
+		gradleRunner().forwardOutput().withArguments("eclipse").build();
+		String classpath = read(".classpath");
+		Assert.assertTrue(classpath.contains("org.eclipse.ecf.provider.filetransfer.ssl-1.0.0.v20151130-0157.jar\""));
+		Assert.assertTrue(classpath.contains("org.eclipse.ecf.provider.filetransfer.ssl-1.0.0.v20151130-0157-sources.jar\""));
+	}
+
+	@Test
+	public void doTestWithDotInGroup() throws Exception {
+		File bin = copyIntoFolder("org.eclipse.ecf.provider.filetransfer.ssl_1.0.0.v20151130-0157.jar");
+		File source = copyIntoFolder("org.eclipse.ecf.provider.filetransfer.ssl.source_1.0.0.v20151130-0157.jar");
+
+		File mavenRoot = new File(folder.getRoot(), "otherMaven");
+		try (MavenRepoBuilder builder = new MavenRepoBuilder(mavenRoot)) {
+			builder.install("some.group", bin);
+			builder.install("some.group", source);
+		}
+		write("build.gradle",
+				"apply plugin: 'java'",
+				"repositories { maven { url '" + mavenRoot.getAbsolutePath().replace("\\", "/") + "' } }",
+				"dependencies {",
+				"    compile 'some.group:org.eclipse.ecf.provider.filetransfer.ssl:+'",
 				"}",
 				"apply plugin: 'eclipse'");
 		gradleRunner().forwardOutput().withArguments("eclipse").build();
