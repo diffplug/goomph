@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [3.36.1] - 2022-04-20
 ### Fixed
 - Handle groupId with dots in p2AsMaven ([#188](https://github.com/diffplug/goomph/pull/188))
 
