@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 DiffPlug
+ * Copyright (C) 2016-2022 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ class MavenRepoBuilder implements AutoCloseable {
 	@Override
 	public void close() throws Exception {
 		for (Coordinate coord : artifactMap.keySet()) {
-			File groupFolder = new File(root, coord.group);
+			File groupFolder = new File(root, coord.group.replace(".", "/"));
 			File artifactFolder = new File(groupFolder, coord.artifactId);
 			FileMisc.mkdirs(artifactFolder);
 			Collection<Artifact> values = artifactMap.get(coord);
