@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [3.36.2] - 2022-04-23
 ### Fixed
 - Tweaked the `4.13.0` bootstrapper to fix antrunner tasks (fixes [#185](https://github.com/diffplug/goomph/issues/185)).
 
