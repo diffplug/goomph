@@ -59,7 +59,7 @@ public final class EclipseRelease {
 		}
 	}
 
-	public static final String LATEST = "4.23.0";
+	public static final String LATEST = "4.24.0";
 
 	public static EclipseRelease latestOfficial() {
 		return official(LATEST);
