@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 ### Added
-- Eclipse `4.24.0` aka `2022-06` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.24/)).
+- Eclipse `4.24.0` aka `2022-06` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.24/)) ([#191](https://github.com/diffplug/goomph/pull/191)).
 
 ## [3.36.2] - 2022-04-23
 ### Fixed
