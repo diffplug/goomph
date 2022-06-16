@@ -46,6 +46,7 @@ public class MavenCentralMapping {
 	private static final String PDE = "org.eclipse.pde";
 	private static final String EMF = "org.eclipse.emf";
 	private static final String ECF = "org.eclipse.ecf";
+	private static final String OSGI = "org.osgi";
 
 	private static final String ICU_BUNDLE_ID = "com.ibm.icu";
 
@@ -67,6 +68,8 @@ public class MavenCentralMapping {
 			return EMF + ":" + bundleId;
 		} else if (bundleId.startsWith(ECF)) {
 			return ECF + ":" + bundleId;
+		} else if (bundleId.startsWith(OSGI)) {
+			return OSGI + ":" + bundleId;
 		} else {
 			return PLATFORM + ":" + bundleId;
 		}
