@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2021 DiffPlug
+ * Copyright (C) 2018-2022 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,7 @@ public class MavenCentralMapping {
 	private static final String PDE = "org.eclipse.pde";
 	private static final String EMF = "org.eclipse.emf";
 	private static final String ECF = "org.eclipse.ecf";
+	private static final String OSGI = "org.osgi";
 
 	private static final String ICU_BUNDLE_ID = "com.ibm.icu";
 
@@ -67,6 +68,8 @@ public class MavenCentralMapping {
 			return EMF + ":" + bundleId;
 		} else if (bundleId.startsWith(ECF)) {
 			return ECF + ":" + bundleId;
+		} else if (bundleId.startsWith(OSGI)) {
+			return OSGI + ":" + bundleId;
 		} else {
 			return PLATFORM + ":" + bundleId;
 		}
@@ -96,6 +99,13 @@ public class MavenCentralMapping {
 	}
 
 	static String calculateMavenCentralVersion(String bundleId, String bundleVersion) {
+		if ("org.eclipse.equinox.preferences".equals(bundleId) && "3.10.0.v20220503-1634".equals(bundleVersion)) {
+			// See https://github.com/eclipse-equinox/equinox.bundles/issues/54
+			return "3.10.1";
+		} else if ("org.eclipse.osgi.util".equals(bundleId) && "3.7.0.v20220427-2144".equals(bundleVersion)) {
+			// See https://github.com/eclipse-equinox/equinox.framework/issues/70
+			return "3.7.1";
+		}
 		Version parsed = Version.parseVersion(bundleVersion);
 		if (ICU_BUNDLE_ID.equals(bundleId) && parsed.getMicro() == 0) {
 			return parsed.getMajor() + "." + parsed.getMinor();
