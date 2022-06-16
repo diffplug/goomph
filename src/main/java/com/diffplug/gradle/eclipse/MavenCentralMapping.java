@@ -99,6 +99,13 @@ public class MavenCentralMapping {
 	}
 
 	static String calculateMavenCentralVersion(String bundleId, String bundleVersion) {
+		if ("org.eclipse.equinox.preferences".equals(bundleId) && "3.10.0.v20220503-1634".equals(bundleVersion)) {
+			// See https://github.com/eclipse-equinox/equinox.bundles/issues/54
+			return "3.10.1";
+		} else if ("org.eclipse.osgi.util".equals(bundleId) && "3.7.0.v20220427-2144".equals(bundleVersion)) {
+			// See https://github.com/eclipse-equinox/equinox.framework/issues/70
+			return "3.7.1";
+		}
 		Version parsed = Version.parseVersion(bundleVersion);
 		if (ICU_BUNDLE_ID.equals(bundleId) && parsed.getMicro() == 0) {
 			return parsed.getMajor() + "." + parsed.getMinor();

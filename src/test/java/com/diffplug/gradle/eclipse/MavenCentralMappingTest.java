@@ -91,6 +91,28 @@ public class MavenCentralMappingTest {
 	}
 
 	@Test
+	public void testParsing4240() throws IOException, ParserConfigurationException, SAXException {
+		try (InputStream input = MavenCentralMappingTest.class.getResourceAsStream("/artifacts-4.24.0.xml")) {
+			assert4240(MavenCentralMapping.parse(input, MavenCentralMapping::groupIdArtifactId));
+		}
+	}
+
+	private void assert4240(Map<String, String> groupIdArtifactIdToVersion) {
+		Assertions.assertThat(groupIdArtifactIdToVersion)
+				.containsEntry("org.eclipse.platform:org.eclipse.debug.core", "3.19.100")
+				.containsEntry("org.eclipse.platform:org.eclipse.equinox.p2.metadata", "2.6.200")
+				.containsEntry("org.eclipse.platform:org.eclipse.help", "3.9.100")
+				.containsEntry("org.eclipse.ecf:org.eclipse.ecf", "3.10.0")
+				.containsEntry("org.eclipse.jdt:org.eclipse.jdt.core", "3.30.0")
+				.containsEntry("org.eclipse.jdt:ecj", "3.30.0")
+				.containsEntry("org.osgi:org.osgi.service.prefs", "1.1.2")
+				.containsEntry("org.osgi:org.osgi.util.function", "1.2.0")
+				.containsEntry("org.eclipse.platform:org.eclipse.equinox.preferences","3.10.1") // 3.10.0 is broken on maven central, a fix was published
+				.containsEntry("org.eclipse.platform:org.eclipse.osgi.util", "3.7.1") // 3.7.0 is broken on maven central, a fix was published
+				.hasSize(833);
+	}
+
+	@Test
 	public void testMissingBugfixVersion() throws IOException {
 		Assertions.assertThatThrownBy(() -> {
 			MavenCentralMapping.bundleToVersion(EclipseRelease.official("4.14"));
