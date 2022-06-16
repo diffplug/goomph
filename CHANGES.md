@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [3.37.0] - 2022-06-16
 ### Added
 - Eclipse `4.24.0` aka `2022-06` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.24/)) ([#191](https://github.com/diffplug/goomph/pull/191)).
 
