@@ -54,7 +54,7 @@ public class JRE {
 		} else {
 			// Assume AppClassLoader of Java9+
 			Class<? extends ClassLoader> clz = classLoader.getClass();
-			Field ucpFld = clz.getDeclaredField("ucp");
+			Field ucpFld = getUCPField(clz);
 			ucpFld.setAccessible(true);
 			Object ucpObj = ucpFld.get(classLoader);
 			Field pathFld = ucpObj.getClass().getDeclaredField("path");
@@ -64,6 +64,17 @@ public class JRE {
 			urls = pathObj.toArray(new URL[pathObj.size()]);
 		}
 		return extractLongClasspathJar(urls);
+	}
+
+	private static Field getUCPField(Class<? extends ClassLoader> clz) throws Exception {
+		try {
+			return clz.getDeclaredField("ucp");
+		} catch (NoSuchFieldException e) {
+			// Java 16+:
+			// jdk.internal.loader.BuiltinClassLoader.ucp
+			// https://github.com/openjdk/jdk/commit/03a4df0acd103702e52dcd01c3f03fda4d7b04f5#diff-32cc12c0e3172fe5f2da1f65a75fa1cb920c39040d06323c83ad2c4d84e095aaL147
+			return clz.getSuperclass().getDeclaredField("ucp");
+		}	
 	}
 
 	private static URL[] extractLongClasspathJar(URL[] in) throws IOException {
