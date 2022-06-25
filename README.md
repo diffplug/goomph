@@ -27,29 +27,6 @@ output = [
 output = prefixDelimiterReplace(input, 'https://javadoc.io/doc/com.diffplug.gradle/goomph/', '/', versionLast);
 -->
 
-## IDE-as-build-artifact.
-
-It is possible to have many installations of the Eclipse IDE share a common set of installed artifacts, called a "bundlepool".  This means it is fast and efficient to get a purpose-built IDE for every project, preconfigured with all the plugins and settings appropriate for the project at hand.
-
-When you run `gradlew ide`, it builds and downloads an IDE into `build/oomphIde` with just the features you need.  Takes ~15 seconds and 1MB of disk space once all the common artifacts have been cached at `~/.goomph`.
-
-```groovy
-apply plugin: 'com.diffplug.oomph.ide'
-oomphIde {
-  repoEclipseLatest()
-  jdt {}
-  eclipseIni {
-    vmargs('-Xmx2g')    // IDE can have up to 2 gigs of RAM
-  }
-  style {
-    classicTheme()  // oldschool cool
-    niceText()      // with nice fonts and visible whitespace
-  }
-}
-```
-
-See the [plugin's javadoc](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.37.0/com/diffplug/gradle/oomph/OomphIdePlugin.html) for a quickstart, and [HOW_TO_AUTOMATE_IDE.md](HOW_TO_AUTOMATE_IDE.md) for examples and more in-depth details.
-
 ## Blog posts
 
 - [P2, Maven, and Gradle](https://discuss.diffplug.com/t/p2-maven-and-gradle)
@@ -84,7 +61,7 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 * [`equinoxlaunch`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.37.0/com/diffplug/gradle/eclipserunner/EquinoxLaunchPlugin.html) can configure and run equinox applications as part of the build, such as a code generator.
 * [`OsgiExecable`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.37.0/com/diffplug/gradle/osgi/OsgiExecable.html) makes it easy to run a chunk of code within an OSGi container, and get the result from outside the container.
 
-#### `com.diffplug.p2` A  and plugins for manipulating p2 data.
+#### `com.diffplug.p2` A  and plugins for manipulating p2 data. (*mostly [abandoned](https://github.com/diffplug/goomph/issues/166#issuecomment-945188596) now*)
 
 * [`asmaven`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.37.0/com/diffplug/gradle/p2/AsMavenPlugin.html) downloads dependencies from a p2 repository and makes them available in a local maven repository.
 * [`P2Model`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.37.0/com/diffplug/gradle/p2/P2Model.html) models a set of p2 repositories and IUs, and provides convenience methods for running p2-director or the p2.mirror ant task against these.
@@ -93,7 +70,7 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 * [`FeaturesAndBundlesPublisher`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.37.0/com/diffplug/gradle/p2/FeaturesAndBundlesPublisher.html) models the FeaturesAndBundlesPublisher eclipse application.
 * [`Repo2Runnable`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.37.0/com/diffplug/gradle/p2/Repo2Runnable.html) models the Repo2Runnable eclipse application.
 
-#### `com.diffplug.gradle.pde` Tasks for running Eclipse PDE using a downloaded eclipse instance.
+#### `com.diffplug.gradle.pde` Tasks for running Eclipse PDE using a downloaded eclipse instance. (*this part is mostly [abandoned](https://github.com/diffplug/goomph/issues/166#issuecomment-945188596) now*)
 
 * [`PdeBuildTask`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.37.0/com/diffplug/gradle/pde/PdeBuildTask.html) runs PDE build to build an RCP product.
 * [`PdeAntBuildTask`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.37.0/com/diffplug/gradle/pde/PdeAntBuildTask.html) runs PDE on an ant file.
@@ -111,6 +88,29 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 #### Other
 
 * [`com.diffplug.configuration-cache-for-platform-specific-build`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.37.0/com/diffplug/gradle/swt/PlatformSpecificBuildPlugin.html) allows you to use `OS.getNative()` and `OS.getRunning()` in your gradle build without breaking the configuration cache.
+
+## IDE-as-build-artifact. (*this part is mostly [abandoned](https://github.com/diffplug/goomph/issues/189)*)
+
+It is possible to have many installations of the Eclipse IDE share a common set of installed artifacts, called a "bundlepool".  This means it is fast and efficient to get a purpose-built IDE for every project, preconfigured with all the plugins and settings appropriate for the project at hand.
+
+When you run `gradlew ide`, it builds and downloads an IDE into `build/oomphIde` with just the features you need.  Takes ~15 seconds and 1MB of disk space once all the common artifacts have been cached at `~/.goomph`.
+
+```groovy
+apply plugin: 'com.diffplug.oomph.ide'
+oomphIde {
+  repoEclipseLatest()
+  jdt {}
+  eclipseIni {
+    vmargs('-Xmx2g')    // IDE can have up to 2 gigs of RAM
+  }
+  style {
+    classicTheme()  // oldschool cool
+    niceText()      // with nice fonts and visible whitespace
+  }
+}
+```
+
+See the [plugin's javadoc](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.37.0/com/diffplug/gradle/oomph/OomphIdePlugin.html) for a quickstart, and [HOW_TO_AUTOMATE_IDE.md](HOW_TO_AUTOMATE_IDE.md) for examples and more in-depth details.
 
 <!---freshmark /javadoc -->
 
