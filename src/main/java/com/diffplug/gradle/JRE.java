@@ -54,7 +54,14 @@ public class JRE {
 		} else {
 			// Assume AppClassLoader of Java9+
 			Class<? extends ClassLoader> clz = classLoader.getClass();
-			Field ucpFld = clz.getDeclaredField("ucp");
+			Field ucpFld;
+			try {
+				// Java 9 - 15
+				ucpFld = clz.getDeclaredField("ucp");
+			} catch (NoSuchFieldException e) {
+				// Java 16+
+				ucpFld = clz.getSuperclass().getDeclaredField("ucp");
+			}
 			ucpFld.setAccessible(true);
 			Object ucpObj = ucpFld.get(classLoader);
 			Field pathFld = ucpObj.getClass().getDeclaredField("path");
