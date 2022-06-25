@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 DiffPlug
+ * Copyright (C) 2021-2022 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ public class JRE {
 			// jdk.internal.loader.BuiltinClassLoader.ucp
 			// https://github.com/openjdk/jdk/commit/03a4df0acd103702e52dcd01c3f03fda4d7b04f5#diff-32cc12c0e3172fe5f2da1f65a75fa1cb920c39040d06323c83ad2c4d84e095aaL147
 			return clz.getSuperclass().getDeclaredField("ucp");
-		}	
+		}
 	}
 
 	private static URL[] extractLongClasspathJar(URL[] in) throws IOException {
