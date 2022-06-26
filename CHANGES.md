@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+### Fixed
+- Attempt to fix `equinoxLaunch` and `oomphIde` on Java 16+ ([#195](https://github.com/diffplug/goomph/pull/195) fixes [#182](https://github.com/diffplug/goomph/issues/182))
 
 ## [3.37.0] - 2022-06-16
 ### Added
