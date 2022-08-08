@@ -178,6 +178,9 @@ public class ZipMisc {
 			ZipEntry entry;
 			while ((entry = zipInput.getNextEntry()) != null) {
 				File dest = new File(destinationDir, entry.getName());
+				if (!dest.toPath().normalize().startsWith(destinationDir.toPath().normalize())) {
+					throw new RuntimeException("Bad zip entry");
+				}
 				if (entry.isDirectory()) {
 					FileMisc.mkdirs(dest);
 				} else {
