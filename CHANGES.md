@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Fixed
 - Fixed zip-slip vulnerability in `ZipMisc`. This could have allowed a malicious zip file to extract itself into an arbitrary directory. The only file that Goomph extracts is the p2 bootstrapper and eclipse metadata files hosted at `eclipse.org`, which are not malicious, so the only way this vulnerability could have affected you is if you had set a custom bootstrap zip, and that zip was malicious. Unlikely! Defense in depth is important, so good to have this fixed, and thanks to @JLLeitschuh for reporting, and with a fix no less! ([#198](https://github.com/diffplug/goomph/pull/198))
+- Bumped all deps to latest. ([#199](https://github.com/diffplug/goomph/pull/199))
 
 ## [3.37.1] - 2022-06-26
 ### Fixed
