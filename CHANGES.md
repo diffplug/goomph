@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [3.38.0] - 2022-09-14
 ### Added
 - Eclipse `4.25.0` aka `2022-09` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.25/))
 
