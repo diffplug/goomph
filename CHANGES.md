@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+### Added
+- New method `constrainTransitivesToThisReleaseExcept('icu4j', 'someotherdep')` to limit which transitives get constrained.
 
 ## [3.38.0] - 2022-09-14
 ### Added
