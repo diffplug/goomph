@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2021 DiffPlug
+ * Copyright (C) 2018-2022 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@ import com.diffplug.common.base.StringPrinter;
 import com.diffplug.common.swt.os.SwtPlatform;
 import com.diffplug.gradle.pde.EclipseRelease;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
@@ -132,16 +134,22 @@ public class MavenCentralExtension {
 		}
 
 		public void constrainTransitivesToThisRelease() {
+			constrainTransitivesToThisReleaseExcept();
+		}
+
+		public void constrainTransitivesToThisReleaseExcept(String... artifactNames) {
+			List<String> names = Arrays.asList(artifactNames);
 			project.getConfigurations().forEach(config -> {
 				config.getResolutionStrategy().eachDependency(dep -> {
 					ModuleVersionSelector mod = dep.getRequested();
-					String version = groupIdArtifactIdToVersion.get(mod.getGroup() + ":" + mod.getName());
-					if (version != null) {
-						dep.useVersion(version);
+					if (!names.contains(mod.getName())) {
+						String version = groupIdArtifactIdToVersion.get(mod.getGroup() + ":" + mod.getName());
+						if (version != null) {
+							dep.useVersion(version);
+						}
 					}
 				});
 			});
-
 		}
 
 		/////////////

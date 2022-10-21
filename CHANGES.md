@@ -2,6 +2,23 @@
 
 ## [Unreleased]
 
+## [3.39.0] - 2022-09-30
+### Added
+- New method `constrainTransitivesToThisReleaseExcept('icu4j', 'someotherdep')` to limit which transitives get constrained.
+
+## [3.38.0] - 2022-09-14
+### Added
+- Eclipse `4.25.0` aka `2022-09` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.25/))
+
+## [3.37.2] - 2022-08-09
+### Fixed
+- Fixed zip-slip vulnerability in `ZipMisc` ([CVE-2022-26049](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-26049)). This could have allowed a malicious zip file to extract itself into an arbitrary directory. The only file that Goomph extracts is the p2 bootstrapper and eclipse metadata files hosted at `eclipse.org`, which are not malicious, so the only way this vulnerability could have affected you is if you had set a custom bootstrap zip, and that zip was malicious. Unlikely! Defense in depth is important, so good to have this fixed, and thanks to @JLLeitschuh for reporting, and with a fix no less! ([#198](https://github.com/diffplug/goomph/pull/198))
+- Bumped all deps to latest. ([#199](https://github.com/diffplug/goomph/pull/199))
+
+## [3.37.1] - 2022-06-26
+### Fixed
+- Attempt to fix `equinoxLaunch` and `oomphIde` on Java 16+ ([#195](https://github.com/diffplug/goomph/pull/195) fixes [#182](https://github.com/diffplug/goomph/issues/182))
+
 ## [3.37.0] - 2022-06-16
 ### Added
 - Eclipse `4.24.0` aka `2022-06` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.24/)) ([#191](https://github.com/diffplug/goomph/pull/191)).
