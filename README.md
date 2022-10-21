@@ -110,7 +110,7 @@ oomphIde {
 }
 ```
 
-See the [plugin's javadoc](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.37.0/com/diffplug/gradle/oomph/OomphIdePlugin.html) for a quickstart, and [HOW_TO_AUTOMATE_IDE.md](HOW_TO_AUTOMATE_IDE.md) for examples and more in-depth details.
+See the [plugin's javadoc](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.39.0/com/diffplug/gradle/oomph/OomphIdePlugin.html) for a quickstart, and [HOW_TO_AUTOMATE_IDE.md](HOW_TO_AUTOMATE_IDE.md) for examples and more in-depth details.
 
 <!---freshmark /javadoc -->
 
