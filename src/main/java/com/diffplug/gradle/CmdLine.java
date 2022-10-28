@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2019 DiffPlug
+ * Copyright (C) 2015-2022 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import com.diffplug.common.base.Throwing;
 import com.diffplug.common.collect.ImmutableList;
 import com.diffplug.common.collect.Lists;
 import com.diffplug.common.swt.os.OS;
+import groovy.lang.Closure;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -73,6 +74,16 @@ public class CmdLine {
 		});
 	}
 
+	public void cleanDir(File dir) {
+		run(() -> {
+			try {
+				FileMisc.cleanDir(dir);
+			} catch (IOException e) {
+				throw new RuntimeException("cleanDir: " + dir, e);
+			}
+		});
+	}
+
 	/** Removes the given file or directory. */
 	public void rm(File fileOrDir) {
 		run(() -> {
@@ -110,6 +121,11 @@ public class CmdLine {
 				FileUtils.moveFile(src, dst);
 			}
 		});
+	}
+
+	/** Removes the given file or directory. */
+	public void run(Closure<?> action) {
+		run(() -> action.run());
 	}
 
 	/** Removes the given file or directory. */
