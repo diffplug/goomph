@@ -64,11 +64,6 @@ public class MavenCentralExtension {
 			dep(JavaPlugin.TEST_COMPILE_ONLY_CONFIGURATION_NAME, bundleId);
 		}
 
-		@Deprecated
-		public void compile(String bundleId) {
-			dep(JavaPlugin.COMPILE_CONFIGURATION_NAME, bundleId);
-		}
-
 		public void api(String bundleId) {
 			dep(JavaPlugin.API_CONFIGURATION_NAME, bundleId);
 		}
@@ -77,27 +72,12 @@ public class MavenCentralExtension {
 			dep(JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME, bundleId);
 		}
 
-		@Deprecated
-		public void testCompile(String bundleId) {
-			dep(JavaPlugin.TEST_COMPILE_CONFIGURATION_NAME, bundleId);
-		}
-
 		public void testImplementation(String bundleId) {
 			dep(JavaPlugin.TEST_IMPLEMENTATION_CONFIGURATION_NAME, bundleId);
 		}
 
-		@Deprecated
-		public void runtime(String bundleId) {
-			dep(JavaPlugin.RUNTIME_CONFIGURATION_NAME, bundleId);
-		}
-
 		public void runtimeOnly(String bundleId) {
 			dep(JavaPlugin.RUNTIME_ONLY_CONFIGURATION_NAME, bundleId);
-		}
-
-		@Deprecated
-		public void testRuntime(String bundleId) {
-			dep(JavaPlugin.TEST_RUNTIME_CONFIGURATION_NAME, bundleId);
 		}
 
 		public void testRuntimeOnly(String bundleId) {
@@ -163,11 +143,6 @@ public class MavenCentralExtension {
 			nativeDep(JavaPlugin.TEST_COMPILE_ONLY_CONFIGURATION_NAME, bundleId);
 		}
 
-		@Deprecated
-		public void compileNative(String bundleId) {
-			nativeDep(JavaPlugin.COMPILE_CONFIGURATION_NAME, bundleId);
-		}
-
 		public void apiNative(String bundleId) {
 			nativeDep(JavaPlugin.API_CONFIGURATION_NAME, bundleId);
 		}
@@ -176,27 +151,12 @@ public class MavenCentralExtension {
 			nativeDep(JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME, bundleId);
 		}
 
-		@Deprecated
-		public void testCompileNative(String bundleId) {
-			nativeDep(JavaPlugin.TEST_COMPILE_CONFIGURATION_NAME, bundleId);
-		}
-
 		public void testImplementationNative(String bundleId) {
 			nativeDep(JavaPlugin.TEST_IMPLEMENTATION_CONFIGURATION_NAME, bundleId);
 		}
 
-		@Deprecated
-		public void runtimeNative(String bundleId) {
-			nativeDep(JavaPlugin.RUNTIME_CONFIGURATION_NAME, bundleId);
-		}
-
 		public void runtimeOnlyNative(String bundleId) {
 			nativeDep(JavaPlugin.RUNTIME_ONLY_CONFIGURATION_NAME, bundleId);
-		}
-
-		@Deprecated
-		public void testRuntimeNative(String bundleId) {
-			nativeDep(JavaPlugin.TEST_RUNTIME_CONFIGURATION_NAME, bundleId);
 		}
 
 		public void testRuntimeOnlyNative(String bundleId) {
