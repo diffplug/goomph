@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 DiffPlug
+ * Copyright (C) 2016-2022 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,8 +62,8 @@ import org.gradle.api.Project;
  * The registry lives in {@link GoomphCacheLocations#workspaces()}.  It names the workspace folders as such:
  * 
  * ```
- *     <gradle root project's name>-<hashcode of ide directory absolute path>/
- *     <gradle root project's name>-<hashcode of ide directory absolute path>-owner   [file containing absolute path of ide folder]
+ *     gradle root project's name-hashcode of ide directory absolute path/
+ *     gradle root project's name-hashcode of ide directory absolute path-owner   [file containing absolute path of ide folder]
  * ```
  */
 public class WorkspaceRegistry {

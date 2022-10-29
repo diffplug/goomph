@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2020 DiffPlug
+ * Copyright (C) 2015-2022 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -126,7 +126,7 @@ import org.gradle.api.Project;
  *     group 'myGroup', {
  *         ...
  *         p2ant {
- *             it.addArg('plugincustomization', '<path to proxies.ini>')
+ *             it.addArg('plugincustomization', 'path to proxies.ini')
  *         }
  *     }
  * }
@@ -183,7 +183,7 @@ import org.gradle.api.Project;
  * Gradle's dependency resolution.  It's very impressive, but it has a few limitations:
  *
  * - It does not support composite repositories
- * - It does not work on Gradle > 2.8
+ * - It does not work on Gradle over 2.8
  *
  * All of the above are great work, and served as useful examples.  The central
  * problem which is the cause of so many not-quite-satisfying implementations is this:

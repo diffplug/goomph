@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2019 DiffPlug
+ * Copyright (C) 2015-2022 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package com.diffplug.gradle;
 
 
-import com.diffplug.common.base.Throwing;
+import groovy.lang.Closure;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
 
@@ -39,6 +39,10 @@ import org.gradle.api.tasks.TaskAction;
  **/
 public class CmdLineTask extends DefaultTask {
 	private CmdLine cmdLine = new CmdLine();
+
+	public void cleanDir(Object dir) {
+		cmdLine.cleanDir(getProject().file(dir));
+	}
 
 	/** Executes the given command. */
 	public void cmd(String cmd) {
@@ -66,7 +70,7 @@ public class CmdLineTask extends DefaultTask {
 	}
 
 	/** Removes the given file or directory. */
-	public void run(Throwing.Runnable action) {
+	public void run(Closure<?> action) {
 		cmdLine.run(action);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2020 DiffPlug
+ * Copyright (C) 2016-2022 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,7 +96,7 @@ public class GoomphCacheLocations {
 	/**
 	 * Location where the p2-bootstrap application should be downloaded from.
 	 *
-	 * Goomph's p2 tasks rely on the eclipse [p2 director application](https://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Fguide%2Fp2_director.html&cp=2_0_20_2).
+	 * Goomph's p2 tasks rely on the eclipse [p2 director application](https://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Fguide%2Fp2_director.html&amp;cp=2_0_20_2).
 	 * It is distributed within the Eclipse SDK.  But rather
 	 * than requiring the entire SDK, we have packaged just
 	 * the jars required for p2 director into a ~7MB download
@@ -120,7 +120,7 @@ public class GoomphCacheLocations {
 	 * Location where the p2-bootstrap application
 	 * is cached: `~/.goomph/p2-bootstrap`.
 	 *
-	 * Goomph's p2 tasks rely on the eclipse [p2 director application](https://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Fguide%2Fp2_director.html&cp=2_0_20_2).
+	 * Goomph's p2 tasks rely on the eclipse [p2 director application](https://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Fguide%2Fp2_director.html&amp;cp=2_0_20_2).
 	 * It is distributed within the Eclipse SDK.  But rather
 	 * than requiring the entire SDK, we have packaged just
 	 * the jars required for p2 director into a ~7MB download
@@ -137,7 +137,7 @@ public class GoomphCacheLocations {
 	/**
 	 * Location where the pde-bootstrap application should be downloaded from.
 	 *
-	 * Goomph's pde tasks rely on the eclipse [p2 director application](https://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Fguide%2Fp2_director.html&cp=2_0_20_2).
+	 * Goomph's pde tasks rely on the eclipse [p2 director application](https://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Fguide%2Fp2_director.html&amp;cp=2_0_20_2).
 	 * It is distributed within the Eclipse SDK.  The Package is
 	 * downloaded and installed during configuration from official eclipse
 	 * repository.

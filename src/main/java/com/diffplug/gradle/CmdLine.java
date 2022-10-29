@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2019 DiffPlug
+ * Copyright (C) 2015-2022 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,18 @@ package com.diffplug.gradle;
 
 
 import com.diffplug.common.base.Errors;
-import com.diffplug.common.base.Throwing;
 import com.diffplug.common.collect.ImmutableList;
-import com.diffplug.common.collect.Lists;
 import com.diffplug.common.swt.os.OS;
+import groovy.lang.Closure;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.io.Serializable;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -38,7 +39,11 @@ import org.apache.commons.io.FileUtils;
  * Implementation of {@link CmdLineTask}, but helpful for implementing other things as well.
  */
 public class CmdLine {
-	private List<Throwing.Runnable> actions = Lists.newArrayList();
+	public static abstract class SerializableAction implements Serializable {
+		abstract void run() throws Exception;
+	}
+
+	private List<SerializableAction> actions = new ArrayList<>();
 
 	private boolean echoCmd = true;
 	private boolean echoOutput = true;
@@ -61,65 +66,101 @@ public class CmdLine {
 
 	/** Sets the working directory to the given dir, then executes the given command. */
 	public void cmd(File workingDir, String cmd) {
-		run(() -> {
-			try {
-				runCmd(workingDir, cmd, echoCmd, echoOutput);
-			} catch (IOException e) {
-				throw new RuntimeException(
-						"cmd: " + cmd + "\n" +
-								"dir: " + workingDir.getAbsolutePath(),
-						e);
+		run(new SerializableAction() {
+			@Override
+			void run() throws Exception {
+				try {
+					runCmd(workingDir, cmd, echoCmd, echoOutput);
+				} catch (IOException e) {
+					throw new RuntimeException(
+							"cmd: " + cmd + "\n" +
+									"dir: " + workingDir.getAbsolutePath(),
+							e);
+				}
+			}
+		});
+	}
+
+	public void cleanDir(File dir) {
+		run(new SerializableAction() {
+			@Override
+			void run() throws Exception {
+				try {
+					FileMisc.cleanDir(dir);
+				} catch (IOException e) {
+					throw new Exception("cleanDir: " + dir, e);
+				}
 			}
 		});
 	}
 
 	/** Removes the given file or directory. */
 	public void rm(File fileOrDir) {
-		run(() -> {
-			if (fileOrDir.exists()) {
-				FileMisc.forceDelete(fileOrDir);
+		run(new SerializableAction() {
+			@Override
+			void run() throws Exception {
+				if (fileOrDir.exists()) {
+					FileMisc.forceDelete(fileOrDir);
+				}
 			}
 		});
 	}
 
 	/** Removes the given file or directory. */
 	public void copy(File src, File dst) {
-		run(() -> {
-			if (!src.exists()) {
-				throw new IllegalArgumentException("copy failed: " + src.getAbsolutePath() + " does not exist.");
-			}
+		run(new SerializableAction() {
+			@Override
+			void run() throws Exception {
+				if (!src.exists()) {
+					throw new IllegalArgumentException("copy failed: " + src.getAbsolutePath() + " does not exist.");
+				}
 
-			if (src.isDirectory()) {
-				FileUtils.copyDirectory(src, dst);
-			} else {
-				FileUtils.copyFile(src, dst);
+				if (src.isDirectory()) {
+					FileUtils.copyDirectory(src, dst);
+				} else {
+					FileUtils.copyFile(src, dst);
+				}
 			}
 		});
 	}
 
 	/** Removes the given file or directory. */
 	public void mv(File src, File dst) {
-		run(() -> {
-			if (!src.exists()) {
-				throw new IllegalArgumentException("mv failed: " + src.getAbsolutePath() + " does not exist.");
-			}
+		run(new SerializableAction() {
+			@Override
+			void run() throws Exception {
+				if (!src.exists()) {
+					throw new IllegalArgumentException("mv failed: " + src.getAbsolutePath() + " does not exist.");
+				}
 
-			if (src.isDirectory()) {
-				FileUtils.moveDirectory(src, dst);
-			} else {
-				FileUtils.moveFile(src, dst);
+				if (src.isDirectory()) {
+					FileUtils.moveDirectory(src, dst);
+				} else {
+					FileUtils.moveFile(src, dst);
+				}
+
 			}
 		});
 	}
 
 	/** Removes the given file or directory. */
-	public void run(Throwing.Runnable action) {
+	public void run(Closure<?> action) {
+		run(new SerializableAction() {
+			@Override
+			void run() throws Exception {
+				action.run();
+			}
+		});
+	}
+
+	/** Removes the given file or directory. */
+	public void run(SerializableAction action) {
 		actions.add(action);
 	}
 
 	/** Runs the commands that have been queued up. */
 	public void performActions() throws Throwable {
-		for (Throwing.Runnable action : actions) {
+		for (SerializableAction action : actions) {
 			action.run();
 		}
 	}

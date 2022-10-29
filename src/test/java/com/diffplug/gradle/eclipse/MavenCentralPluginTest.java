@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2021 DiffPlug
+ * Copyright (C) 2015-2022 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ public class MavenCentralPluginTest extends GradleIntegrationTest {
 				"}",
 				"eclipseMavenCentral {",
 				"    release '4.7.0', {",
-				"        compile 'org.eclipse.equinox.common'",
+				"        implementation 'org.eclipse.equinox.common'",
 				"    }",
 				"}",
 				"apply plugin: 'java'");
@@ -44,7 +44,7 @@ public class MavenCentralPluginTest extends GradleIntegrationTest {
 				"}",
 				"eclipseMavenCentral {",
 				"    release '4.7.0', {",
-				"        compile 'com.ibm.icu'",
+				"        implementation 'com.ibm.icu'",
 				"    }",
 				"}",
 				"repositories {",

@@ -1,6 +1,15 @@
 # Goomph releases
 
 ## [Unreleased]
+### Removed
+- **breaking** Long-deprecated methods of `eclipseMavenCentral` have been removed
+  - `compile`, `testCompile`, `runtime`, `testRuntime` and their native versions
+  - this was required to compile Goomph against Gradle 7.x
+- **breaking** Removed `CmdLine.run(Throwing.Runnable)` and `CmdLineTask.(Throwing.Runnable)`
+### Added
+- `CmdLineTask` and `CmdLine` now support configuration cache.
+  - This required replacing `run(Throwing.Runnable)` with `run(SerializableAction)`.
+  - Also added new method `CmdLine.cleanDir`
 
 ## [3.39.0] - 2022-09-30
 ### Added

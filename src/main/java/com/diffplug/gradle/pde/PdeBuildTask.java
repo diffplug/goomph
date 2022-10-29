@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2020 DiffPlug
+ * Copyright (C) 2016-2022 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@ import org.gradle.internal.Actions;
  *     }
  *     // p2.compress doesn't work, so we'll do it manually
  *     doLast {
- *         def compressXml = { name ->
+ *         def compressXml = { name -&gt;
  *             def xml = project.file(P2_REPO_DIR + "/${name}.xml")
  *             def jar = project.file(P2_REPO_DIR + "/${name}.jar")
  *             ZipMisc.zip(xml, "${name}.xml", jar)
