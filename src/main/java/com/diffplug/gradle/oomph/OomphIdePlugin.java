@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2020 DiffPlug
+ * Copyright (C) 2016-2022 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,7 +85,7 @@ import org.gradle.api.Task;
  * 
  * It helps to know a little about the guts of the tasks.
  * 
- * `ide` -> `ideSetupWorkspace` -> `ideSetupP2`
+ * `ide` - `ideSetupWorkspace` - `ideSetupP2`
  * 
  * - `ideSetupP2` installs plugins and updates their versions.
  *     + If you change something about the p2 model or the icons,
@@ -143,7 +143,7 @@ import org.gradle.api.Task;
  *     ...
  * 
  *     p2director {
- *         addArg('plugincustomization', '<path to proxies.ini>')
+ *         addArg('plugincustomization', 'path to proxies.ini')
  *     }
  * }
  * ```

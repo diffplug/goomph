@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 DiffPlug
+ * Copyright (C) 2016-2022 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,9 +53,9 @@ public class PdeInstallation implements EclipseRunner {
 	 * - Option #1: To use an officially supported release, use this:
 	 *     + `GOOMPH_PDE_VER`=4.5.2 (or any official release)
 	 * - Option #2: To use any release (e.g. milestone, nightly, etc)
-	 *     + `GOOMPH_PDE_VER`=<any version>
-	 *     + `GOOMPH_PDE_UPDATE_SITE`=<url to update site>
-	 *     + `GOOMPH_PDE_ID`=<the ID used for caching, cannot be a version listed in Option #1)
+	 *     + `GOOMPH_PDE_VER`=any version
+	 *     + `GOOMPH_PDE_UPDATE_SITE`=url to update site
+	 *     + `GOOMPH_PDE_ID`=the ID used for caching, cannot be a version listed in Option #1)
 	 *
 	 * You must do one or the other, specify only `VER` for Option #1,
 	 * or specify `VER`, `UPDATE_SITE`, and `ID` for Option #2.

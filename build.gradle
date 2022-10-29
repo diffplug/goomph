@@ -102,6 +102,7 @@ dependencies {
 // MAVEN //
 ///////////
 javadoc {
+	options.source("8")
 	// error on javadoc problem
 	options.addStringOption('Xwerror', '-quiet')
 	// setup links

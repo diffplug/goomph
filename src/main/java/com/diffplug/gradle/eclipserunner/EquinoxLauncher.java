@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2021 DiffPlug
+ * Copyright (C) 2016-2022 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -143,7 +143,7 @@ public class EquinoxLauncher {
 	 * map.put("osgi.framework.useSystemProperties", "false");
 	 * map.put("osgi.install.area", <installation root>);
 	 * map.put("osgi.noShutdown", "false");
-	 * 	map.put(EclipseStarter.PROP_FRAMEWORK, <path to plugin "org.eclipse.osgi">);
+	 * 	map.put(EclipseStarter.PROP_FRAMEWORK, &lt;path to plugin "org.eclipse.osgi"&gt;);
 	 * ```
 	 * 
 	 * And, if `bundleDiscoveryAuto` is true, then:
