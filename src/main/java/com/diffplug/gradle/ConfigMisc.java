@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 DiffPlug
+ * Copyright (C) 2016-2022 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,6 @@ public class ConfigMisc {
 		}
 	}
 
-	/** Loads a properties file and puts it into a `Map<String, String>`. */
 	public static Map<String, String> loadProps(File file) throws IOException {
 		Properties props = new Properties();
 		try (InputStream input = Files.asByteSource(file).openBufferedStream()) {
