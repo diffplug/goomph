@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [3.40.0] - 2022-10-29
 ### Removed
 - **breaking** Long-deprecated methods of `eclipseMavenCentral` have been removed
   - `compile`, `testCompile`, `runtime`, `testRuntime` and their native versions
