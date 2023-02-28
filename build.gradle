@@ -131,6 +131,7 @@ gradlePlugin {
 				implementationClass = "${newImpl}\$Legacy"
 				displayName         = "Back-compat alias to $newId"
 				description         = "Back-compat alias to $newId"
+				tags.set(Arrays.asList("eclipse"))
 			}
 		}
 	}
