@@ -48,4 +48,4 @@ jobs:
       - name: publish all
         if: "${{ github.event.inputs.to_publish == 'all' }}"
         run: |
-          ./gradlew :changelogPush -Prelease=true -Penable_publishing=true -Pgradle.publish.key=${{ secrets.GRADLE_KEY }} -Pgradle.publish.secret=${{ secrets.GRADLE_SECRET }} --stacktrace --warning-mode all
+          ./gradlew :publishPlugins -Prelease=true -Penable_publishing=true -Pgradle.publish.key=${{ secrets.GRADLE_KEY }} -Pgradle.publish.secret=${{ secrets.GRADLE_SECRET }} --stacktrace --warning-mode all
