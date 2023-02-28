@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2022 DiffPlug
+ * Copyright (C) 2015-2023 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 package com.diffplug.gradle.pde;
-
 
 import java.util.Objects;
 import java.util.function.Function;
@@ -128,6 +127,7 @@ public final class EclipseRelease {
 			case "4.23.0": return root + "4.23/R-4.23-202203080310/";
 			case "4.24.0": return root + "4.24/R-4.24-202206070700/";
 			case "4.25.0": return root + "4.25/R-4.25-202208311800/";
+			case "4.26.0": return root + "4.26/R-4.26-202211231800/";
 			// less-specific versions
 			case "3.5": case "3.6": case "3.7": case "3.8":
 			case "4.2": case "4.3": case "4.4": case "4.5":
@@ -136,6 +136,7 @@ public final class EclipseRelease {
 			case "4.14": case "4.15": case "4.16": case "4.17":
 			case "4.18": case "4.19": case "4.20": case "4.21":
 			case "4.22": case "4.23": case "4.24": case "4.25":
+			case "4.26":
 				return root + v + "/";
 			default: return null;
 			}
