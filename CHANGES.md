@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [3.41.0] - 2023-02-28
 ### Added
 - Eclipse `4.26.0` aka `2022-12` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.26/))
 - We recommend users of the following plugins to migrate as follows:
