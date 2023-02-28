@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2019 DiffPlug
+ * Copyright (C) 2015-2023 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
  */
 package com.diffplug.gradle.p2;
 
-
 import com.diffplug.common.base.Errors;
 import com.diffplug.gradle.FileMisc;
+import com.diffplug.gradle.eclipse.EquoMigration;
 import java.io.File;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -53,7 +53,12 @@ public class AsMavenExtension {
 		}
 	}
 
+	public void silenceEquoIDE() {
+		EquoMigration.silenceEquoIDE();
+	}
+
 	void run() {
+		EquoMigration.asMaven();
 		Set<File> files = new HashSet<>();
 		File p2asmaven = project.file(destination);
 		groups.forEach((group, action) -> {

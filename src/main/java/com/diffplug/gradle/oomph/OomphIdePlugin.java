@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2022 DiffPlug
+ * Copyright (C) 2016-2023 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
  */
 package com.diffplug.gradle.oomph;
 
-
 import com.diffplug.common.base.Errors;
 import com.diffplug.gradle.GoomphCacheLocations;
 import com.diffplug.gradle.LegacyPlugin;
 import com.diffplug.gradle.ProjectPlugin;
+import com.diffplug.gradle.eclipse.EquoMigration;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 
@@ -203,6 +203,7 @@ public class OomphIdePlugin extends ProjectPlugin {
 				if (!extension.workspaceExists()) {
 					ide.dependsOn(ideSetupWorkspace);
 				}
+				EquoMigration.oomph();
 			});
 		});
 
