@@ -22,13 +22,10 @@ public class EquoMigration {
 		silenceEquoIde = true;
 	}
 
-	private static boolean eclipseMavenCentral = false;
-
 	public static void eclipseMavenCentral() {
-		if (silenceEquoIde || eclipseMavenCentral) {
+		if (silenceEquoIde) {
 			return;
 		}
-		eclipseMavenCentral = true;
 		System.out.println("We strongly recommend that you migrate");
 		System.out.println("  from 'com.diffplug.eclipse.mavencentral'");
 		System.out.println("    to 'dev.equo.p2deps'");
@@ -45,13 +42,10 @@ public class EquoMigration {
 		System.out.println("```");
 	}
 
-	private static boolean asMaven = false;
-
 	public static void asMaven() {
-		if (silenceEquoIde || asMaven) {
+		if (silenceEquoIde) {
 			return;
 		}
-		asMaven = true;
 		System.out.println("We strongly recommend that you migrate");
 		System.out.println("  from 'com.diffplug.p2.asmaven'");
 		System.out.println("    to 'dev.equo.p2deps'");
@@ -68,13 +62,10 @@ public class EquoMigration {
 		System.out.println("```");
 	}
 
-	private static boolean oomph = false;
-
 	public static void oomph() {
-		if (silenceEquoIde || oomph) {
+		if (silenceEquoIde) {
 			return;
 		}
-		oomph = true;
 		System.out.println("We strongly recommend that you migrate");
 		System.out.println("  from 'com.diffplug.oomph.ide'");
 		System.out.println("    to 'dev.equo.ide'");
