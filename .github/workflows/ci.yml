@@ -12,9 +12,6 @@ jobs:
       matrix:
         jre: [11]
         os: [ubuntu-latest, windows-latest]
-        include:
-          - jre: 17
-            os: ubuntu-latest
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
