@@ -10,13 +10,18 @@ spotlessChangelog {
 
 apply plugin: 'com.diffplug.blowdryer'
 
-apply from: 干.file('base/java8.gradle')
+configurations.all {
+	exclude group: 'org.eclipse.platform', module: 'org.eclipse.swt.${osgi.platform}'
+	exclude group: 'com.sun.jna', module: 'com.sun.jna'
+	exclude group: 'com.sun.jna', module: 'com.sun.jna.platform'
+}
+apply from: 干.file('base/java.gradle')
 apply from: 干.file('base/changelog.gradle')
 apply from: 干.file('base/gradle-plugin.gradle')
-apply from: 干.file('base/maven.gradle')
 apply from: 干.file('base/sonatype.gradle')
 apply from: 干.file('spotless/freshmark.gradle')
 apply from: 干.file('spotless/java.gradle')
+apply from: 干.file('base/maven.gradle')
 spotless {
 	java {
 		targetExclude 'src/main/java/com/diffplug/gradle/eclipse/apt/**'
@@ -63,12 +68,6 @@ eclipseMavenCentral {
 		compileOnly 'org.eclipse.jdt.launching'
 		compileOnly 'org.eclipse.emf.ecore'
 	}
-}
-
-configurations.all {
-	exclude group: 'org.eclipse.platform', module: 'org.eclipse.swt.${osgi.platform}'
-	exclude group: 'com.sun.jna', module: 'com.sun.jna'
-	exclude group: 'com.sun.jna', module: 'com.sun.jna.platform'
 }
 
 test {
