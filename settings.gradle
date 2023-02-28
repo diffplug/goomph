@@ -1,26 +1,32 @@
 pluginManagement {
-	plugins {
-		id 'com.diffplug.blowdryer'                version '1.6.0'
-		id 'com.diffplug.blowdryerSetup'           version '1.6.0'
-		id 'com.diffplug.eclipse.mavencentral'     version '3.36.2'
-		id 'com.diffplug.spotless-changelog'       version '2.4.0'
-		id 'com.diffplug.spotless'                 version '6.6.0'
-		id 'com.gradle.plugin-publish'             version '0.21.0'
-		id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
-		id 'org.jdrupes.mdoclet'                   version '1.0.10'
+	repositories {
+		mavenCentral()
+		gradlePluginPortal()
 	}
 }
 plugins {
-	id 'com.diffplug.blowdryerSetup'
-	id 'com.diffplug.eclipse.mavencentral'     apply false
-	id 'com.diffplug.spotless-changelog'       apply false
-	id 'com.diffplug.spotless'                 apply false
-	id 'com.gradle.plugin-publish'             apply false
-	id 'io.github.gradle-nexus.publish-plugin' apply false
-	id 'org.jdrupes.mdoclet'                   apply false
+	// https://github.com/diffplug/blowdryer/blob/main/CHANGELOG.md
+	id 'com.diffplug.blowdryerSetup' version '1.7.0'
+	// https://github.com/diffplug/spotless/blob/main/plugin-gradle/CHANGES.md
+	id 'com.diffplug.spotless' version '6.14.0' apply false
+	// https://github.com/diffplug/spotless-changelog/blob/main/CHANGELOG.md
+	id 'com.diffplug.spotless-changelog' version '2.4.1' apply false
+	// https://plugins.gradle.org/plugin/com.gradle.plugin-publish
+	id 'com.gradle.plugin-publish' version '1.1.0' apply false
+	// https://github.com/equodev/equo-ide/blob/main/plugin-gradle/CHANGELOG.md
+	id 'dev.equo.ide' version '0.12.1' apply false
+	// https://github.com/gradle-nexus/publish-plugin/releases
+	id 'io.github.gradle-nexus.publish-plugin' version '1.1.0' apply false
+	// dogfood
+	id 'com.diffplug.eclipse.mavencentral' version '3.40.0' apply false
 }
 blowdryerSetup {
-	github 'diffplug/blowdryer-diffplug', 'tag', '5.2.0'
+	github 'diffplug/blowdryer-diffplug', 'tag', '7.0.0'
 	//devLocal '../blowdryer-diffplug'
+	setPluginsBlockTo {
+		it.file 'plugin.versions'
+		it.add("\t// dogfood");
+		it.add("\tid 'com.diffplug.eclipse.mavencentral' version '3.40.0' apply false")
+	}
 }
 rootProject.name = 'goomph'
