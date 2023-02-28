@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+### Fixed
+* Fixed CI publishing and plugin migration notice.
 
 ## [3.41.0] - 2023-02-28
 ### Added
