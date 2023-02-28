@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2022 DiffPlug
+ * Copyright (C) 2018-2023 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 package com.diffplug.gradle.eclipse;
-
 
 import com.diffplug.common.base.StringPrinter;
 import com.diffplug.common.swt.os.SwtPlatform;
@@ -39,12 +38,17 @@ public class MavenCentralExtension {
 		this.project = Objects.requireNonNull(project);
 	}
 
+	public void silenceEquoIDE() {
+		EquoMigration.silenceEquoIDE();
+	}
+
 	public void release(String version, Action<ReleaseConfigurer> configurer) throws IOException {
 		release(EclipseRelease.official(version), configurer);
 	}
 
 	public void release(EclipseRelease release, Action<ReleaseConfigurer> configurer) throws IOException {
 		configurer.execute(new ReleaseConfigurer(release));
+		EquoMigration.eclipseMavenCentral();
 	}
 
 	public class ReleaseConfigurer {

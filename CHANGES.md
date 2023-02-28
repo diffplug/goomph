@@ -1,6 +1,12 @@
 # Goomph releases
 
 ## [Unreleased]
+### Added
+- Eclipse `4.26.0` aka `2022-12` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.26/))
+- We recommend users of the following plugins to migrate as follows:
+  - `com.diffplug.eclipse.mavencentral` and `com.diffplug.p2.asmaven` -> [`dev.equo.p2deps`](https://github.com/equodev/equo-ide/tree/main/plugin-gradle#user-plugins)
+  - `com.diffplug.oomph.ide` -> [`dev.equo.ide`](https://github.com/equodev/equo-ide/tree/main/plugin-gradle)
+  - The legacy plugins will continue to be maintained, so you don't *have* to migrate, but the new plugins are strictly better.
 
 ## [3.40.0] - 2022-10-29
 ### Removed

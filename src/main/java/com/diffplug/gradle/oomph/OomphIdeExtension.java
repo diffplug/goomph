@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2021 DiffPlug
+ * Copyright (C) 2016-2023 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package com.diffplug.gradle.oomph;
 
-
 import com.diffplug.common.base.Errors;
 import com.diffplug.common.base.Preconditions;
 import com.diffplug.common.base.StandardSystemProperty;
@@ -29,6 +28,7 @@ import com.diffplug.gradle.GoomphCacheLocations;
 import com.diffplug.gradle.JavaExecable;
 import com.diffplug.gradle.Lazyable;
 import com.diffplug.gradle.StateBuilder;
+import com.diffplug.gradle.eclipse.EquoMigration;
 import com.diffplug.gradle.eclipserunner.EclipseIni;
 import com.diffplug.gradle.eclipserunner.EclipseIniLauncher;
 import com.diffplug.gradle.oomph.thirdparty.ConventionThirdParty;
@@ -103,6 +103,10 @@ public class OomphIdeExtension implements P2Declarative {
 		this.description = this.name;
 		this.perspective = Perspectives.RESOURCES;
 		this.runP2Using = app -> Errors.rethrow().run(() -> app.runUsingBootstrapper(project));
+	}
+
+	public void silenceEquoIDE() {
+		EquoMigration.silenceEquoIDE();
 	}
 
 	/** Returns the underlying project. */
