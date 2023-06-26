@@ -1,6 +1,11 @@
 # Goomph releases
 
 ## [Unreleased]
+### Fixed
+- Attempt to fix the publish.
+
+## [3.42.0] - 2023-06-26
+** Failed publish **
 ### Added
 - Eclipse `4.27.0` aka `2023-03` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.27/))
 - Eclipse `4.28.0` aka `2023-06` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.28/))
