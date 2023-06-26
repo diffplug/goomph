@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [3.42.1] - 2023-06-26
 ### Fixed
 - Attempt to fix the publish.
 
