@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+- Eclipse `4.27.0` aka `2023-03` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.27/))
+- Eclipse `4.28.0` aka `2023-06` ([new and noteworthy](https://www.eclipse.org/eclipse/news/4.28/))
 ### Fixed
 * Fixed CI publishing and plugin migration notice.
 
