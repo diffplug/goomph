@@ -17,8 +17,8 @@ output = [
 [![Maven artifact](https://img.shields.io/badge/mavenCentral-com.diffplug.gradle%3Agoomph-blue.svg)](https://search.maven.org/artifact/com.diffplug.gradle/goomph)
 [![License Apache](https://img.shields.io/badge/license-Apache-blue.svg)](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))
 
-[![Changelog](https://img.shields.io/badge/changelog-3.42.1-brightgreen.svg)](CHANGES.md)
-[![Javadoc](https://img.shields.io/badge/javadoc-yes-brightgreen.svg)](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.1/index.html)
+[![Changelog](https://img.shields.io/badge/changelog-3.42.2-brightgreen.svg)](CHANGES.md)
+[![Javadoc](https://img.shields.io/badge/javadoc-yes-brightgreen.svg)](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.2/index.html)
 [![Live chat](https://img.shields.io/badge/gitter-live_chat-brightgreen.svg)](https://gitter.im/diffplug/goomph)
 [![CircleCI](https://circleci.com/gh/diffplug/goomph.svg?style=shield)](https://circleci.com/gh/diffplug/goomph)
 <!---freshmark /shields -->
@@ -48,38 +48,38 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 
 #### `com.diffplug.eclipse` Eclipse project files and eclipse version-mapping maven central artifacts.
 
-* [`apt`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.1/com/diffplug/gradle/eclipse/apt/AptEclipsePlugin.html) fixes eclipse project to work with Gradle annotation processing.
-* [`mavencentral`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.1/com/diffplug/gradle/eclipse/MavenCentralPlugin.html) makes it easy to add dependency jars from an eclipse release.
-* [`buildproperties`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.1/com/diffplug/gradle/eclipse/BuildPropertiesPlugin.html) uses [`build.properties`](https://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Fguide%2Ftools%2Feditors%2Fmanifest_editor%2Fbuild.htm) to control a gradle build, and fixes eclipse project classpath to include binary assets specified in `build.properties`.
-* [`excludebuildfolder`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.1/com/diffplug/gradle/eclipse/ExcludeBuildFolderPlugin.html) excludes the gradle `build` folder from Eclipse's resource indexing.
-* [`projectdeps`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.1/com/diffplug/gradle/eclipse/ProjectDepsPlugin.html) fixes an intermittent problem where dependencies on other projects within the workspace aren't always resolved correctly within Eclipse.
-* [`resourcefilters`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.1/com/diffplug/gradle/eclipse/ResourceFiltersPlugin.html) adds resource filters to the eclipse project.
+* [`apt`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.2/com/diffplug/gradle/eclipse/apt/AptEclipsePlugin.html) fixes eclipse project to work with Gradle annotation processing.
+* [`mavencentral`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.2/com/diffplug/gradle/eclipse/MavenCentralPlugin.html) makes it easy to add dependency jars from an eclipse release.
+* [`buildproperties`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.2/com/diffplug/gradle/eclipse/BuildPropertiesPlugin.html) uses [`build.properties`](https://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.pde.doc.user%2Fguide%2Ftools%2Feditors%2Fmanifest_editor%2Fbuild.htm) to control a gradle build, and fixes eclipse project classpath to include binary assets specified in `build.properties`.
+* [`excludebuildfolder`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.2/com/diffplug/gradle/eclipse/ExcludeBuildFolderPlugin.html) excludes the gradle `build` folder from Eclipse's resource indexing.
+* [`projectdeps`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.2/com/diffplug/gradle/eclipse/ProjectDepsPlugin.html) fixes an intermittent problem where dependencies on other projects within the workspace aren't always resolved correctly within Eclipse.
+* [`resourcefilters`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.2/com/diffplug/gradle/eclipse/ResourceFiltersPlugin.html) adds resource filters to the eclipse project.
 
 #### `com.diffplug.osgi` Plugins for working with OSGi.
 
-* [`bndmanifest`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.1/com/diffplug/gradle/osgi/BndManifestPlugin.html) generates a manifest using purely bnd, and outputs it for IDE consumption.
-* [`equinoxlaunch`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.1/com/diffplug/gradle/eclipserunner/EquinoxLaunchPlugin.html) can configure and run equinox applications as part of the build, such as a code generator.
-* [`OsgiExecable`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.1/com/diffplug/gradle/osgi/OsgiExecable.html) makes it easy to run a chunk of code within an OSGi container, and get the result from outside the container.
+* [`bndmanifest`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.2/com/diffplug/gradle/osgi/BndManifestPlugin.html) generates a manifest using purely bnd, and outputs it for IDE consumption.
+* [`equinoxlaunch`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.2/com/diffplug/gradle/eclipserunner/EquinoxLaunchPlugin.html) can configure and run equinox applications as part of the build, such as a code generator.
+* [`OsgiExecable`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.2/com/diffplug/gradle/osgi/OsgiExecable.html) makes it easy to run a chunk of code within an OSGi container, and get the result from outside the container.
 
 #### `com.diffplug.p2` A  and plugins for manipulating p2 data. (*mostly [abandoned](https://github.com/diffplug/goomph/issues/166#issuecomment-945188596) now*)
 
-* [`asmaven`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.1/com/diffplug/gradle/p2/AsMavenPlugin.html) downloads dependencies from a p2 repository and makes them available in a local maven repository.
-* [`P2Model`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.1/com/diffplug/gradle/p2/P2Model.html) models a set of p2 repositories and IUs, and provides convenience methods for running p2-director or the p2.mirror ant task against these.
-* [`P2AntRunner`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.1/com/diffplug/gradle/p2/P2AntRunner.html) runs eclipse ant tasks.
-* [`CategoryPublisher`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.1/com/diffplug/gradle/p2/CategoryPublisher.html) models the CategoryPublisher eclipse application.
-* [`FeaturesAndBundlesPublisher`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.1/com/diffplug/gradle/p2/FeaturesAndBundlesPublisher.html) models the FeaturesAndBundlesPublisher eclipse application.
-* [`Repo2Runnable`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.1/com/diffplug/gradle/p2/Repo2Runnable.html) models the Repo2Runnable eclipse application.
+* [`asmaven`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.2/com/diffplug/gradle/p2/AsMavenPlugin.html) downloads dependencies from a p2 repository and makes them available in a local maven repository.
+* [`P2Model`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.2/com/diffplug/gradle/p2/P2Model.html) models a set of p2 repositories and IUs, and provides convenience methods for running p2-director or the p2.mirror ant task against these.
+* [`P2AntRunner`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.2/com/diffplug/gradle/p2/P2AntRunner.html) runs eclipse ant tasks.
+* [`CategoryPublisher`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.2/com/diffplug/gradle/p2/CategoryPublisher.html) models the CategoryPublisher eclipse application.
+* [`FeaturesAndBundlesPublisher`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.2/com/diffplug/gradle/p2/FeaturesAndBundlesPublisher.html) models the FeaturesAndBundlesPublisher eclipse application.
+* [`Repo2Runnable`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.2/com/diffplug/gradle/p2/Repo2Runnable.html) models the Repo2Runnable eclipse application.
 
 #### `com.diffplug.gradle.pde` Tasks for running Eclipse PDE using a downloaded eclipse instance. (*this part is mostly [abandoned](https://github.com/diffplug/goomph/issues/166#issuecomment-945188596) now*)
 
-* [`PdeBuildTask`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.1/com/diffplug/gradle/pde/PdeBuildTask.html) runs PDE build to build an RCP product.
-* [`PdeAntBuildTask`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.1/com/diffplug/gradle/pde/PdeAntBuildTask.html) runs PDE on an ant file.
+* [`PdeBuildTask`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.2/com/diffplug/gradle/pde/PdeBuildTask.html) runs PDE build to build an RCP product.
+* [`PdeAntBuildTask`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.2/com/diffplug/gradle/pde/PdeAntBuildTask.html) runs PDE on an ant file.
 
 #### `com.diffplug.gradle` Miscellaneous infrastructure.
 
-* [`CmdLineTask`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.1/com/diffplug/gradle/CmdLineTask.html) runs a series of shell commands, possibly copying or moving files in the meantime.
-* [`JavaExecable`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.1/com/diffplug/gradle/JavaExecable.html) makes it easy to run a chunk of code in a separate JVM, and get the result back in this one.
-* [`JavaExecWinFriendly`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.1/com/diffplug/gradle/JavaExecWinFriendly.html) overcomes limitations in Windows' commandline length and long classpaths.
+* [`CmdLineTask`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.2/com/diffplug/gradle/CmdLineTask.html) runs a series of shell commands, possibly copying or moving files in the meantime.
+* [`JavaExecable`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.2/com/diffplug/gradle/JavaExecable.html) makes it easy to run a chunk of code in a separate JVM, and get the result back in this one.
+* [`JavaExecWinFriendly`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.2/com/diffplug/gradle/JavaExecWinFriendly.html) overcomes limitations in Windows' commandline length and long classpaths.
 
 #### `com.diffplug.gradle.eclipserunner` Infrastructure for running headless eclipse applications.
 
@@ -87,7 +87,7 @@ Below is an index of Goomph's capabilities, along with links to the javadoc wher
 
 #### Other
 
-* [`com.diffplug.configuration-cache-for-platform-specific-build`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.1/com/diffplug/gradle/swt/PlatformSpecificBuildPlugin.html) allows you to use `OS.getNative()` and `OS.getRunning()` in your gradle build without breaking the configuration cache.
+* [`com.diffplug.configuration-cache-for-platform-specific-build`](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.2/com/diffplug/gradle/swt/PlatformSpecificBuildPlugin.html) allows you to use `OS.getNative()` and `OS.getRunning()` in your gradle build without breaking the configuration cache.
 
 ## IDE-as-build-artifact. (*this part is mostly [abandoned](https://github.com/diffplug/goomph/issues/189)*)
 
@@ -110,7 +110,7 @@ oomphIde {
 }
 ```
 
-See the [plugin's javadoc](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.1/com/diffplug/gradle/oomph/OomphIdePlugin.html) for a quickstart, and [HOW_TO_AUTOMATE_IDE.md](HOW_TO_AUTOMATE_IDE.md) for examples and more in-depth details.
+See the [plugin's javadoc](https://javadoc.io/doc/com.diffplug.gradle/goomph/3.42.2/com/diffplug/gradle/oomph/OomphIdePlugin.html) for a quickstart, and [HOW_TO_AUTOMATE_IDE.md](HOW_TO_AUTOMATE_IDE.md) for examples and more in-depth details.
 
 <!---freshmark /javadoc -->
 
