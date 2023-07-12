@@ -31,9 +31,10 @@ import org.gradle.api.file.SourceDirectorySet;
 import org.gradle.api.internal.HasConvention;
 import org.gradle.api.plugins.GroovyBasePlugin;
 import org.gradle.api.plugins.JavaBasePlugin;
-import org.gradle.api.plugins.JavaPluginConvention;
+import org.gradle.api.plugins.JavaPluginExtension;
 import org.gradle.api.reflect.HasPublicType;
 import org.gradle.api.reflect.TypeOf;
+import org.gradle.api.tasks.GroovySourceDirectorySet;
 import org.gradle.api.tasks.GroovySourceSet;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.Internal;
@@ -62,9 +63,9 @@ public class AptPlugin implements Plugin<Project> {
         .withType(
             JavaBasePlugin.class,
             javaBasePlugin -> {
-              final JavaPluginConvention javaConvention =
-                  project.getConvention().getPlugin(JavaPluginConvention.class);
-              javaConvention
+              final JavaPluginExtension javaExtension =
+                  project.getExtensions().getByType(JavaPluginExtension.class);
+              javaExtension
                   .getSourceSets()
                   .all(
                       sourceSet -> {
@@ -84,17 +85,15 @@ public class AptPlugin implements Plugin<Project> {
         .withType(
             GroovyBasePlugin.class,
             groovyBasePlugin -> {
-              JavaPluginConvention javaConvention =
-                  project.getConvention().getPlugin(JavaPluginConvention.class);
-              javaConvention
+              JavaPluginExtension javaExtension =
+                  project.getExtensions().getByType(JavaPluginExtension.class);
+              javaExtension
                   .getSourceSets()
                   .all(
                       sourceSet -> {
                         SourceDirectorySet groovy =
-                            ((HasConvention) sourceSet)
-                                .getConvention()
-                                .getPlugin(GroovySourceSet.class)
-                                .getGroovy();
+                            sourceSet.getExtensions()
+                                .getByType(GroovySourceDirectorySet.class);
                         configureCompileTaskForSourceSet(
                             project,
                             sourceSet,

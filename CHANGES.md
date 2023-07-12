@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+### Fixed
+- Upgrade JavaPluginConvention to JavaPluginExtension [#208](https://github.com/diffplug/goomph/pull/208) fixes [#207](https://github.com/diffplug/goomph/issues/207)
 
 ## [3.42.1] - 2023-06-26
 ### Fixed
