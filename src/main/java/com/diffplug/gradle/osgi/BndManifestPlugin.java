@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2022 DiffPlug
+ * Copyright (C) 2016-2023 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 package com.diffplug.gradle.osgi;
-
 
 import aQute.bnd.osgi.Builder;
 import aQute.bnd.osgi.Constants;
@@ -38,7 +37,7 @@ import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.java.archives.Attributes;
 import org.gradle.api.plugins.JavaPlugin;
-import org.gradle.api.plugins.JavaPluginConvention;
+import org.gradle.api.plugins.JavaPluginExtension;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetOutput;
 import org.gradle.api.tasks.bundling.Jar;
@@ -150,8 +149,8 @@ public class BndManifestPlugin extends ProjectPlugin {
 	}
 
 	private static Path outputManifest(Jar jarTask) {
-		JavaPluginConvention javaConvention = jarTask.getProject().getConvention().getPlugin(JavaPluginConvention.class);
-		SourceSet main = javaConvention.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME);
+		JavaPluginExtension javaExtension = jarTask.getProject().getExtensions().getByType(JavaPluginExtension.class);
+		SourceSet main = javaExtension.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME);
 		return main.getOutput().getResourcesDir().toPath().resolve("META-INF/MANIFEST.MF");
 	}
 
@@ -188,8 +187,8 @@ public class BndManifestPlugin extends ProjectPlugin {
 			builder.addClasspath(runtimeConfig);
 
 			// put the class files and resources into the jar
-			JavaPluginConvention javaConvention = project.getConvention().getPlugin(JavaPluginConvention.class);
-			SourceSetOutput main = javaConvention.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME).getOutput();
+			JavaPluginExtension javaExtension = project.getExtensions().getByType(JavaPluginExtension.class);
+			SourceSetOutput main = javaExtension.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME).getOutput();
 			// delete empty folders so that bnd doesn't make Export-Package entries for them
 			Set<String> includeresource = new LinkedHashSet<>();
 			deleteEmptyFoldersIfExists(main.getResourcesDir());

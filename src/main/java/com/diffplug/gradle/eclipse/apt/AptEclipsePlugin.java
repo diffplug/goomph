@@ -25,7 +25,7 @@ import org.gradle.api.Task;
 import org.gradle.api.internal.PropertiesTransformer;
 import org.gradle.api.plugins.ExtensionAware;
 import org.gradle.api.plugins.JavaPlugin;
-import org.gradle.api.plugins.JavaPluginConvention;
+import org.gradle.api.plugins.JavaPluginExtension;
 import org.gradle.api.tasks.Delete;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.internal.xml.XmlTransformer;
@@ -62,12 +62,12 @@ public class AptEclipsePlugin implements Plugin<Project> {
         .withType(
             JavaPlugin.class,
             javaPlugin -> {
-              JavaPluginConvention javaConvention =
-                  project.getConvention().getPlugin(JavaPluginConvention.class);
+              JavaPluginExtension javaExtension =
+                  project.getExtensions().getByType(JavaPluginExtension.class);
               SourceSet mainSourceSet =
-                  javaConvention.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME);
+                  javaExtension.getSourceSets().getByName(SourceSet.MAIN_SOURCE_SET_NAME);
               SourceSet testSourceSet =
-                  javaConvention.getSourceSets().getByName(SourceSet.TEST_SOURCE_SET_NAME);
+                  javaExtension.getSourceSets().getByName(SourceSet.TEST_SOURCE_SET_NAME);
 
               configureEclipse(project, mainSourceSet, testSourceSet);
             });
