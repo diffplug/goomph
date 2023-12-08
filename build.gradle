@@ -29,7 +29,7 @@ spotless {
 }
 
 String VER_DURIAN = '1.2.0'
-String VER_DURIAN_SWT = '3.6.1'
+String VER_DURIAN_SWT = '4.3.0'
 String VER_BNDLIB = '6.3.1'
 String OLDEST_SUPPORTED_GRADLE = '5.1'
 String VER_P2_BOOTSTRAP = '4.13.0'
@@ -40,15 +40,15 @@ dependencies {
 	implementation "com.diffplug.durian:durian-collect:${VER_DURIAN}"
 	implementation "com.diffplug.durian:durian-io:${VER_DURIAN}"
 	implementation "com.diffplug.durian:durian-swt.os:${VER_DURIAN_SWT}"
-	implementation "commons-io:commons-io:2.11.0"
-	implementation "com.diffplug.spotless:spotless-lib:2.28.0"
-	implementation "com.squareup.okhttp3:okhttp:4.10.0"
-	implementation "com.squareup.okio:okio:3.2.0"
+	implementation "commons-io:commons-io:2.15.1"
+	implementation "com.diffplug.spotless:spotless-lib:2.34.0"
+	implementation "com.squareup.okhttp3:okhttp:4.12.0"
+	implementation "com.squareup.okio:okio:3.6.0"
 	// OSGi
 	implementation "biz.aQute.bnd:biz.aQute.bndlib:${VER_BNDLIB}"
 	// testing
 	testImplementation "junit:junit:4.13.2"
-	testImplementation "org.assertj:assertj-core:3.23.1"
+	testImplementation "org.assertj:assertj-core:3.24.2"
 }
 
 configurations.compileClasspath {
