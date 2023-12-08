@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [3.44.0] - 2023-12-08
 ### Added
 - Eclipse `4.30.0` aka `2023-12` ([new and noteworthy](https://eclipse.dev/eclipse/news/4.30/)) ([#213](https://github.com/diffplug/goomph/pull/213))
 ### Fixed
