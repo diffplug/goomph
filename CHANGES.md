@@ -2,7 +2,9 @@
 
 ## [Unreleased]
 ### Added
-- Eclipse `4.30.0` aka `2023-12` ([new and noteworthy](https://eclipse.dev/eclipse/news/4.30/))
+- Eclipse `4.30.0` aka `2023-12` ([new and noteworthy](https://eclipse.dev/eclipse/news/4.30/)) ([#213](https://github.com/diffplug/goomph/pull/213))
+### Fixed
+- `com.diffplug.configuration-cache-for-platform-specific-build` no longer throws Gradle warnings about `uname -a` or about `forUseAtConfigurationTime` being deprecated. ([#214](https://github.com/diffplug/goomph/pull/214))
 
 ## [3.43.0] - 2023-09-28
 ### Added
