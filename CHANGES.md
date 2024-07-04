@@ -1,6 +1,11 @@
 # Goomph releases
 
 ## [Unreleased]
+### Added
+- Add support for latest Eclipse versions. ([#215](https://github.com/diffplug/goomph/pull/215))
+  - Eclipse `4.31.0` aka `2024-03` ([new and noteworthy](https://eclipse.dev/eclipse/news/4.31/))
+  - Eclipse `4.32.0` aka `2024-06` ([new and noteworthy](https://eclipse.dev/eclipse/news/4.32/))
+  - **BREAKING** Updated spotless dependency to be compatible with spotless-plugin-gradle 7.x.
 
 ## [3.44.0] - 2023-12-08
 ### Added
