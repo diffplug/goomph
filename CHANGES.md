@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [4.0.1] - 2024-07-04
 ### Fixed
 - Revert spotless dependency bump.
 
