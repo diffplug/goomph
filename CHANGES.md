@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 ### Fixed
-- Spotless dependency was supposed to be `3.0.0.BETA1` not `3.0.0.RC2`
+- Revert spotless dependency bump.
 
 ## [4.0.0] - 2024-07-04
 ### Added
