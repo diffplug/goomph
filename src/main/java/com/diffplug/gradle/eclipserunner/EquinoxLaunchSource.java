@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2019 DiffPlug
+ * Copyright (C) 2017-2024 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 package com.diffplug.gradle.eclipserunner;
-
 
 import com.diffplug.common.base.Unhandled;
 import com.diffplug.spotless.FileSignature;
