@@ -93,7 +93,7 @@ public class EquinoxLaunchSource extends LazyForwardingEquality<FileSignature> {
 				throw Unhandled.classException(o);
 			}
 		}
-		return FileSignature.signAsList(files);
+		return FileSignature.from(files);
 	}
 
 	/** Returns the files which were resolved. */
