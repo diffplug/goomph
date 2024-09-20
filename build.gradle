@@ -55,6 +55,7 @@ configurations.compileClasspath {
 	transitive = false
 }
 eclipseMavenCentral {
+	silenceEquoIDE()
 	release VER_P2_BOOTSTRAP, {
 		api 'org.eclipse.osgi'
 		api 'org.eclipse.osgi.compatibility.state'
