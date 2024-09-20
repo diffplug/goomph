@@ -8,25 +8,25 @@ plugins {
 	// https://github.com/diffplug/blowdryer/blob/main/CHANGELOG.md
 	id 'com.diffplug.blowdryerSetup' version '1.7.1'
 	// https://github.com/diffplug/spotless/blob/main/plugin-gradle/CHANGES.md
-	id 'com.diffplug.spotless' version '7.0.0.BETA1' apply false
+	id 'com.diffplug.spotless' version '7.0.0.BETA2' apply false
 	// https://github.com/diffplug/spotless-changelog/blob/main/CHANGELOG.md
-	id 'com.diffplug.spotless-changelog' version '3.0.2' apply false
+	id 'com.diffplug.spotless-changelog' version '3.1.2' apply false
 	// https://plugins.gradle.org/plugin/com.gradle.plugin-publish
-	id 'com.gradle.plugin-publish' version '1.2.1' apply false
+	id 'com.gradle.plugin-publish' version '1.2.2' apply false
 	// https://github.com/equodev/equo-ide/blob/main/plugin-gradle/CHANGELOG.md
-	id 'dev.equo.ide' version '1.7.6' apply false
+	id 'dev.equo.ide' version '1.7.7' apply false
 	// https://github.com/gradle-nexus/publish-plugin/releases
 	id 'io.github.gradle-nexus.publish-plugin' version '2.0.0' apply false
 	// dogfood
-	id 'com.diffplug.eclipse.mavencentral' version '3.40.0' apply false
+	id 'com.diffplug.configuration-cache-for-platform-specific-build' version '4.0.1'
 }
 blowdryerSetup {
-	github 'diffplug/blowdryer-diffplug', 'tag', '7.3.0'
+	github 'diffplug/blowdryer-diffplug', 'tag', '8.0.2'
 	//devLocal '../blowdryer-diffplug'
 	setPluginsBlockTo {
 		it.file 'plugin.versions'
 		it.add("\t// dogfood");
-		it.add("\tid 'com.diffplug.eclipse.mavencentral' version '3.40.0' apply false")
+		it.add("\tid 'com.diffplug.configuration-cache-for-platform-specific-build' version '4.0.1'")
 	}
 }
 rootProject.name = 'goomph'
