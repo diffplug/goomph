@@ -1,6 +1,9 @@
 # Goomph releases
 
 ## [Unreleased]
+### Added
+- Add support for latest Eclipse versions. ([#216](https://github.com/diffplug/goomph/pull/216))
+  - Eclipse `4.34.0` aka `2024-12` ([new and noteworthy](https://eclipse.dev/eclipse/news/4.34/))
 
 ## [4.1.0] - 2024-09-20
 ### Added
