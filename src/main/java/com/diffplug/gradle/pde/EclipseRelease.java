@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2024 DiffPlug
+ * Copyright (C) 2015-2025 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ public final class EclipseRelease {
 		}
 	}
 
-	public static final String LATEST = "4.34.0";
+	public static final String LATEST = "4.35.0";
 
 	public static EclipseRelease latestOfficial() {
 		return official(LATEST);
@@ -136,6 +136,7 @@ public final class EclipseRelease {
 			case "4.32.0": return root + "4.32/R-4.32-202406010610/";
 			case "4.33.0": return root + "4.33/R-4.33-202409030240/";
 			case "4.34.0": return root + "4.34/R-4.34-202411201800/";
+			case "4.35.0": return root + "4.35/R-4.35-202502280140/";
 			// less-specific versions
 			case "3.5": case "3.6": case "3.7": case "3.8":
 			case "4.2": case "4.3": case "4.4": case "4.5":
@@ -146,7 +147,7 @@ public final class EclipseRelease {
 			case "4.22": case "4.23": case "4.24": case "4.25":
 			case "4.26": case "4.27": case "4.28": case "4.29":
 			case "4.30": case "4.31": case "4.32": case "4.33":
-			case "4.34":
+			case "4.34": case "4.35":
 				return root + v + "/";
 			default: return null;
 			}

@@ -1,6 +1,9 @@
 # Goomph releases
 
 ## [Unreleased]
+### Added
+- Add support for latest Eclipse versions.
+  - Eclipse `4.35.0` aka `2025-03` ([new and noteworthy](https://eclipse.dev/eclipse/news/4.35/))
 
 ## [4.2.0] - 2024-12-02
 ### Added
