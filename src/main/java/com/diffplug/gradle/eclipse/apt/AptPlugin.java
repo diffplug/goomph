@@ -109,15 +109,14 @@ public class AptPlugin implements Plugin<Project> {
       final Project project,
       Class<T> compileTaskClass,
       final Function<T, CompileOptions> getCompileOptions) {
-    IMPL.configureTasks(
-        project,
-        compileTaskClass,
-        task -> {
-          CompileOptions compileOptions = getCompileOptions.apply(task);
-          final AptOptions aptOptions = IMPL.createAptOptions();
-          task.getExtensions().add(AptOptions.class, "aptOptions", aptOptions);
-          IMPL.configureCompileTask(task, compileOptions, aptOptions);
-        });
+    project.afterEvaluate(p -> {
+        for (T task : p.getTasks().withType(compileTaskClass)) {
+            CompileOptions compileOptions = getCompileOptions.apply(task);
+            final AptOptions aptOptions = IMPL.createAptOptions();
+            task.getExtensions().add(AptOptions.class, "aptOptions", aptOptions);
+            IMPL.configureCompileTask(task, compileOptions, aptOptions);
+        }
+    });
   }
 
   private <T extends AbstractCompile> void configureCompileTaskForSourceSet(

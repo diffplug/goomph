@@ -18,7 +18,7 @@ package com.diffplug.gradle.eclipse.apt;
 import java.io.File;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.file.FileCollection;
 import org.gradle.api.tasks.Internal;
 import org.gradle.plugins.ide.api.XmlGeneratorTask;
 
@@ -38,10 +38,10 @@ public class GenerateEclipseFactorypath extends XmlGeneratorTask<Factorypath> {
     EclipseFactorypath factorypathModel = getFactorypath();
     factorypathModel.getFile().getBeforeMerged().execute(factorypath);
     Set<File> entries = new LinkedHashSet<>();
-    for (Configuration configuration : factorypathModel.getPlusConfigurations()) {
+    for (FileCollection configuration : factorypathModel.getPlusConfigurations()) {
       entries.addAll(configuration.getFiles());
     }
-    for (Configuration configuration : factorypathModel.getMinusConfigurations()) {
+    for (FileCollection configuration : factorypathModel.getMinusConfigurations()) {
       entries.removeAll(configuration.getFiles());
     }
     factorypath.mergeEntries(entries);
