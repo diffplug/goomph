@@ -23,9 +23,11 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.internal.PropertiesTransformer;
+import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.plugins.ExtensionAware;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.plugins.JavaPluginExtension;
+import org.gradle.api.provider.MapProperty;
 import org.gradle.api.tasks.Delete;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.internal.xml.XmlTransformer;
@@ -35,6 +37,8 @@ import org.gradle.plugins.ide.eclipse.EclipsePlugin;
 import org.gradle.plugins.ide.eclipse.model.EclipseModel;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+import javax.inject.Inject;
 
 /**
  * Plugin which modifies the eclipse project file so that it will
@@ -50,6 +54,18 @@ public class AptEclipsePlugin implements Plugin<Project> {
 
   private static Action<Task> dependsOn(final Object taskDependency) {
     return task -> task.dependsOn(taskDependency);
+  }
+
+  private final ObjectFactory objects;
+
+  @Deprecated
+  public AptEclipsePlugin() {
+      throw new UnsupportedOperationException("Cannot directly instantiate AptEclipsePlugin");
+  }
+
+  @Inject
+  public AptEclipsePlugin(ObjectFactory objects) {
+      this.objects = objects;
   }
 
   @Override
@@ -103,14 +119,13 @@ public class AptEclipsePlugin implements Plugin<Project> {
                     .getExtensions()
                     .getByType(AptPlugin.AptOptions.class)
                     .isAnnotationProcessing()));
-    jdtApt.setProcessorOptions(
-        () ->
-            project
-                .getTasks()
-                .getByName(mainSourceSet.getCompileJavaTaskName())
-                .getExtensions()
-                .getByType(AptPlugin.AptOptions.class)
-                .getProcessorArgs());
+    MapProperty<String, ?> processorOptions = objects
+      .mapProperty(String.class, Object.class)
+      .value(project.getTasks().named(mainSourceSet.getCompileJavaTaskName()).map(task ->
+        task.getExtensions().getByType(AptPlugin.AptOptions.class).getProcessorArgs()
+      ));
+    jdtApt.setProcessorOptions(processorOptions::getOrNull);
+    project.afterEvaluate(p -> processorOptions.finalizeValue());
 
     eclipseModel
         .getJdt()

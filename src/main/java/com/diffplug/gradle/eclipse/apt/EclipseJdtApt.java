@@ -22,19 +22,31 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
+
 import org.gradle.api.Action;
 import org.gradle.api.Project;
+import org.gradle.api.file.ProjectLayout;
 import org.gradle.api.provider.Property;
 import org.gradle.api.provider.Provider;
+import org.gradle.api.provider.ProviderFactory;
 import org.gradle.plugins.ide.api.PropertiesFileContentMerger;
 import org.gradle.util.ConfigureUtil;
 
 public class EclipseJdtApt {
-  private final Project project;
+  private final ProviderFactory providers;
+  private final ProjectLayout layout;
   private final PropertiesFileContentMerger file;
 
+  @Deprecated
   public EclipseJdtApt(Project project, PropertiesFileContentMerger file) {
-    this.project = project;
+    this(project, project.getProviders(), project.getLayout(), file);
+  }
+
+  @Inject
+  public EclipseJdtApt(Project project, ProviderFactory providers, ProjectLayout layout, PropertiesFileContentMerger file) {
+    this.providers = providers;
+    this.layout = layout;
     this.file = file;
     this.aptEnabled = project.getObjects().property(Boolean.class);
     aptEnabled.set(true);
@@ -78,7 +90,7 @@ public class EclipseJdtApt {
   private final Property<File> genSrcDir;
 
   public File getGenSrcDir() {
-    return project.file(genSrcDir);
+    return layout.getProjectDirectory().file(genSrcDir.map(File::getAbsolutePath)).get().getAsFile();
   }
 
   public void setGenSrcDir(File genSrcDir) {
@@ -87,13 +99,13 @@ public class EclipseJdtApt {
 
   public void setGenSrcDir(Object genSrcDir) {
     Objects.requireNonNull(genSrcDir);
-    this.genSrcDir.set(project.provider(() -> project.file(genSrcDir)));
+    this.genSrcDir.set(providers.provider(() -> layout.getProjectDirectory().files(genSrcDir).getSingleFile()));
   }
 
   private final Property<File> genTestSrcDir;
 
   public File getGenTestSrcDir() {
-    return project.file(genTestSrcDir);
+    return layout.getProjectDirectory().file(genTestSrcDir.map(File::getAbsolutePath)).get().getAsFile();
   }
 
   public void setGenTestSrcDir(File genTestSrcDir) {
@@ -102,7 +114,7 @@ public class EclipseJdtApt {
 
   public void setGenTestSrcDir(Object genTestSrcDir) {
     Objects.requireNonNull(genTestSrcDir);
-    this.genTestSrcDir.set(project.provider(() -> project.file(genTestSrcDir)));
+    this.genSrcDir.set(providers.provider(() -> layout.getProjectDirectory().files(genTestSrcDir).getSingleFile()));
   }
 
   // XXX: this is actually either a Property<Map> or a MapProperty depending on Gradle version

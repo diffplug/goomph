@@ -16,12 +16,28 @@
 package com.diffplug.gradle.eclipse.apt;
 
 import java.util.Map;
+
+import org.gradle.api.file.ProjectLayout;
 import org.gradle.api.tasks.Internal;
 import org.gradle.plugins.ide.api.PropertiesGeneratorTask;
+
+import javax.inject.Inject;
 
 public class GenerateEclipseJdtApt extends PropertiesGeneratorTask<JdtApt> {
   @SuppressWarnings("NullAway.Init") // will be initialized by setJdtApt right after creation
   private EclipseJdtApt jdtApt;
+
+  private final ProjectLayout layout;
+
+  @Deprecated
+  public GenerateEclipseJdtApt() {
+    this(null);
+  }
+
+  @Inject
+  public GenerateEclipseJdtApt(ProjectLayout layout) {
+    this.layout = layout != null ? layout : getProject().getLayout();
+  }
 
   @SuppressWarnings("unchecked")
   @Override
@@ -29,8 +45,8 @@ public class GenerateEclipseJdtApt extends PropertiesGeneratorTask<JdtApt> {
     EclipseJdtApt jdtAptModel = getJdtApt();
     jdtAptModel.getFile().getBeforeMerged().execute(jdtApt);
     jdtApt.setAptEnabled(jdtAptModel.isAptEnabled());
-    jdtApt.setGenSrcDir(getProject().relativePath(jdtAptModel.getGenSrcDir()));
-    jdtApt.setGenTestSrcDir(getProject().relativePath(jdtAptModel.getGenTestSrcDir()));
+    jdtApt.setGenSrcDir(layout.getProjectDirectory().file(jdtAptModel.getGenSrcDir().getAbsolutePath()).getAsFile().getPath());
+    jdtApt.setGenTestSrcDir(layout.getProjectDirectory().file(jdtAptModel.getGenTestSrcDir().getAbsolutePath()).getAsFile().getPath());
     jdtApt.setReconcileEnabled(jdtAptModel.isReconcileEnabled());
     jdtApt.getProcessorOptions().clear();
     if (jdtAptModel.getProcessorOptions() != null) {
