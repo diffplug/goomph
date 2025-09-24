@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [4.4.0] - 2025-09-24
 ### Added
 - Add Gradle configuration cache compatibility fixes for the Eclipse APT plugin.
 
