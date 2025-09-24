@@ -102,9 +102,7 @@ dependencies {
 // MAVEN //
 ///////////
 javadoc {
-	options.source("8")
-	// error on javadoc problem
-	options.addStringOption('Xwerror', '-quiet')
+	options.source("${ver_java}")
 	// setup links
 	options.linksOffline('https://docs.oracle.com/javase/8/docs/api/', 'gradle/javadoc/java8')
 	options.linksOffline("https://docs.gradle.org/${OLDEST_SUPPORTED_GRADLE}/javadoc/", 'gradle/javadoc/gradle')
