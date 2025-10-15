@@ -1,6 +1,8 @@
 # Goomph releases
 
 ## [Unreleased]
+
+## [4.4.1] - 2025-10-15
 ### Fixed
 - Fixed build failure when querying APT options for compile tasks before `project.afterEvaluate`.
 
