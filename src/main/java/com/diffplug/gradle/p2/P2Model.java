@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2019 DiffPlug
+ * Copyright (C) 2015-2025 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 package com.diffplug.gradle.p2;
-
 
 import com.diffplug.common.base.Consumers;
 import com.diffplug.common.base.Errors;
