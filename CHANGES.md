@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [4.4.2] - 2025-11-06
+### Fixed
+- Changed CleanedAssert assertion to pass when attributes aren't in the correct order by normalizing XML content before comparison. Fixes test failures when running tests in P2ModelTest with Nondex due to non-deterministic attribute ordering in tags resulting from mirrorApp. ([#222](https://github.com/diffplug/goomph/pull/222))
+
 ## [4.4.1] - 2025-10-15
 ### Fixed
 - Fixed build failure when querying APT options for compile tasks before `project.afterEvaluate`.

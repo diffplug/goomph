@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 DiffPlug
+ * Copyright (C) 2021-2025 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,9 @@
  */
 package com.diffplug.gradle;
 
-
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.junit.Assert;
 
@@ -26,7 +27,28 @@ public class CleanedAssert {
 	}
 
 	public static void xml(String expected, String actual) {
-		Assert.assertEquals(trim(expected), trim(actual));
+		Assert.assertEquals(normalizeXml(trim(expected)), normalizeXml(trim(actual)));
+	}
+
+	private static String normalizeXml(String xml) {
+		Pattern tagPattern = Pattern.compile("<([^\\s/>]+)([^>]*)>");
+		Matcher matcher = tagPattern.matcher(xml);
+		StringBuffer sb = new StringBuffer();
+		while (matcher.find()) {
+			String tagName = matcher.group(1);
+			String remainder = matcher.group(2).trim();
+			boolean selfClosing = remainder.endsWith("/");
+			if (selfClosing) {
+				remainder = remainder.substring(0, remainder.length() - 1).trim();
+			}
+			String[] attrArray = remainder.isEmpty() ? new String[0] : remainder.split("\\s+");
+			Arrays.sort(attrArray);
+			String attrs = (attrArray.length > 0 ? " " + String.join(" ", attrArray) : "");
+			String replacement = "<" + tagName + attrs + (selfClosing ? "/>" : ">");
+			matcher.appendReplacement(sb, Matcher.quoteReplacement(replacement));
+		}
+		matcher.appendTail(sb);
+		return sb.toString();
 	}
 
 	private static String trim(String input) {
