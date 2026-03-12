@@ -114,7 +114,7 @@ public class EclipseJdtApt {
 
   public void setGenTestSrcDir(Object genTestSrcDir) {
     Objects.requireNonNull(genTestSrcDir);
-    this.genSrcDir.set(providers.provider(() -> layout.getProjectDirectory().files(genTestSrcDir).getSingleFile()));
+    this.genTestSrcDir.set(providers.provider(() -> layout.getProjectDirectory().files(genTestSrcDir).getSingleFile()));
   }
 
   // XXX: this is actually either a Property<Map> or a MapProperty depending on Gradle version
